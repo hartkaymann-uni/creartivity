@@ -9,7 +9,7 @@ void ofApp::setup()
 	}
 
 	filesystem::path shader_path( "../../res/shaders" );
-	shader.load( shader_path/"gameOfLife.vert", shader_path/"gameOfLife.frag" );
+	shader.load( shader_path / "gameOfLife.vert", shader_path / "gameOfLife.frag" );
 }
 
 void ofApp::update()
@@ -45,12 +45,12 @@ int ofApp::getNeighbourCount( int x, int y )
 {
 	int count = 0;
 	if (current_generation[x - 1][y - 1]) count++;	// top-left
-	if (current_generation[  x  ][y - 1]) count++;	// top-middle
+	if (current_generation[x][y - 1]) count++;	// top-middle
 	if (current_generation[x + 1][y - 1]) count++;	// top-right
-	if (current_generation[x - 1][  y  ]) count++;	// middle-left
-	if (current_generation[x + 1][  y  ]) count++;	// middle-right
+	if (current_generation[x - 1][y]) count++;	// middle-left
+	if (current_generation[x + 1][y]) count++;	// middle-right
 	if (current_generation[x - 1][y + 1]) count++;	// bottom-left
-	if (current_generation[  x  ][y + 1]) count++;	// bottom-middle
+	if (current_generation[x][y + 1]) count++;	// bottom-middle
 	if (current_generation[x + 1][y + 1]) count++;	// bottom-right
 	return count;
 }
@@ -69,56 +69,24 @@ void ofApp::draw()
 	shader.end();
 }
 
-void ofApp::keyPressed( int key )
-{
-
-}
-
-void ofApp::keyReleased( int key ) {
-
-}
-
-void ofApp::mouseMoved( int x, int y )
-{
-
-}
-
 void ofApp::mouseDragged( int x, int y, int button )
 {
+	const int MOUSE_DRAG_RADIUS = 5;
 
+	if (x > 0 && x < ofGetWindowWidth()
+		&& y > 0 && ofGetWindowHeight())
+	{
+		setRadius( x / 10, y / 10, MOUSE_DRAG_RADIUS, true );
+		std::cout << x << " " << y << std::endl;
+	}
 }
 
-void ofApp::mousePressed( int x, int y, int button )
+void ofApp::setRadius( int x, int y, int r, bool val )
 {
-
-}
-
-void ofApp::mouseReleased( int x, int y, int button )
-{
-
-}
-
-void ofApp::mouseEntered( int x, int y )
-{
-
-}
-
-void ofApp::mouseExited( int x, int y )
-{
-
-}
-
-void ofApp::windowResized( int w, int h )
-{
-
-}
-
-void ofApp::gotMessage( ofMessage msg )
-{
-
-}
-
-void ofApp::dragEvent( ofDragInfo dragInfo )
-{
-
+	for (int y_shift = -r; y_shift <= r; y_shift++) {
+		for (int x_shift = -r; x_shift <= r; x_shift++) {
+			if (x_shift * x_shift + y_shift * y_shift <= r * r)
+				current_generation[x + x_shift][y + y_shift] = true;
+		}
+	}
 }
