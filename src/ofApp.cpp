@@ -8,6 +8,7 @@ void ofApp::setup()
 		}
 	}
 
+	// Filepath to shader directory (this comment is mopstly for testing thats why its so useless)
 	filesystem::path shader_path( "../../res/shaders" );
 	shader.load( shader_path/"gameOfLife.vert", shader_path/"gameOfLife.frag" );
 }
