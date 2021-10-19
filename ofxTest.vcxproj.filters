@@ -21,8 +21,4 @@
   <ItemGroup>
     <ResourceCompile Include="icon.rc" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="res\gameOfLife.vert" />
-    <None Include="res\gameOfLife.frag" />
-  </ItemGroup>
 </Project>
