@@ -35,6 +35,11 @@ void ofApp::update()
 				// Dead cells with 3 neightbours live in the next generation
 				if (n_neighbours == 3) next_generation[x][y] = true;
 			}
+
+			if (invincible[x][y] > 0) {
+				next_generation[x][y] = true;
+				invincible[x][y]--;
+			}
 		}
 	}
 	std::copy( &next_generation[0][0], &next_generation[0][0] + N_CELLS_X * N_CELLS_Y, &current_generation[0][0] );
@@ -95,7 +100,10 @@ void ofApp::setRadius( int x, int y, int r, bool val )
 					&& x_shifted < N_CELLS_X
 					&& y_shifted > 0
 					&& y_shifted < N_CELLS_Y)
+				{
 					current_generation[x_shifted][y_shifted] = true;
+					invincible[x_shifted][y_shifted] = INVINCIBILITY_DURATION;
+				}
 			}
 		}
 	}
