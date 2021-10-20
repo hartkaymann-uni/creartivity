@@ -44,14 +44,15 @@ void ofApp::update()
 int ofApp::getNeighbourCount( int x, int y )
 {
 	int count = 0;
-	if (current_generation[x - 1][y - 1]) count++;	// top-left
-	if (current_generation[x][y - 1]) count++;	// top-middle
-	if (current_generation[x + 1][y - 1]) count++;	// top-right
-	if (current_generation[x - 1][y]) count++;	// middle-left
-	if (current_generation[x + 1][y]) count++;	// middle-right
-	if (current_generation[x - 1][y + 1]) count++;	// bottom-left
-	if (current_generation[x][y + 1]) count++;	// bottom-middle
-	if (current_generation[x + 1][y + 1]) count++;	// bottom-right
+
+	if (x > 0 && y > 0) if (current_generation[x - 1][y - 1]) count++;					// top-left
+	if (y > 0) if (current_generation[x][y - 1]) count++;								// top-middle
+	if (x < N_CELLS_X && y > 0) if (current_generation[x + 1][y - 1]) count++;			// top-right
+	if (x > 0) if (current_generation[x - 1][y]) count++;								// middle-left
+	if (x < N_CELLS_X) if (current_generation[x + 1][y]) count++;						// middle-right
+	if (x > 0 && y < N_CELLS_Y) if (current_generation[x - 1][y + 1]) count++;			// bottom-left
+	if (y < N_CELLS_Y) if (current_generation[x][y + 1]) count++;						// bottom-middle
+	if (x < N_CELLS_X && y < N_CELLS_Y) if (current_generation[x + 1][y + 1]) count++;	// bottom-right
 	return count;
 }
 
@@ -86,7 +87,16 @@ void ofApp::setRadius( int x, int y, int r, bool val )
 	for (int y_shift = -r; y_shift <= r; y_shift++) {
 		for (int x_shift = -r; x_shift <= r; x_shift++) {
 			if (x_shift * x_shift + y_shift * y_shift <= r * r)
-				current_generation[x + x_shift][y + y_shift] = true;
+			{
+				int x_shifted = x + x_shift;
+				int y_shifted = y + y_shift;
+
+				if (x_shifted > 0
+					&& x_shifted < N_CELLS_X
+					&& y_shifted > 0
+					&& y_shifted < N_CELLS_Y)
+					current_generation[x_shifted][y_shifted] = true;
+			}
 		}
 	}
 }
