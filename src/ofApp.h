@@ -17,8 +17,8 @@ public:
 
 private:
 	ofShader shader;
-	bool current_generation[N_CELLS_X][N_CELLS_Y];
-	unsigned short invincible[N_CELLS_X][N_CELLS_Y];
+	bool current_generation[N_CELLS_X * N_CELLS_Y] = { false };
+	unsigned short invincible[N_CELLS_X * N_CELLS_Y] = { 69};
 
 	int getNeighbourCount( int x, int y );
 	void setRadius( int x, int y, int r, bool val );

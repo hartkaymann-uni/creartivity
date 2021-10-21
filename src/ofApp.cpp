@@ -2,9 +2,14 @@
 
 void ofApp::setup()
 {
+
+	std::fill_n( current_generation, N_CELLS_X * N_CELLS_Y, false );
+	std::fill_n( invincible, N_CELLS_X * N_CELLS_Y, 0 );
+
 	for (int x = 0; x < N_CELLS_X; x++) {
 		for (int y = 0; y < N_CELLS_Y; y++) {
-			if (x * y % (x + y + 1) < 10) current_generation[x][y] = true;
+			if (x * y % (x + y + 1) < 10) 
+				current_generation[x * N_CELLS_Y + y ] = true;
 		}
 	}
 
@@ -19,30 +24,32 @@ void ofApp::update()
 	ofSetWindowTitle( strm.str() );
 
 	// Basic game of life logic
-	bool next_generation[N_CELLS_X][N_CELLS_Y] = { false };
+	bool next_generation[N_CELLS_X * N_CELLS_Y] = { false };
 	for (int x = 0; x < N_CELLS_X; x++) {
 		for (int y = 0; y < N_CELLS_Y; y++) {
+			
 			int n_neighbours = getNeighbourCount( x, y );
 
 			// Cell is initially alive
-			if (current_generation[x][y])
+			if (current_generation[x * N_CELLS_Y + y ])
 			{
 				// Alive cells with 2 or 3 neightbours live in the next generation
-				if (n_neighbours == 2 || n_neighbours == 3) next_generation[x][y] = true;
+				if (n_neighbours == 2 || n_neighbours == 3) next_generation[x * N_CELLS_Y + y ] = true;
 			}
 			else
 			{
 				// Dead cells with 3 neightbours live in the next generation
-				if (n_neighbours == 3) next_generation[x][y] = true;
+				if (n_neighbours == 3) next_generation[x * N_CELLS_Y + y ] = true;
 			}
 
-			if (invincible[x][y] > 0) {
-				next_generation[x][y] = true;
-				invincible[x][y]--;
+			if (invincible[x * N_CELLS_Y + y ] > 0) {
+				next_generation[x * N_CELLS_Y + y] = true;
+				invincible[x * N_CELLS_Y + y ]--;
 			}
 		}
+
 	}
-	std::copy( &next_generation[0][0], &next_generation[0][0] + N_CELLS_X * N_CELLS_Y, &current_generation[0][0] );
+	std::copy( &next_generation[0], &next_generation[0] + N_CELLS_X * N_CELLS_Y, &current_generation[0] );
 }
 
 
@@ -50,14 +57,14 @@ int ofApp::getNeighbourCount( int x, int y )
 {
 	int count = 0;
 
-	if (x > 0 && y > 0) if (current_generation[x - 1][y - 1]) count++;					// top-left
-	if (y > 0) if (current_generation[x][y - 1]) count++;								// top-middle
-	if (x < N_CELLS_X && y > 0) if (current_generation[x + 1][y - 1]) count++;			// top-right
-	if (x > 0) if (current_generation[x - 1][y]) count++;								// middle-left
-	if (x < N_CELLS_X) if (current_generation[x + 1][y]) count++;						// middle-right
-	if (x > 0 && y < N_CELLS_Y) if (current_generation[x - 1][y + 1]) count++;			// bottom-left
-	if (y < N_CELLS_Y) if (current_generation[x][y + 1]) count++;						// bottom-middle
-	if (x < N_CELLS_X && y < N_CELLS_Y) if (current_generation[x + 1][y + 1]) count++;	// bottom-right
+	if (x > 0 && y > 0) if (current_generation[(x - 1) * N_CELLS_Y + (y - 1)]) count++;					// top-left
+	if (y > 0) if (current_generation[x * N_CELLS_Y + (y - 1)]) count++;								// top-middle
+	if (x < N_CELLS_X && y > 0) if (current_generation[(x + 1) * N_CELLS_Y + (y - 1)]) count++;			// top-right
+	if (x > 0) if (current_generation[(x - 1) * N_CELLS_Y + y]) count++;								// middle-left
+	if (x < N_CELLS_X) if (current_generation[(x + 1) * N_CELLS_Y + y]) count++;						// middle-right
+	if (x > 0 && y < N_CELLS_Y) if (current_generation[(x - 1) * N_CELLS_Y + (y + 1)]) count++;			// bottom-left
+	if (y < N_CELLS_Y) if (current_generation[x * N_CELLS_Y + (y + 1)]) count++;						// bottom-middle
+	if (x < N_CELLS_X && y < N_CELLS_Y) if (current_generation[(x + 1) * N_CELLS_Y + (y + 1)]) count++;	// bottom-right
 	return count;
 }
 
@@ -67,7 +74,7 @@ void ofApp::draw()
 	shader.begin();
 	for (int x = 0; x < N_CELLS_X; x++) {
 		for (int y = 0; y < N_CELLS_Y; y++) {
-			if (current_generation[x][y]) {
+			if (current_generation[x * N_CELLS_Y + y ]) {
 				ofDrawRectangle( x * 10, y * 10, 10, 10 );
 			}
 		}
@@ -101,8 +108,8 @@ void ofApp::setRadius( int x, int y, int r, bool val )
 					&& y_shifted > 0
 					&& y_shifted < N_CELLS_Y)
 				{
-					current_generation[x_shifted][y_shifted] = true;
-					invincible[x_shifted][y_shifted] = INVINCIBILITY_DURATION;
+					current_generation[x_shifted * N_CELLS_Y + y_shifted] = true;
+					invincible[x_shifted * N_CELLS_Y + y_shifted] = INVINCIBILITY_DURATION;
 				}
 			}
 		}
