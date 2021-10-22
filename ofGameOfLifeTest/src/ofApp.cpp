@@ -8,9 +8,8 @@ void ofApp::setup()
 		}
 	}
 
-	// Filepath to shader directory (this comment is mopstly for testing thats why its so useless)
 	filesystem::path shader_path( "../../res/shaders" );
-	shader.load( shader_path/"gameOfLife.vert", shader_path/"gameOfLife.frag" );
+	shader.load( shader_path / "gameOfLife.vert", shader_path / "gameOfLife.frag" );
 }
 
 void ofApp::update()
@@ -36,6 +35,11 @@ void ofApp::update()
 				// Dead cells with 3 neightbours live in the next generation
 				if (n_neighbours == 3) next_generation[x][y] = true;
 			}
+
+			if (invincible[x][y] > 0) {
+				next_generation[x][y] = true;
+				invincible[x][y]--;
+			}
 		}
 	}
 	std::copy( &next_generation[0][0], &next_generation[0][0] + N_CELLS_X * N_CELLS_Y, &current_generation[0][0] );
@@ -45,14 +49,15 @@ void ofApp::update()
 int ofApp::getNeighbourCount( int x, int y )
 {
 	int count = 0;
-	if (current_generation[x - 1][y - 1]) count++;	// top-left
-	if (current_generation[  x  ][y - 1]) count++;	// top-middle
-	if (current_generation[x + 1][y - 1]) count++;	// top-right
-	if (current_generation[x - 1][  y  ]) count++;	// middle-left
-	if (current_generation[x + 1][  y  ]) count++;	// middle-right
-	if (current_generation[x - 1][y + 1]) count++;	// bottom-left
-	if (current_generation[  x  ][y + 1]) count++;	// bottom-middle
-	if (current_generation[x + 1][y + 1]) count++;	// bottom-right
+
+	if (x > 0 && y > 0) if (current_generation[x - 1][y - 1]) count++;					// top-left
+	if (y > 0) if (current_generation[x][y - 1]) count++;								// top-middle
+	if (x < N_CELLS_X && y > 0) if (current_generation[x + 1][y - 1]) count++;			// top-right
+	if (x > 0) if (current_generation[x - 1][y]) count++;								// middle-left
+	if (x < N_CELLS_X) if (current_generation[x + 1][y]) count++;						// middle-right
+	if (x > 0 && y < N_CELLS_Y) if (current_generation[x - 1][y + 1]) count++;			// bottom-left
+	if (y < N_CELLS_Y) if (current_generation[x][y + 1]) count++;						// bottom-middle
+	if (x < N_CELLS_X && y < N_CELLS_Y) if (current_generation[x + 1][y + 1]) count++;	// bottom-right
 	return count;
 }
 
@@ -70,56 +75,36 @@ void ofApp::draw()
 	shader.end();
 }
 
-void ofApp::keyPressed( int key )
-{
-
-}
-
-void ofApp::keyReleased( int key ) {
-
-}
-
-void ofApp::mouseMoved( int x, int y )
-{
-
-}
-
 void ofApp::mouseDragged( int x, int y, int button )
 {
+	const int MOUSE_DRAG_RADIUS = 5;
 
+	if (x > 0 && x < ofGetWindowWidth()
+		&& y > 0 && ofGetWindowHeight())
+	{
+		setRadius( x / 10, y / 10, MOUSE_DRAG_RADIUS, true );
+		std::cout << x << " " << y << std::endl;
+	}
 }
 
-void ofApp::mousePressed( int x, int y, int button )
+void ofApp::setRadius( int x, int y, int r, bool val )
 {
+	for (int y_shift = -r; y_shift <= r; y_shift++) {
+		for (int x_shift = -r; x_shift <= r; x_shift++) {
+			if (x_shift * x_shift + y_shift * y_shift <= r * r)
+			{
+				int x_shifted = x + x_shift;
+				int y_shifted = y + y_shift;
 
-}
-
-void ofApp::mouseReleased( int x, int y, int button )
-{
-
-}
-
-void ofApp::mouseEntered( int x, int y )
-{
-
-}
-
-void ofApp::mouseExited( int x, int y )
-{
-
-}
-
-void ofApp::windowResized( int w, int h )
-{
-
-}
-
-void ofApp::gotMessage( ofMessage msg )
-{
-
-}
-
-void ofApp::dragEvent( ofDragInfo dragInfo )
-{
-
+				if (x_shifted > 0
+					&& x_shifted < N_CELLS_X
+					&& y_shifted > 0
+					&& y_shifted < N_CELLS_Y)
+				{
+					current_generation[x_shifted][y_shifted] = true;
+					invincible[x_shifted][y_shifted] = INVINCIBILITY_DURATION;
+				}
+			}
+		}
+	}
 }
