@@ -84,6 +84,7 @@ void ofApp::mouseDragged( int x, int y, int button )
 	{
 		setRadius( x / 10, y / 10, MOUSE_DRAG_RADIUS, true );
 		std::cout << x << " " << y << std::endl;
+
 	}
 }
 
