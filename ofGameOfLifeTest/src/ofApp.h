@@ -6,6 +6,13 @@ const int N_CELLS_X = 102;
 const int N_CELLS_Y = 77;
 const unsigned short INVINCIBILITY_DURATION = 10;
 
+
+
+typedef struct Cell {
+	bool alive;
+	glm::vec3 color;
+} Cell;
+
 class ofApp : public ofBaseApp {
 
 public:
@@ -17,8 +24,10 @@ public:
 
 private:
 	ofShader shader;
-	bool current_generation[N_CELLS_X * N_CELLS_Y] = { false };
-	unsigned short invincible[N_CELLS_X * N_CELLS_Y] = { 69};
+
+	Cell current_generation[N_CELLS_X * N_CELLS_Y];
+	Cell next_generation[N_CELLS_X * N_CELLS_Y];
+	unsigned short invincible[N_CELLS_X * N_CELLS_Y];
 
 	int getNeighbourCount( int x, int y );
 	void setRadius( int x, int y, int r, bool val );
