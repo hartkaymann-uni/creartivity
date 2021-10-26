@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ofMain.h"
+#include "ofxUbo.h"
 
 const int N_CELLS_X = 102;
 const int N_CELLS_Y = 77;
@@ -8,10 +9,11 @@ const unsigned short INVINCIBILITY_DURATION = 10;
 
 
 
-typedef struct Cell {
-	bool alive;
-	glm::vec3 color;
-} Cell;
+struct Cell {
+	int alive;
+	int invincible;
+	ofVec3f color;
+};
 
 class ofApp : public ofBaseApp {
 
@@ -23,7 +25,7 @@ public:
 	void mouseDragged( int x, int y, int button );
 
 private:
-	ofShader shader;
+	ofxUboShader shader;
 
 	Cell current_generation[N_CELLS_X * N_CELLS_Y];
 	Cell next_generation[N_CELLS_X * N_CELLS_Y];

@@ -1,10 +1,8 @@
 #include "ofApp.h"
-#include "ofxUbo.h"
 
-// #pragma warning (disable : 6385)
 void ofApp::setup()
 {
-	Cell empty_cell = { false, {0, 0, 0} };
+	Cell empty_cell = { false, 0, {0, 0, 0} };
 	std::fill_n( current_generation, N_CELLS_X * N_CELLS_Y, empty_cell );
 	std::fill_n( invincible, N_CELLS_X * N_CELLS_Y, 0 );
 	
@@ -26,7 +24,7 @@ void ofApp::update()
 	ofSetWindowTitle( strm.str() );
 
 	// Basic game of life logic
-	Cell empty_cell = { false, {0, 0, 0} };
+	Cell empty_cell = { false, 0, {0, 0, 0} };
 	std::fill_n( next_generation, N_CELLS_X * N_CELLS_Y, empty_cell );
 
 	for (int x = 0; x < N_CELLS_X; x++) {
@@ -55,6 +53,8 @@ void ofApp::update()
 		}
 	}
 	std::copy( &next_generation[0], &next_generation[0] + N_CELLS_X * N_CELLS_Y, &current_generation[0] );
+
+	
 }
 
 
@@ -78,7 +78,10 @@ void ofApp::draw()
 {
 	ofClear( 255 );
 	shader.begin();
-	
+	shader.setUniformBuffer( "u_Cells", current_generation );
+
+	shader.tex
+
 	for (int x = 0; x < N_CELLS_X; x++) {
 		for (int y = 0; y < N_CELLS_Y; y++) {
 			if (current_generation[x * N_CELLS_Y + y].alive) {
@@ -97,7 +100,7 @@ void ofApp::mouseDragged( int x, int y, int button )
 		&& y > 0 && ofGetWindowHeight())
 	{
 		setRadius( x / 10, y / 10, MOUSE_DRAG_RADIUS, true );
-		std::cout << x << " " << y << std::endl;
+		//std::cout << x << " " << y << std::endl;
 	}
 }
 

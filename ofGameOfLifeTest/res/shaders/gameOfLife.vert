@@ -1,23 +1,15 @@
 #version 150
 
-/**
-struct RGB
-{
-    unsigned char 
-    r, 
-    g, 
-    b;
-};
-
 struct Cell
 {
     bool alive;
-    RGB color;
+    bool invincible;
+    vec3 color;
 };
 
-uniform Cell cells[102 * 77];
-*/
-uniform mat4 modelViewProjectionMatrix;
+uniform Cell u_Cells[102 * 77];
+
+uniform mat4 u_MVP;
 
 in vec4 position;
 
