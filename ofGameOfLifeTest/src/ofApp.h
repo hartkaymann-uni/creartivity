@@ -61,12 +61,8 @@ private:
 	
 	ofFbo   renderFBO;
 
+	float   timeStep;
 
-	ofShader shader;
-	GLuint tex_front;
-	GLuint tex_back;
-	GLuint framebuffer;
-	ofTexture tex;
 
 	int width, height;
 

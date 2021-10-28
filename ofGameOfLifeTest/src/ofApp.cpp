@@ -1,5 +1,7 @@
 #include "ofApp.h"
 
+#include <random>
+
 void ofApp::setup()
 {
 	width = ofGetWindowWidth();
@@ -7,31 +9,46 @@ void ofApp::setup()
 
 	std::fill_n( current_generation, N_CELLS_X * N_CELLS_Y, false );
 	std::fill_n( invincible, N_CELLS_X * N_CELLS_Y, 0 );
-	
-	for (int x = 0; x < N_CELLS_X; x++) {
-		for (int y = 0; y < N_CELLS_Y; y++) {
-			if (x * y % (x + y + 1) < 10) 
-				current_generation[x * N_CELLS_Y + y ] = true;
-		}
-	}
 
+	// Load Shaders
 	filesystem::path shader_path( "../../res/shaders" );
-	shader.load( shader_path / "gameOfLife.vert", shader_path / "gameOfLife.frag" );
-
-	// ping pong buffering
 	updateCells.load( shader_path / "gameOfLife.vert", shader_path / "gameOfLife.frag" );
 	updateRender.load( shader_path / "render.vert", shader_path / "render.frag" );
 
+	// Make array of float pixels with cell data
+	// Currently only R value is be used, as cells can only either be true or false
+	vector<float> pos( N_CELLS_X * N_CELLS_Y * 3 );
+	for (int x = 0; x < N_CELLS_X; x++) {
+		for (int y = 0; x < N_CELLS_Y; y++) {
+			int i = N_CELLS_X * y + x;
+
+			pos[i * 3 + 0] = ofRandom( 1.0 );
+			pos[i * 3 + 1] = 0.0;
+			pos[i * 3 + 2] = 0.0;
+		}
+	}
+
+	// Load data into the FBO's texture
+	cellPingPong.allocate( N_CELLS_X, N_CELLS_Y, GL_RGB32F );
+	cellPingPong.src->getTexture().loadData( pos.data(), N_CELLS_X, N_CELLS_Y, GL_RGB );
+	cellPingPong.dst->getTexture().loadData( pos.data(), N_CELLS_X, N_CELLS_Y, GL_RGB );
+
+	// Allocate the render FBO
+	renderFBO.allocate( width, height, GL_RGB );
+	renderFBO.begin();
+	ofClear( 0, 0, 0, 255 );
+	renderFBO.end();
 }
 
 void ofApp::update()
 {
+	// Display framerate in window title
 	std::stringstream strm;
 	strm << "fps: " << ofGetFrameRate();
 	ofSetWindowTitle( strm.str() );
 
 	// Basic game of life logic
-	Cell empty_cell = { false, 0, {0, 0, 0} };
+	/* Cell empty_cell = {false, 0, {0, 0, 0}};
 	std::fill_n( next_generation, N_CELLS_X * N_CELLS_Y, empty_cell );
 
 	for (int x = 0; x < N_CELLS_X; x++) {
@@ -40,24 +57,40 @@ void ofApp::update()
 			int n_neighbours = getNeighbourCount( x, y );
 
 			// Cell is initially alive
-			if (current_generation[x * N_CELLS_Y + y ])
+			if (current_generation[x * N_CELLS_Y + y])
 			{
 				// Alive cells with 2 or 3 neightbours live in the next generation
-				if (n_neighbours == 2 || n_neighbours == 3) next_generation[x * N_CELLS_Y + y ] = true;
+				if (n_neighbours == 2 || n_neighbours == 3) next_generation[x * N_CELLS_Y + y] = true;
 			}
 			else
 			{
 				// Dead cells with 3 neightbours live in the next generation
-				if (n_neighbours == 3) next_generation[x * N_CELLS_Y + y ] = true;
+				if (n_neighbours == 3) next_generation[x * N_CELLS_Y + y] = true;
 			}
 
-			if (invincible[x * N_CELLS_Y + y ] > 0) {
+			if (invincible[x * N_CELLS_Y + y] > 0) {
 				next_generation[x * N_CELLS_Y + y] = true;
-				invincible[x * N_CELLS_Y + y ]--;
+				invincible[x * N_CELLS_Y + y]--;
 			}
 		}
 	}
 	std::copy( &next_generation[0], &next_generation[0] + N_CELLS_X * N_CELLS_Y, &current_generation[0] );
+	*/
+
+	cellPingPong.dst->begin();
+	ofClear( 0 );
+	updateCells.begin();
+	updateCells.setUniformTexture( "cellData", cellPingPong.src->getTexture(), 0 );
+	updateCells.setUniform1i( "resolutionX", N_CELLS_X );
+	updateCells.setUniform1i( "resolutionY", N_CELLS_Y );
+	updateCells.setUniform2f( "screen", (float)width, (float)height );
+	updateCells.setUniform1f( "timestep", (float)timeStep);
+
+	// Draw cell texture to call shaders, logic happens in shaders
+	cellPingPong.src->draw(0, 0);
+
+	cellPingPong.dst->end();
+	cellPingPong.swap();
 }
 
 
@@ -85,13 +118,13 @@ void ofApp::draw()
 
 	shader.tex
 
-	for (int x = 0; x < N_CELLS_X; x++) {
-		for (int y = 0; y < N_CELLS_Y; y++) {
-			if (current_generation[x * N_CELLS_Y + y ]) {
-				ofDrawRectangle( x * 10, y * 10, 10, 10 );
+		for (int x = 0; x < N_CELLS_X; x++) {
+			for (int y = 0; y < N_CELLS_Y; y++) {
+				if (current_generation[x * N_CELLS_Y + y]) {
+					ofDrawRectangle( x * 10, y * 10, 10, 10 );
+				}
 			}
 		}
-	}
 	shader.end();
 }
 
