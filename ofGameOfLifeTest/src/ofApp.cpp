@@ -2,19 +2,26 @@
 
 void ofApp::setup()
 {
+	width = ofGetWindowWidth();
+	height = ofGetWindowHeight();
 
 	std::fill_n( current_generation, N_CELLS_X * N_CELLS_Y, false );
 	std::fill_n( invincible, N_CELLS_X * N_CELLS_Y, 0 );
 
 	for (int x = 0; x < N_CELLS_X; x++) {
 		for (int y = 0; y < N_CELLS_Y; y++) {
-			if (x * y % (x + y + 1) < 10) 
-				current_generation[x * N_CELLS_Y + y ] = true;
+			if (x * y % (x + y + 1) < 10)
+				current_generation[x * N_CELLS_Y + y] = true;
 		}
 	}
 
 	filesystem::path shader_path( "../../res/shaders" );
 	shader.load( shader_path / "gameOfLife.vert", shader_path / "gameOfLife.frag" );
+
+	// ping pong buffering
+	updateCells.load( shader_path / "gameOfLife.vert", shader_path / "gameOfLife.frag" );
+	updateRender.load( shader_path / "render.vert", shader_path / "render.frag" );
+
 }
 
 void ofApp::update()
@@ -27,29 +34,43 @@ void ofApp::update()
 	bool next_generation[N_CELLS_X * N_CELLS_Y] = { false };
 	for (int x = 0; x < N_CELLS_X; x++) {
 		for (int y = 0; y < N_CELLS_Y; y++) {
-			
+
 			int n_neighbours = getNeighbourCount( x, y );
 
 			// Cell is initially alive
-			if (current_generation[x * N_CELLS_Y + y ])
+			if (current_generation[x * N_CELLS_Y + y])
 			{
 				// Alive cells with 2 or 3 neightbours live in the next generation
-				if (n_neighbours == 2 || n_neighbours == 3) next_generation[x * N_CELLS_Y + y ] = true;
+				if (n_neighbours == 2 || n_neighbours == 3) next_generation[x * N_CELLS_Y + y] = true;
 			}
 			else
 			{
 				// Dead cells with 3 neightbours live in the next generation
-				if (n_neighbours == 3) next_generation[x * N_CELLS_Y + y ] = true;
+				if (n_neighbours == 3) next_generation[x * N_CELLS_Y + y] = true;
 			}
 
-			if (invincible[x * N_CELLS_Y + y ] > 0) {
+			if (invincible[x * N_CELLS_Y + y] > 0) {
 				next_generation[x * N_CELLS_Y + y] = true;
-				invincible[x * N_CELLS_Y + y ]--;
+				invincible[x * N_CELLS_Y + y]--;
 			}
 		}
 
 	}
 	std::copy( &next_generation[0], &next_generation[0] + N_CELLS_X * N_CELLS_Y, &current_generation[0] );
+
+	//glBindFramebuffer( GL_FRAMEBUFFER, framebuffer );
+	//glFramebufferTexture2D( GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex_back, 0 );
+	//glViewport( 0, 0, N_CELLS_X, N_CELLS_Y );
+	//glBindTexture( GL_TEXTURE_2D, tex_front );
+
+	fbo.begin();
+	shader.begin();
+
+	ofClear( 255, 255, 255, 0 );
+	fbo.attachTexture( tex, GL_RGBA, 0 );
+
+	shader.end();
+	fbo.end();
 }
 
 
@@ -74,7 +95,7 @@ void ofApp::draw()
 	shader.begin();
 	for (int x = 0; x < N_CELLS_X; x++) {
 		for (int y = 0; y < N_CELLS_Y; y++) {
-			if (current_generation[x * N_CELLS_Y + y ]) {
+			if (current_generation[x * N_CELLS_Y + y]) {
 				ofDrawRectangle( x * 10, y * 10, 10, 10 );
 			}
 		}
