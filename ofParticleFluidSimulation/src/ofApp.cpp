@@ -13,7 +13,7 @@ void ofApp::setup() {
 	{
 		p.pos.x = ofRandom( -ofGetWidth() * 0.5, ofGetWidth() * 0.5 );
 		p.pos.y = ofRandom( -ofGetHeight() * 0.5, ofGetHeight() * 0.5 );
-		p.pos.z = ofRandom( -ofGetHeight() * 0.5, ofGetHeight() * 0.5 );
+		p.pos.z = ofRandom( -ofGetHeight() * 1.5, -ofGetHeight() * 2.5 );
 		p.pos.w = 1;
 		p.vel = { 0,0,0,0 };
 		i++;
@@ -31,6 +31,7 @@ void ofApp::setup() {
 
 	gui.setup();
 	shaderUniforms.setName( "Shader Parameters" );
+	shaderUniforms.add( maxSpeed.set( "max_speed", 2500, 0, 5000 ) );
 	gui.add( shaderUniforms );
 	gui.add( fps.set( "fps", 60, 0, 60 ) );
 
@@ -43,6 +44,7 @@ void ofApp::update() {
 	fps = ofGetFrameRate();
 
 	compute.begin();
+	compute.setUniforms( shaderUniforms );
 	compute.setUniform1f( "timeLastFrame", ofGetLastFrameTime() );
 	compute.setUniform1f( "elapsedTime", ofGetElapsedTimef() );
 
@@ -56,11 +58,8 @@ void ofApp::update() {
 void ofApp::draw() {
 	ofEnableBlendMode( OF_BLENDMODE_ADD );
 	camera.begin();
-	ofSetColor( 255, 70 );
+	ofSetColor( 255);
 	glPointSize( 5 );
-	vbo.draw( GL_POINTS, 0, particles.size() );
-	ofSetColor( 255 );
-	glPointSize( 2 );
 	vbo.draw( GL_POINTS, 0, particles.size() );
 
 	ofNoFill();

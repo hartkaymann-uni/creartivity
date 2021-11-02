@@ -20,8 +20,34 @@ layout(std140, binding=2) buffer indices{
 
 uniform float timeLastFrame;
 uniform float elapsedTime;
+uniform float max_speed;
 
 layout(local_size_x = 1024, local_size_y = 1, local_size_z = 1) in;
 void main(){
+	vec3 particle = p2[gl_GlobalInvocationID.x].pos.xyz;
+	vec3 acc = vec3(0.0, 0.0, 0.0);
+	uint m = uint(1024.0*8.0*elapsedTime);
+	uint start = m%(1024*8-512);
+	uint end = start + 512;
 
+	for(uint i = start; i < end; i++) {
+		acc += vec3(0.1);
+	}
+
+	// Update position
+	p[gl_GlobalInvocationID.x].pos.xyz += p[gl_GlobalInvocationID.x].vel.xyz*timeLastFrame;
+
+	// Update acceleration
+	p[gl_GlobalInvocationID.x].vel.xyz += acc*timeLastFrame;
+	p[gl_GlobalInvocationID.x].vel.xyz *= 0.99;
+
+	// Speed limit
+	vec3 dir = normalize(p[gl_GlobalInvocationID.x].vel.xyz);
+	if(length(p[gl_GlobalInvocationID.x].vel.xyz) > max_speed) {
+		p[gl_GlobalInvocationID.x].vel.xyz = dir * max_speed;
+	}
+
+	float max_component = max(max(dir.x,dir.y),dir.z);
+	p[gl_GlobalInvocationID.x].color.rgb = dir/max_component;
+	p[gl_GlobalInvocationID.x].color.a = 0.4;
 }

@@ -40,6 +40,7 @@ class ofApp : public ofBaseApp{
 		ofParameterGroup shaderUniforms;
 		ofParameter<bool> dirAsColor;
 		ofParameter<float> fps;
+		ofParameter<float> maxSpeed;
 
 		
 };
