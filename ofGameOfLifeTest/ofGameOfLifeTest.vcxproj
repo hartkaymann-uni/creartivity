@@ -201,8 +201,10 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="res\shaders\gameOfLife.frag" />
-    <None Include="res\shaders\gameOfLife.vert" />
+    <None Include="res\shaders\gol.frag" />
+    <None Include="res\shaders\passthru.vert" />
+    <None Include="res\shaders\render.frag" />
+    <None Include="res\shaders\render.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ProjectExtensions>

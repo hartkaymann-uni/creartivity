@@ -56,20 +56,13 @@ public:
 private:
 	ofShader    updateCells;
 	ofShader    updateRender;
-
 	pingPongBuffer cellPingPong;
-	
 	ofFbo   renderFBO;
 
+	ofVboMesh mesh;
+
 	float   timeStep;
-
-
 	int width, height;
 
-	bool current_generation[N_CELLS_X * N_CELLS_Y] = { false };
-	unsigned short invincible[N_CELLS_X * N_CELLS_Y] = { 69};
-
-	int getNeighbourCount( int x, int y );
 	void setRadius( int x, int y, int r, bool val );
-
 };

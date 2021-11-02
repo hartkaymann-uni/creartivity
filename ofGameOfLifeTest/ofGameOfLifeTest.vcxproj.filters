@@ -46,7 +46,9 @@
     <ResourceCompile Include="icon.rc" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="res\shaders\gameOfLife.vert" />
-    <None Include="res\shaders\gameOfLife.frag" />
+    <None Include="res\shaders\gol.frag" />
+    <None Include="res\shaders\passthru.vert" />
+    <None Include="res\shaders\render.vert" />
+    <None Include="res\shaders\render.frag" />
   </ItemGroup>
 </Project>
