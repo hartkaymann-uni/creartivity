@@ -38,9 +38,14 @@ class ofApp : public ofBaseApp{
 		ofxPanel gui;
 
 		ofParameterGroup shaderUniforms;
+		ofParameter<bool> drawArrows;
 		ofParameter<bool> dirAsColor;
 		ofParameter<float> fps;
 		ofParameter<float> maxSpeed;
-
+		ofParameter<float> noiseShift;
+		ofParameter<float> deltaNoiseShift;
 		
+		static const int FIELD_X = 25;
+		static const int FIELD_Y = 10;
+		float noiseField[FIELD_X][FIELD_Y];
 };

@@ -13,7 +13,7 @@ void ofApp::setup() {
 	{
 		p.pos.x = ofRandom( -ofGetWidth() * 0.5, ofGetWidth() * 0.5 );
 		p.pos.y = ofRandom( -ofGetHeight() * 0.5, ofGetHeight() * 0.5 );
-		p.pos.z = ofRandom( -ofGetHeight() * 1.5, -ofGetHeight() * 2.5 );
+		p.pos.z = 0;
 		p.pos.w = 1;
 		p.vel = { 0,0,0,0 };
 		i++;
@@ -24,19 +24,28 @@ void ofApp::setup() {
 	vbo.setVertexBuffer( particlesBuffer, 4, sizeof( Particle ) );
 	vbo.setColorBuffer( particlesBuffer, sizeof( Particle ), sizeof( glm::vec4 ) * 2 );
 	vbo.disableColors();
-	dirAsColor = false;
+	dirAsColor = true;
 
 	ofBackground( 0 );
 	ofEnableBlendMode( OF_BLENDMODE_ADD );
 
 	gui.setup();
 	shaderUniforms.setName( "Shader Parameters" );
-	shaderUniforms.add( maxSpeed.set( "max_speed", 2500, 0, 5000 ) );
+	shaderUniforms.add( maxSpeed.set( "u_MaxSpeed", 2500, 0, 5000 ) );
 	gui.add( shaderUniforms );
+	gui.add( drawArrows.set( "Draw Arrows", false ) );
+	gui.add( deltaNoiseShift.set( "Noise Shift", 0.001, 0.0, 1.0 ) );
 	gui.add( fps.set( "fps", 60, 0, 60 ) );
 
 	particlesBuffer.bindBase( GL_SHADER_STORAGE_BUFFER, 0 );
 	particlesBuffer2.bindBase( GL_SHADER_STORAGE_BUFFER, 1 );
+
+	noiseShift = 0;
+	for (int x = 0; x < FIELD_X; x++) {
+		for (int y = 0; y < FIELD_Y; y++) {
+			noiseField[x][y] = ofNoise( glm::vec3( x, y, noiseShift ) );
+		}
+	}
 }
 
 //--------------------------------------------------------------
@@ -45,25 +54,52 @@ void ofApp::update() {
 
 	compute.begin();
 	compute.setUniforms( shaderUniforms );
-	compute.setUniform1f( "timeLastFrame", ofGetLastFrameTime() );
-	compute.setUniform1f( "elapsedTime", ofGetElapsedTimef() );
+	compute.setUniform1f( "u_TimeLastFrame", ofGetLastFrameTime() );
+	compute.setUniform1f( "u_ElapsedTime", ofGetElapsedTimef() );
+	compute.setUniform1f( "u_ScreenWidth", ofGetScreenWidth() );
+	compute.setUniform1f( "u_ScreenHeight", ofGetScreenHeight() );
+	compute.setUniform1f( "u_NoiseShift", noiseShift );
 
 	compute.dispatchCompute( (particles.size() + 1024 - 1) / 1024, 1, 1 );
 	compute.end();
 
 	particlesBuffer.copyTo( particlesBuffer2 );
+
+	noiseShift += deltaNoiseShift;
+	for (int x = 0; x < FIELD_X; x++) {
+		for (int y = 0; y < FIELD_Y; y++) {
+			noiseField[x][y] = ofNoise( glm::vec3( x, y, noiseShift ) );
+		}
+	}
 }
 
 //--------------------------------------------------------------
 void ofApp::draw() {
 	ofEnableBlendMode( OF_BLENDMODE_ADD );
 	camera.begin();
-	ofSetColor( 255);
-	glPointSize( 5 );
+	ofSetColor( 255, 70 );
+	glPointSize( 2 );
 	vbo.draw( GL_POINTS, 0, particles.size() );
 
-	ofNoFill();
-	ofDrawBox( 0, 0, -ofGetHeight() * 2, ofGetWidth() * 4, ofGetHeight() * 4, ofGetHeight() * 4 );
+	//ofNoFill();
+	//ofDrawBox( 0, 0, -ofGetHeight() * 2, ofGetWidth() * 4, ofGetHeight() * 4, ofGetHeight() * 4 );
+
+	if (drawArrows)
+	{
+		int width = ofGetScreenWidth();
+		int height = ofGetScreenHeight();
+		int left = -ofGetScreenWidth() * 0.5;
+		int bot = -ofGetScreenHeight() * 0.5;
+		int arrowLength = 25;
+		ofSetColor( ofColor::red );
+		for (int x = 0; x < FIELD_X; x++) {
+			for (int y = 0; y < FIELD_Y; y++) {
+				auto xPos = left + (width / FIELD_X) * x;
+				auto yPos = bot + (height / FIELD_Y) * y;
+				ofDrawArrow( glm::vec3( xPos, yPos, 10.0 ), glm::vec3( xPos + sin( noiseField[x][y] * (2 * PI) ) * arrowLength, yPos + cos( noiseField[x][y] * (2 * PI) ) * arrowLength, 10.0 ), arrowLength / 10 );
+			}
+		}
+	}
 
 	camera.end();
 
