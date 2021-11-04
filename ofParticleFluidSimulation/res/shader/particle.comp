@@ -20,12 +20,14 @@ layout(std140, binding=2) buffer indices{
 	uint idx[];
 };
 
-uniform float u_TimeLastFrame;
-uniform float u_ElapsedTime;
-uniform float u_MaxSpeed;
-uniform float u_ScreenWidth;
-uniform float u_ScreenHeight;
-uniform float u_NoiseShift;
+uniform bool	u_MousePressed;
+uniform float	u_TimeLastFrame;
+uniform float	u_ElapsedTime;
+uniform float	u_MaxSpeed;
+uniform float	u_ScreenWidth;
+uniform float	u_ScreenHeight;
+uniform float	u_NoiseShift;
+uniform vec3	u_MousePosition;
 
 float rand(vec2 co){
     return fract(sin(dot(co, vec2(12.9898, 78.233))) * 43758.5453);
@@ -120,7 +122,7 @@ void main(){
 		|| particle.y < (-u_ScreenHeight * 0.5)
 		|| particle.y > (u_ScreenHeight * 0.5))
 	{
-		p[index].pos.xy = vec2(rand(p[index].pos.xy) * u_ScreenWidth - (u_ScreenWidth * 0.5), rand(p[index].pos.xy) * u_ScreenHeight - (u_ScreenHeight * 0.5));
+		p[index].pos.xy = vec2(rand(p[index].pos.xy) * u_ScreenWidth - (u_ScreenWidth * 0.5), rand(p[index].pos.yx) * u_ScreenHeight - (u_ScreenHeight * 0.5));
 		p[index].vel.xyz = vec3(0.0);
 	}
 
@@ -145,4 +147,14 @@ void main(){
 	float max_component = max(max(dir.x,dir.y),dir.z);
 	p[index].color.rgb = dir/max_component;
 	p[index].color.a = 0.4;
+
+	// Mouse Interaction
+	if(u_MousePressed && length(u_MousePosition-p[index].pos.xyz) < 50) {
+		p[index].color = vec4( 1.0 );
+		p[index].vel.xyz += (p[index].pos.xyz- u_MousePosition) * .1;
+	}
+
+	if(u_MousePressed)
+		p[index].color += vec4( 0.5 );
+
 }

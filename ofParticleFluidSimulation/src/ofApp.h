@@ -37,13 +37,15 @@ class ofApp : public ofBaseApp{
 
 		ofxPanel gui;
 
-		ofParameterGroup shaderUniforms;
-		ofParameter<bool> drawArrows;
-		ofParameter<bool> dirAsColor;
+		ofParameterGroup m_ShaderUniforms;
+		ofParameter<bool> m_DrawArrows;
+		ofParameter<bool> m_DirAsColor;
 		ofParameter<float> fps;
-		ofParameter<float> maxSpeed;
-		ofParameter<float> noiseShift;
-		ofParameter<float> deltaNoiseShift;
+		ofParameter<float> m_MaxSpeed;
+		ofParameter<float> m_NoiseShift;
+		ofParameter<float> m_DeltaNoiseShift;
+		ofParameter<bool> m_MousePressed;
+		ofParameter<glm::vec3> m_MousePosition;
 		
 		static const int FIELD_X = 25;
 		static const int FIELD_Y = 10;

@@ -5,9 +5,13 @@ void ofApp::setup() {
 	filesystem::path res_path( "../../res/" );
 	compute.setupShaderFromFile( GL_COMPUTE_SHADER, res_path / "shader/particle.comp" );
 	compute.linkProgram();
-	camera.setFarClip( ofGetWidth() * 10 );
-	particles.resize( 1024 * 8 );
 
+	camera.disableMouseInput();
+	camera.setupPerspective();
+	camera.setPosition( 0, 0, 665 );
+	camera.setFarClip( ofGetWidth() * 10 );
+
+	particles.resize( 1024 * 8 );
 	int i = 0;
 	for (auto& p : particles)
 	{
@@ -23,27 +27,33 @@ void ofApp::setup() {
 
 	vbo.setVertexBuffer( particlesBuffer, 4, sizeof( Particle ) );
 	vbo.setColorBuffer( particlesBuffer, sizeof( Particle ), sizeof( glm::vec4 ) * 2 );
-	vbo.disableColors();
-	dirAsColor = true;
+	vbo.enableColors();
+	m_DirAsColor = true;
 
 	ofBackground( 0 );
 	ofEnableBlendMode( OF_BLENDMODE_ADD );
 
+	m_NoiseShift.set( 0 );
+	m_MousePressed.set( "Mouse Pressed", false);
+	m_DrawArrows.set( "Draw Arrows", false );
+	m_MaxSpeed.set( "u_MaxSpeed", 2500, 0, 5000 );
+	m_DeltaNoiseShift.set( "Noise Shift", 0.001, 0.0, 1.0 );
+
 	gui.setup();
-	shaderUniforms.setName( "Shader Parameters" );
-	shaderUniforms.add( maxSpeed.set( "u_MaxSpeed", 2500, 0, 5000 ) );
-	gui.add( shaderUniforms );
-	gui.add( drawArrows.set( "Draw Arrows", false ) );
-	gui.add( deltaNoiseShift.set( "Noise Shift", 0.001, 0.0, 1.0 ) );
+	m_ShaderUniforms.setName( "Shader Parameters" );
+	m_ShaderUniforms.add( m_MaxSpeed );
+	gui.add( m_ShaderUniforms );
+	gui.add( m_DrawArrows );
+	gui.add( m_DeltaNoiseShift );
 	gui.add( fps.set( "fps", 60, 0, 60 ) );
+
 
 	particlesBuffer.bindBase( GL_SHADER_STORAGE_BUFFER, 0 );
 	particlesBuffer2.bindBase( GL_SHADER_STORAGE_BUFFER, 1 );
 
-	noiseShift = 0;
 	for (int x = 0; x < FIELD_X; x++) {
 		for (int y = 0; y < FIELD_Y; y++) {
-			noiseField[x][y] = ofNoise( glm::vec3( x, y, noiseShift ) );
+			noiseField[x][y] = ofNoise( glm::vec3( x, y, m_NoiseShift ) );
 		}
 	}
 }
@@ -53,22 +63,24 @@ void ofApp::update() {
 	fps = ofGetFrameRate();
 
 	compute.begin();
-	compute.setUniforms( shaderUniforms );
+	compute.setUniforms( m_ShaderUniforms );
 	compute.setUniform1f( "u_TimeLastFrame", ofGetLastFrameTime() );
 	compute.setUniform1f( "u_ElapsedTime", ofGetElapsedTimef() );
 	compute.setUniform1f( "u_ScreenWidth", ofGetScreenWidth() );
 	compute.setUniform1f( "u_ScreenHeight", ofGetScreenHeight() );
-	compute.setUniform1f( "u_NoiseShift", noiseShift );
+	compute.setUniform1f( "u_NoiseShift", m_NoiseShift );
+	compute.setUniform3f( "u_MousePosition", m_MousePosition );
+	compute.setUniform1i( "u_MousePressed", m_MousePressed );
 
 	compute.dispatchCompute( (particles.size() + 1024 - 1) / 1024, 1, 1 );
 	compute.end();
 
 	particlesBuffer.copyTo( particlesBuffer2 );
 
-	noiseShift += deltaNoiseShift;
+	m_NoiseShift += m_DeltaNoiseShift;
 	for (int x = 0; x < FIELD_X; x++) {
 		for (int y = 0; y < FIELD_Y; y++) {
-			noiseField[x][y] = ofNoise( glm::vec3( x, y, noiseShift ) );
+			noiseField[x][y] = ofNoise( glm::vec3( x, y, m_NoiseShift ) );
 		}
 	}
 }
@@ -84,7 +96,7 @@ void ofApp::draw() {
 	//ofNoFill();
 	//ofDrawBox( 0, 0, -ofGetHeight() * 2, ofGetWidth() * 4, ofGetHeight() * 4, ofGetHeight() * 4 );
 
-	if (drawArrows)
+	if (m_DrawArrows)
 	{
 		int width = ofGetScreenWidth();
 		int height = ofGetScreenHeight();
@@ -111,11 +123,21 @@ void ofApp::draw() {
 //--------------------------------------------------------------
 void ofApp::keyPressed( int key ) {
 
+	// std::cout << key << std::endl;
+	if (key == ofKey::OF_KEY_SHIFT)
+	{
+		camera.enableMouseInput();
+	}
 }
 
 //--------------------------------------------------------------
 void ofApp::keyReleased( int key ) {
 
+	if (key == ofKey::OF_KEY_SHIFT)
+	{
+		camera.disableMouseInput();
+
+	}
 }
 
 //--------------------------------------------------------------
@@ -125,17 +147,19 @@ void ofApp::mouseMoved( int x, int y ) {
 
 //--------------------------------------------------------------
 void ofApp::mouseDragged( int x, int y, int button ) {
-
+	if (m_MousePressed)
+		m_MousePosition = glm::vec3( x, y, 0 );
 }
 
 //--------------------------------------------------------------
 void ofApp::mousePressed( int x, int y, int button ) {
-
+	m_MousePressed = true;
+	m_MousePosition = glm::vec3( x, y, 0 );
 }
 
 //--------------------------------------------------------------
 void ofApp::mouseReleased( int x, int y, int button ) {
-
+	m_MousePressed = false;
 }
 
 //--------------------------------------------------------------
