@@ -1,0 +1,93 @@
+<?xml version="1.0"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<ItemGroup>
+		<ClCompile Include="src\ofApp.cpp">
+			<Filter>src</Filter>
+		</ClCompile>
+		<ClCompile Include="src\main.cpp">
+			<Filter>src</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\..\addons\ofxAppUtils\src\ofxApp.cpp">
+			<Filter>addons\ofxAppUtils\src</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\..\addons\ofxAppUtils\src\ofxParticle.cpp">
+			<Filter>addons\ofxAppUtils\src</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\..\addons\ofxAppUtils\src\ofxQuadWarper.cpp">
+			<Filter>addons\ofxAppUtils\src</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\..\addons\ofxAppUtils\src\ofxScene.cpp">
+			<Filter>addons\ofxAppUtils\src</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\..\addons\ofxAppUtils\src\ofxSceneManager.cpp">
+			<Filter>addons\ofxAppUtils\src</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\..\addons\ofxAppUtils\src\ofxTransformer.cpp">
+			<Filter>addons\ofxAppUtils\src</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\..\addons\ofxAppUtils\src\ofxTransformPanel.cpp">
+			<Filter>addons\ofxAppUtils\src</Filter>
+		</ClCompile>
+	</ItemGroup>
+	<ItemGroup>
+		<Filter Include="src">
+			<UniqueIdentifier>{d8376475-7454-4a24-b08a-aac121d3ad6f}</UniqueIdentifier>
+		</Filter>
+		<Filter Include="addons">
+			<UniqueIdentifier>{71834F65-F3A9-211E-73B8-DC85}</UniqueIdentifier>
+		</Filter>
+		<Filter Include="addons\ofxAppUtils">
+			<UniqueIdentifier>{189BE19E-1C16-C397-42FA-1242}</UniqueIdentifier>
+		</Filter>
+		<Filter Include="addons\ofxAppUtils\src">
+			<UniqueIdentifier>{AEACC229-5F4F-9834-C85E-E0E8}</UniqueIdentifier>
+		</Filter>
+	</ItemGroup>
+	<ItemGroup>
+		<ClInclude Include="src\ofApp.h">
+			<Filter>src</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\..\addons\ofxAppUtils\src\matrix_funcs.h">
+			<Filter>addons\ofxAppUtils\src</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\..\addons\ofxAppUtils\src\ofxApp.h">
+			<Filter>addons\ofxAppUtils\src</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\..\addons\ofxAppUtils\src\ofxAppUtils.h">
+			<Filter>addons\ofxAppUtils\src</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\..\addons\ofxAppUtils\src\ofxBitmapString.h">
+			<Filter>addons\ofxAppUtils\src</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\..\addons\ofxAppUtils\src\ofxMovingAverage.h">
+			<Filter>addons\ofxAppUtils\src</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\..\addons\ofxAppUtils\src\ofxParticle.h">
+			<Filter>addons\ofxAppUtils\src</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\..\addons\ofxAppUtils\src\ofxParticleManager.h">
+			<Filter>addons\ofxAppUtils\src</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\..\addons\ofxAppUtils\src\ofxQuadWarper.h">
+			<Filter>addons\ofxAppUtils\src</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\..\addons\ofxAppUtils\src\ofxScene.h">
+			<Filter>addons\ofxAppUtils\src</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\..\addons\ofxAppUtils\src\ofxSceneManager.h">
+			<Filter>addons\ofxAppUtils\src</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\..\addons\ofxAppUtils\src\ofxTimer.h">
+			<Filter>addons\ofxAppUtils\src</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\..\addons\ofxAppUtils\src\ofxTransformer.h">
+			<Filter>addons\ofxAppUtils\src</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\..\addons\ofxAppUtils\src\ofxTransformPanel.h">
+			<Filter>addons\ofxAppUtils\src</Filter>
+		</ClInclude>
+	</ItemGroup>
+	<ItemGroup>
+		<ResourceCompile Include="icon.rc" />
+	</ItemGroup>
+</Project>
