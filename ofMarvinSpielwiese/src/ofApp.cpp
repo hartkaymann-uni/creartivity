@@ -4,7 +4,7 @@ int width = 0;
 ofRectangle myRect;
 int myRectSize = 50;
 
-
+ofRectangle circleArray[];
 
 int yMovement = 1;
 int xMovement = 1;
@@ -20,7 +20,7 @@ void ofApp::setup(){
 void ofApp::update(){
 	if (collisionWithWall()) {
 		cout << "bounce" << endl;
-		ofDrawCircle(myRect.getPosition(), 50);
+		ofDrawCircle(myRect.getCenter(), 50);
 	}
 }
 
@@ -62,6 +62,8 @@ bool ofApp::collisionWithWall() {
 void ofApp::draw(){
 	
 	//ofDrawCircle(ofGetWidth() / 2, ofGetHeight() / 2, 50);
+
+	ofDrawLine(myRect.getX()+ myRectSize/2, myRect.getY() + myRectSize / 2,ofGetWidth() / 2, ofGetHeight() / 2);
 
 	ofDrawRectangle(myRect);
 
