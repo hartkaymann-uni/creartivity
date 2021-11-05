@@ -1,23 +1,50 @@
+#pragma once
+
 #include "ofApp.h"
 
 //--------------------------------------------------------------
 void ofApp::setup(){
-
+	kinect1.init();
+	kinect1.open();
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
-
+	kinect1.update();
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
+	kinect1.draw(0, 0, 640, 480);
+}
 
+//--------------------------------------------------------------
+void ofApp::exit(){
+	kinect1.setCameraTiltAngle(0);
+	kinect1.close();
 }
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
-
+	switch (key) {
+		case OF_KEY_UP:
+			angle++;
+			if (angle > 30) {
+				angle = 30;
+			}
+			kinect1.setCameraTiltAngle(angle);
+			break;
+		case OF_KEY_DOWN:
+			angle--;
+			if (angle > -30) {
+				angle = -30;
+			}
+			kinect1.setCameraTiltAngle(angle);
+			break;
+		
+		default:
+			break;
+	}
 }
 
 //--------------------------------------------------------------
