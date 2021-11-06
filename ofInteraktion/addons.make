@@ -1,1 +1,3 @@
-ofxKinect
+ofxKinectV2
+ofxOpenCv
+ofxOsc

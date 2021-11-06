@@ -1,7 +1,8 @@
 #pragma once
 
 #include "ofMain.h"
-#include "ofxKinect.h"
+//#include "ofxKinect.h"
+#include "ofxKinectV2.h"
 
 class ofApp : public ofBaseApp{
 
@@ -23,6 +24,10 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
 		
-		ofxKinect kinect1;
-		int angle;
+		//ofxKinect kinect1;
+		//int angle;
+		ofxKinectV2 kinect1;
+		ofTexture texture;
+
+		ofVideoGrabber cam;
 };
