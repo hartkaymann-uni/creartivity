@@ -9,6 +9,6 @@ int main( ){
 	settings.setSize( 1024, 768 );
 	ofCreateWindow( settings );
 
-	ofRunApp( new ofApp() );
 
+	ofRunAppWithAppUtils( new ofApp() );
 }

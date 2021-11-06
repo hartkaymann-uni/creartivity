@@ -1,1 +1,3 @@
 ofxAppUtils
+ofxGui
+ofxUbo
