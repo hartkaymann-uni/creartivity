@@ -1,6 +1,7 @@
 #include "ofMain.h"
 #include "ofApp.h"
 #include "ofRandomLines.h"
+#include "ofBasicsExamples01.h"
 
 //========================================================================
 int main( ){
@@ -10,6 +11,7 @@ int main( ){
 	// can be OF_WINDOW or OF_FULLSCREEN
 	// pass in width and height too:
 
-	if(0) ofRunApp(new ofApp());
-	if(1) ofRunApp(new ofRandomLines());
+	if (0) ofRunApp(new ofApp());
+	if (0) ofRunApp(new ofRandomLines());
+	if (1) ofRunApp(new ofBasicsExamples01());
 }

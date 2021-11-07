@@ -10,6 +10,9 @@
     <ClCompile Include="src\ofRandomLines.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\ofBasicsExamples01.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -21,6 +24,9 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\ofRandomLines.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ofBasicsExamples01.h">
       <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>
