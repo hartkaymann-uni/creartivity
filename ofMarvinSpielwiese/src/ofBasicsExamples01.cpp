@@ -22,10 +22,17 @@ void ofBasicsExamples01::draw() {
 void ofBasicsExamples01::drawWaves() {
 	float time = ofGetElapsedTimef();
 
-	for (int i = -100; i < ofGetHeight()+100; i+=5)
+	for (int i = 100; i < ofGetHeight()-100; i+=5)
 	{
-		ofDrawCircle(ofGetWidth() * 1 / 3 + 100 * sin(i * 0.01 + time), i, 100);
-		ofDrawCircle(ofGetWidth() * 2 / 3 + 100 * sin(i * 0.01 + time), i, 50 + 40 * sin( i * 0.005 + time ));
+		ofSetColor(255, 255, 255);
+		ofDrawCircle(ofGetWidth() * 1 / 4 + 100 * sin(i * 0.01 + time), i, 100);
+
+		ofDrawCircle(ofGetWidth() * 2 / 4 + 100 * sin(i * 0.01 + time), i, 50 + 40 * sin( i * 0.005 + time ));
+
+		ofSetColor(	127 + 127 * sin(i * 0.014 + time),
+					127 + 127 * sin(i * 0.01 + time),
+					127 + 127 * sin(i * 0.012 + time));
+		ofDrawCircle(ofGetWidth() * 3 / 4 + 100 * cos(i * 0.01 + time), i, 50 + 40 * cos(i * 0.005 + time));
 	}
 }
 
