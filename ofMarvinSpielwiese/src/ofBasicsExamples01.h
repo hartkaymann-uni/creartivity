@@ -11,4 +11,7 @@ public:
 	void keyPressed(int key);
 
 	void drawWaves();
+	void drawClock();
+
+	ofTrueTypeFont font;
 };
