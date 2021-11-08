@@ -7,7 +7,7 @@ void ofApp::setup() {
 	ofSetVerticalSync( true );
 	ofBackground( 0 );
 
-	transformer.setRenderSize( 600, 400 );
+	transformer.setRenderSize( 1024, 768 );
 	transformer.setTransforms( true, true, false, true, true );
 	setTransformer( &transformer );
 
@@ -17,6 +17,7 @@ void ofApp::setup() {
 
 	// Load scenes
 	particleScene = (ParticleScene*)sceneManager.add( new ParticleScene() );
+	gameOfLifeScene = (GameOfLifeScene*)sceneManager.add( new GameOfLifeScene() );
 	sceneManager.add( new LineScene() );
 	sceneManager.setup( true ); // Setup all scenes now
 	ofSetLogLevel( "ofxScenemanager", OF_LOG_VERBOSE );

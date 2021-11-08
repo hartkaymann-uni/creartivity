@@ -8,16 +8,16 @@ ParticleScene::ParticleScene() : ofxFadeScene("Particles") {
 
 //--------------------------------------------------------------
 void ParticleScene::setup() {
-	filesystem::path res_path( "../../../res/" );
+	filesystem::path res_path( "../../res/" );
 	compute.setupShaderFromFile( GL_COMPUTE_SHADER, res_path / "shader/particle.comp" );
-	compute.linkProgram();
+	bool linked = compute.linkProgram();
 
 	camera.disableMouseInput();
 	camera.setupPerspective();
 	camera.setPosition( 0, 0, 665 );
 	camera.setFarClip( ofGetWidth() * 10 );
 
-	particles.resize( 1024 * 8 );
+	particles.resize( 1024 * 8 * 10 );
 	int i = 0;
 	for (auto& p : particles)
 	{

@@ -12,6 +12,7 @@
 #endif
 
 class ParticleScene;
+class GameOfLifeScene;
 
 class ofApp : public ofxApp {
 
@@ -38,6 +39,7 @@ public:
 	int lastScene;
 
 	ParticleScene* particleScene;
+	GameOfLifeScene* gameOfLifeScene;
 
 #ifdef HAVE_OFX_GUI
 	ofxTransformPanel panel;
