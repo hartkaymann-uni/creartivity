@@ -8,9 +8,9 @@ void ofApp::setup(){
 	//kinect1.open();
 	kinect1.open();
 
-	int width = 640;
-	int height = 480;
-	cam.setup(width, height);
+	//int width = 640;
+	//int height = 480;
+	//cam.setup(width, height);
 	//cam.videoSettings();
 }
 
@@ -22,7 +22,7 @@ void ofApp::update(){
 		texture.loadData(kinect1.getRgbPixels());
 	}
 
-	cam.update();
+	//cam.update();
 }
 
 //--------------------------------------------------------------
