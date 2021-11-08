@@ -1,5 +1,7 @@
 #include "GameOfLifeScene.h"
 
+#include <random>
+
 GameOfLifeScene::GameOfLifeScene() : ofxFadeScene( "GameOfLife" ) {
 	setSingleSetup( false );
 	setFade( 1000, 1000 );
@@ -7,77 +9,103 @@ GameOfLifeScene::GameOfLifeScene() : ofxFadeScene( "GameOfLife" ) {
 
 void GameOfLifeScene::setup()
 {
+	width = ofGetWindowWidth();
+	height = ofGetWindowHeight();
+
+	// Load Shaders
+	filesystem::path shader_path( "../../res/shaders" );
+	updateCells.load( shader_path / "passthru.vert", shader_path / "gol.frag" );
+	updateRender.load( shader_path / "render.vert", shader_path / "render.frag" );
+
+	// Make array of float pixels with cell data
+	// Currently only R value is be used, cells can only either be true (R > .5) or false (R =< .5)
+	vector<float> cells( N_CELLS_X * N_CELLS_Y * 3 );
 	for (int x = 0; x < N_CELLS_X; x++) {
 		for (int y = 0; y < N_CELLS_Y; y++) {
-			if (x * y % (x + y + 1) < 10) current_generation[x][y] = true;
+			int i = x + N_CELLS_X * y;		//not sure about this index
+
+			cells[i * 3 + 0] = 1.0;
+			cells[i * 3 + 1] = 0.0;
+			cells[i * 3 + 2] = 0.0;
 		}
 	}
 
-	filesystem::path shader_path( "../../res/shaders" );
-	shader.load( shader_path / "gameOfLife.vert", shader_path / "gameOfLife.frag" );
+	// Load data into the FBO's texture
+	cellPingPong.allocate( N_CELLS_X, N_CELLS_Y, GL_RGB32F );
+	cellPingPong.src->getTexture().loadData( cells.data(), N_CELLS_X, N_CELLS_Y, GL_RGB );
+	cellPingPong.dst->getTexture().loadData( cells.data(), N_CELLS_X, N_CELLS_Y, GL_RGB );
+
+	// Allocate the render FBO
+	renderFBO.allocate( width, height, GL_RGB );
+	renderFBO.begin();
+	ofClear( 0, 255, 0, 255 );
+	renderFBO.end();
+
+
+	mesh.setMode( OF_PRIMITIVE_POINTS );
+
+	for (int x = 0; x < N_CELLS_X; x++) {
+		for (int y = 0; y < N_CELLS_Y; y++) {
+			mesh.addVertex( { x,y,0 } );
+			mesh.addTexCoord( { x, y } );
+		}
+	}
+
 }
 
 void GameOfLifeScene::update()
 {
+	// Display framerate in window title
 	std::stringstream strm;
 	strm << "fps: " << ofGetFrameRate();
 	ofSetWindowTitle( strm.str() );
 
-	// Basic game of life logic
-	bool next_generation[N_CELLS_X][N_CELLS_Y] = { false };
-	for (int x = 0; x < N_CELLS_X; x++) {
-		for (int y = 0; y < N_CELLS_Y; y++) {
-			int n_neighbours = getNeighbourCount( x, y );
+	cellPingPong.dst->begin();
+	ofClear( 0 );
+	updateCells.begin();
+	updateCells.setUniformTexture( "cellData", cellPingPong.src->getTexture(), 0 );
+	updateCells.setUniform1i( "resolutionX", N_CELLS_X );
+	updateCells.setUniform1i( "resolutionY", N_CELLS_Y );
+	updateCells.setUniform2f( "screen", (float)width, (float)height );
+	updateCells.setUniform1f( "timestep", (float)timeStep );
 
-			// Cell is initially alive
-			if (current_generation[x][y])
-			{
-				// Alive cells with 2 or 3 neightbours live in the next generation
-				if (n_neighbours == 2 || n_neighbours == 3) next_generation[x][y] = true;
-			}
-			else
-			{
-				// Dead cells with 3 neightbours live in the next generation
-				if (n_neighbours == 3) next_generation[x][y] = true;
-			}
+	// Draw cell texture to call shaders, logic happens in shaders
+	cellPingPong.src->draw( 0, 0 );
 
-			if (invincible[x][y] > 0) {
-				next_generation[x][y] = true;
-				invincible[x][y]--;
-			}
-		}
-	}
-	std::copy( &next_generation[0][0], &next_generation[0][0] + N_CELLS_X * N_CELLS_Y, &current_generation[0][0] );
-}
+	cellPingPong.dst->end();
+	cellPingPong.swap();
 
+	// Rendering
+	renderFBO.begin();
+	ofClear( 0, 0, 0, 0 );
+	updateRender.begin();
+	updateRender.setUniformTexture( "cellTex", cellPingPong.dst->getTexture(), 0 );
+	updateRender.setUniform1i( "resolutionX", N_CELLS_X );
+	updateRender.setUniform1i( "resolutionY", N_CELLS_Y );
+	updateRender.setUniform2f( "screen", (float)width, (float)height );
 
-int GameOfLifeScene::getNeighbourCount( int x, int y )
-{
-	int count = 0;
+	ofPushStyle();
+	ofEnableBlendMode( OF_BLENDMODE_ADD );
+	ofSetColor( 255 );
 
-	if (x > 0 && y > 0) if (current_generation[x - 1][y - 1]) count++;					// top-left
-	if (y > 0) if (current_generation[x][y - 1]) count++;								// top-middle
-	if (x < N_CELLS_X && y > 0) if (current_generation[x + 1][y - 1]) count++;			// top-right
-	if (x > 0) if (current_generation[x - 1][y]) count++;								// middle-left
-	if (x < N_CELLS_X) if (current_generation[x + 1][y]) count++;						// middle-right
-	if (x > 0 && y < N_CELLS_Y) if (current_generation[x - 1][y + 1]) count++;			// bottom-left
-	if (y < N_CELLS_Y) if (current_generation[x][y + 1]) count++;						// bottom-middle
-	if (x < N_CELLS_X && y < N_CELLS_Y) if (current_generation[x + 1][y + 1]) count++;	// bottom-right
-	return count;
+	mesh.draw();
+
+	ofDisableBlendMode();
+	glEnd();
+
+	updateRender.end();
+	renderFBO.end();
+	ofPopStyle();
 }
 
 void GameOfLifeScene::draw()
 {
-	ofClear( 255 );
-	shader.begin();
-	for (int x = 0; x < N_CELLS_X; x++) {
-		for (int y = 0; y < N_CELLS_Y; y++) {
-			if (current_generation[x][y]) {
-				ofDrawRectangle( x * 10, y * 10, 10, 10 );
-			}
-		}
-	}
-	shader.end();
+	ofBackground( 100 );
+
+	ofSetColor( 100, 255, 255 );
+
+	//renderFBO.draw( 0, 0, N_CELLS_X * 5, N_CELLS_Y * 5 );
+	cellPingPong.dst->draw( 0, 0, width, height );
 }
 
 void GameOfLifeScene::mouseDragged( int x, int y, int button )
@@ -88,7 +116,7 @@ void GameOfLifeScene::mouseDragged( int x, int y, int button )
 		&& y > 0 && ofGetWindowHeight())
 	{
 		setRadius( x / 10, y / 10, MOUSE_DRAG_RADIUS, true );
-		std::cout << x << " " << y << std::endl;
+		//std::cout << x << " " << y << std::endl;
 	}
 }
 
@@ -106,8 +134,8 @@ void GameOfLifeScene::setRadius( int x, int y, int r, bool val )
 					&& y_shifted > 0
 					&& y_shifted < N_CELLS_Y)
 				{
-					current_generation[x_shifted][y_shifted] = true;
-					invincible[x_shifted][y_shifted] = INVINCIBILITY_DURATION;
+					//current_generation[x_shifted * N_CELLS_Y + y_shifted].alive = true;
+					//invincible[x_shifted * N_CELLS_Y + y_shifted] = INVINCIBILITY_DURATION;
 				}
 			}
 		}
