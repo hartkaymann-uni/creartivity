@@ -16,9 +16,9 @@ void ofApp::setup() {
 #endif
 
 	// Load scenes
+	sceneManager.add( new LineScene() );
 	particleScene = (ParticleScene*)sceneManager.add( new ParticleScene() );
 	gameOfLifeScene = (GameOfLifeScene*)sceneManager.add( new GameOfLifeScene() );
-	sceneManager.add( new LineScene() );
 	sceneManager.setup( true ); // Setup all scenes now
 	ofSetLogLevel( "ofxScenemanager", OF_LOG_VERBOSE );
 
