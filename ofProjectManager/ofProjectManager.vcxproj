@@ -254,7 +254,11 @@
   <ItemGroup>
     <None Include="res\shader\gameOfLife.frag" />
     <None Include="res\shader\gameOfLife.vert" />
+    <None Include="res\shader\gol.frag" />
     <None Include="res\shader\particle.comp" />
+    <None Include="res\shader\passthru.vert" />
+    <None Include="res\shader\render.frag" />
+    <None Include="res\shader\render.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ProjectExtensions>

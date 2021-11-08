@@ -49,6 +49,7 @@ class GameOfLifeScene : public ofxFadeScene {
 
 public:
 	GameOfLifeScene();
+	GameOfLifeScene(int );
 	void setup();
 	void update();
 	void draw();
