@@ -209,5 +209,6 @@
     <None Include="res\shader\passthru.vert" />
     <None Include="res\shader\render.frag" />
     <None Include="res\shader\render.vert" />
+    <None Include="res\shader\render.geom" />
   </ItemGroup>
 </Project>

@@ -15,5 +15,5 @@ void main(void){
     // Update the position.
     
     // And finally store it on the position FBO.
-    vFragColor = vec4(pos.x,pos.y,1.0,1.0);  
+    vFragColor = vec4(vTexCoord.xy, 0.0, 1.0);
 }
