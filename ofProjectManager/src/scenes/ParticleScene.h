@@ -4,8 +4,7 @@
 #include "ofBufferObject.h"
 
 #include "ofxGui.h";
-
-#include <ofxAppUtils.h>
+#include "ofxAppUtils.h"
 
 class ParticleScene : public ofxFadeScene{
 

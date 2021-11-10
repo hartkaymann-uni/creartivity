@@ -2,21 +2,26 @@
 
 #include <random>
 
-GameOfLifeScene::GameOfLifeScene() : ofxFadeScene( "GameOfLife" ) {
+GameOfLifeScene::GameOfLifeScene() : GameOfLifeScene( 102, 77 ) {}
+
+GameOfLifeScene::GameOfLifeScene( int cells_x, int cells_y )
+	: ofxFadeScene( "GameOfLife" ),
+	width( ofGetWindowWidth() ),
+	height( ofGetWindowHeight() ),
+	timeStep( 0.0 ),
+	N_CELLS_X( cells_x ),
+	N_CELLS_Y( cells_y )
+{
 	setSingleSetup( false );
 	setFade( 1000, 1000 );
-	width = ofGetWindowWidth();
-	height = ofGetWindowHeight();
-	timeStep = 0.0;
 }
 
 void GameOfLifeScene::setup()
 {
-
 	// Load Shaders
 	filesystem::path shader_path( "../../res/shader" );
 	bool loadUpdateCells = updateCells.load( shader_path / "passthru.vert", shader_path / "gol.frag" );
-	bool loadUpdateRender = updateRender.load( shader_path / "render.vert", shader_path / "render.frag", shader_path / "render.geom");
+	bool loadUpdateRender = updateRender.load( shader_path / "render.vert", shader_path / "render.frag", shader_path / "render.geom" );
 	bool loadBasicShader = basicShader.load( shader_path / "passthru.vert", shader_path / "render.frag" );
 
 	// Make array of float pixels with cell data
@@ -45,11 +50,10 @@ void GameOfLifeScene::setup()
 	mesh.setMode( OF_PRIMITIVE_POINTS );
 	for (int x = 0; x < N_CELLS_X; x++) {
 		for (int y = 0; y < N_CELLS_Y; y++) {
-			mesh.addVertex( { x * 10.0 + x, y * 10.0 + y, 0} );
+			mesh.addVertex( { x * 10.0 + x, y * 10.0 + y, 0 } );
 			mesh.addTexCoord( { x, y } );
 		}
 	}
-
 }
 
 void GameOfLifeScene::update()
@@ -66,7 +70,7 @@ void GameOfLifeScene::update()
 	updateCells.setUniform1i( "resolutionX", N_CELLS_X );
 	updateCells.setUniform1i( "resolutionY", N_CELLS_Y );
 	updateCells.setUniform2f( "screen", (float)width, (float)height );
-	updateCells.setUniform1f( "timestep", (float) timeStep+=0.05 );
+	updateCells.setUniform1f( "timestep", (float)timeStep += 0.05 );
 
 	// Draw cell texture to call shaders, logic happens in shaders
 	cellPingPong.src->draw( 0, 0 );

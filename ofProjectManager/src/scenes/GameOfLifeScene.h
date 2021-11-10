@@ -1,12 +1,10 @@
 #pragma once
 
 #include "ofMain.h"
-#include <ofxAppUtils.h>
-#include "ofxUbo.h"
 
-const int N_CELLS_X = 102;
-const int N_CELLS_Y = 77;
-const unsigned short INVINCIBILITY_DURATION = 10;
+#include "ofxAppUtils.h"
+#include "ofxUbo.h"
+#include "ofxGui.h"
 
 struct pingPongBuffer {
 public:
@@ -66,9 +64,15 @@ private:
 	ofFbo   renderFBO;
 	ofVboMesh mesh;
 
+	ofxPanel gui;
+
+	const int N_CELLS_X;
+	const int N_CELLS_Y;
+	const int INVINCIBILITY = 10;
+	
 	float   timeStep;
 
 	int width, height;
-
+	
 	void setRadius( int x, int y, int r, bool val );
 };
