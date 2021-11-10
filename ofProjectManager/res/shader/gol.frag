@@ -13,7 +13,7 @@ out vec4 vFragColor;
 void main(void){
     // Get the cell state 
     vec3 state = texture( cellData, vTexCoord ).xyz;
-    vec4 next_state = vec4( 0.0, 1.0, 0.0, 1.0 );
+    vec4 next_state = vec4( 0.0, 0.0, 0.0, 1.0 );
    
     float left_top  = floor( texture(cellData, vTexCoord.xy + vec2(-1.0, -1.0)).x + 0.5 );
     float mid_top   = floor( texture(cellData, vTexCoord.xy + vec2( 0.0, -1.0)).x + 0.5 );
@@ -23,17 +23,13 @@ void main(void){
     float left_bot  = floor( texture(cellData, vTexCoord.xy + vec2(-1.0,  1.0)).x + 0.5 );
     float mid_bot   = floor( texture(cellData, vTexCoord.xy + vec2( 0.0,  1.0)).x + 0.5 );
     float right_bot = floor( texture(cellData, vTexCoord.xy + vec2( 1.0,  1.0)).x + 0.5 );
-
     float n_neighbours = left_top + mid_top + right_top + left_mid + right_mid + left_bot + mid_bot + right_bot;
-
-    if (n_neighbours == 3.0) next_state.x = 1.0; 
-    else if (state.x >= 0.5 && n_neighbours == 2.0) next_state.x = 1.0;
+   
+    if (n_neighbours == 3.0) next_state.xyz = vec3( 1.0 ); 
+    else if (state.x >= 0.5 && n_neighbours == 2.0) next_state.xyz = vec3( 1.0 );
         
     // And finally store it on the FBO
-     vFragColor = vec4(vec3(n_neighbours / 8.0), 1.0);
-
-     vFragColor = vec4(state, 1.0);
-
+     vFragColor = vec4(next_state.xyz, 1.0);
 
      // Border
      int borderThickness = 1;

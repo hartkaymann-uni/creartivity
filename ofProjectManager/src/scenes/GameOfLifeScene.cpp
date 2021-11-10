@@ -22,11 +22,12 @@ void GameOfLifeScene::setup()
 	// Make array of float pixels with cell data
 	// Currently only R value is be used, cells can only either be true (R > .5) or false (R =< .5)
 	vector<float> cells( N_CELLS_X * N_CELLS_Y * 3 );
-	for (int x = 0; x < N_CELLS_X; x++) {
-		for (int y = 0; y < N_CELLS_Y; y++) {
-			cells.push_back( y >= 10 && y <= 20 ? 1.0 : 0.0);
-			cells.push_back( 0.0 );
-			cells.push_back( 0.0 );
+	for (size_t x = 0; x < N_CELLS_X; x++) {
+		for (size_t y = 0; y < N_CELLS_Y; y++) {
+			size_t i = x * N_CELLS_Y + y;
+			cells[i * 3 + 0] = 1.0;
+			cells[i * 3 + 1] = 0.0;
+			cells[i * 3 + 2] = 0.0;
 		}
 	}
 
@@ -105,7 +106,7 @@ void GameOfLifeScene::draw()
 
 	//ofSetColor( 100, 255, 255 );
 
-	cellPingPong.dst->draw( 0, 0 );
+	cellPingPong.dst->draw( 0, 0, width, height );
 	//renderFBO.draw( 0, 0);
 
 
