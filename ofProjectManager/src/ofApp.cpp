@@ -16,13 +16,13 @@ void ofApp::setup() {
 #endif
 
 	// Load scenes
+	gameOfLifeScene = (GameOfLifeScene*)sceneManager.add( new GameOfLifeScene() );
 	sceneManager.add( new LineScene() );
 	particleScene = (ParticleScene*)sceneManager.add( new ParticleScene() );
-	gameOfLifeScene = (GameOfLifeScene*)sceneManager.add( new GameOfLifeScene() );
 	sceneManager.setup( true ); // Setup all scenes now
 	ofSetLogLevel( "ofxScenemanager", OF_LOG_VERBOSE );
 
-	sceneManager.gotoScene( "Lines", true );
+	sceneManager.gotoScene( "GameOfLife", true );
 	lastScene = sceneManager.getCurrentSceneIndex();
 	sceneManager.setOverlap( true ); // Overlap scenes when transitioned
 

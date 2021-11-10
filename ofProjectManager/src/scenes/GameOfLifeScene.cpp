@@ -24,7 +24,7 @@ void GameOfLifeScene::setup()
 	vector<float> cells( N_CELLS_X * N_CELLS_Y * 3 );
 	for (int x = 0; x < N_CELLS_X; x++) {
 		for (int y = 0; y < N_CELLS_Y; y++) {
-			cells.push_back( 1.0 );
+			cells.push_back( y >= 10 && y <= 20 ? 1.0 : 0.0);
 			cells.push_back( 0.0 );
 			cells.push_back( 0.0 );
 		}
@@ -103,13 +103,13 @@ void GameOfLifeScene::draw()
 {
 	ofBackground( 0 );
 
-	ofSetColor( 100, 255, 255 );
+	//ofSetColor( 100, 255, 255 );
 
+	cellPingPong.dst->draw( 0, 0 );
 	//renderFBO.draw( 0, 0);
-	cellPingPong.dst->draw( 0, 0, width, height );
+
 
 	basicShader.begin();
-
 	ofDrawRectangle( ofRectangle( 100, 100, 100, 100 ) );
 	basicShader.end();
 
