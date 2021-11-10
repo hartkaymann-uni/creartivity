@@ -8,5 +8,7 @@ in vec4 vColor;
 out vec4 vFragColor;
 
 void main() {
-    vFragColor = vec4(1.0, 0.0, 1.0, 1.0);
+    vec4 col = texture( cellTex, vTexCoord );
+
+    vFragColor = col;
 }

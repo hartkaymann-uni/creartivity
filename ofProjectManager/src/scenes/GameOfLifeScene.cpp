@@ -65,7 +65,7 @@ void GameOfLifeScene::update()
 	updateCells.setUniform1i( "resolutionX", N_CELLS_X );
 	updateCells.setUniform1i( "resolutionY", N_CELLS_Y );
 	updateCells.setUniform2f( "screen", (float)width, (float)height );
-	updateCells.setUniform1f( "timestep", (float)timeStep );
+	updateCells.setUniform1f( "timestep", (float) timeStep+=0.05 );
 
 	// Draw cell texture to call shaders, logic happens in shaders
 	cellPingPong.src->draw( 0, 0 );
@@ -105,8 +105,8 @@ void GameOfLifeScene::draw()
 
 	ofSetColor( 100, 255, 255 );
 
-	renderFBO.draw( 0, 0);
-	//cellPingPong.dst->draw( 0, 0, width, height );
+	//renderFBO.draw( 0, 0);
+	cellPingPong.dst->draw( 0, 0, width, height );
 
 	basicShader.begin();
 

@@ -10,10 +10,12 @@ out vec4 vFragColor;
 
 void main(void){
     // Get the cell state pixel color.
-    vec2 pos = texture( cellData, vTexCoord ).xy;
-    
-    // Update the position.
-    
+    vec2 state = texture( cellData, vTexCoord ).xy;
+
+    float shift_r = sin(timestep) * vTexCoord.x/255;
+    float shift_g = cos(timestep) * vTexCoord.y/255;
+    float shift_b = 0;
+            
     // And finally store it on the position FBO.
-    vFragColor = vec4(vTexCoord.xy, 0.0, 1.0);
+    vFragColor = vec4(shift_r, shift_g, shift_b, 1.0);
 }

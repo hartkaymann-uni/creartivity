@@ -24,5 +24,5 @@ void main() {
 
     vPosition = position;
     vTexCoord = texcoord;
-    vColor = vec4(0.5, 0.0, 1.0, 1.0);
+    vColor = vec4(0.5, 0.0, 0.0, 1.0);
 }
