@@ -2,6 +2,7 @@
 
 uniform mat4 modelViewMatrix;
 
+in vec4 position;
 in vec2 texcoord;
 in vec4 color;
 
@@ -14,14 +15,14 @@ out vec4 vColor;
 
 void main() {
     // Read position data from texture.
-    vec4 pixPos = texture( cellTex, texcoord );
+    //vec4 pixPos = texture( cellTex, texcoord );
     
     // Map the position from the texture (from 0.0 to 1.0) to
     // the screen position (0 - screenWidth/screenHeight)
-    pixPos.x *= screen.x;
-    pixPos.y *= screen.y;
+    //pixPos.x *= screen.x;
+    //pixPos.y *= screen.y;
 
-    vPosition = pixPos;
+    vPosition = position;
     vTexCoord = texcoord;
-    vColor = vec4(1.0);
+    vColor = vec4(0.5, 0.0, 0.0, 1.0);
 }

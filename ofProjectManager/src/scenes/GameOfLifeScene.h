@@ -49,7 +49,7 @@ class GameOfLifeScene : public ofxFadeScene {
 
 public:
 	GameOfLifeScene();
-	GameOfLifeScene(int );
+	GameOfLifeScene(int cells_x, int cells_y);
 	void setup();
 	void update();
 	void draw();
@@ -59,12 +59,15 @@ public:
 private:
 	ofShader    updateCells;
 	ofShader    updateRender;
-	pingPongBuffer cellPingPong;
-	ofFbo   renderFBO;
+	ofShader    basicShader;
 
+	pingPongBuffer cellPingPong;
+	
+	ofFbo   renderFBO;
 	ofVboMesh mesh;
 
 	float   timeStep;
+
 	int width, height;
 
 	void setRadius( int x, int y, int r, bool val );
