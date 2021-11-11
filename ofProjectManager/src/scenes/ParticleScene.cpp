@@ -1,7 +1,9 @@
 #include "ParticleScene.h"
 
 
-ParticleScene::ParticleScene() : ofxFadeScene("Particles") {
+ParticleScene::ParticleScene() : ParticleScene(10) {}
+
+ParticleScene::ParticleScene( int n_particles ) : ofxFadeScene( "Particles" ) {
 	setSingleSetup( false );
 	setFade( 1000, 1000 );
 }
@@ -17,7 +19,7 @@ void ParticleScene::setup() {
 	camera.setPosition( 0, 0, 665 );
 	camera.setFarClip( ofGetWidth() * 10 );
 
-	particles.resize( 1024 * 8 * 1000 );
+	particles.resize( 1024 * 8 * 1 );
 	int i = 0;
 	for (auto& p : particles)
 	{
@@ -62,6 +64,10 @@ void ParticleScene::setup() {
 			noiseField[x][y] = ofNoise( glm::vec3( x, y, m_NoiseShift ) );
 		}
 	}
+
+	ofSpherePrimitive sphere;
+	sphere.setRadius( 10 );
+	m_VboMesh = sphere.getMesh();
 }
 
 //--------------------------------------------------------------
@@ -93,7 +99,10 @@ void ParticleScene::update() {
 
 //--------------------------------------------------------------
 void ParticleScene::draw() {
-	ofEnableBlendMode( OF_BLENDMODE_ADD );
+	//ofEnableBlendMode( OF_BLENDMODE_ADD );
+	ofEnableDepthTest();
+	ofDisableAlphaBlending();
+
 	camera.begin();
 	ofSetColor( 255, 70 );
 	glPointSize( 2 );
@@ -102,22 +111,15 @@ void ParticleScene::draw() {
 	//ofNoFill();
 	//ofDrawBox( 0, 0, -ofGetHeight() * 2, ofGetWidth() * 4, ofGetHeight() * 4, ofGetHeight() * 4 );
 
-	if (m_DrawArrows)
-	{
-		int width = ofGetScreenWidth();
-		int height = ofGetScreenHeight();
-		int left = -ofGetScreenWidth() * 0.5;
-		int bot = -ofGetScreenHeight() * 0.5;
-		int arrowLength = 25;
-		ofSetColor( ofColor::red );
-		for (int x = 0; x < FIELD_X; x++) {
-			for (int y = 0; y < FIELD_Y; y++) {
-				auto xPos = left + (width / FIELD_X) * x;
-				auto yPos = bot + (height / FIELD_Y) * y;
-				ofDrawArrow( glm::vec3( xPos, yPos, 10.0 ), glm::vec3( xPos + sin( noiseField[x][y] * (2 * PI) ) * arrowLength, yPos + cos( noiseField[x][y] * (2 * PI) ) * arrowLength, 10.0 ), arrowLength / 10 );
-			}
-		}
-	}
+	// Draw call for instanced objects
+	renderShader.begin();
+	glEnable( GL_CULL_FACE );
+	glCullFace( GL_BACK );
+
+	m_VboMesh.drawInstanced( OF_MESH_FILL, 10 );
+	
+	glDisable( GL_CULL_FACE );
+	renderShader.end();
 
 	camera.end();
 

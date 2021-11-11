@@ -10,6 +10,7 @@ class ParticleScene : public ofxFadeScene{
 
 	public:
 		ParticleScene();
+		ParticleScene(int n_particles);
 		void setup();
 		void update();
 		void draw();
@@ -33,12 +34,15 @@ class ParticleScene : public ofxFadeScene{
 		};
 
 		ofShader compute;
+		ofShader renderShader;
 		vector<Particle> particles;
 		ofBufferObject particlesBuffer, particlesBuffer2;
 		ofEasyCam camera;
 		ofVbo vbo;
 
 		ofxPanel gui;
+
+		ofVboMesh m_VboMesh;
 
 		ofParameterGroup m_ShaderUniforms;
 		ofParameter<bool> m_DrawArrows;
