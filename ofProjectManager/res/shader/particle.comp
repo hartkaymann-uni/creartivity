@@ -16,10 +16,6 @@ layout(std140, binding=1) buffer particleBack{
     Particle p2[];
 };
 
-layout(std140, binding=2) buffer indices{
-	uint idx[];
-};
-
 uniform bool	u_MousePressed;
 uniform float	u_TimeLastFrame;
 uniform float	u_ElapsedTime;

@@ -12,17 +12,17 @@ void ofApp::setup() {
 	setTransformer( &transformer );
 
 #ifdef HAVE_OFX_GUI
-	panel.setup( &transformer );
+		panel.setup( &transformer );
 #endif
 
 	// Load scenes
+	particleScene = (ParticleScene*)sceneManager.add( new ParticleScene() );
 	gameOfLifeScene = (GameOfLifeScene*)sceneManager.add( new GameOfLifeScene() );
 	sceneManager.add( new LineScene() );
-	particleScene = (ParticleScene*)sceneManager.add( new ParticleScene() );
 	sceneManager.setup( true ); // Setup all scenes now
 	ofSetLogLevel( "ofxScenemanager", OF_LOG_VERBOSE );
 
-	sceneManager.gotoScene( "GameOfLife", true );
+	sceneManager.gotoScene( "Particles", true );
 	lastScene = sceneManager.getCurrentSceneIndex();
 	sceneManager.setOverlap( true ); // Overlap scenes when transitioned
 
@@ -43,7 +43,7 @@ void ofApp::update() {
 
 //--------------------------------------------------------------
 void ofApp::draw() {
-	
+
 	if (isDebug()) {
 		ofNoFill();
 		ofSetColor( 255 );

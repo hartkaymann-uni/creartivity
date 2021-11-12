@@ -1,4 +1,4 @@
-#version 150
+#version 440
 
 struct Particle{
 	vec4 pos;
@@ -22,5 +22,6 @@ in vec3  normal;
 
 void main()
 {
-
+ vec4 vPos = p[gl_InstanceID].pos + position;
+ gl_Position =  projectionMatrix * modelViewMatrix * vPos;
 }

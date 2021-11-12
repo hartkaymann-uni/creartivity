@@ -14,6 +14,8 @@ void ParticleScene::setup() {
 	compute.setupShaderFromFile( GL_COMPUTE_SHADER, res_path / "shader/particle.comp" );
 	bool linked = compute.linkProgram();
 
+	bool renderLinked = renderShader.load( res_path / "shader/instancedParticles.vert", res_path / "shader/instancedParticles.frag" );
+
 	camera.disableMouseInput();
 	camera.setupPerspective();
 	camera.setPosition( 0, 0, 665 );
@@ -65,8 +67,10 @@ void ParticleScene::setup() {
 		}
 	}
 
+
+	// Create VBO Mesh
 	ofSpherePrimitive sphere;
-	sphere.setRadius( 10 );
+	sphere.set( 10, 5 );
 	m_VboMesh = sphere.getMesh();
 }
 
@@ -108,22 +112,25 @@ void ParticleScene::draw() {
 	glPointSize( 2 );
 	vbo.draw( GL_POINTS, 0, particles.size() );
 
-	//ofNoFill();
-	//ofDrawBox( 0, 0, -ofGetHeight() * 2, ofGetWidth() * 4, ofGetHeight() * 4, ofGetHeight() * 4 );
+	ofNoFill();
+	ofDrawBox( 0, 0, -ofGetHeight() * 2, ofGetWidth() * 4, ofGetHeight() * 4, ofGetHeight() * 4 );
 
 	// Draw call for instanced objects
 	renderShader.begin();
 	glEnable( GL_CULL_FACE );
 	glCullFace( GL_BACK );
 
-	m_VboMesh.drawInstanced( OF_MESH_FILL, 10 );
+	m_VboMesh.drawInstanced( OF_MESH_FILL, 1024 * 8 * 1 );
 	
 	glDisable( GL_CULL_FACE );
 	renderShader.end();
 
 	camera.end();
 
+	ofDisableDepthTest();
+	ofEnableAlphaBlending();
 	ofEnableBlendMode( OF_BLENDMODE_ALPHA );
+	
 	ofSetColor( 255 );
 	gui.draw();
 }
