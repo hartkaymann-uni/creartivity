@@ -1,6 +1,8 @@
 #version 150
 
+uniform mat4 projectionMatrix;
 uniform mat4 modelViewMatrix;
+uniform mat4 modelViewProjectionMatrix;
 
 in vec4 position;
 in vec2 texcoord;
@@ -22,7 +24,6 @@ void main() {
     //pixPos.x *= screen.x;
     //pixPos.y *= screen.y;
 
-    vPosition = position;
     vTexCoord = texcoord;
     vColor = vec4(0.5, 0.0, 0.0, 1.0);
 }

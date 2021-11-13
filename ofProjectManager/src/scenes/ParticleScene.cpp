@@ -72,6 +72,17 @@ void ParticleScene::setup() {
 	ofSpherePrimitive sphere;
 	sphere.set( 10, 5 );
 	m_VboMesh = sphere.getMesh();
+
+	// Create ground grid mesh
+	int groundSize = 25;
+	groundGrid.setMode( OF_PRIMITIVE_POINTS );
+	for (int x = 0; x < groundSize; x++) {
+		for (int z = 0; z < groundSize; z++) {
+			int vPosX = std::ceil( -groundSize / 2 ) + x;
+			int vPosZ = std::ceil( -groundSize / 2 ) + z;
+			groundGrid.addVertex( { vPosX, 0, vPosZ } );
+		}
+	}
 }
 
 //--------------------------------------------------------------
@@ -99,6 +110,7 @@ void ParticleScene::update() {
 			noiseField[x][y] = ofNoise( glm::vec3( x, y, m_NoiseShift ) );
 		}
 	}
+	
 }
 
 //--------------------------------------------------------------
@@ -114,13 +126,18 @@ void ParticleScene::draw() {
 
 	ofNoFill();
 	ofDrawBox( 0, 0, -ofGetHeight() * 2, ofGetWidth() * 4, ofGetHeight() * 4, ofGetHeight() * 4 );
+	groundGrid.drawWireframe();
+
+	ofFill();
+	ofSetColor( ofColor::blue );
+	ofDrawBox( glm::vec3( 0.0 ), 5 );
 
 	// Draw call for instanced objects
 	renderShader.begin();
 	glEnable( GL_CULL_FACE );
 	glCullFace( GL_BACK );
 
-	m_VboMesh.drawInstanced( OF_MESH_FILL, 1024 * 8 * 1 );
+	//m_VboMesh.drawInstanced( OF_MESH_FILL, 1024 * 8 * 1 );
 	
 	glDisable( GL_CULL_FACE );
 	renderShader.end();

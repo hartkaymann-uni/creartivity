@@ -42,6 +42,7 @@ class ParticleScene : public ofxFadeScene{
 
 		ofxPanel gui;
 
+		ofVboMesh groundGrid;
 		ofVboMesh m_VboMesh;
 
 		ofParameterGroup m_ShaderUniforms;

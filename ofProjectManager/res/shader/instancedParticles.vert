@@ -23,5 +23,5 @@ in vec3  normal;
 void main()
 {
  vec4 vPos = p[gl_InstanceID].pos + position;
- gl_Position =  projectionMatrix * modelViewMatrix * vPos;
+ gl_Position =  modelViewProjectionMatrix * vPos;
 }
