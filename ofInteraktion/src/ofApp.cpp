@@ -50,7 +50,7 @@ void ofApp::update(){
 		difference.absDiff(background, gray);
 
 		// binarisation = Binarisierung
-		difference.threshold(threshold);
+		difference.threshold(threshold);	
 
 		contour.findContours(difference, 10, width * height, 10, true);
 	}
