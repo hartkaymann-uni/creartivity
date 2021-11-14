@@ -1,6 +1,8 @@
 #pragma once
 
 #include "ofMain.h"
+#include "ofxGui.h"
+#include "ofxOpenCv.h"
 #include "ofxKinectV2.h"
 
 class ofApp : public ofBaseApp{
@@ -22,7 +24,27 @@ class ofApp : public ofBaseApp{
 		void windowResized(int w, int h);
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
-		
+
 		ofxKinectV2 kinect1;
+		ofTexture textureDEPTH;
 		ofTexture texture;
+
+		int width;
+		int height;
+
+		// trying 2D contourFinder out
+		
+		ofxCvColorImage color;
+		ofxCvGrayscaleImage gray;
+		ofxCvGrayscaleImage background;
+		ofxCvGrayscaleImage difference;
+
+		ofxCvContourFinder contour;
+
+		// for difference, so we can either see more or less contours
+		int threshold = 35;
+		// find contours on-screen
+		bool learn = true;
+		
+
 };
