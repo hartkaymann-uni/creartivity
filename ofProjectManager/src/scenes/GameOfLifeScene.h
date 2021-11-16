@@ -52,6 +52,8 @@ public:
 	void update();
 	void draw();
 
+	void keyPressed( int key );
+	void keyReleased( int key );
 	void mouseDragged( int x, int y, int button );
 
 private:
@@ -63,8 +65,16 @@ private:
 	
 	ofFbo   renderFBO;
 	ofVboMesh mesh;
+	ofMesh axisMesh;
+
+	ofEasyCam camera;
 
 	ofxPanel gui;
+	ofParameterGroup shaderUniforms;
+	ofParameter<int> circleResolution;
+	ofParameter<float> evolutionFactor;
+	ofParameter<float> cellSize;
+	ofParameter<float> dataSrcSize;
 
 	const int N_CELLS_X;
 	const int N_CELLS_Y;
@@ -74,5 +84,4 @@ private:
 
 	int width, height;
 	
-	void setRadius( int x, int y, int r, bool val );
 };
