@@ -2,6 +2,24 @@
 
 #include "ofMain.h"
 
+class hub {
+
+public:
+	glm::vec2 force;
+	glm::vec2 position;
+	glm::vec2 direction;
+
+	float size;
+	float directionSpeed = 2;
+
+	void update();
+	void draw();
+
+	hub(int x, int y, int hue);		//construktor
+	~hub();							//destruktor
+
+};
+
 class ofApp : public ofBaseApp{
 
 	public:
@@ -20,5 +38,10 @@ class ofApp : public ofBaseApp{
 		void windowResized(int w, int h);
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
+
+		vector<hub> hubs;
+		int hue;
 	
 };
+
+

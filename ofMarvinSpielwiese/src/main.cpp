@@ -2,6 +2,7 @@
 #include "ofApp.h"
 #include "ofRandomLines.h"
 #include "ofBasicsExamples01.h"
+#include "ofNNviaMesh.h"
 
 //========================================================================
 int main( ){
@@ -12,6 +13,7 @@ int main( ){
 	// pass in width and height too:
 
 	if (1) ofRunApp(new ofApp());
-	if (0) ofRunApp(new ofRandomLines());
-	if (0) ofRunApp(new ofBasicsExamples01());
+	//if (0) ofRunApp(new ofNNviaMesh());
+	//if (0) ofRunApp(new ofRandomLines());
+	//if (0) ofRunApp(new ofBasicsExamples01());
 }

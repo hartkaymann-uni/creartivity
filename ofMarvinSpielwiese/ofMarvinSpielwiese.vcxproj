@@ -181,12 +181,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\ofBasicsExamples01.cpp" />
+    <ClCompile Include="src\ofNNviaMesh.cpp" />
     <ClCompile Include="src\ofRandomLines.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\ofApp.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\ofBasicsExamples01.h" />
+    <ClInclude Include="src\ofNNviaMesh.h" />
     <ClInclude Include="src\ofRandomLines.h" />
     <ClInclude Include="src\ofApp.h" />
   </ItemGroup>
