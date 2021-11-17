@@ -2,7 +2,7 @@
 
 #include "ofMain.h"
 
-class hub {
+class Hub {
 
 public:
 	glm::vec2 force;
@@ -10,13 +10,14 @@ public:
 	glm::vec2 direction;
 
 	float size;
-	float directionSpeed = 2;
+
+	bool isVisible();
 
 	void update();
 	void draw();
 
-	hub(int x, int y, int hue);		//construktor
-	~hub();							//destruktor
+	Hub(int x, int y, int hue);		//construktor
+	~Hub();							//destruktor
 
 };
 
@@ -39,7 +40,7 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
 
-		vector<hub> hubs;
+		vector<Hub> hubs;
 		int hue;
 	
 };
