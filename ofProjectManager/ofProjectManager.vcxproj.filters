@@ -210,5 +210,7 @@
     <None Include="res\shader\render.geom" />
     <None Include="res\shader\instancedParticles.vert" />
     <None Include="res\shader\instancedParticles.frag" />
+    <None Include="res\shader\renderInstanced.frag" />
+    <None Include="res\shader\renderInstanced.vert" />
   </ItemGroup>
 </Project>

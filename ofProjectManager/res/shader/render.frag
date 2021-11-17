@@ -17,7 +17,7 @@ void main() {
 	
 	mat4x2 coords;
 	coords[0] = vTexCoord.xy;
-	coords[1] = vTexCoord.xy + vec2( 1.0,  0.0 ); 
+	coords[1] = vTexCoord.xy + vec2( 1.0,  0.0 );
 	coords[2] = vTexCoord.xy + vec2( 0.0, -1.0 );
 	coords[3] = vTexCoord.xy + vec2( 1.0, -1.0 );
 

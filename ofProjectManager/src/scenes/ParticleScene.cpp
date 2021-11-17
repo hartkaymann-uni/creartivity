@@ -67,7 +67,6 @@ void ParticleScene::setup() {
 		}
 	}
 
-
 	// Create VBO Mesh
 	ofSpherePrimitive sphere;
 	sphere.set( 10, 5 );

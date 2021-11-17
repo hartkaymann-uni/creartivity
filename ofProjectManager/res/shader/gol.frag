@@ -13,7 +13,7 @@ out vec4 vFragColor;
 void main(void){
     // Get the cell state 
     vec3 state = texture( cellData, vTexCoord ).xyz;
-    vec4 next_state = vec4( state.xyz, 0.1 );
+    vec4 next_state = vec4( state.xyz, 1.0 );
     vec3 evolVec = vec3 ( evolutionFac );
    
     float left_top  = texture(cellData, vTexCoord.xy + vec2(-1.0, -1.0)).x;
@@ -29,38 +29,32 @@ void main(void){
     if ( state.x <= 0.0) {
         // Dead with 2.5 to 3 is revived
         if( n_neighbours >= 2.5 && n_neighbours <= 3.5 ) {
-            next_state.xyz += evolVec;
+            next_state.x += evolutionFac;
         }
     } else {
         // Alive with less than two dies
         if ( n_neighbours < 2.0 ) {
-            next_state.xyz -= evolVec;
+            next_state.x -= evolutionFac;
 
         // Alive with two to three lives
         } else if ( n_neighbours >= 2.0 && n_neighbours <= 3.0 ) {
-            next_state.xyz += evolVec;
+            next_state.x += evolutionFac;
 
         // ALive with more than three dies
         } else if ( n_neighbours > 3.0 ) {
-            next_state.xyz -= evolVec;
+            next_state.x -= evolutionFac;
         }
     }
+
+    next_state.y = n_neighbours / 8.0;
 
     // Clamp values between 0.0 and 1.0
     next_state.x = clamp(next_state.x, 0.0, 1.0);
     next_state.y = clamp(next_state.y, 0.0, 1.0);
     next_state.z = clamp(next_state.z, 0.0, 1.0);
 
-    // And finally store it on the FBO
-     vFragColor = vec4(next_state.xyz, 1.0);
+    //next_state.w = ( n_neighbours / 1.0 );
 
-     // Border
-     int borderThickness = 0;
-     if(vTexCoord.x <= borderThickness 
-     || vTexCoord.x >= (screen.x - borderThickness) 
-     || vTexCoord.y <= borderThickness 
-     || vTexCoord.y >= (screen.y - borderThickness)) 
-     {
-        vFragColor = vec4( 1.0 );
-     }
+    // And finally store it on the FBO
+     vFragColor = next_state;
 }

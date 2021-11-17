@@ -56,15 +56,19 @@ public:
 	void keyReleased( int key );
 	void mouseDragged( int x, int y, int button );
 
+	void handleCellSizeChanged(float &cellSize);
+
 private:
 	ofShader    updateCells;
 	ofShader    updateRender;
-	ofShader    basicShader;
+	ofShader    instancedShader;
 
 	pingPongBuffer cellPingPong;
 	
 	ofFbo   renderFBO;
-	ofVboMesh mesh;
+
+	ofVboMesh vboGrid;
+	ofVboMesh vboSphere;
 	ofMesh axisMesh;
 
 	ofEasyCam camera;

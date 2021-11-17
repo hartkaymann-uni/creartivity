@@ -20,8 +20,9 @@ void GameOfLifeScene::setup()
 {
 	// Load Shaders
 	filesystem::path shader_path( "../../res/shader" );
-	bool loadUpdateCells = updateCells.load( shader_path / "passthru.vert", shader_path / "gol.frag" );
-	bool loadUpdateRender = updateRender.load( shader_path / "render.vert", shader_path / "render.frag" /*, shader_path / "render.geom" */ );
+	bool loadUpdateShader = updateCells.load( shader_path / "passthru.vert", shader_path / "gol.frag" );
+	bool loadRenderShader = updateRender.load( shader_path / "render.vert", shader_path / "render.frag" /*, shader_path / "render.geom" */ );
+	bool loadInstancedShader = instancedShader.load( shader_path / "renderInstanced.vert", shader_path / "renderInstanced.frag");
 
 	camera.disableMouseInput();
 	camera.setupPerspective();
@@ -39,8 +40,8 @@ void GameOfLifeScene::setup()
 			// initialValue = (y % 2 == 0) ? 1.0 : 0.0;
 
 			cells[i * 3 + 0] = initialValue;
-			cells[i * 3 + 1] = initialValue;
-			cells[i * 3 + 2] = initialValue;
+			cells[i * 3 + 1] = 0.0;
+			cells[i * 3 + 2] = 0.0;
 		}
 	}
 
@@ -58,6 +59,8 @@ void GameOfLifeScene::setup()
 	circleResolution.set( "circleRes", 10, 4, 20 );
 	evolutionFactor.set( "evolutionFac", 0.0, 0.0, 1.0 );
 	cellSize.set( "size", 10.0, 1.0, 10.0 );
+	cellSize.addListener( this, &GameOfLifeScene::handleCellSizeChanged );
+	
 	dataSrcSize.set( "srcSize", 0, 0, 9 );
 
 	gui.setup();
@@ -69,26 +72,30 @@ void GameOfLifeScene::setup()
 	gui.add( shaderUniforms );
 	gui.setPosition( width - gui.getWidth() - 10, height - gui.getHeight() - 10 );
 
-	mesh.setMode( OF_PRIMITIVE_TRIANGLES );
+	vboGrid.setMode( OF_PRIMITIVE_TRIANGLES );
 	for (int y = 0; y < N_CELLS_Y; y++) {
 		for (int x = 0; x < N_CELLS_X; x++) {
-			mesh.addVertex( { x * cellSize, y * cellSize, 0 } );
-			mesh.addTexCoord( { x, y } );
+			vboGrid.addVertex( { x * cellSize, y * cellSize, 0 } );
+			vboGrid.addTexCoord( { x, y } );
 		}
 	}
 	for (int y = 0; y < N_CELLS_Y - 1; y++) {
 		for (int x = 0; x < N_CELLS_X - 1; x++) {
-			mesh.addIndex( x + y * N_CELLS_X );
-			mesh.addIndex( (x + 1) + y * N_CELLS_X );
-			mesh.addIndex( x + (y + 1) * N_CELLS_X );
+			vboGrid.addIndex( x + y * N_CELLS_X );
+			vboGrid.addIndex( (x + 1) + y * N_CELLS_X );
+			vboGrid.addIndex( x + (y + 1) * N_CELLS_X );
 
-			mesh.addIndex( (x + 1) + y * N_CELLS_X );
-			mesh.addIndex( (x + 1) + (y + 1) * N_CELLS_X );
-			mesh.addIndex( x + (y + 1) * N_CELLS_X );
+			vboGrid.addIndex( (x + 1) + y * N_CELLS_X );
+			vboGrid.addIndex( (x + 1) + (y + 1) * N_CELLS_X );
+			vboGrid.addIndex( x + (y + 1) * N_CELLS_X );
 		}
 	}
 
 	axisMesh = ofMesh::axis();
+
+	ofSpherePrimitive sphere;
+	sphere.set( cellSize, 10 );
+	vboSphere = sphere.getMesh();
 }
 
 void GameOfLifeScene::update()
@@ -128,7 +135,7 @@ void GameOfLifeScene::update()
 	ofEnableBlendMode( OF_BLENDMODE_ADD );
 	ofSetColor( 255 );
 
-	mesh.draw();
+	vboGrid.draw();
 
 	ofDisableBlendMode();
 	glEnd();
@@ -150,20 +157,35 @@ void GameOfLifeScene::draw()
 	camera.begin();
 	axisMesh.draw();
 
+	instancedShader.begin();
+	instancedShader.setUniforms( shaderUniforms );
+	instancedShader.setUniformTexture( "cellData", cellPingPong.src->getTexture(), 0 );
+	instancedShader.setUniform2f( "resolution", (float)N_CELLS_X, (float)N_CELLS_Y );
+	instancedShader.setUniform2f( "screen", (float)width, (float)height );
+
+	vboSphere.drawInstanced( OF_MESH_FILL, N_CELLS_X * N_CELLS_Y );
+	instancedShader.end();
+
 	//drawCoordinateSystem();
-	ofSetColor( 255 );
-	renderFBO.draw( 0, 0 );
+	
+	//renderFBO.draw( 0, 0 );
 	camera.end();
 
 	ofSetColor( 255 );
 	gui.draw();
-
 }
 
 
 void GameOfLifeScene::mouseDragged( int x, int y, int button )
 {
 
+}
+
+void GameOfLifeScene::handleCellSizeChanged(float &cellSize)
+{
+	ofSpherePrimitive sphere;
+	sphere.set( cellSize, 10 );
+	vboSphere = sphere.getMesh();
 }
 
 void GameOfLifeScene::keyPressed( int key ) {
