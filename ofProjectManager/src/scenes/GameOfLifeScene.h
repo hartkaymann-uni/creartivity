@@ -47,7 +47,7 @@ class GameOfLifeScene : public ofxFadeScene {
 
 public:
 	GameOfLifeScene();
-	GameOfLifeScene(int cells_x, int cells_y);
+	GameOfLifeScene( int cells_x, int cells_y );
 	void setup();
 	void update();
 	void draw();
@@ -56,7 +56,8 @@ public:
 	void keyReleased( int key );
 	void mouseDragged( int x, int y, int button );
 
-	void handleCellSizeChanged(float &cellSize);
+	void handleSphereResolutionChanged( int& sphereRes);
+	void handleSphereRadiusChanged( float& cellSize );
 
 private:
 	ofShader    updateCells;
@@ -64,7 +65,7 @@ private:
 	ofShader    instancedShader;
 
 	pingPongBuffer cellPingPong;
-	
+
 	ofFbo   renderFBO;
 
 	ofVboMesh vboGrid;
@@ -73,9 +74,14 @@ private:
 
 	ofEasyCam camera;
 
+	ofLight light;
+	ofVec3f lightPos;
+	ofColor materialColor;
+
 	ofxPanel gui;
 	ofParameterGroup shaderUniforms;
-	ofParameter<int> circleResolution;
+	ofParameter<int> sphereResolution;
+	ofParameter<float> sphereRadius;
 	ofParameter<float> evolutionFactor;
 	ofParameter<float> cellSize;
 	ofParameter<float> dataSrcSize;
@@ -83,9 +89,9 @@ private:
 	const int N_CELLS_X;
 	const int N_CELLS_Y;
 	const int INVINCIBILITY = 10;
-	
+
 	float   timeStep;
 
 	int width, height;
-	
+
 };

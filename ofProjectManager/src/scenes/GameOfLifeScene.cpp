@@ -22,12 +22,20 @@ void GameOfLifeScene::setup()
 	filesystem::path shader_path( "../../res/shader" );
 	bool loadUpdateShader = updateCells.load( shader_path / "passthru.vert", shader_path / "gol.frag" );
 	bool loadRenderShader = updateRender.load( shader_path / "render.vert", shader_path / "render.frag" /*, shader_path / "render.geom" */ );
-	bool loadInstancedShader = instancedShader.load( shader_path / "renderInstanced.vert", shader_path / "renderInstanced.frag");
+	bool loadInstancedShader = instancedShader.load( shader_path / "renderInstanced.vert", shader_path / "renderInstanced.frag" );
 
 	camera.disableMouseInput();
 	camera.setupPerspective();
 	camera.setPosition( 0, 0, 500 );
 	camera.setFarClip( ofGetWidth() * 10 );
+
+	lightPos = ofVec3f( 50, 50, 50 );
+	light.setPointLight();
+	light.setup();
+	light.enable();
+	light.setPosition( lightPos );
+
+	materialColor = ofColor( 50.f, 120.f, 255.f );
 
 	// Make array of float pixels with cell data
 	// Currently only R value is be used, cells can only either be true (R > .5) or false (R =< .5)
@@ -56,18 +64,21 @@ void GameOfLifeScene::setup()
 	ofClear( 255 );
 	renderFBO.end();
 
-	circleResolution.set( "circleRes", 10, 4, 20 );
 	evolutionFactor.set( "evolutionFac", 0.0, 0.0, 1.0 );
+	sphereResolution.set( "circleRes", 10, 1, 100 );
+	sphereRadius.set( "radius", 4.0, 0.0, 10.0 );
 	cellSize.set( "size", 10.0, 1.0, 10.0 );
-	cellSize.addListener( this, &GameOfLifeScene::handleCellSizeChanged );
-	
 	dataSrcSize.set( "srcSize", 0, 0, 9 );
+
+	sphereResolution.addListener( this, &GameOfLifeScene::handleSphereResolutionChanged );
+	cellSize.addListener( this, &GameOfLifeScene::handleSphereRadiusChanged );
 
 	gui.setup();
 	shaderUniforms.setName( "Shader Parameters" );
-	shaderUniforms.add( circleResolution );
 	shaderUniforms.add( evolutionFactor );
-	shaderUniforms.add( cellSize);
+	shaderUniforms.add( sphereResolution );
+	shaderUniforms.add( cellSize );
+	shaderUniforms.add( sphereRadius );
 	shaderUniforms.add( dataSrcSize );
 	gui.add( shaderUniforms );
 	gui.setPosition( width - gui.getWidth() - 10, height - gui.getHeight() - 10 );
@@ -128,7 +139,7 @@ void GameOfLifeScene::update()
 	updateRender.begin();
 	updateRender.setUniforms( shaderUniforms );
 	updateRender.setUniformTexture( "cellTex", cellPingPong.src->getTexture(), 0 );
-	updateRender.setUniform2f( "resolution", (float) N_CELLS_X, (float) N_CELLS_Y);
+	updateRender.setUniform2f( "resolution", (float)N_CELLS_X, (float)N_CELLS_Y );
 	updateRender.setUniform2f( "screen", (float)width, (float)height );
 
 	ofPushStyle();
@@ -149,12 +160,19 @@ void GameOfLifeScene::draw()
 {
 	ofBackground( 0 );
 
-
 	//ofSetColor( 100, 255, 255 );
 
-	cellPingPong.dst->draw( 0, 0 , width / (10 - dataSrcSize ), height / (10 - dataSrcSize));
+	cellPingPong.dst->draw( 0, 0, width / (10 - dataSrcSize), height / (10 - dataSrcSize) );
+
+	ofPushStyle();
+	
+	ofEnableDepthTest();
+	ofDisableAlphaBlending();
 
 	camera.begin();
+	glEnable( GL_CULL_FACE );
+	glCullFace( GL_BACK );
+	
 	axisMesh.draw();
 
 	instancedShader.begin();
@@ -162,12 +180,20 @@ void GameOfLifeScene::draw()
 	instancedShader.setUniformTexture( "cellData", cellPingPong.src->getTexture(), 0 );
 	instancedShader.setUniform2f( "resolution", (float)N_CELLS_X, (float)N_CELLS_Y );
 	instancedShader.setUniform2f( "screen", (float)width, (float)height );
+	instancedShader.setUniform3f( "lightPos", lightPos );
+	instancedShader.setUniform4f( "materialColor", materialColor );
 
 	vboSphere.drawInstanced( OF_MESH_FILL, N_CELLS_X * N_CELLS_Y );
+	
+	glDisable( GL_CULL_FACE );
 	instancedShader.end();
 
-	//drawCoordinateSystem();
+	ofDisableDepthTest();
+	ofEnableAlphaBlending();
+
+	ofPopStyle();
 	
+	//drawCoordinateSystem();
 	//renderFBO.draw( 0, 0 );
 	camera.end();
 
@@ -176,15 +202,17 @@ void GameOfLifeScene::draw()
 }
 
 
-void GameOfLifeScene::mouseDragged( int x, int y, int button )
-{
-
-}
-
-void GameOfLifeScene::handleCellSizeChanged(float &cellSize)
+void GameOfLifeScene::handleSphereRadiusChanged( float& val )
 {
 	ofSpherePrimitive sphere;
-	sphere.set( cellSize, 10 );
+	sphere.set( cellSize, sphereResolution );
+	vboSphere = sphere.getMesh();
+}
+
+void GameOfLifeScene::handleSphereResolutionChanged( int& val )
+{
+	ofSpherePrimitive sphere;
+	sphere.set( cellSize, sphereResolution );
 	vboSphere = sphere.getMesh();
 }
 
@@ -205,4 +233,9 @@ void GameOfLifeScene::keyReleased( int key ) {
 		camera.disableMouseInput();
 
 	}
+}
+
+void GameOfLifeScene::mouseDragged( int x, int y, int button )
+{
+
 }
