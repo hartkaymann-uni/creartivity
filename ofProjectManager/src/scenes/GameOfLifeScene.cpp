@@ -8,7 +8,6 @@ GameOfLifeScene::GameOfLifeScene( int cells_x, int cells_y )
 	: ofxFadeScene( "GameOfLife" ),
 	width( ofGetWindowWidth() ),
 	height( ofGetWindowHeight() ),
-	timeStep( 0.0 ),
 	N_CELLS_X( cells_x ),
 	N_CELLS_Y( cells_y )
 {
@@ -35,7 +34,7 @@ void GameOfLifeScene::setup()
 	light.enable();
 	light.setPosition( lightPos );
 
-	materialColor = ofColor( 50.f, 120.f, 255.f );
+	materialColor = ofColor( 50.f, 255.f, 128.f );
 
 	// Make array of float pixels with cell data
 	// Currently only R value is be used, cells can only either be true (R > .5) or false (R =< .5)
@@ -64,11 +63,13 @@ void GameOfLifeScene::setup()
 	ofClear( 255 );
 	renderFBO.end();
 
+	// Set all Parameters once
 	evolutionFactor.set( "evolutionFac", 0.0, 0.0, 1.0 );
 	sphereResolution.set( "circleRes", 10, 1, 100 );
 	sphereRadius.set( "radius", 4.0, 0.0, 10.0 );
 	cellSize.set( "size", 10.0, 1.0, 10.0 );
 	dataSrcSize.set( "srcSize", 0, 0, 9 );
+	mouseRadius.set( "mouseRad", 2.5, 0, 10 );
 
 	sphereResolution.addListener( this, &GameOfLifeScene::handleSphereResolutionChanged );
 	cellSize.addListener( this, &GameOfLifeScene::handleSphereRadiusChanged );
@@ -80,6 +81,7 @@ void GameOfLifeScene::setup()
 	shaderUniforms.add( cellSize );
 	shaderUniforms.add( sphereRadius );
 	shaderUniforms.add( dataSrcSize );
+	shaderUniforms.add( mouseRadius );
 	gui.add( shaderUniforms );
 	gui.setPosition( width - gui.getWidth() - 10, height - gui.getHeight() - 10 );
 
@@ -123,7 +125,9 @@ void GameOfLifeScene::update()
 	updateCells.setUniformTexture( "cellData", cellPingPong.src->getTexture(), 0 );
 	updateRender.setUniform2f( "resolution", (float)N_CELLS_X, (float)N_CELLS_Y );
 	updateCells.setUniform2f( "screen", (float)width, (float)height );
-	updateCells.setUniform1f( "timestep", (float)timeStep += 0.05 );
+	updateCells.setUniform1i( "mouseDown", mouseIsDown );
+	updateCells.setUniform3f( "mousePos", mousePosition);
+
 
 	// Draw cell texture to call shaders, logic happens in shaders
 	cellPingPong.src->draw( 0, 0 );
@@ -165,14 +169,14 @@ void GameOfLifeScene::draw()
 	cellPingPong.dst->draw( 0, 0, width / (10 - dataSrcSize), height / (10 - dataSrcSize) );
 
 	ofPushStyle();
-	
+
 	ofEnableDepthTest();
 	ofDisableAlphaBlending();
 
 	camera.begin();
 	glEnable( GL_CULL_FACE );
 	glCullFace( GL_BACK );
-	
+
 	axisMesh.draw();
 
 	instancedShader.begin();
@@ -184,7 +188,7 @@ void GameOfLifeScene::draw()
 	instancedShader.setUniform4f( "materialColor", materialColor );
 
 	vboSphere.drawInstanced( OF_MESH_FILL, N_CELLS_X * N_CELLS_Y );
-	
+
 	glDisable( GL_CULL_FACE );
 	instancedShader.end();
 
@@ -192,7 +196,7 @@ void GameOfLifeScene::draw()
 	ofEnableAlphaBlending();
 
 	ofPopStyle();
-	
+
 	//drawCoordinateSystem();
 	//renderFBO.draw( 0, 0 );
 	camera.end();
@@ -200,7 +204,6 @@ void GameOfLifeScene::draw()
 	ofSetColor( 255 );
 	gui.draw();
 }
-
 
 void GameOfLifeScene::handleSphereRadiusChanged( float& val )
 {
@@ -235,7 +238,19 @@ void GameOfLifeScene::keyReleased( int key ) {
 	}
 }
 
+void GameOfLifeScene::mousePressed( int x, int y, int button )
+{
+	mouseIsDown = true;
+	mousePosition.set( x, y, 0.0 );
+}
+
+void GameOfLifeScene::mouseReleased( int x, int y, int button )
+{
+	mouseIsDown = false;
+}
+
 void GameOfLifeScene::mouseDragged( int x, int y, int button )
 {
-
+	if (mouseIsDown)
+		mousePosition.set( x, y, 0.0 );
 }

@@ -2,13 +2,20 @@
 
 uniform sampler2DRect cellData; // Previous generation cell data
 
-uniform float timestep;
 uniform float evolutionFac;
 uniform vec2 screen;
+
+uniform bool mouseDown;
+uniform vec3 mousePos;
+uniform float mouseRad;
 
 in vec2 vTexCoord;
 
 out vec4 vFragColor;
+
+float rand(vec2 co){
+    return fract(sin(dot(co, vec2(12.9898, 78.233))) * 43758.5453);
+}
 
 void main(void){
     // Get the cell state 
@@ -57,4 +64,9 @@ void main(void){
 
     // And finally store it on the FBO
      vFragColor = next_state;
+
+     if(mouseDown && distance(vTexCoord, mousePos.xy) <= mouseRad) {
+        float val = rand(vTexCoord);
+        vFragColor = vec4( val, val, 0.0, 1.0 );
+     }
 }

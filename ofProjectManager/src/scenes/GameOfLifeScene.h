@@ -54,6 +54,8 @@ public:
 
 	void keyPressed( int key );
 	void keyReleased( int key );
+	void mousePressed( int x, int y, int button );
+	void mouseReleased( int x, int y, int button );
 	void mouseDragged( int x, int y, int button );
 
 	void handleSphereResolutionChanged( int& sphereRes);
@@ -85,13 +87,14 @@ private:
 	ofParameter<float> evolutionFactor;
 	ofParameter<float> cellSize;
 	ofParameter<float> dataSrcSize;
+	ofParameter<float> mouseRadius;
 
 	const int N_CELLS_X;
 	const int N_CELLS_Y;
-	const int INVINCIBILITY = 10;
-
-	float   timeStep;
 
 	int width, height;
+	
+	bool mouseIsDown;
+	ofVec3f mousePosition;
 
 };
