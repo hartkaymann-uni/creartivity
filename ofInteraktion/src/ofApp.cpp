@@ -4,41 +4,39 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
-	kinect1.open();
+	//kinect1.open();
 
-	width = 640;
-	height = 480;
-
-	ofxKinectV2::Settings ksettings;
-	ksettings.enableRGB = true;
-	ksettings.enableIR = false;
-	ksettings.enableDepth = true;
-	ksettings.config.MinDepth = 0.5;
-	ksettings.config.MaxDepth = 8.0;
+	width = 1280;
+	height = 720;
 
 	// trying 2D contourFinder out
 	
+	cam.setup(width, height);
+	cam.videoSettings();
+
 	color.allocate(width, height);
 	gray.allocate(width, height);
 	background.allocate(width, height);
 	difference.allocate(width, height);
 	
-
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
+	/*
 	kinect1.update();
 
 	if (kinect1.isFrameNew()) {
-		textureDEPTH.loadData(kinect1.getDepthPixels());
+		texture.loadData(kinect1.getPixels());
 	}
+	*/
 
 	// trying 2D contourFinder out
 	
-	if (kinect1.isFrameNew()) {
-		color.setFromPixels(kinect1.getRgbPixels());
-		color.resize(width, height);
+	cam.update();
+
+	if (cam.isFrameNew()) {
+		color.setFromPixels(cam.getPixels());
 		gray = color;
 
 		if (learn) {
@@ -59,25 +57,28 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-	textureDEPTH.draw(width, 0, width, height);
+	//texture.draw(0, 0, width, height);
 
 	// trying 2D contourFinder out
 	
 	// we can draw the whole contour
-	/*
-	contour.draw(0, 0, width, height);
-	*/
+	// contour.draw(0, 0, -width, height);
 	// or, instead we can draw each blob individually,
+	ofPushMatrix();
+	ofTranslate(cam.getWidth(), 0);
+	ofScale(-1, 1);
 	for (int i = 0; i < contour.nBlobs; i++) {
 		contour.blobs[i].draw(0, 0);
+
+		printf("x = %f, y = %f\n", contour.blobs[1].boundingRect.getCenter().x, contour.blobs[1].boundingRect.getCenter().y);
 	}
-	
-	color.draw(0,0);
+	ofPopMatrix();
+
 }
 
 //--------------------------------------------------------------
 void ofApp::exit(){
-	kinect1.close();
+	//kinect1.close();
 }
 
 //--------------------------------------------------------------
