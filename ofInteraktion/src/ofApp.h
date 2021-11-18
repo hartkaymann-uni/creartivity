@@ -25,16 +25,14 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
 
-		/*
 		ofxKinectV2 kinect1;
 		ofTexture texture;
-		*/
 
 		int width;
 		int height;
 
-		// trying 2D contourFinder out
-		
+		// 2D input contourFinder
+		/*
 		ofVideoGrabber cam;
 
 		ofxCvColorImage color;
@@ -48,6 +46,6 @@ class ofApp : public ofBaseApp{
 		int threshold = 57;
 		// find contours on-screen
 		bool learn = true;
-		
+		*/
 
 };

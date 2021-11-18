@@ -9,8 +9,8 @@ void ofApp::setup(){
 	width = 1280;
 	height = 720;
 
-	// trying 2D contourFinder out
-	
+	// 2D input contourFinder
+	/*
 	cam.setup(width, height);
 	cam.videoSettings();
 
@@ -18,21 +18,20 @@ void ofApp::setup(){
 	gray.allocate(width, height);
 	background.allocate(width, height);
 	difference.allocate(width, height);
-	
+	*/
+
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
-	/*
 	kinect1.update();
 
 	if (kinect1.isFrameNew()) {
 		texture.loadData(kinect1.getPixels());
 	}
-	*/
 
-	// trying 2D contourFinder out
-	
+	// 2D input contourFinder
+	/*
 	cam.update();
 
 	if (cam.isFrameNew()) {
@@ -52,15 +51,16 @@ void ofApp::update(){
 
 		contour.findContours(difference, 10, width * height, 10, true);
 	}
-	
+	*/
+
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
 	//texture.draw(0, 0, width, height);
 
-	// trying 2D contourFinder out
-	
+	// 2D input contourFinder
+	/*
 	// we can draw the whole contour
 	// contour.draw(0, 0, -width, height);
 	// or, instead we can draw each blob individually,
@@ -73,18 +73,19 @@ void ofApp::draw(){
 		printf("x = %f, y = %f\n", contour.blobs[1].boundingRect.getCenter().x, contour.blobs[1].boundingRect.getCenter().y);
 	}
 	ofPopMatrix();
+	*/
 
 }
 
 //--------------------------------------------------------------
 void ofApp::exit(){
-	//kinect1.close();
+	kinect1.close();
 }
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
-	// trying 2D contourFinder out
-	
+	// 2D input contourFinder
+	/*
 	switch (key) {
 	case 'q':
 		threshold++;
@@ -99,7 +100,8 @@ void ofApp::keyPressed(int key){
 	default:
 		break;
 	}
-	
+	*/
+
 }
 
 //--------------------------------------------------------------
