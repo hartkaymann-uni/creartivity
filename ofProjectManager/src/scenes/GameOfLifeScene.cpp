@@ -9,7 +9,9 @@ GameOfLifeScene::GameOfLifeScene( int cells_x, int cells_y )
 	width( ofGetWindowWidth() ),
 	height( ofGetWindowHeight() ),
 	N_CELLS_X( cells_x ),
-	N_CELLS_Y( cells_y )
+	N_CELLS_Y( cells_y ),
+	mouseIsDown( false ),
+	mousePosition( 0.f, 0.f, 0.f)
 {
 	setSingleSetup( false );
 	setFade( 1000, 1000 );
@@ -126,7 +128,7 @@ void GameOfLifeScene::update()
 	updateRender.setUniform2f( "resolution", (float)N_CELLS_X, (float)N_CELLS_Y );
 	updateCells.setUniform2f( "screen", (float)width, (float)height );
 	updateCells.setUniform1i( "mouseDown", mouseIsDown );
-	updateCells.setUniform3f( "mousePos", mousePosition);
+	updateCells.setUniform3f( "mousePos", mousePosition );
 
 
 	// Draw cell texture to call shaders, logic happens in shaders

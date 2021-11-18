@@ -53,6 +53,11 @@ void main(void){
         }
     }
 
+
+    if(mouseDown && distance(vTexCoord, mousePos.xy) <= mouseRad) {
+        next_state.x += evolutionFac;
+    }
+
     next_state.y = n_neighbours / 8.0;
 
     // Clamp values between 0.0 and 1.0
@@ -60,13 +65,7 @@ void main(void){
     next_state.y = clamp(next_state.y, 0.0, 1.0);
     next_state.z = clamp(next_state.z, 0.0, 1.0);
 
-    //next_state.w = ( n_neighbours / 1.0 );
 
     // And finally store it on the FBO
      vFragColor = next_state;
-
-     if(mouseDown && distance(vTexCoord, mousePos.xy) <= mouseRad) {
-        float val = rand(vTexCoord);
-        vFragColor = vec4( val, val, 0.0, 1.0 );
-     }
 }
