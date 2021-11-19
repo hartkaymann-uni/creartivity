@@ -3,8 +3,8 @@
 //--------------------------------------------------------------
 void ofApp::setup() {
 	bool pause = false;
-	ofSetFrameRate(30);
-	int maxDistance = 100;
+	ofSetFrameRate(60);
+	int maxDistance = 200;
 	bool lineIsEnabled = false;
 	bool lightningIsEnabled = false;
 }
@@ -29,7 +29,7 @@ void ofApp::update() {
 	}
 
 	// Generate some random nodes
-	while (nodes.size() < 128)
+	while (nodes.size() < 512)
 	{
 		Node newHub(ofRandom(ofGetWidth()), ofRandom(ofGetHeight()));
 		nodes.push_back(newHub);
@@ -40,6 +40,7 @@ void ofApp::update() {
 //--------------------------------------------------------------
 void ofApp::draw() {
 	ofSetColor(255);
+	ofSetLineWidth(1);
 
 	// Draw circles for every node
 	for (int i = 0; i < nodes.size(); i++)
@@ -48,17 +49,30 @@ void ofApp::draw() {
 	}
 
 	// Draw lines or lightning between nodes
-	for (int i = 0; i < nodes.size(); i++)
+	for (int i = 0; i < nodes.size() - 1; i++)
 	{
 		glm::vec2 positionOne = nodes[i].position;
-		for (int j = 0; j < nodes.size(); j++)
+		for (int j = i + 1; j < nodes.size(); j++)
 		{
 			glm::vec2 positionTwo = nodes[j].position;
 			int distance = glm::distance(positionOne, positionTwo);
-			if (i != j && distance < maxDistance) // watch for double checking!
+			if (distance < maxDistance)
 			{
-				if(lineIsEnabled) ofDrawLine(positionOne, positionTwo);
-				if(lightningIsEnabled) drawLightning(positionOne, positionTwo, distance/3);
+				float x1 = positionOne.x;
+				float y1 = positionOne.y;
+				float x4 = positionTwo.x;
+				float y4 = positionTwo.y;
+				float x2 = (x1 + x4) / 2 - distance / 2 * nodes[i].direction.x;
+				float y2 = (y1 + y4) / 2 - distance / 2 * nodes[i].direction.y;
+				float x3 = (x1 + x4) / 2 - distance / 2 * nodes[j].direction.x;
+				float y3 = (y1 + y4) / 2 - distance / 2 * nodes[j].direction.y;
+
+
+
+				ofDrawBezier(x1,y1,x2,y2,x3,y3,x4,y4);
+
+				if (lineIsEnabled) ofDrawLine(positionOne, positionTwo);
+				if (lightningIsEnabled) drawLightning(positionOne, positionTwo, distance / 3);
 			}
 		}
 	}
@@ -167,10 +181,10 @@ bool Node::isVisible() {
 void Node::update() {
 	float time = ofGetElapsedTimef();
 	position += direction;
-	size -= 0.01;
+	size += ofRandom(-0.02, 0.001);
 }
 
 void Node::draw() {
 	ofNoFill();
-	ofDrawCircle(position, size);
+	//ofDrawCircle(position, size);
 }

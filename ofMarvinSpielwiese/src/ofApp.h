@@ -17,7 +17,7 @@ public:
 	void draw();
 
 	Node(int x, int y);		//construktor
-	~Node();							//destruktor
+	~Node();				//destruktor
 
 };
 
