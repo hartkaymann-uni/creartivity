@@ -54,7 +54,7 @@ void main(void){
     }
 
 
-    if(mouseDown && distance(vTexCoord, mousePos.xy) <= mouseRad) {
+    if(mouseDown && distance(vTexCoord, mousePos.xy / 10) <= mouseRad) {
         next_state.x += evolutionFac;
     }
 

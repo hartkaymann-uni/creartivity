@@ -20,9 +20,8 @@ uniform bool	u_MousePressed;
 uniform float	u_TimeLastFrame;
 uniform float	u_ElapsedTime;
 uniform float	u_MaxSpeed;
-uniform float	u_ScreenWidth;
-uniform float	u_ScreenHeight;
 uniform float	u_NoiseShift;
+uniform vec2	u_Screen;
 uniform vec3	u_MousePosition;
 
 float rand(vec2 co){
@@ -113,12 +112,12 @@ void main(){
 	vec3 acc = vec3(0.0, 0.0, 0.0);
 	
 	// Reset position if out of bounds
-	if(particle.x  < (-u_ScreenWidth * 0.5) 
-		|| particle.x > (u_ScreenWidth * 0.5)
-		|| particle.y < (-u_ScreenHeight * 0.5)
-		|| particle.y > (u_ScreenHeight * 0.5))
+	if(particle.x < 0.0
+		|| particle.x > u_Screen.x
+		|| particle.y < 0.0
+		|| particle.y > u_Screen.y)
 	{
-		p[index].pos.xy = vec2(rand(p[index].pos.xy) * u_ScreenWidth - (u_ScreenWidth * 0.5), rand(p[index].pos.yx) * u_ScreenHeight - (u_ScreenHeight * 0.5));
+		p[index].pos.xy = vec2(rand(p[index].pos.xy) * u_Screen.x, rand(p[index].pos.yx) * u_Screen.y);
 		p[index].vel.xyz = vec3(0.0);
 	}
 

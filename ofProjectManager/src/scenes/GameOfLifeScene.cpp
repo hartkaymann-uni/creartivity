@@ -66,12 +66,12 @@ void GameOfLifeScene::setup()
 	renderFBO.end();
 
 	// Set all Parameters once
-	evolutionFactor.set( "evolutionFac", 0.0, 0.0, 1.0 );
+	evolutionFactor.set( "evolutionFac", 0.1, 0.0, 1.0 );
 	sphereResolution.set( "circleRes", 10, 1, 100 );
 	sphereRadius.set( "radius", 4.0, 0.0, 10.0 );
 	cellSize.set( "size", 10.0, 1.0, 10.0 );
 	dataSrcSize.set( "srcSize", 0, 0, 9 );
-	mouseRadius.set( "mouseRad", 2.5, 0, 10 );
+	mouseRadius.set( "mouseRad", 5, 0, 10 );
 
 	sphereResolution.addListener( this, &GameOfLifeScene::handleSphereResolutionChanged );
 	cellSize.addListener( this, &GameOfLifeScene::handleSphereRadiusChanged );

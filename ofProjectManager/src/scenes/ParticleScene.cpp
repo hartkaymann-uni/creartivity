@@ -25,8 +25,8 @@ void ParticleScene::setup() {
 	int i = 0;
 	for (auto& p : particles)
 	{
-		p.pos.x = ofRandom( -ofGetWidth() * 0.5, ofGetWidth() * 0.5 );
-		p.pos.y = ofRandom( -ofGetHeight() * 0.5, ofGetHeight() * 0.5 );
+		p.pos.x = ofRandom( 0, ofGetWidth() );
+		p.pos.y = ofRandom( 0, ofGetHeight() );
 		p.pos.z = 0;
 		p.pos.w = 1;
 		p.vel = { 0,0,0,0 };
@@ -92,8 +92,7 @@ void ParticleScene::update() {
 	compute.setUniforms( m_ShaderUniforms );
 	compute.setUniform1f( "u_TimeLastFrame", ofGetLastFrameTime() );
 	compute.setUniform1f( "u_ElapsedTime", ofGetElapsedTimef() );
-	compute.setUniform1f( "u_ScreenWidth", ofGetScreenWidth() );
-	compute.setUniform1f( "u_ScreenHeight", ofGetScreenHeight() );
+	compute.setUniform2f( "u_Screen", (float)ofGetWidth(), (float)ofGetHeight() );
 	compute.setUniform1f( "u_NoiseShift", m_NoiseShift );
 	compute.setUniform3f( "u_MousePosition", m_MousePosition );
 	compute.setUniform1i( "u_MousePressed", m_MousePressed );
