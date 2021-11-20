@@ -47,32 +47,54 @@ class GameOfLifeScene : public ofxFadeScene {
 
 public:
 	GameOfLifeScene();
-	GameOfLifeScene(int cells_x, int cells_y);
+	GameOfLifeScene( int cells_x, int cells_y );
 	void setup();
 	void update();
 	void draw();
 
+	void keyPressed( int key );
+	void keyReleased( int key );
+	void mousePressed( int x, int y, int button );
+	void mouseReleased( int x, int y, int button );
 	void mouseDragged( int x, int y, int button );
+
+	void handleSphereResolutionChanged( int& sphereRes);
+	void handleSphereRadiusChanged( float& cellSize );
 
 private:
 	ofShader    updateCells;
 	ofShader    updateRender;
-	ofShader    basicShader;
+	ofShader    instancedShader;
 
 	pingPongBuffer cellPingPong;
-	
+
 	ofFbo   renderFBO;
-	ofVboMesh mesh;
+
+	ofVboMesh vboGrid;
+	ofVboMesh vboSphere;
+	ofMesh axisMesh;
+
+	ofEasyCam camera;
+
+	ofLight light;
+	ofVec3f lightPos;
+	ofColor materialColor;
 
 	ofxPanel gui;
+	ofParameterGroup shaderUniforms;
+	ofParameter<int> sphereResolution;
+	ofParameter<float> sphereRadius;
+	ofParameter<float> evolutionFactor;
+	ofParameter<float> cellSize;
+	ofParameter<float> dataSrcSize;
+	ofParameter<float> mouseRadius;
 
 	const int N_CELLS_X;
 	const int N_CELLS_Y;
-	const int INVINCIBILITY = 10;
-	
-	float   timeStep;
 
 	int width, height;
 	
-	void setRadius( int x, int y, int r, bool val );
+	bool mouseIsDown;
+	ofVec3f mousePosition;
+
 };

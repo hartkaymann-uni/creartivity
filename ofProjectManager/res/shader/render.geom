@@ -7,6 +7,7 @@ layout (max_vertices = 6) out;
 uniform mat4 modelViewProjectionMatrix;
 
 uniform float size;
+uniform int circleRes;
 uniform vec2 screen;
 
 in vec4 vPosition[];

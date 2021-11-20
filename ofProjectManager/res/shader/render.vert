@@ -10,20 +10,17 @@ in vec4 color;
 
 uniform sampler2DRect cellTex;
 uniform vec2 screen;
+uniform vec2 resolution;
 
-out vec4 vPosition;
-out vec2 vTexCoord;
-out vec4 vColor;
+flat out vec4 vPosition;
+flat out vec2 vTexCoord;
+flat out vec4 vColor;
 
 void main() {
-    // Read position data from texture.
-    //vec4 pixPos = texture( cellTex, texcoord );
-    
-    // Map the position from the texture (from 0.0 to 1.0) to
-    // the screen position (0 - screenWidth/screenHeight)
-    //pixPos.x *= screen.x;
-    //pixPos.y *= screen.y;
 
+    vPosition = modelViewProjectionMatrix * position;
     vTexCoord = texcoord;
-    vColor = vec4(0.5, 0.0, 0.0, 1.0);
+    vColor = vec4(0.1, 0.2, 0.6, 1.0);
+
+    gl_Position = modelViewProjectionMatrix * position;
 }

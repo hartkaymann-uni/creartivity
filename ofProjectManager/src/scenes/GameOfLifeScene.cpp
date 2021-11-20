@@ -8,9 +8,10 @@ GameOfLifeScene::GameOfLifeScene( int cells_x, int cells_y )
 	: ofxFadeScene( "GameOfLife" ),
 	width( ofGetWindowWidth() ),
 	height( ofGetWindowHeight() ),
-	timeStep( 0.0 ),
 	N_CELLS_X( cells_x ),
-	N_CELLS_Y( cells_y )
+	N_CELLS_Y( cells_y ),
+	mouseIsDown( false ),
+	mousePosition( 0.f, 0.f, 0.f)
 {
 	setSingleSetup( false );
 	setFade( 1000, 1000 );
@@ -20,17 +21,34 @@ void GameOfLifeScene::setup()
 {
 	// Load Shaders
 	filesystem::path shader_path( "../../res/shader" );
-	bool loadUpdateCells = updateCells.load( shader_path / "passthru.vert", shader_path / "gol.frag" );
-	bool loadUpdateRender = updateRender.load( shader_path / "render.vert", shader_path / "render.frag", shader_path / "render.geom" );
-	bool loadBasicShader = basicShader.load( shader_path / "passthru.vert", shader_path / "render.frag" );
+	bool loadUpdateShader = updateCells.load( shader_path / "passthru.vert", shader_path / "gol.frag" );
+	bool loadRenderShader = updateRender.load( shader_path / "render.vert", shader_path / "render.frag" /*, shader_path / "render.geom" */ );
+	bool loadInstancedShader = instancedShader.load( shader_path / "renderInstanced.vert", shader_path / "renderInstanced.frag" );
+
+	camera.disableMouseInput();
+	camera.setupPerspective();
+	camera.setPosition( 0, 0, 500 );
+	camera.setFarClip( ofGetWidth() * 10 );
+
+	lightPos = ofVec3f( 50, 50, 50 );
+	light.setPointLight();
+	light.setup();
+	light.enable();
+	light.setPosition( lightPos );
+
+	materialColor = ofColor( 50.f, 255.f, 128.f );
 
 	// Make array of float pixels with cell data
 	// Currently only R value is be used, cells can only either be true (R > .5) or false (R =< .5)
+	ofSeedRandom();
 	vector<float> cells( N_CELLS_X * N_CELLS_Y * 3 );
 	for (size_t x = 0; x < N_CELLS_X; x++) {
 		for (size_t y = 0; y < N_CELLS_Y; y++) {
 			size_t i = x * N_CELLS_Y + y;
-			cells[i * 3 + 0] = 1.0;
+			float initialValue = ofRandom( 1.0 );
+			// initialValue = (y % 2 == 0) ? 1.0 : 0.0;
+
+			cells[i * 3 + 0] = initialValue;
 			cells[i * 3 + 1] = 0.0;
 			cells[i * 3 + 2] = 0.0;
 		}
@@ -47,13 +65,52 @@ void GameOfLifeScene::setup()
 	ofClear( 255 );
 	renderFBO.end();
 
-	mesh.setMode( OF_PRIMITIVE_POINTS );
-	for (int x = 0; x < N_CELLS_X; x++) {
-		for (int y = 0; y < N_CELLS_Y; y++) {
-			mesh.addVertex( { x * 10.0 + x, y * 10.0 + y, 0 } );
-			mesh.addTexCoord( { x, y } );
+	// Set all Parameters once
+	evolutionFactor.set( "evolutionFac", 0.1, 0.0, 1.0 );
+	sphereResolution.set( "circleRes", 10, 1, 100 );
+	sphereRadius.set( "radius", 4.0, 0.0, 10.0 );
+	cellSize.set( "size", 10.0, 1.0, 10.0 );
+	dataSrcSize.set( "srcSize", 0, 0, 9 );
+	mouseRadius.set( "mouseRad", 5, 0, 10 );
+
+	sphereResolution.addListener( this, &GameOfLifeScene::handleSphereResolutionChanged );
+	cellSize.addListener( this, &GameOfLifeScene::handleSphereRadiusChanged );
+
+	gui.setup();
+	shaderUniforms.setName( "Shader Parameters" );
+	shaderUniforms.add( evolutionFactor );
+	shaderUniforms.add( sphereResolution );
+	shaderUniforms.add( cellSize );
+	shaderUniforms.add( sphereRadius );
+	shaderUniforms.add( dataSrcSize );
+	shaderUniforms.add( mouseRadius );
+	gui.add( shaderUniforms );
+	gui.setPosition( width - gui.getWidth() - 10, height - gui.getHeight() - 10 );
+
+	vboGrid.setMode( OF_PRIMITIVE_TRIANGLES );
+	for (int y = 0; y < N_CELLS_Y; y++) {
+		for (int x = 0; x < N_CELLS_X; x++) {
+			vboGrid.addVertex( { x * cellSize, y * cellSize, 0 } );
+			vboGrid.addTexCoord( { x, y } );
 		}
 	}
+	for (int y = 0; y < N_CELLS_Y - 1; y++) {
+		for (int x = 0; x < N_CELLS_X - 1; x++) {
+			vboGrid.addIndex( x + y * N_CELLS_X );
+			vboGrid.addIndex( (x + 1) + y * N_CELLS_X );
+			vboGrid.addIndex( x + (y + 1) * N_CELLS_X );
+
+			vboGrid.addIndex( (x + 1) + y * N_CELLS_X );
+			vboGrid.addIndex( (x + 1) + (y + 1) * N_CELLS_X );
+			vboGrid.addIndex( x + (y + 1) * N_CELLS_X );
+		}
+	}
+
+	axisMesh = ofMesh::axis();
+
+	ofSpherePrimitive sphere;
+	sphere.set( cellSize, 10 );
+	vboSphere = sphere.getMesh();
 }
 
 void GameOfLifeScene::update()
@@ -66,11 +123,13 @@ void GameOfLifeScene::update()
 	cellPingPong.dst->begin();
 	ofClear( 0 );
 	updateCells.begin();
+	updateCells.setUniforms( shaderUniforms );
 	updateCells.setUniformTexture( "cellData", cellPingPong.src->getTexture(), 0 );
-	updateCells.setUniform1i( "resolutionX", N_CELLS_X );
-	updateCells.setUniform1i( "resolutionY", N_CELLS_Y );
+	updateRender.setUniform2f( "resolution", (float)N_CELLS_X, (float)N_CELLS_Y );
 	updateCells.setUniform2f( "screen", (float)width, (float)height );
-	updateCells.setUniform1f( "timestep", (float)timeStep += 0.05 );
+	updateCells.setUniform1i( "mouseDown", mouseIsDown );
+	updateCells.setUniform3f( "mousePos", mousePosition );
+
 
 	// Draw cell texture to call shaders, logic happens in shaders
 	cellPingPong.src->draw( 0, 0 );
@@ -84,17 +143,16 @@ void GameOfLifeScene::update()
 	renderFBO.begin();
 	ofClear( 0, 0, 0, 0 );
 	updateRender.begin();
-	updateRender.setUniformTexture( "cellTex", cellPingPong.dst->getTexture(), 0 );
-	updateRender.setUniform1i( "resolutionX", N_CELLS_X );
-	updateRender.setUniform1i( "resolutionY", N_CELLS_Y );
-	updateRender.setUniform1f( "size", 10.0 );
+	updateRender.setUniforms( shaderUniforms );
+	updateRender.setUniformTexture( "cellTex", cellPingPong.src->getTexture(), 0 );
+	updateRender.setUniform2f( "resolution", (float)N_CELLS_X, (float)N_CELLS_Y );
 	updateRender.setUniform2f( "screen", (float)width, (float)height );
 
 	ofPushStyle();
 	ofEnableBlendMode( OF_BLENDMODE_ADD );
 	ofSetColor( 255 );
 
-	mesh.draw();
+	vboGrid.draw();
 
 	ofDisableBlendMode();
 	glEnd();
@@ -110,46 +168,91 @@ void GameOfLifeScene::draw()
 
 	//ofSetColor( 100, 255, 255 );
 
-	cellPingPong.dst->draw( 0, 0, width, height );
-	//renderFBO.draw( 0, 0);
+	cellPingPong.dst->draw( 0, 0, width / (10 - dataSrcSize), height / (10 - dataSrcSize) );
 
+	ofPushStyle();
 
-	basicShader.begin();
-	ofDrawRectangle( ofRectangle( 100, 100, 100, 100 ) );
-	basicShader.end();
+	ofEnableDepthTest();
+	ofDisableAlphaBlending();
 
+	camera.begin();
+	glEnable( GL_CULL_FACE );
+	glCullFace( GL_BACK );
+
+	axisMesh.draw();
+
+	instancedShader.begin();
+	instancedShader.setUniforms( shaderUniforms );
+	instancedShader.setUniformTexture( "cellData", cellPingPong.src->getTexture(), 0 );
+	instancedShader.setUniform2f( "resolution", (float)N_CELLS_X, (float)N_CELLS_Y );
+	instancedShader.setUniform2f( "screen", (float)width, (float)height );
+	instancedShader.setUniform3f( "lightPos", lightPos );
+	instancedShader.setUniform4f( "materialColor", materialColor );
+
+	vboSphere.drawInstanced( OF_MESH_FILL, N_CELLS_X * N_CELLS_Y );
+
+	glDisable( GL_CULL_FACE );
+	instancedShader.end();
+
+	ofDisableDepthTest();
+	ofEnableAlphaBlending();
+
+	ofPopStyle();
+
+	//drawCoordinateSystem();
+	//renderFBO.draw( 0, 0 );
+	camera.end();
+
+	ofSetColor( 255 );
+	gui.draw();
+}
+
+void GameOfLifeScene::handleSphereRadiusChanged( float& val )
+{
+	ofSpherePrimitive sphere;
+	sphere.set( cellSize, sphereResolution );
+	vboSphere = sphere.getMesh();
+}
+
+void GameOfLifeScene::handleSphereResolutionChanged( int& val )
+{
+	ofSpherePrimitive sphere;
+	sphere.set( cellSize, sphereResolution );
+	vboSphere = sphere.getMesh();
+}
+
+void GameOfLifeScene::keyPressed( int key ) {
+
+	// std::cout << key << std::endl;
+	if (key == ofKey::OF_KEY_SHIFT)
+	{
+		camera.enableMouseInput();
+		//std::cout << camera.getPosition() << std::endl;
+	}
+}
+
+void GameOfLifeScene::keyReleased( int key ) {
+
+	if (key == ofKey::OF_KEY_SHIFT)
+	{
+		camera.disableMouseInput();
+
+	}
+}
+
+void GameOfLifeScene::mousePressed( int x, int y, int button )
+{
+	mouseIsDown = true;
+	mousePosition.set( x, y, 0.0 );
+}
+
+void GameOfLifeScene::mouseReleased( int x, int y, int button )
+{
+	mouseIsDown = false;
 }
 
 void GameOfLifeScene::mouseDragged( int x, int y, int button )
 {
-	const int MOUSE_DRAG_RADIUS = 5;
-
-	if (x > 0 && x < ofGetWindowWidth()
-		&& y > 0 && ofGetWindowHeight())
-	{
-		setRadius( x / 10, y / 10, MOUSE_DRAG_RADIUS, true );
-		//std::cout << x << " " << y << std::endl;
-	}
-}
-
-void GameOfLifeScene::setRadius( int x, int y, int r, bool val )
-{
-	for (int y_shift = -r; y_shift <= r; y_shift++) {
-		for (int x_shift = -r; x_shift <= r; x_shift++) {
-			if (x_shift * x_shift + y_shift * y_shift <= r * r)
-			{
-				int x_shifted = x + x_shift;
-				int y_shifted = y + y_shift;
-
-				if (x_shifted > 0
-					&& x_shifted < N_CELLS_X
-					&& y_shifted > 0
-					&& y_shifted < N_CELLS_Y)
-				{
-					//current_generation[x_shifted * N_CELLS_Y + y_shifted].alive = true;
-					//invincible[x_shifted * N_CELLS_Y + y_shifted] = INVINCIBILITY_DURATION;
-				}
-			}
-		}
-	}
+	if (mouseIsDown)
+		mousePosition.set( x, y, 0.0 );
 }
