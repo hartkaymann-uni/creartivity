@@ -22,7 +22,7 @@ void main() {
 //
 
 	// Set brightness according to z value
-	float z = smoothstep(0.1, 0.75, pow(vPosition.z / (radius * size), 1.0));
+	float z = smoothstep(0.0, 0.75, pow(vPosition.z / (radius * size), 1.0));
 	vFragColor = vec4( vec3(z), 1.0);
 
 }

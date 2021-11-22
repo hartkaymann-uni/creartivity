@@ -72,7 +72,7 @@ void GameOfLifeScene::setup()
 	cellSize.set( "size", 10.0, 1.0, 10.0 );
 	dataSrcSize.set( "srcSize", 0, 0, 9 );
 	mouseRadius.set( "mouseRad", 5, 0, 10 );
-	mouseStrength.set( "mouseStr", 0.1, 0.0, 1.0 );
+	mouseStrength.set( "mouseStr", 0.05, 0.0, 1.0 );
 
 	sphereResolution.addListener( this, &GameOfLifeScene::handleSphereResolutionChanged );
 	cellSize.addListener( this, &GameOfLifeScene::handleSphereRadiusChanged );
