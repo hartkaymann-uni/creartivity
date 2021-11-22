@@ -88,6 +88,7 @@ private:
 	ofParameter<float> cellSize;
 	ofParameter<float> dataSrcSize;
 	ofParameter<float> mouseRadius;
+	ofParameter<float> mouseStrength;
 
 	const int N_CELLS_X;
 	const int N_CELLS_Y;

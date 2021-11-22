@@ -66,12 +66,13 @@ void GameOfLifeScene::setup()
 	renderFBO.end();
 
 	// Set all Parameters once
-	evolutionFactor.set( "evolutionFac", 0.1, 0.0, 1.0 );
-	sphereResolution.set( "circleRes", 10, 1, 100 );
+	evolutionFactor.set( "evolutionFac", 0.05, 0.0, 1.0 );
+	sphereResolution.set( "circleRes", 20, 1, 100 );
 	sphereRadius.set( "radius", 4.0, 0.0, 10.0 );
 	cellSize.set( "size", 10.0, 1.0, 10.0 );
 	dataSrcSize.set( "srcSize", 0, 0, 9 );
 	mouseRadius.set( "mouseRad", 5, 0, 10 );
+	mouseStrength.set( "mouseStr", 0.1, 0.0, 1.0 );
 
 	sphereResolution.addListener( this, &GameOfLifeScene::handleSphereResolutionChanged );
 	cellSize.addListener( this, &GameOfLifeScene::handleSphereRadiusChanged );
@@ -84,6 +85,8 @@ void GameOfLifeScene::setup()
 	shaderUniforms.add( sphereRadius );
 	shaderUniforms.add( dataSrcSize );
 	shaderUniforms.add( mouseRadius );
+	shaderUniforms.add( mouseStrength );
+
 	gui.add( shaderUniforms );
 	gui.setPosition( width - gui.getWidth() - 10, height - gui.getHeight() - 10 );
 
@@ -109,7 +112,7 @@ void GameOfLifeScene::setup()
 	axisMesh = ofMesh::axis();
 
 	ofSpherePrimitive sphere;
-	sphere.set( cellSize, 10 );
+	sphere.set( cellSize, sphereResolution);
 	vboSphere = sphere.getMesh();
 }
 
@@ -180,6 +183,9 @@ void GameOfLifeScene::draw()
 	glCullFace( GL_BACK );
 
 	axisMesh.draw();
+
+	glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+	glEnable( GL_BLEND );
 
 	instancedShader.begin();
 	instancedShader.setUniforms( shaderUniforms );

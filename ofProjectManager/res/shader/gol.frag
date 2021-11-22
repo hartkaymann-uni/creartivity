@@ -8,6 +8,7 @@ uniform vec2 screen;
 uniform bool mouseDown;
 uniform vec3 mousePos;
 uniform float mouseRad;
+uniform float mouseStr;
 
 in vec2 vTexCoord;
 
@@ -55,7 +56,7 @@ void main(void){
 
 
     if(mouseDown && distance(vTexCoord, mousePos.xy / 10) <= mouseRad) {
-        next_state.x += evolutionFac;
+        next_state.x += mouseStr;
     }
 
     next_state.y = n_neighbours / 8.0;
