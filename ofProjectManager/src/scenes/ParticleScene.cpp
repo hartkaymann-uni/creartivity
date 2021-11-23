@@ -18,7 +18,7 @@ void ParticleScene::setup() {
 
 	camera.disableMouseInput();
 	camera.setupPerspective();
-	camera.setPosition( 0, 0, 665 );
+	camera.setPosition( ofGetWidth() / 2, ofGetHeight() / 2, 665 );
 	camera.setFarClip( ofGetWidth() * 10 );
 
 	particles.resize( 1024 * 8 * 1 );

@@ -88,12 +88,14 @@ private:
 	ofParameter<float> dataSrcSize;
 	ofParameter<float> mouseRadius;
 	ofParameter<float> mouseStrength;
+	ofParameter<float> jiggleFactor;
 
 	const int N_CELLS_X;
 	const int N_CELLS_Y;
 
 	int width, height;
-	
+	float time;
+
 	bool mouseIsDown;
 	ofVec3f mousePosition;
 

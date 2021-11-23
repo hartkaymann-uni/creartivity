@@ -25,7 +25,7 @@ void GameOfLifeScene::setup()
 
 	camera.disableMouseInput();
 	camera.setupPerspective();
-	camera.setPosition( 0, 0, 500 );
+	camera.setPosition( ofGetWidth() / 2, ofGetHeight() / 2, 665 );
 	camera.setFarClip( ofGetWidth() * 10 );
 
 	lightPos = ofVec3f( 50, 50, 50 );
@@ -71,6 +71,7 @@ void GameOfLifeScene::setup()
 	dataSrcSize.set( "srcSize", 0, 0, 9 );
 	mouseRadius.set( "mouseRad", 5, 0, 10 );
 	mouseStrength.set( "mouseStr", 0.1, 0.0, 1.0 );
+	jiggleFactor.set( "jiggle", 1.0, 0.0, 10.0 );
 
 	sphereResolution.addListener( this, &GameOfLifeScene::handleSphereResolutionChanged );
 	cellSize.addListener( this, &GameOfLifeScene::handleSphereRadiusChanged );
@@ -84,6 +85,7 @@ void GameOfLifeScene::setup()
 	shaderUniforms.add( dataSrcSize );
 	shaderUniforms.add( mouseRadius );
 	shaderUniforms.add( mouseStrength );
+	shaderUniforms.add( jiggleFactor );
 
 	gui.add( shaderUniforms );
 	gui.setPosition( width - gui.getWidth() - 10, height - gui.getHeight() - 10 );
@@ -110,12 +112,8 @@ void GameOfLifeScene::setup()
 	axisMesh = ofMesh::axis();
 
 	ofSpherePrimitive sphere;
-	ofPath path;
-	path.circle( glm::vec2( 0.f ), sphereRadius );
-	path.setFilled( true );
 	sphere.set( cellSize, sphereResolution);
 	vboSphere = sphere.getMesh();
-	vboSphere = path.getTessellation();
 }
 
 void GameOfLifeScene::update()
@@ -124,6 +122,8 @@ void GameOfLifeScene::update()
 	std::stringstream strm;
 	strm << "fps: " << ofGetFrameRate();
 	ofSetWindowTitle( strm.str() );
+	
+	time = ofGetElapsedTimef();
 
 	cellPingPong.dst->begin();
 	ofClear( 0 );
@@ -196,6 +196,7 @@ void GameOfLifeScene::draw()
 	instancedShader.setUniform2f( "screen", (float)width, (float)height );
 	instancedShader.setUniform3f( "lightPos", lightPos );
 	instancedShader.setUniform4f( "materialColor", materialColor );
+	instancedShader.setUniform1f( "time", time );
 
 	vboSphere.drawInstanced( OF_MESH_FILL, N_CELLS_X * N_CELLS_Y );
 
