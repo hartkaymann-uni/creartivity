@@ -2,16 +2,15 @@
 
 #include <random>
 
-GameOfLifeScene::GameOfLifeScene() : GameOfLifeScene( 102, 77 ) {}
-
-GameOfLifeScene::GameOfLifeScene( int cells_x, int cells_y )
+GameOfLifeScene::GameOfLifeScene( int cells_x = 102, int cells_y = 77, filesystem::path src_img = "" )
 	: ofxFadeScene( "GameOfLife" ),
 	width( ofGetWindowWidth() ),
 	height( ofGetWindowHeight() ),
 	N_CELLS_X( cells_x ),
 	N_CELLS_Y( cells_y ),
 	mouseIsDown( false ),
-	mousePosition( 0.f, 0.f, 0.f)
+	mousePosition( 0.f, 0.f, 0.f ),
+	srcImg( src_img )
 {
 	setSingleSetup( false );
 	setFade( 1000, 1000 );
@@ -20,6 +19,7 @@ GameOfLifeScene::GameOfLifeScene( int cells_x, int cells_y )
 void GameOfLifeScene::setup()
 {
 	// Load Shaders
+	filesystem::path res_path( "../../res" );
 	filesystem::path shader_path( "../../res/shader" );
 	bool loadUpdateShader = updateCells.load( shader_path / "passthru.vert", shader_path / "gol.frag" );
 	bool loadRenderShader = updateRender.load( shader_path / "render.vert", shader_path / "render.frag" /*, shader_path / "render.geom" */ );
@@ -38,8 +38,9 @@ void GameOfLifeScene::setup()
 
 	materialColor = ofColor( 50.f, 255.f, 128.f );
 
+
+	
 	// Make array of float pixels with cell data
-	// Currently only R value is be used, cells can only either be true (R > .5) or false (R =< .5)
 	ofSeedRandom();
 	vector<float> cells( N_CELLS_X * N_CELLS_Y * 3 );
 	for (size_t x = 0; x < N_CELLS_X; x++) {
@@ -89,25 +90,6 @@ void GameOfLifeScene::setup()
 
 	gui.add( shaderUniforms );
 	gui.setPosition( width - gui.getWidth() - 10, height - gui.getHeight() - 10 );
-
-	vboGrid.setMode( OF_PRIMITIVE_TRIANGLES );
-	for (int y = 0; y < N_CELLS_Y; y++) {
-		for (int x = 0; x < N_CELLS_X; x++) {
-			vboGrid.addVertex( { x * cellSize, y * cellSize, 0 } );
-			vboGrid.addTexCoord( { x, y } );
-		}
-	}
-	for (int y = 0; y < N_CELLS_Y - 1; y++) {
-		for (int x = 0; x < N_CELLS_X - 1; x++) {
-			vboGrid.addIndex( x + y * N_CELLS_X );
-			vboGrid.addIndex( (x + 1) + y * N_CELLS_X );
-			vboGrid.addIndex( x + (y + 1) * N_CELLS_X );
-
-			vboGrid.addIndex( (x + 1) + y * N_CELLS_X );
-			vboGrid.addIndex( (x + 1) + (y + 1) * N_CELLS_X );
-			vboGrid.addIndex( x + (y + 1) * N_CELLS_X );
-		}
-	}
 
 	axisMesh = ofMesh::axis();
 
@@ -205,8 +187,6 @@ void GameOfLifeScene::draw()
 
 	ofPopStyle();
 
-	//drawCoordinateSystem();
-	//renderFBO.draw( 0, 0 );
 	camera.end();
 
 	ofSetColor( 255 );

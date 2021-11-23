@@ -46,8 +46,7 @@ private:
 class GameOfLifeScene : public ofxFadeScene {
 
 public:
-	GameOfLifeScene();
-	GameOfLifeScene( int cells_x, int cells_y );
+	GameOfLifeScene( int cells_x = 102, int cells_y = 77, filesystem::path src_img = "");
 	void setup();
 	void update();
 	void draw();
@@ -98,4 +97,5 @@ private:
 	bool mouseIsDown;
 	ofVec3f mousePosition;
 
+	filesystem::path srcImg;
 };
