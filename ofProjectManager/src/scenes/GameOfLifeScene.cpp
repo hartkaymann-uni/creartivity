@@ -27,7 +27,7 @@ void GameOfLifeScene::setup()
 
 	camera.disableMouseInput();
 	camera.setupPerspective();
-	camera.setPosition( 0, 0, 500 );
+	camera.setPosition( ofGetWidth() / 2, ofGetHeight() / 2, 665 );
 	camera.setFarClip( ofGetWidth() * 10 );
 
 	lightPos = ofVec3f( 50, 50, 50 );
