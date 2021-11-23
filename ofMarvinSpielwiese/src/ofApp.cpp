@@ -7,6 +7,9 @@ void ofApp::setup() {
 	int maxDistance = 200;
 	bool lineIsEnabled = false;
 	bool lightningIsEnabled = false;
+	bool curveIsEnabled = false;
+	ofBackground(0);
+
 }
 
 //--------------------------------------------------------------
@@ -58,25 +61,26 @@ void ofApp::draw() {
 			int distance = glm::distance(positionOne, positionTwo);
 			if (distance < maxDistance)
 			{
-				float x1 = positionOne.x;
-				float y1 = positionOne.y;
-				float x4 = positionTwo.x;
-				float y4 = positionTwo.y;
-				float x2 = (x1 + x4) / 2 - distance / 2 * nodes[i].direction.x;
-				float y2 = (y1 + y4) / 2 - distance / 2 * nodes[i].direction.y;
-				float x3 = (x1 + x4) / 2 - distance / 2 * nodes[j].direction.x;
-				float y3 = (y1 + y4) / 2 - distance / 2 * nodes[j].direction.y;
-
-
-
-				ofDrawBezier(x1,y1,x2,y2,x3,y3,x4,y4);
-
+				if (curveIsEnabled)drawCurves(i, j, distance);
 				if (lineIsEnabled) ofDrawLine(positionOne, positionTwo);
 				if (lightningIsEnabled) drawLightning(positionOne, positionTwo, distance / 3);
 			}
 		}
 	}
 
+}
+
+void ofApp::drawCurves(int i, int j, float distance) {
+	float x1 = nodes[i].position.x;
+	float y1 = nodes[i].position.y;
+	float x4 = nodes[j].position.x;
+	float y4 = nodes[j].position.y;
+	float x2 = (x1 + x4) / 2 - distance / 2 * nodes[i].direction.x;
+	float y2 = (y1 + y4) / 2 - distance / 2 * nodes[i].direction.y;
+	float x3 = (x1 + x4) / 2 - distance / 2 * nodes[j].direction.x;
+	float y3 = (y1 + y4) / 2 - distance / 2 * nodes[j].direction.y;
+
+	ofDrawBezier(x1, y1, x2, y2, x3, y3, x4, y4);
 }
 
 void ofApp::drawLightning(glm::vec2 Pos1, glm::vec2 Pos2, float displace) {
@@ -105,6 +109,7 @@ void ofApp::keyPressed(int key) {
 	if (key == 's') maxDistance -= 10;
 	if (key == '1') lineIsEnabled = !lineIsEnabled;
 	if (key == '2') lightningIsEnabled = !lightningIsEnabled;
+	if (key == '3') curveIsEnabled = !curveIsEnabled;
 }
 //--------------------------------------------------------------
 void ofApp::keyReleased(int key) {

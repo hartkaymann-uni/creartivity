@@ -15,7 +15,7 @@ public:
 
 	void update();
 	void draw();
-
+	
 	Node(int x, int y);		//construktor
 	~Node();				//destruktor
 
@@ -28,6 +28,7 @@ public:
 	void update();
 	void draw();
 
+	void drawCurves(int i, int j, float distance);
 	void drawLightning(glm::vec2 Pos1, glm::vec2 Pos2, float displace = 50);
 
 	void keyPressed(int key);
@@ -48,6 +49,7 @@ private:
 	bool isPaused;
 	bool lineIsEnabled;
 	bool lightningIsEnabled;
+	bool curveIsEnabled;
 	int maxDistance;
 
 };
