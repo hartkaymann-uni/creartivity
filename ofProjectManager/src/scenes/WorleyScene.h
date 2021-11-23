@@ -23,4 +23,9 @@ public:
 	void dragEvent(ofDragInfo dragInfo);
 	void gotMessage(ofMessage msg);
 
+private:
+
+	ofShader worleyShader;
+
+	int width, height;
 };

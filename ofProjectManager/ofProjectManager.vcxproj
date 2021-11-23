@@ -264,6 +264,8 @@
     <None Include="res\shader\render.vert" />
     <None Include="res\shader\renderInstanced.frag" />
     <None Include="res\shader\renderInstanced.vert" />
+    <None Include="res\shader\worley.frag" />
+    <None Include="res\shader\worley.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ProjectExtensions>

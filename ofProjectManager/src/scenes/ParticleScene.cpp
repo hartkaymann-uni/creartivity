@@ -21,7 +21,7 @@ void ParticleScene::setup() {
 	camera.setPosition( 0, 0, 665 );
 	camera.setFarClip( ofGetWidth() * 10 );
 
-	particles.resize( 1024 * 8 * 5000 );
+	particles.resize( 1024 * 8 * 1 );
 	int i = 0;
 	for (auto& p : particles)
 	{
