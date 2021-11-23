@@ -202,6 +202,7 @@
     <ClCompile Include="..\..\..\addons\ofxGui\src\ofxSliderGroup.cpp" />
     <ClCompile Include="..\..\..\addons\ofxGui\src\ofxToggle.cpp" />
     <ClCompile Include="..\..\..\addons\ofxUbo\src\ofxUbo.cpp" />
+    <ClCompile Include="src\scenes\WorleyScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\scenes\GameOfLifeScene.h" />
@@ -235,6 +236,7 @@
     <ClInclude Include="..\..\..\addons\ofxGui\src\ofxSliderGroup.h" />
     <ClInclude Include="..\..\..\addons\ofxGui\src\ofxToggle.h" />
     <ClInclude Include="..\..\..\addons\ofxUbo\src\ofxUbo.h" />
+    <ClInclude Include="src\scenes\WorleyScene.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="$(OF_ROOT)\libs\openFrameworksCompiled\project\vs\openframeworksLib.vcxproj">
