@@ -2,9 +2,7 @@
 
 #include <random>
 
-GameOfLifeScene::GameOfLifeScene() : GameOfLifeScene( 102, 77 ) {}
-
-GameOfLifeScene::GameOfLifeScene( int cells_x, int cells_y )
+GameOfLifeScene::GameOfLifeScene( int cells_x, int cells_y)
 	: ofxFadeScene( "GameOfLife" ),
 	width( ofGetWindowWidth() ),
 	height( ofGetWindowHeight() ),
@@ -112,8 +110,12 @@ void GameOfLifeScene::setup()
 	axisMesh = ofMesh::axis();
 
 	ofSpherePrimitive sphere;
+	ofPath path;
+	path.circle( glm::vec2( 0.f ), sphereRadius );
+	path.setFilled( true );
 	sphere.set( cellSize, sphereResolution);
 	vboSphere = sphere.getMesh();
+	vboSphere = path.getTessellation();
 }
 
 void GameOfLifeScene::update()
@@ -179,8 +181,8 @@ void GameOfLifeScene::draw()
 	ofDisableAlphaBlending();
 
 	camera.begin();
-	glEnable( GL_CULL_FACE );
-	glCullFace( GL_BACK );
+	//glEnable( GL_CULL_FACE );
+	//glCullFace( GL_BACK );
 
 	axisMesh.draw();
 
