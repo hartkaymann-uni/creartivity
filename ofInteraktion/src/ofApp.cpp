@@ -3,153 +3,111 @@
 #include "ofApp.h"
 
 //--------------------------------------------------------------
-void ofApp::setup(){
-	//kinect1.open();
+void ofApp::setup() {
+	ofSetLogLevel( OF_LOG_VERBOSE );
 
-	width = 1280;
-	height = 720;
+	ofxKinectV2 tmp;
+	ofxKinectV2::KinectDeviceInfo deviceInfo = tmp.getDeviceList()[0];
 
-	// 2D input contourFinder
-	/*
-	cam.setup(width, height);
-	cam.videoSettings();
+	ofxKinectV2::Settings ksettings;
+	ksettings.enableDepth = true;
+	ksettings.enableDepthRegistration = true;
+	ksettings.config.MinDepth = 0.5;
+	ksettings.config.MinDepth = 1.0;
 
-	color.allocate(width, height);
-	gray.allocate(width, height);
-	background.allocate(width, height);
-	difference.allocate(width, height);
-	*/
+	kinect.open(deviceInfo.serial, ksettings);
 
+	width = ofGetWidth();
+	height = ofGetHeight();
+
+	depthFbo.allocate( width, height, GL_RGB );
+	depthFbo.begin();
+	ofClear( 255 );
+	depthFbo.end();
 }
 
 //--------------------------------------------------------------
-void ofApp::update(){
-	kinect1.update();
+void ofApp::update() {
+	kinect.update();
 
-	if (kinect1.isFrameNew()) {
-		texture.loadData(kinect1.getPixels());
+	if (kinect.isFrameNew()) {
+		texture.loadData( kinect.getPixels() );
+		depthTexture.loadData( kinect.getDepthPixels() );
+		
+	}
+	else {
+		return;
 	}
 
-	// 2D input contourFinder
-	/*
-	cam.update();
+	depthFbo.begin();
+	ofClear( 0, 0, 0, 0 );
+	depthTexture.draw( 0, 0 );
+	depthFbo.end();
+}
 
-	if (cam.isFrameNew()) {
-		color.setFromPixels(cam.getPixels());
-		gray = color;
+//--------------------------------------------------------------
+void ofApp::draw() {
+	//texture.draw( 0, 0 );
+	depthFbo.draw( 0, 0 );
+}
 
-		if (learn) {
-			background = gray;
-			learn = false;
-		}
+//--------------------------------------------------------------
+void ofApp::exit() {
+	kinect.close();
+}
 
-		// background-subtraction = Hintergrundsubtraktion
-		difference.absDiff(background, gray);
-
-		// binarisation = Binarisierung
-		difference.threshold(threshold);	
-
-		contour.findContours(difference, 10, width * height, 10, true);
-	}
-	*/
+//--------------------------------------------------------------
+void ofApp::keyPressed( int key ) {
 
 }
 
 //--------------------------------------------------------------
-void ofApp::draw(){
-	//texture.draw(0, 0, width, height);
-
-	// 2D input contourFinder
-	/*
-	// we can draw the whole contour
-	// contour.draw(0, 0, -width, height);
-	// or, instead we can draw each blob individually,
-	ofPushMatrix();
-	ofTranslate(cam.getWidth(), 0);
-	ofScale(-1, 1);
-	for (int i = 0; i < contour.nBlobs; i++) {
-		contour.blobs[i].draw(0, 0);
-
-		printf("x = %f, y = %f\n", contour.blobs[1].boundingRect.getCenter().x, contour.blobs[1].boundingRect.getCenter().y);
-	}
-	ofPopMatrix();
-	*/
+void ofApp::keyReleased( int key ) {
 
 }
 
 //--------------------------------------------------------------
-void ofApp::exit(){
-	kinect1.close();
-}
-
-//--------------------------------------------------------------
-void ofApp::keyPressed(int key){
-	// 2D input contourFinder
-	/*
-	switch (key) {
-	case 'q':
-		threshold++;
-		printf("threshold = %d\n", threshold);
-		break;
-
-	case 'w':
-		threshold--;
-		printf("threshold = %d\n", threshold);
-		break;
-
-	default:
-		break;
-	}
-	*/
+void ofApp::mouseMoved( int x, int y ) {
 
 }
 
 //--------------------------------------------------------------
-void ofApp::keyReleased(int key){
+void ofApp::mouseDragged( int x, int y, int button ) {
 
 }
 
 //--------------------------------------------------------------
-void ofApp::mouseMoved(int x, int y ){
+void ofApp::mousePressed( int x, int y, int button ) {
 
 }
 
 //--------------------------------------------------------------
-void ofApp::mouseDragged(int x, int y, int button){
+void ofApp::mouseReleased( int x, int y, int button ) {
 
 }
 
 //--------------------------------------------------------------
-void ofApp::mousePressed(int x, int y, int button){
+void ofApp::mouseEntered( int x, int y ) {
 
 }
 
 //--------------------------------------------------------------
-void ofApp::mouseReleased(int x, int y, int button){
+void ofApp::mouseExited( int x, int y ) {
 
 }
 
 //--------------------------------------------------------------
-void ofApp::mouseEntered(int x, int y){
+void ofApp::windowResized( int w, int h ) {
+	width = ofGetWidth();
+	height = ofGetHeight();
+}
+
+//--------------------------------------------------------------
+void ofApp::gotMessage( ofMessage msg ) {
 
 }
 
 //--------------------------------------------------------------
-void ofApp::mouseExited(int x, int y){
-
-}
-
-//--------------------------------------------------------------
-void ofApp::windowResized(int w, int h){
-
-}
-
-//--------------------------------------------------------------
-void ofApp::gotMessage(ofMessage msg){
-
-}
-
-//--------------------------------------------------------------
-void ofApp::dragEvent(ofDragInfo dragInfo){ 
+void ofApp::dragEvent( ofDragInfo dragInfo ) {
 
 }

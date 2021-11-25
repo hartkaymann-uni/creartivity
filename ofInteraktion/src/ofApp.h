@@ -25,27 +25,15 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
 
-		ofxKinectV2 kinect1;
+		ofxKinectV2 kinect;
+		
 		ofTexture texture;
+		ofTexture depthTexture;
+
+		ofFbo depthFbo;
 
 		int width;
 		int height;
 
-		// 2D input contourFinder
-		/*
-		ofVideoGrabber cam;
-
-		ofxCvColorImage color;
-		ofxCvGrayscaleImage gray;
-		ofxCvGrayscaleImage background;
-		ofxCvGrayscaleImage difference;
-
-		ofxCvContourFinder contour;
-
-		// for difference, so we can either see more or less contours, threshold for face=80
-		int threshold = 57;
-		// find contours on-screen
-		bool learn = true;
-		*/
-
+		
 };
