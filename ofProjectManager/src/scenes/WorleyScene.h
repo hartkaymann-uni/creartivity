@@ -26,6 +26,7 @@ public:
 private:
 
 	ofShader worleyShader;
-
 	int width, height;
+	ofMesh mesh;
+	
 };

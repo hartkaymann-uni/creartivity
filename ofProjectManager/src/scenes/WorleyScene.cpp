@@ -27,14 +27,18 @@ void WorleyScene::update()
 
 void WorleyScene::draw()
 {
+	
 	ofBackground( 0 );
 
 	worleyShader.begin();
-	worleyShader.setUniform2f( "screen", (float)width, (float)height );
+	worleyShader.setUniform2f( "u_resolution", (float)width, (float)height );
+	worleyShader.setUniform1f( "u_time", ofGetElapsedTimef());
+	worleyShader.setUniform2f( "u_mouse", ofGetMouseX(), ofGetMouseY());
 
 	ofDrawRectangle( 0, 0, width, height );
 
 	worleyShader.end();
+
 }
 
 void WorleyScene::keyPressed( int key ) 
