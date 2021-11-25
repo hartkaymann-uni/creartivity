@@ -3,6 +3,21 @@
 #include "ofMain.h"
 #include "ofxAppUtils.h"
 
+class Node {
+
+public:
+	glm::vec2 force;
+	glm::vec2 position;
+	glm::vec2 direction;
+
+	void update();
+	void draw();
+
+	Node(int x, int y);		//construktor
+	~Node();				//destruktor
+
+};
+
 class WorleyScene : public ofxFadeScene {
 
 public:
@@ -25,6 +40,7 @@ public:
 
 private:
 
+	vector<Node> nodes;
 	ofShader worleyShader;
 	int width, height;
 	ofMesh mesh;

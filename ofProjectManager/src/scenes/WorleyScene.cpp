@@ -15,6 +15,15 @@ void WorleyScene::setup()
 	filesystem::path shader_path( "../../res/shader" );
 	worleyShader.load( shader_path / "worley.vert", shader_path / "worley.frag" );
 
+	for (int x = 0; x < ofGetWidth() - 100; x + 100)
+	{
+		for (int y = 0; y < ofGetHeight() - 100; y + 100)
+		{
+			Node newHub(ofRandom(x, x + 99), ofRandom(y, y + 99));
+			nodes.push_back(newHub);
+		}
+	}
+
 }
 
 void WorleyScene::update()
@@ -39,6 +48,10 @@ void WorleyScene::draw()
 
 	worleyShader.end();
 
+	for (int i = 0; i < nodes.size(); i++)
+	{
+		nodes[i].draw();
+	}
 }
 
 void WorleyScene::keyPressed( int key ) 
@@ -83,4 +96,24 @@ void WorleyScene::dragEvent(ofDragInfo dragInfo)
 
 void WorleyScene::gotMessage(ofMessage msg)
 {
+}
+
+Node::Node(int startX, int startY) {
+	float directionSpeed = 1.0;
+	position = glm::vec2(startX, startY);
+	direction = glm::vec2(ofRandom(-directionSpeed, directionSpeed), ofRandom(-directionSpeed, directionSpeed));
+}
+
+Node::~Node() {
+}
+
+void Node::update() {
+	float time = ofGetElapsedTimef();
+	//position += direction;
+	//size += ofRandom(-0.02, 0.001);
+}
+
+void Node::draw() {
+	ofNoFill();
+	ofDrawCircle(position, 10);
 }
