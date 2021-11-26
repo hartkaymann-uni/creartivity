@@ -15,9 +15,9 @@ void WorleyScene::setup()
 	filesystem::path shader_path( "../../res/shader" );
 	worleyShader.load( shader_path / "worley.vert", shader_path / "worley.frag" );
 
-	for (int x = 0; x < (width - 100); x += 100) {
-		for (int y = 0; y < (height - 100); y += 100) {
-			Node newHub(ofRandom(x, x + 99), ofRandom(y, y + 99));
+	for (int y = 0; y < (height); y += 100) {
+		for (int x = 0; x < (width); x += 100) {
+			Node newHub(x, y);
 			nodes.push_back(newHub);
 		}
 	}
@@ -30,6 +30,12 @@ void WorleyScene::update()
 	std::stringstream strm;
 	strm << "fps: " << ofGetFrameRate();
 	ofSetWindowTitle( strm.str() );
+
+	for (int i = 0; i < nodes.size(); i++)
+	{
+		nodes[i].update();
+	}
+
 }
 
 void WorleyScene::draw()
@@ -49,6 +55,13 @@ void WorleyScene::draw()
 	for (int i = 0; i < nodes.size(); i++)
 	{
 		nodes[i].draw();
+	}
+
+	for (int x = 0; x < (width); x += 100) {
+		ofDrawLine(x, 0 , x, height);
+	}
+	for (int y = 0; y < (height); y += 100) {
+		ofDrawLine(0, y, width, y);
 	}
 }
 
@@ -107,7 +120,9 @@ Node::~Node() {
 
 void Node::update() {
 	float time = ofGetElapsedTimef();
-	//position += direction;
+	direction.x = 0.5 * sin(0.5 * ofGetElapsedTimef());
+	direction.y = 0.5 * cos(0.5 * ofGetElapsedTimef());
+	position += direction;
 	//size += ofRandom(-0.02, 0.001);
 }
 
