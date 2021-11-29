@@ -108,7 +108,7 @@ void ParticleScene::update() {
 			noiseField[x][y] = ofNoise( glm::vec3( x, y, m_NoiseShift ) );
 		}
 	}
-	
+
 }
 
 //--------------------------------------------------------------

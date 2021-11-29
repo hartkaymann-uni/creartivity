@@ -180,7 +180,8 @@
     <PostBuildEvent />
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\octree.cpp" />
+    <ClCompile Include="src\quadtree.cpp" />
+    <ClCompile Include="src\scenes\FluidScene.cpp" />
     <ClCompile Include="src\scenes\GameOfLifeScene.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\ofApp.cpp" />
@@ -205,8 +206,9 @@
     <ClCompile Include="..\..\..\addons\ofxUbo\src\ofxUbo.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\list.hpp" />
-    <ClInclude Include="src\octree.h" />
+    <ClInclude Include="src\particle.h" />
+    <ClInclude Include="src\quadtree.h" />
+    <ClInclude Include="src\scenes\FluidScene.h" />
     <ClInclude Include="src\scenes\GameOfLifeScene.h" />
     <ClInclude Include="src\ofApp.h" />
     <ClInclude Include="src\scenes\LineScene.h" />

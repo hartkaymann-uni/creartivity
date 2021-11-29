@@ -71,7 +71,8 @@
       <Filter>addons\ofxUbo\src</Filter>
     </ClCompile>
     <ClCompile Include="src\scenes\GameOfLifeScene.cpp" />
-    <ClCompile Include="src\octree.cpp" />
+    <ClCompile Include="src\scenes\FluidScene.cpp" />
+    <ClCompile Include="src\quadtree.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -195,8 +196,9 @@
     </ClInclude>
     <ClInclude Include="src\scenes\LineScene.h" />
     <ClInclude Include="src\scenes\GameOfLifeScene.h" />
-    <ClInclude Include="src\octree.h" />
-    <ClInclude Include="src\list.hpp" />
+    <ClInclude Include="src\scenes\FluidScene.h" />
+    <ClInclude Include="src\quadtree.h" />
+    <ClInclude Include="src\particle.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="icon.rc" />

@@ -1,10 +1,11 @@
 #pragma once
 
 #include "ofMain.h"
-#include "ofBufferObject.h"
-
 #include "ofxGui.h";
 #include "ofxAppUtils.h"
+#include "ofBufferObject.h"
+
+#include "particle.h"
 
 class ParticleScene : public ofxFadeScene{
 
@@ -26,12 +27,6 @@ class ParticleScene : public ofxFadeScene{
 		void windowResized(int w, int h);
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
-		
-		struct Particle {
-			glm::vec4 pos;
-			glm::vec4 vel;
-			ofFloatColor color;
-		};
 
 		ofShader compute;
 		ofShader renderShader;
