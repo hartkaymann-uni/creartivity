@@ -4,11 +4,6 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
-	//kinect1.open();
-
-	width = 1280;
-	height = 720;
-
 	// 2D input contourFinder
 	/*
 	cam.setup(width, height);
@@ -20,16 +15,19 @@ void ofApp::setup(){
 	difference.allocate(width, height);
 	*/
 
+	// 3D input
+	ofSetFrameRate(60);
+	ofSetVerticalSync(true);
+	ofBackground(0);
+
+	device.setLogLevel(OF_LOG_NOTICE);
+	device.setup(0);
+	tracker.setup(device);
+	tracker.enableTrackingOutOfFrame(true);
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
-	kinect1.update();
-
-	if (kinect1.isFrameNew()) {
-		texture.loadData(kinect1.getPixels());
-	}
-
 	// 2D input contourFinder
 	/*
 	cam.update();
@@ -53,12 +51,20 @@ void ofApp::update(){
 	}
 	*/
 
+	// 3D input
+	device.update();
+
+	// how many users
+	for (int u = 0; u < tracker.getNumUser(); u++) {
+		cout << "userNumber: " + ofToString(u) << endl;
+		// in this case: show position of joint from left hand of all users
+		tracker.getUser(u)->getJoint(NITE_JOINT_LEFT_HAND).getPosition();
+	};
+
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-	//texture.draw(0, 0, width, height);
-
 	// 2D input contourFinder
 	/*
 	// we can draw the whole contour
@@ -75,11 +81,35 @@ void ofApp::draw(){
 	ofPopMatrix();
 	*/
 
+	// 3D input
+	depthPixels = tracker.getPixelsRef(1000, 4000);
+	depthTexture.loadData(depthPixels);
+
+		// draw skeleton in 2D
+	ofSetColor(255);
+	depthTexture.draw(0, 0);
+	tracker.draw();
+
+		// draw skeleton in 3D skeleton in 2D
+	/*
+	ofPushView();
+	tracker.getOverlayCamera().begin(ofRectangle(0, 0, depthTexture.getWidth(), depthTexture.getHeight()));
+	ofDrawAxis(100);
+	tracker.draw3D();
+	tracker.getOverlayCamera().end();
+	ofPopView();
+	*/
+
+	ofDrawBitmapString("Tracker FPS: " + ofToString(tracker.getFrameRate()), 20, ofGetHeight() - 40);
+	ofDrawBitmapString("Application FPS: " + ofToString(ofGetFrameRate()), 20, ofGetHeight() - 20);
+
 }
 
 //--------------------------------------------------------------
 void ofApp::exit(){
-	kinect1.close();
+	// 3D input
+	tracker.exit();
+	device.exit();
 }
 
 //--------------------------------------------------------------

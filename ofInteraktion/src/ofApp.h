@@ -3,7 +3,9 @@
 #include "ofMain.h"
 #include "ofxGui.h"
 #include "ofxOpenCv.h"
-#include "ofxKinectV2.h"
+#include "ofxNI2.h"
+#include "ofxNiTE2.h"
+#include "ofxOsc.h"
 
 class ofApp : public ofBaseApp{
 
@@ -25,12 +27,6 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
 
-		ofxKinectV2 kinect1;
-		ofTexture texture;
-
-		int width;
-		int height;
-
 		// 2D input contourFinder
 		/*
 		ofVideoGrabber cam;
@@ -47,5 +43,11 @@ class ofApp : public ofBaseApp{
 		// find contours on-screen
 		bool learn = true;
 		*/
+
+		// 3D input
+		ofxNI2::Device device;
+		ofxNiTE2::UserTracker tracker;
+		ofPixels depthPixels;
+		ofTexture depthTexture;
 
 };
