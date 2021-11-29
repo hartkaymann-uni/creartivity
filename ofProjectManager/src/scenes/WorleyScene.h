@@ -6,11 +6,11 @@
 class Node {
 
 public:
-	glm::vec2 force;
+	glm::vec2 boxMid;
 	glm::vec2 position;
 	glm::vec2 direction;
 
-	void update();
+	void update(int i);
 	void draw();
 
 	Node(int x, int y);		//construktor
@@ -41,8 +41,10 @@ public:
 private:
 
 	vector<Node> nodes;
+
 	ofShader worleyShader;
 	int width, height;
-	ofMesh mesh;
+
+
 	
 };

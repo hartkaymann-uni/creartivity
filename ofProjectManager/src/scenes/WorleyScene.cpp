@@ -33,7 +33,7 @@ void WorleyScene::update()
 
 	for (int i = 0; i < nodes.size(); i++)
 	{
-		nodes[i].update();
+		nodes[i].update(i);
 	}
 
 }
@@ -48,8 +48,6 @@ void WorleyScene::draw()
 	worleyShader.setUniform1f( "u_time", ofGetElapsedTimef());
 	worleyShader.setUniform2f( "u_mouse", ofGetMouseX(), ofGetMouseY());
 
-	ofDrawRectangle( 0, 0, width, height );
-
 	worleyShader.end();
 
 	for (int i = 0; i < nodes.size(); i++)
@@ -57,11 +55,12 @@ void WorleyScene::draw()
 		nodes[i].draw();
 	}
 
-	for (int x = 0; x < (width); x += 100) {
-		ofDrawLine(x, 0 , x, height);
+	int boxSize = 100;
+	for (int x = 0; x < (width); x += boxSize) {
+		//ofDrawLine(x + boxSize / 2, 0 , x + boxSize / 2, height);
 	}
-	for (int y = 0; y < (height); y += 100) {
-		ofDrawLine(0, y, width, y);
+	for (int y = 0; y < (height); y += boxSize) {
+		//ofDrawLine(0, y + boxSize / 2, width, y + boxSize / 2);
 	}
 }
 
@@ -111,6 +110,7 @@ void WorleyScene::gotMessage(ofMessage msg)
 
 Node::Node(int startX, int startY) {
 	float directionSpeed = 1.0;
+	boxMid = glm::vec2(startX, startY);
 	position = glm::vec2(startX, startY);
 	direction = glm::vec2(ofRandom(-directionSpeed, directionSpeed), ofRandom(-directionSpeed, directionSpeed));
 }
@@ -118,12 +118,14 @@ Node::Node(int startX, int startY) {
 Node::~Node() {
 }
 
-void Node::update() {
-	float time = ofGetElapsedTimef();
-	direction.x = 0.5 * sin(0.5 * ofGetElapsedTimef());
-	direction.y = 0.5 * cos(0.5 * ofGetElapsedTimef());
-	position += direction;
-	//size += ofRandom(-0.02, 0.001);
+void Node::update(int i) {
+	
+	int boxSize = 100;
+
+	direction.x = (boxSize / 2 - 10) * sin(0.5 * ofGetElapsedTimef() + boxMid.y / 10 + i);
+	direction.y = (boxSize / 2 - 10) * cos(0.5 * ofGetElapsedTimef() + boxMid.x / 10 + i);
+	position.x = boxMid.x + direction.x;
+	position.y = boxMid.y + direction.y;
 }
 
 void Node::draw() {
