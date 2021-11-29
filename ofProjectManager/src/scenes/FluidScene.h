@@ -3,7 +3,6 @@
 
 #include "ofxAppUtils.h"
 
-#include "particle.h"
 #include "quadtree.h"
 
 class FluidScene : public ofxFadeScene
@@ -22,9 +21,11 @@ public:
 	void mouseDragged( int x, int y, int button );
 
 private:
+	int width, height;
+
 	float particleSize = 4.0;
 
-	std::vector<Particle> particles;
+	std::vector<quadtree::Particle> particles;
 	quadtree::node root;
 };
 

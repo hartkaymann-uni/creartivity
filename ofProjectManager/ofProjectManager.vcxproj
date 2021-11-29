@@ -206,7 +206,6 @@
     <ClCompile Include="..\..\..\addons\ofxUbo\src\ofxUbo.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\particle.h" />
     <ClInclude Include="src\quadtree.h" />
     <ClInclude Include="src\scenes\FluidScene.h" />
     <ClInclude Include="src\scenes\GameOfLifeScene.h" />

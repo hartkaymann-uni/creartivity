@@ -5,9 +5,14 @@
 #include "ofxAppUtils.h"
 #include "ofBufferObject.h"
 
-#include "particle.h"
-
 class ParticleScene : public ofxFadeScene{
+
+
+	struct Particle {
+		glm::vec4 pos;
+		glm::vec4 vel;
+		ofFloatColor color;
+	};
 
 	public:
 		ParticleScene();

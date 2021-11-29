@@ -2,20 +2,19 @@
 
 
 namespace quadtree {
-	node::node() : node( -1, glm::vec2( 0.f ), glm::vec2( 0.f ), nullptr ) {	}
+	node::node() : node( -1, 0.f, 0.f, 0.f, 0.f, nullptr ) {	}
 
-	node::node( const int level, glm::vec2 position, glm::vec2 dimensions, std::vector<Particle>* objs )
+	node::node( const int level, const int x, const int y, const int width, const int height, std::vector<Particle>* objs )
 		: level( level ),
-		position( position ),
-		dimensions( dimensions ),
+		position( glm::vec2( x, y ) ),
+		dimensions( glm::vec2( width, height ) ),
 		children{ nullptr, nullptr, nullptr, nullptr },
 		objects( objs )
 	{
 		indices.reserve( NO_CHILDREN );
 	}
 
-
-	void node::update()
+	void node::build()
 	{
 		indices.clear();
 		indices.shrink_to_fit();
@@ -30,12 +29,48 @@ namespace quadtree {
 		}
 	}
 
+	void node::update()
+	{
+
+		if (children[0] != nullptr) {
+			for (auto& child : children) {
+				child->update();
+			}
+			return;
+		}
+
+		float interactionRadius = 50;
+		Particle* p;
+		for (const size_t i : indices) {
+			p = &(objects->at( i ));
+			glm::vec2 acc = glm::vec3( 0.0f );
+
+			// Move away from close particles
+			for (const size_t other : indices) {
+				if (i == other) 
+					break;
+
+				glm::vec2 diff = p->pos - objects->at( other ).pos;
+				if (glm::length( diff ) < interactionRadius) {
+					acc += glm::vec2( interactionRadius / diff.x, interactionRadius / diff.y );
+				}
+			}
+
+			// Update velocity
+			p->vel += glm::min(acc, glm::normalize(acc));
+			p->vel *= .99f;
+			// Update position (move screen boundary here)
+			p->pos += p->vel;
+
+			
+		}
+	}
+
 	void node::draw() const
 	{
-		ofSetColor( ofColor::white );
+		ofSetColor( 255 );
 		ofNoFill();
-		ofDrawRectangle( position, dimensions.x - 5, dimensions.y - 5 );
-		ofDrawRectangle( 10 * level, 10 * level, 50, 50 );
+		ofDrawRectangle( position.x, position.y, dimensions.x, dimensions.y );
 		ofFill();
 
 		if (children[0] != nullptr) {
@@ -47,18 +82,17 @@ namespace quadtree {
 
 	void node::split()
 	{
-		glm::vec2 d = dimensions / 2.0;
+		glm::vec2 d = dimensions * 0.5f;
 
 		glm::vec2 NW = position;
-		glm::vec2 NE = position + d.x;
-		glm::vec2 SW = position + d.y;
+		glm::vec2 NE = position + glm::vec2( d.x, 0.f );
+		glm::vec2 SW = position + glm::vec2( 0.f, d.y );
 		glm::vec2 SE = position + d;
 
-		children[0] = std::make_unique<node>( level + 1, NW, d, objects );
-		children[0] = std::make_unique<node>( level + 1, NE, d, objects );
-		children[0] = std::make_unique<node>( level + 1, SW, d, objects );
-		children[0] = std::make_unique<node>( level + 1, SE, d, objects );
-
+		children[0] = std::make_unique<node>( level + 1, NW.x, NW.y, d.x, d.y, objects );
+		children[1] = std::make_unique<node>( level + 1, NE.x, NE.y, d.x, d.y, objects );
+		children[2] = std::make_unique<node>( level + 1, SW.x, SW.y, d.x, d.y, objects );
+		children[3] = std::make_unique<node>( level + 1, SE.x, SE.y, d.x, d.y, objects );
 	}
 
 	void node::insert( const int id )
@@ -107,6 +141,19 @@ namespace quadtree {
 		}
 
 		return false;
+	}
+
+	void node::reset()
+	{
+		position = glm::vec2( 0.f );
+		dimensions = glm::vec2( 0.f );
+		indices.clear();
+		indices.shrink_to_fit();
+
+		children[0] = nullptr;
+		children[1] = nullptr;
+		children[2] = nullptr;
+		children[3] = nullptr;
 	}
 
 }

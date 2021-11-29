@@ -57,7 +57,6 @@ void ParticleScene::setup() {
 	gui.add( m_DeltaNoiseShift );
 	gui.add( fps.set( "fps", 60, 0, 60 ) );
 
-
 	particlesBuffer.bindBase( GL_SHADER_STORAGE_BUFFER, 0 );
 	particlesBuffer2.bindBase( GL_SHADER_STORAGE_BUFFER, 1 );
 
