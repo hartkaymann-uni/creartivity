@@ -41,10 +41,8 @@ public:
 private:
 
 	vector<Node> nodes;
-
 	ofShader worleyShader;
 	int width, height;
-
 
 	
 };

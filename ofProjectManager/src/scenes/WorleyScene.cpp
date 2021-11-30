@@ -15,6 +15,7 @@ void WorleyScene::setup()
 	filesystem::path shader_path( "../../res/shader" );
 	worleyShader.load( shader_path / "worley.vert", shader_path / "worley.frag" );
 
+
 	for (int y = 0; y < (height); y += 100) {
 		for (int x = 0; x < (width); x += 100) {
 			Node newHub(x, y);
@@ -57,10 +58,10 @@ void WorleyScene::draw()
 
 	int boxSize = 100;
 	for (int x = 0; x < (width); x += boxSize) {
-		//ofDrawLine(x + boxSize / 2, 0 , x + boxSize / 2, height);
+		ofDrawLine(x + boxSize / 2, 0 , x + boxSize / 2, height);
 	}
 	for (int y = 0; y < (height); y += boxSize) {
-		//ofDrawLine(0, y + boxSize / 2, width, y + boxSize / 2);
+		ofDrawLine(0, y + boxSize / 2, width, y + boxSize / 2);
 	}
 }
 
@@ -121,9 +122,8 @@ Node::~Node() {
 void Node::update(int i) {
 	
 	int boxSize = 100;
-
-	direction.x = (boxSize / 2 - 10) * sin(0.5 * ofGetElapsedTimef() + boxMid.y / 10 + i);
-	direction.y = (boxSize / 2 - 10) * cos(0.5 * ofGetElapsedTimef() + boxMid.x / 10 + i);
+	direction.x = (boxSize / 2 - 10) * (sin(0.5 * ofGetElapsedTimef() + (boxMid.y + 265) / 10 + i) + sin((i + 13) / boxMid.y * ofGetElapsedTimef() - i)) / 2;
+	direction.y = (boxSize / 2 - 10) * (cos(0.5 * ofGetElapsedTimef() + (boxMid.x - 135) / 10 + i) + cos((i + 19) / boxMid.x * ofGetElapsedTimef() - i)) / 2;
 	position.x = boxMid.x + direction.x;
 	position.y = boxMid.y + direction.y;
 }
