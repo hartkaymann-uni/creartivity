@@ -1,10 +1,20 @@
+#version 150
+
 #ifdef GL_ES
 precision mediump float;
 #endif
 
+in vec2 vTexCoord;
+
 uniform vec2 u_resolution;
 uniform vec2 u_mouse;
 uniform float u_time;
+
+uniform int u_length;
+uniform vec2 u_positions[88];
+uniform vec2 u_position;
+
+out vec4 vFragColor;
 
 vec2 random2( vec2 p ) {
     return fract(sin(vec2(dot(p,vec2(127.1,311.7)),dot(p,vec2(269.5,183.3))))*43758.5453);
@@ -58,5 +68,14 @@ void main() {
     // Show isolines
     // color -= step(.7,abs(sin(27.0*m_dist)))*.5;
 
-    gl_FragColor = vec4(color,1.0);
+    float minDist = 1.0;
+    for( int i = 0; i < 81; i++) {
+    vec2 pos = u_positions[i];
+    float dist = distance(pos.xy / u_resolution.xy, gl_FragCoord.xy / u_resolution.xy);
+        minDist = dist < minDist ? dist : minDist;
+
+    }
+
+    vFragColor = vec4(vec3(smoothstep(0.0, 0.5, minDist)), 1.0);
+
 }

@@ -1,9 +1,9 @@
 #include "WorleyScene.h"
 
-WorleyScene::WorleyScene() 
-	: ofxFadeScene("Worley"),
-	width(ofGetWidth()),
-	height(ofGetHeight()) 
+WorleyScene::WorleyScene()
+	: ofxFadeScene( "Worley" ),
+	width( ofGetWidth() ),
+	height( ofGetHeight() )
 {
 	setSingleSetup( false );
 	setFade( 1000, 1000 );
@@ -18,8 +18,8 @@ void WorleyScene::setup()
 
 	for (int y = 0; y < (height); y += 100) {
 		for (int x = 0; x < (width); x += 100) {
-			Node newHub(x, y);
-			nodes.push_back(newHub);
+			Node newHub( x, y );
+			nodes.push_back( newHub );
 		}
 	}
 
@@ -34,23 +34,32 @@ void WorleyScene::update()
 
 	for (int i = 0; i < nodes.size(); i++)
 	{
-		nodes[i].update(i);
+		nodes[i].update( i );
+
+		positions[i] = nodes[i].position;
 	}
+
 
 }
 
 void WorleyScene::draw()
 {
-	
+
 	ofBackground( 0 );
 
 	worleyShader.begin();
 	worleyShader.setUniform2f( "u_resolution", (float)width, (float)height );
-	worleyShader.setUniform1f( "u_time", ofGetElapsedTimef());
-	worleyShader.setUniform2f( "u_mouse", ofGetMouseX(), ofGetMouseY());
+	worleyShader.setUniform1f( "u_time", ofGetElapsedTimef() );
+	worleyShader.setUniform2f( "u_mouse", ofGetMouseX(), ofGetMouseY() );
+
+	worleyShader.setUniform1i( "u_length", nodes.size() );
+	worleyShader.setUniform2fv( "u_positions",  &positions[0].x, 88);
+
+	ofDrawRectangle( 0, 0, width, height );
 
 	worleyShader.end();
 
+	/*
 	for (int i = 0; i < nodes.size(); i++)
 	{
 		nodes[i].draw();
@@ -63,72 +72,76 @@ void WorleyScene::draw()
 	for (int y = 0; y < (height); y += boxSize) {
 		ofDrawLine(0, y + boxSize / 2, width, y + boxSize / 2);
 	}
+	*/
+
 }
 
-void WorleyScene::keyPressed( int key ) 
-{	
-}
-
-void WorleyScene::keyReleased( int key ) 
+void WorleyScene::keyPressed( int key )
 {
 }
 
-void WorleyScene::mouseMoved(int x, int y)
+void WorleyScene::keyReleased( int key )
 {
 }
 
-void WorleyScene::mouseDragged(int x, int y, int button)
+void WorleyScene::mouseMoved( int x, int y )
 {
 }
 
-void WorleyScene::mousePressed(int x, int y, int button)
+void WorleyScene::mouseDragged( int x, int y, int button )
 {
 }
 
-void WorleyScene::mouseReleased(int x, int y, int button)
+void WorleyScene::mousePressed( int x, int y, int button )
 {
 }
 
-void WorleyScene::mouseEntered(int x, int y)
+void WorleyScene::mouseReleased( int x, int y, int button )
 {
 }
 
-void WorleyScene::mouseExited(int x, int y)
+void WorleyScene::mouseEntered( int x, int y )
 {
 }
 
-void WorleyScene::windowResized(int w, int h)
+void WorleyScene::mouseExited( int x, int y )
 {
 }
 
-void WorleyScene::dragEvent(ofDragInfo dragInfo)
+void WorleyScene::windowResized( int w, int h )
+{
+	width = w;
+	height = h;
+}
+
+void WorleyScene::dragEvent( ofDragInfo dragInfo )
 {
 }
 
-void WorleyScene::gotMessage(ofMessage msg)
+void WorleyScene::gotMessage( ofMessage msg )
 {
 }
 
-Node::Node(int startX, int startY) {
+Node::Node( int startX, int startY ) {
 	float directionSpeed = 1.0;
-	boxMid = glm::vec2(startX, startY);
-	position = glm::vec2(startX, startY);
-	direction = glm::vec2(ofRandom(-directionSpeed, directionSpeed), ofRandom(-directionSpeed, directionSpeed));
+	boxMid = glm::vec2( startX, startY );
+	position = glm::vec2( startX, startY );
+	direction = glm::vec2( ofRandom( -directionSpeed, directionSpeed ), ofRandom( -directionSpeed, directionSpeed ) );
 }
 
 Node::~Node() {
 }
 
-void Node::update(int i) {
-	
+void Node::update( int i ) {
+
 	int boxSize = 100;
-	direction.x = (boxSize / 2 - 10) * (sin(0.5 * ofGetElapsedTimef() + (boxMid.y + 265) / 10 + i) + sin((i + 13) / boxMid.y * ofGetElapsedTimef() - i)) / 2;
-	direction.y = (boxSize / 2 - 10) * (cos(0.5 * ofGetElapsedTimef() + (boxMid.x - 135) / 10 + i) + cos((i + 19) / boxMid.x * ofGetElapsedTimef() - i)) / 2;
+	direction.x = (boxSize / 2 - 10) * (sin( 0.5 * ofGetElapsedTimef() + (boxMid.y + 265) / 10 + i ) + sin( (i + 13) / (boxMid.y + 1.0) * ofGetElapsedTimef() - i )) / 2;
+	direction.y = (boxSize / 2 - 10) * (cos( 0.5 * ofGetElapsedTimef() + (boxMid.x - 135) / 10 + i ) + cos( (i + 19) / (boxMid.x + 1.0) * ofGetElapsedTimef() - i )) / 2;
 	position.x = boxMid.x + direction.x;
 	position.y = boxMid.y + direction.y;
 }
 
 void Node::draw() {
 	ofNoFill();
-	ofDrawCircle(position, 10);
+	ofDrawCircle( position, 10 );
 }
