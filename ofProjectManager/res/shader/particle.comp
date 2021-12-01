@@ -121,7 +121,7 @@ void main(){
 		p[index].vel.xyz = vec3(0.0);
 	}
 
-	float noise = cnoise(vec3(particle.xy, u_NoiseShift));
+	float noise = cnoise(vec3(particle.xyz));
 	float rad = noise * (2 * M_PI);
 	acc = vec3(sin(rad), cos(rad), 0.);
 
@@ -146,7 +146,7 @@ void main(){
 	// Mouse Interaction
 	if(u_MousePressed && length(u_MousePosition-p[index].pos.xyz) < 50) {
 		p[index].color = vec4( 1.0 );
-		p[index].vel.xyz += (p[index].pos.xyz- u_MousePosition) * .1;
+		p[index].vel.xyz += (p[index].pos.xyz - u_MousePosition) * .1;
 	}
 
 	if(u_MousePressed)

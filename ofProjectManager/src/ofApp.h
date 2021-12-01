@@ -13,6 +13,7 @@
 
 class ParticleScene;
 class GameOfLifeScene;
+class FluidScene;
 
 class ofApp : public ofxApp {
 
@@ -40,6 +41,7 @@ public:
 
 	ParticleScene* particleScene;
 	GameOfLifeScene* gameOfLifeScene;
+	FluidScene* fluidScene;
 
 #ifdef HAVE_OFX_GUI
 	ofxTransformPanel panel;

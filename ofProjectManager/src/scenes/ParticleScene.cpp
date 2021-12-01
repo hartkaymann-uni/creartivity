@@ -18,7 +18,7 @@ void ParticleScene::setup() {
 
 	camera.disableMouseInput();
 	camera.setupPerspective();
-	camera.setPosition( 0, 0, 665 );
+	camera.setPosition( ofGetWidth() / 2, ofGetHeight() / 2, 665 );
 	camera.setFarClip( ofGetWidth() * 10 );
 
 	particles.resize( 1024 * 8 * 1 );
@@ -56,7 +56,6 @@ void ParticleScene::setup() {
 	gui.add( m_DrawArrows );
 	gui.add( m_DeltaNoiseShift );
 	gui.add( fps.set( "fps", 60, 0, 60 ) );
-
 
 	particlesBuffer.bindBase( GL_SHADER_STORAGE_BUFFER, 0 );
 	particlesBuffer2.bindBase( GL_SHADER_STORAGE_BUFFER, 1 );
@@ -108,7 +107,7 @@ void ParticleScene::update() {
 			noiseField[x][y] = ofNoise( glm::vec3( x, y, m_NoiseShift ) );
 		}
 	}
-	
+
 }
 
 //--------------------------------------------------------------
