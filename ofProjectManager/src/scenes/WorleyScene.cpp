@@ -18,8 +18,14 @@ void WorleyScene::setup()
 
 	for (int y = 0; y < (height); y += 100) {
 		for (int x = 0; x < (width); x += 100) {
-			Node newHub(x, y);
-			nodes.push_back(newHub);
+			if (y % 200 == 0){
+				Node newHub(x+50, y);
+				nodes.push_back(newHub);
+			}
+			else{
+				Node newHub(x, y);
+				nodes.push_back(newHub);
+			}
 		}
 	}
 
@@ -122,8 +128,8 @@ Node::~Node() {
 void Node::update(int i) {
 	
 	int boxSize = 100;
-	direction.x = (boxSize / 2 - 10) * (sin(0.5 * ofGetElapsedTimef() + (boxMid.y + 265) / 10 + i) + sin((i + 13) / boxMid.y * ofGetElapsedTimef() - i)) / 2;
-	direction.y = (boxSize / 2 - 10) * (cos(0.5 * ofGetElapsedTimef() + (boxMid.x - 135) / 10 + i) + cos((i + 19) / boxMid.x * ofGetElapsedTimef() - i)) / 2;
+	direction.x = (boxSize / 5 - 10) * (sin(0.5 * ofGetElapsedTimef() + (boxMid.y + 265) / 10 + i) + sin((i + 13) / boxMid.y * ofGetElapsedTimef() - i)) / 2;
+	direction.y = (boxSize / 5 - 10) * (cos(0.5 * ofGetElapsedTimef() + (boxMid.x - 135) / 10 + i) + cos((i + 19) / boxMid.x * ofGetElapsedTimef() - i)) / 2;
 	position.x = boxMid.x + direction.x;
 	position.y = boxMid.y + direction.y;
 }
