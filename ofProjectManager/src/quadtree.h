@@ -12,9 +12,14 @@
 namespace quadtree {
 
 	struct Particle {
+		size_t index;
 		glm::vec2 pos;
 		glm::vec2 vel;
+		float mass;
+		float density;
+		float pressure;
 		ofFloatColor color;
+		glm::vec2 force;
 	};
 
 	class node {

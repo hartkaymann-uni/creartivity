@@ -16,6 +16,19 @@ namespace quadtree {
 
 	void node::build()
 	{
+		
+	}
+
+	void node::update()
+	{
+
+		/*if (children[0] != nullptr) {
+			for (auto& child : children) {
+				child->update();
+			}
+			return;
+		}*/
+
 		indices.clear();
 		indices.shrink_to_fit();
 
@@ -27,43 +40,7 @@ namespace quadtree {
 		for (size_t i = 0; i < objects->size(); i++) {
 			insert( i );
 		}
-	}
 
-	void node::update()
-	{
-
-		if (children[0] != nullptr) {
-			for (auto& child : children) {
-				child->update();
-			}
-			return;
-		}
-
-		float interactionRadius = 50;
-		Particle* p;
-		for (const size_t i : indices) {
-			p = &(objects->at( i ));
-			glm::vec2 acc = glm::vec3( 0.0f );
-
-			// Move away from close particles
-			for (const size_t other : indices) {
-				if (i == other) 
-					break;
-
-				glm::vec2 diff = p->pos - objects->at( other ).pos;
-				if (glm::length( diff ) < interactionRadius) {
-					acc += glm::vec2( interactionRadius / diff.x, interactionRadius / diff.y );
-				}
-			}
-
-			// Update velocity
-			p->vel += glm::min(acc, glm::normalize(acc));
-			p->vel *= .99f;
-			// Update position (move screen boundary here)
-			p->pos += p->vel;
-
-			
-		}
 	}
 
 	void node::draw() const

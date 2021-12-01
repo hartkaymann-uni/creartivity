@@ -21,7 +21,11 @@ public:
 	void mouseDragged( int x, int y, int button );
 
 private:
+
+	float kernel(float d);
+
 	int width, height;
+	float t, dt;
 
 	float particleSize = 4.0;
 
