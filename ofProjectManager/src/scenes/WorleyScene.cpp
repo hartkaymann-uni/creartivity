@@ -6,7 +6,7 @@ WorleyScene::WorleyScene()
 	height( ofGetHeight() )
 {
 	setSingleSetup( false );
-	setFade( 1000, 1000 );
+	setFade(1000, 1000);
 }
 
 void WorleyScene::setup()
@@ -15,11 +15,22 @@ void WorleyScene::setup()
 	filesystem::path shader_path( "../../res/shader" );
 	worleyShader.load( shader_path / "worley.vert", shader_path / "worley.frag" );
 
+	
+	camera.disableMouseInput();
+	camera.setupPerspective();
+	camera.setPosition(0, 0, 665);
+	camera.setFarClip(ofGetWidth() * 10);
 
 	for (int y = 0; y < (height); y += 100) {
 		for (int x = 0; x < (width); x += 100) {
-			Node newHub( x, y );
-			nodes.push_back( newHub );
+			if (y % 200 == 0){
+				Node newHub(x, y);
+				nodes.push_back(newHub);
+			}else{
+				Node newHub(x+50, y);
+				nodes.push_back(newHub);
+			}
+
 		}
 	}
 
@@ -39,6 +50,8 @@ void WorleyScene::update()
 		positions[i] = nodes[i].position;
 	}
 
+	width = ofGetWidth();
+	height = ofGetHeight();
 
 }
 
@@ -47,6 +60,7 @@ void WorleyScene::draw()
 
 	ofBackground( 0 );
 
+	camera.begin();
 	worleyShader.begin();
 	worleyShader.setUniform2f( "u_resolution", (float)width, (float)height );
 	worleyShader.setUniform1f( "u_time", ofGetElapsedTimef() );
@@ -55,19 +69,27 @@ void WorleyScene::draw()
 	worleyShader.setUniform1i( "u_length", nodes.size() );
 	worleyShader.setUniform2fv( "u_positions",  &positions[0].x, 88);
 
+	ofFill();
 	ofDrawRectangle( 0, 0, width, height );
 
 	worleyShader.end();
-
-	/*
+	
+	
 	for (int i = 0; i < nodes.size(); i++)
 	{
-		nodes[i].draw();
+		//nodes[i].draw();
 	}
+	camera.end();
+	float ratio = width / height;
+	//  300 :  400 -> 0,75 --->  4x3	100
+	// 1000 : 1000 -> 1,00 ---> 10x10
+	// 1
 
-	int boxSize = 100;
+	/*
+	int boxSize =  100;
 	for (int x = 0; x < (width); x += boxSize) {
 		ofDrawLine(x + boxSize / 2, 0 , x + boxSize / 2, height);
+		
 	}
 	for (int y = 0; y < (height); y += boxSize) {
 		ofDrawLine(0, y + boxSize / 2, width, y + boxSize / 2);
@@ -78,6 +100,12 @@ void WorleyScene::draw()
 
 void WorleyScene::keyPressed( int key )
 {
+	// std::cout << key << std::endl;
+	if (key == ofKey::OF_KEY_SHIFT)
+	{
+		camera.enableMouseInput();
+		//std::cout << camera.getPosition() << std::endl;
+	}
 }
 
 void WorleyScene::keyReleased( int key )
@@ -135,8 +163,8 @@ Node::~Node() {
 void Node::update( int i ) {
 
 	int boxSize = 100;
-	direction.x = (boxSize / 2 - 10) * (sin( 0.5 * ofGetElapsedTimef() + (boxMid.y + 265) / 10 + i ) + sin( (i + 13) / (boxMid.y + 1.0) * ofGetElapsedTimef() - i )) / 2;
-	direction.y = (boxSize / 2 - 10) * (cos( 0.5 * ofGetElapsedTimef() + (boxMid.x - 135) / 10 + i ) + cos( (i + 19) / (boxMid.x + 1.0) * ofGetElapsedTimef() - i )) / 2;
+	direction.x = (boxSize / 5 - 10.0) * (sin( 0.5 * ofGetElapsedTimef() + 265 / 10 + i ) + sin( (i + 13.0) / 423.0 * ofGetElapsedTimef() - i )) / 2;
+	direction.y = (boxSize / 5 - 10.0) * (cos( 0.5 * ofGetElapsedTimef() + 135 / 10 + i ) + cos( (i + 19.0) / 668.0 * ofGetElapsedTimef() - i )) / 2;
 	position.x = boxMid.x + direction.x;
 	position.y = boxMid.y + direction.y;
 }

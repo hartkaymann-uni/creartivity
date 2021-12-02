@@ -42,6 +42,7 @@ public:
 
 private:
 
+	ofEasyCam camera;
 	ofVec2f positions[88];
 	vector<Node> nodes;
 	ofShader worleyShader;
