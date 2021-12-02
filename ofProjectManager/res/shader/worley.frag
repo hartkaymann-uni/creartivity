@@ -29,7 +29,9 @@ void main() {
         minDist = dist < minDist ? dist : minDist;
 
     }
+    vec3 color = vec3(smoothstep(0.0, 0.2, minDist));
+    color += vec3(1.-step(.002, minDist));
 
-    vFragColor = vec4(vec3(smoothstep(0.0, 0.2, minDist)), 1.0);
+    vFragColor = vec4(color, 1.0);
     // vFragColor = vec4(.5, 0., 0., 1.0);
 }

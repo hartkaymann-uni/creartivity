@@ -62,7 +62,7 @@ void WorleyScene::draw()
 
 	camera.begin();
 	worleyShader.begin();
-	worleyShader.setUniform2f( "u_resolution", (float)width, (float)height );
+	worleyShader.setUniform2f( "u_resolution", (float)ofGetWidth(), (float)ofGetHeight());
 	worleyShader.setUniform1f( "u_time", ofGetElapsedTimef() );
 	worleyShader.setUniform2f( "u_mouse", ofGetMouseX(), ofGetMouseY() );
 
@@ -77,7 +77,7 @@ void WorleyScene::draw()
 	
 	for (int i = 0; i < nodes.size(); i++)
 	{
-		//nodes[i].draw();
+		nodes[i].draw();
 	}
 	camera.end();
 	float ratio = width / height;
@@ -154,7 +154,7 @@ Node::Node( int startX, int startY ) {
 	float directionSpeed = 1.0;
 	boxMid = glm::vec2( startX, startY );
 	position = glm::vec2( startX, startY );
-	direction = glm::vec2( ofRandom( -directionSpeed, directionSpeed ), ofRandom( -directionSpeed, directionSpeed ) );
+	direction = glm::vec2(0,0);
 }
 
 Node::~Node() {
@@ -163,8 +163,8 @@ Node::~Node() {
 void Node::update( int i ) {
 
 	int boxSize = 100;
-	direction.x = (boxSize / 5 - 10.0) * (sin( 0.5 * ofGetElapsedTimef() + 265 / 10 + i ) + sin( (i + 13.0) / 423.0 * ofGetElapsedTimef() - i )) / 2;
-	direction.y = (boxSize / 5 - 10.0) * (cos( 0.5 * ofGetElapsedTimef() + 135 / 10 + i ) + cos( (i + 19.0) / 668.0 * ofGetElapsedTimef() - i )) / 2;
+	direction.x = (boxSize / 5.0 ) * sin( 0.5 * ofGetElapsedTimef());
+	direction.y = (boxSize / 5.0 ) * cos( 0.5 * ofGetElapsedTimef());
 	position.x = boxMid.x + direction.x;
 	position.y = boxMid.y + direction.y;
 }
