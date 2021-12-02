@@ -180,6 +180,7 @@
     <PostBuildEvent />
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\solver.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\ofApp.cpp" />
     <ClCompile Include="..\..\..\addons\ofxGui\src\ofxBaseGui.cpp" />
@@ -193,8 +194,10 @@
     <ClCompile Include="..\..\..\addons\ofxGui\src\ofxSliderGroup.cpp" />
     <ClCompile Include="..\..\..\addons\ofxGui\src\ofxToggle.cpp" />
     <ClCompile Include="..\..\..\addons\ofxUbo\src\ofxUbo.cpp" />
+    <ClCompile Include="src\utilities.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\solver.h" />
     <ClInclude Include="src\ofApp.h" />
     <ClInclude Include="..\..\..\addons\ofxGui\src\ofxBaseGui.h" />
     <ClInclude Include="..\..\..\addons\ofxGui\src\ofxButton.h" />
@@ -209,6 +212,7 @@
     <ClInclude Include="..\..\..\addons\ofxGui\src\ofxSliderGroup.h" />
     <ClInclude Include="..\..\..\addons\ofxGui\src\ofxToggle.h" />
     <ClInclude Include="..\..\..\addons\ofxUbo\src\ofxUbo.h" />
+    <ClInclude Include="src\utilities.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="$(OF_ROOT)\libs\openFrameworksCompiled\project\vs\openframeworksLib.vcxproj">
@@ -221,6 +225,44 @@
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">/D_DEBUG %(AdditionalOptions)</AdditionalOptions>
       <AdditionalIncludeDirectories>$(OF_ROOT)\libs\openFrameworksCompiled\project\vs</AdditionalIncludeDirectories>
     </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\shader\addforce.frag" />
+    <None Include="res\shader\advect.frag" />
+    <None Include="res\shader\background.frag" />
+    <None Include="res\shader\background.vert" />
+    <None Include="res\shader\box.frag" />
+    <None Include="res\shader\box.vert" />
+    <None Include="res\shader\boxwireframe.frag" />
+    <None Include="res\shader\boxwireframe.vert" />
+    <None Include="res\shader\common.frag" />
+    <None Include="res\shader\composite.frag" />
+    <None Include="res\shader\copy.frag" />
+    <None Include="res\shader\divergence.frag" />
+    <None Include="res\shader\enforceboundaries.frag" />
+    <None Include="res\shader\extendvelocity.frag" />
+    <None Include="res\shader\fullscreen.vert" />
+    <None Include="res\shader\fxaa.frag" />
+    <None Include="res\shader\grid.frag" />
+    <None Include="res\shader\grid.vert" />
+    <None Include="res\shader\jacobi.frag" />
+    <None Include="res\shader\mark.frag" />
+    <None Include="res\shader\mark.vert" />
+    <None Include="res\shader\normalizegrid.frag" />
+    <None Include="res\shader\particle.frag" />
+    <None Include="res\shader\particle.vert" />
+    <None Include="res\shader\point.frag" />
+    <None Include="res\shader\point.vert" />
+    <None Include="res\shader\sphere.frag" />
+    <None Include="res\shader\sphere.vert" />
+    <None Include="res\shader\sphereao.frag" />
+    <None Include="res\shader\sphereao.vert" />
+    <None Include="res\shader\spheredepth.frag" />
+    <None Include="res\shader\spheredepth.vert" />
+    <None Include="res\shader\subtract.frag" />
+    <None Include="res\shader\transfertogrid.frag" />
+    <None Include="res\shader\transfertogrid.vert" />
+    <None Include="res\shader\transfertoparticles.frag" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ProjectExtensions>

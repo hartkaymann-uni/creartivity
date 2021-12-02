@@ -1,111 +1,153 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-	<ItemGroup>
-		<ClCompile Include="src\ofApp.cpp">
-			<Filter>src</Filter>
-		</ClCompile>
-		<ClCompile Include="src\main.cpp">
-			<Filter>src</Filter>
-		</ClCompile>
-		<ClCompile Include="..\..\..\addons\ofxGui\src\ofxBaseGui.cpp">
-			<Filter>addons\ofxGui\src</Filter>
-		</ClCompile>
-		<ClCompile Include="..\..\..\addons\ofxGui\src\ofxButton.cpp">
-			<Filter>addons\ofxGui\src</Filter>
-		</ClCompile>
-		<ClCompile Include="..\..\..\addons\ofxGui\src\ofxColorPicker.cpp">
-			<Filter>addons\ofxGui\src</Filter>
-		</ClCompile>
-		<ClCompile Include="..\..\..\addons\ofxGui\src\ofxGuiGroup.cpp">
-			<Filter>addons\ofxGui\src</Filter>
-		</ClCompile>
-		<ClCompile Include="..\..\..\addons\ofxGui\src\ofxInputField.cpp">
-			<Filter>addons\ofxGui\src</Filter>
-		</ClCompile>
-		<ClCompile Include="..\..\..\addons\ofxGui\src\ofxLabel.cpp">
-			<Filter>addons\ofxGui\src</Filter>
-		</ClCompile>
-		<ClCompile Include="..\..\..\addons\ofxGui\src\ofxPanel.cpp">
-			<Filter>addons\ofxGui\src</Filter>
-		</ClCompile>
-		<ClCompile Include="..\..\..\addons\ofxGui\src\ofxSlider.cpp">
-			<Filter>addons\ofxGui\src</Filter>
-		</ClCompile>
-		<ClCompile Include="..\..\..\addons\ofxGui\src\ofxSliderGroup.cpp">
-			<Filter>addons\ofxGui\src</Filter>
-		</ClCompile>
-		<ClCompile Include="..\..\..\addons\ofxGui\src\ofxToggle.cpp">
-			<Filter>addons\ofxGui\src</Filter>
-		</ClCompile>
-		<ClCompile Include="..\..\..\addons\ofxUbo\src\ofxUbo.cpp">
-			<Filter>addons\ofxUbo\src</Filter>
-		</ClCompile>
-	</ItemGroup>
-	<ItemGroup>
-		<Filter Include="src">
-			<UniqueIdentifier>{d8376475-7454-4a24-b08a-aac121d3ad6f}</UniqueIdentifier>
-		</Filter>
-		<Filter Include="addons">
-			<UniqueIdentifier>{71834F65-F3A9-211E-73B8-DC85}</UniqueIdentifier>
-		</Filter>
-		<Filter Include="addons\ofxGui">
-			<UniqueIdentifier>{4F2A59AF-5F4E-704B-D067-EC13}</UniqueIdentifier>
-		</Filter>
-		<Filter Include="addons\ofxGui\src">
-			<UniqueIdentifier>{645E9533-4DCD-6179-1CDF-CB65}</UniqueIdentifier>
-		</Filter>
-		<Filter Include="addons\ofxUbo">
-			<UniqueIdentifier>{47360B40-F768-AE7D-D04D-4017}</UniqueIdentifier>
-		</Filter>
-		<Filter Include="addons\ofxUbo\src">
-			<UniqueIdentifier>{9B87CA23-4ED1-4237-972F-A9BE}</UniqueIdentifier>
-		</Filter>
-	</ItemGroup>
-	<ItemGroup>
-		<ClInclude Include="src\ofApp.h">
-			<Filter>src</Filter>
-		</ClInclude>
-		<ClInclude Include="..\..\..\addons\ofxGui\src\ofxBaseGui.h">
-			<Filter>addons\ofxGui\src</Filter>
-		</ClInclude>
-		<ClInclude Include="..\..\..\addons\ofxGui\src\ofxButton.h">
-			<Filter>addons\ofxGui\src</Filter>
-		</ClInclude>
-		<ClInclude Include="..\..\..\addons\ofxGui\src\ofxColorPicker.h">
-			<Filter>addons\ofxGui\src</Filter>
-		</ClInclude>
-		<ClInclude Include="..\..\..\addons\ofxGui\src\ofxGui.h">
-			<Filter>addons\ofxGui\src</Filter>
-		</ClInclude>
-		<ClInclude Include="..\..\..\addons\ofxGui\src\ofxGuiGroup.h">
-			<Filter>addons\ofxGui\src</Filter>
-		</ClInclude>
-		<ClInclude Include="..\..\..\addons\ofxGui\src\ofxGuiUtils.h">
-			<Filter>addons\ofxGui\src</Filter>
-		</ClInclude>
-		<ClInclude Include="..\..\..\addons\ofxGui\src\ofxInputField.h">
-			<Filter>addons\ofxGui\src</Filter>
-		</ClInclude>
-		<ClInclude Include="..\..\..\addons\ofxGui\src\ofxLabel.h">
-			<Filter>addons\ofxGui\src</Filter>
-		</ClInclude>
-		<ClInclude Include="..\..\..\addons\ofxGui\src\ofxPanel.h">
-			<Filter>addons\ofxGui\src</Filter>
-		</ClInclude>
-		<ClInclude Include="..\..\..\addons\ofxGui\src\ofxSlider.h">
-			<Filter>addons\ofxGui\src</Filter>
-		</ClInclude>
-		<ClInclude Include="..\..\..\addons\ofxGui\src\ofxSliderGroup.h">
-			<Filter>addons\ofxGui\src</Filter>
-		</ClInclude>
-		<ClInclude Include="..\..\..\addons\ofxGui\src\ofxToggle.h">
-			<Filter>addons\ofxGui\src</Filter>
-		</ClInclude>
-		<ClInclude Include="..\..\..\addons\ofxUbo\src\ofxUbo.h">
-			<Filter>addons\ofxUbo\src</Filter>
-		</ClInclude>
-	</ItemGroup>
-	<ItemGroup>
-		<ResourceCompile Include="icon.rc" />
-	</ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\ofApp.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\main.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxGui\src\ofxBaseGui.cpp">
+      <Filter>addons\ofxGui\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxGui\src\ofxButton.cpp">
+      <Filter>addons\ofxGui\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxGui\src\ofxColorPicker.cpp">
+      <Filter>addons\ofxGui\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxGui\src\ofxGuiGroup.cpp">
+      <Filter>addons\ofxGui\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxGui\src\ofxInputField.cpp">
+      <Filter>addons\ofxGui\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxGui\src\ofxLabel.cpp">
+      <Filter>addons\ofxGui\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxGui\src\ofxPanel.cpp">
+      <Filter>addons\ofxGui\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxGui\src\ofxSlider.cpp">
+      <Filter>addons\ofxGui\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxGui\src\ofxSliderGroup.cpp">
+      <Filter>addons\ofxGui\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxGui\src\ofxToggle.cpp">
+      <Filter>addons\ofxGui\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxUbo\src\ofxUbo.cpp">
+      <Filter>addons\ofxUbo\src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\solver.cpp" />
+    <ClCompile Include="src\utilities.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="src">
+      <UniqueIdentifier>{d8376475-7454-4a24-b08a-aac121d3ad6f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons">
+      <UniqueIdentifier>{71834F65-F3A9-211E-73B8-DC85}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxGui">
+      <UniqueIdentifier>{4F2A59AF-5F4E-704B-D067-EC13}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxGui\src">
+      <UniqueIdentifier>{645E9533-4DCD-6179-1CDF-CB65}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxUbo">
+      <UniqueIdentifier>{47360B40-F768-AE7D-D04D-4017}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxUbo\src">
+      <UniqueIdentifier>{9B87CA23-4ED1-4237-972F-A9BE}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\ofApp.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxGui\src\ofxBaseGui.h">
+      <Filter>addons\ofxGui\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxGui\src\ofxButton.h">
+      <Filter>addons\ofxGui\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxGui\src\ofxColorPicker.h">
+      <Filter>addons\ofxGui\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxGui\src\ofxGui.h">
+      <Filter>addons\ofxGui\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxGui\src\ofxGuiGroup.h">
+      <Filter>addons\ofxGui\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxGui\src\ofxGuiUtils.h">
+      <Filter>addons\ofxGui\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxGui\src\ofxInputField.h">
+      <Filter>addons\ofxGui\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxGui\src\ofxLabel.h">
+      <Filter>addons\ofxGui\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxGui\src\ofxPanel.h">
+      <Filter>addons\ofxGui\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxGui\src\ofxSlider.h">
+      <Filter>addons\ofxGui\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxGui\src\ofxSliderGroup.h">
+      <Filter>addons\ofxGui\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxGui\src\ofxToggle.h">
+      <Filter>addons\ofxGui\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxUbo\src\ofxUbo.h">
+      <Filter>addons\ofxUbo\src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\solver.h" />
+    <ClInclude Include="src\utilities.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="icon.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\shader\addforce.frag" />
+    <None Include="res\shader\advect.frag" />
+    <None Include="res\shader\background.frag" />
+    <None Include="res\shader\background.vert" />
+    <None Include="res\shader\box.frag" />
+    <None Include="res\shader\box.vert" />
+    <None Include="res\shader\boxwireframe.frag" />
+    <None Include="res\shader\boxwireframe.vert" />
+    <None Include="res\shader\common.frag" />
+    <None Include="res\shader\composite.frag" />
+    <None Include="res\shader\copy.frag" />
+    <None Include="res\shader\divergence.frag" />
+    <None Include="res\shader\enforceboundaries.frag" />
+    <None Include="res\shader\extendvelocity.frag" />
+    <None Include="res\shader\fullscreen.vert" />
+    <None Include="res\shader\fxaa.frag" />
+    <None Include="res\shader\grid.frag" />
+    <None Include="res\shader\grid.vert" />
+    <None Include="res\shader\jacobi.frag" />
+    <None Include="res\shader\mark.frag" />
+    <None Include="res\shader\mark.vert" />
+    <None Include="res\shader\normalizegrid.frag" />
+    <None Include="res\shader\particle.frag" />
+    <None Include="res\shader\particle.vert" />
+    <None Include="res\shader\point.frag" />
+    <None Include="res\shader\point.vert" />
+    <None Include="res\shader\sphere.frag" />
+    <None Include="res\shader\sphere.vert" />
+    <None Include="res\shader\sphereao.frag" />
+    <None Include="res\shader\sphereao.vert" />
+    <None Include="res\shader\spheredepth.frag" />
+    <None Include="res\shader\spheredepth.vert" />
+    <None Include="res\shader\subtract.frag" />
+    <None Include="res\shader\transfertogrid.frag" />
+    <None Include="res\shader\transfertogrid.vert" />
+    <None Include="res\shader\transfertoparticles.frag" />
+  </ItemGroup>
 </Project>

@@ -2,12 +2,16 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
+	filesystem::path shader_path( "../../res/shader" );
 
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
-
+	// Display framerate in window title
+	std::stringstream strm;
+	strm << "fps: " << ofGetFrameRate();
+	ofSetWindowTitle( strm.str() );
 }
 
 //--------------------------------------------------------------
