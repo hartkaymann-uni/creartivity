@@ -3,16 +3,17 @@
 #include <random>
 
 GameOfLifeScene::GameOfLifeScene( int cells_x, int cells_y)
-	: ofxFadeScene( "GameOfLife" ),
+	: ofxScene( "GameOfLife" ),
 	width( ofGetWindowWidth() ),
 	height( ofGetWindowHeight() ),
 	N_CELLS_X( cells_x ),
 	N_CELLS_Y( cells_y ),
 	mouseIsDown( false ),
-	mousePosition( 0.f, 0.f, 0.f)
+	mousePosition( 0.f, 0.f, 0.f),
+	time( 0.f )
 {
-	setSingleSetup( false );
-	setFade( 1000, 1000 );
+	setSingleSetup( true );
+	
 }
 
 void GameOfLifeScene::setup()
@@ -22,6 +23,7 @@ void GameOfLifeScene::setup()
 	bool loadUpdateShader = updateCells.load( shader_path / "passthru.vert", shader_path / "gol.frag" );
 	bool loadRenderShader = updateRender.load( shader_path / "render.vert", shader_path / "render.frag" /*, shader_path / "render.geom" */ );
 	bool loadInstancedShader = instancedShader.load( shader_path / "renderInstanced.vert", shader_path / "renderInstanced.frag" );
+	bool loadOutlineShader = outlineShader.load( shader_path / "renderInstanced.vert", shader_path / "outline.frag" );
 
 	camera.disableMouseInput();
 	camera.setupPerspective();
@@ -72,7 +74,7 @@ void GameOfLifeScene::setup()
 	mouseRadius.set( "mouseRad", 5, 0, 10 );
 	mouseStrength.set( "mouseStr", 0.1, 0.0, 1.0 );
 	jiggleFactor.set( "jiggle", 1.0, 0.0, 10.0 );
-
+	
 	sphereResolution.addListener( this, &GameOfLifeScene::handleSphereResolutionChanged );
 	cellSize.addListener( this, &GameOfLifeScene::handleSphereRadiusChanged );
 
@@ -171,14 +173,10 @@ void GameOfLifeScene::draw()
 {
 	ofBackground( 0 );
 
-	//ofSetColor( 100, 255, 255 );
-
-	cellPingPong.dst->draw( 0, 0, width / (10 - dataSrcSize), height / (10 - dataSrcSize) );
-
 	ofPushStyle();
 
-	ofEnableDepthTest();
-	ofDisableAlphaBlending();
+	//ofSetColor( 100, 255, 255 );
+
 
 	camera.begin();
 	//glEnable( GL_CULL_FACE );
@@ -186,9 +184,17 @@ void GameOfLifeScene::draw()
 
 	axisMesh.draw();
 
-	glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
-	glEnable( GL_BLEND );
+	
+	// Draw outlines with stencil testing
+	glEnable( GL_STENCIL_TEST );
+	glDepthFunc( GL_LESS );
+	glStencilFunc( GL_NOTEQUAL, 1, 0xFF );
+	glStencilOp( GL_KEEP, GL_KEEP, GL_REPLACE);
+	
+	glClearStencil( 0 );
+	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT );
 
+	
 	instancedShader.begin();
 	instancedShader.setUniforms( shaderUniforms );
 	instancedShader.setUniformTexture( "cellData", cellPingPong.src->getTexture(), 0 );
@@ -198,20 +204,46 @@ void GameOfLifeScene::draw()
 	instancedShader.setUniform4f( "materialColor", materialColor );
 	instancedShader.setUniform1f( "time", time );
 
+	glStencilFunc( GL_ALWAYS, 1, 0xFF );
+	glStencilMask( 0xFF );
 	vboSphere.drawInstanced( OF_MESH_FILL, N_CELLS_X * N_CELLS_Y );
 
-	glDisable( GL_CULL_FACE );
 	instancedShader.end();
+	
+	outlineShader.begin();
+	outlineShader.setUniforms( shaderUniforms );
+	outlineShader.setUniformTexture( "cellData", cellPingPong.src->getTexture(), 0 );
+	outlineShader.setUniform2f( "resolution", (float)N_CELLS_X, (float)N_CELLS_Y );
+	outlineShader.setUniform2f( "screen", (float)width, (float)height );
+	outlineShader.setUniform3f( "lightPos", lightPos );
+	outlineShader.setUniform4f( "materialColor", materialColor );
+	outlineShader.setUniform1f( "time", time );
 
-	ofDisableDepthTest();
+	// Scale up spheres for second draw
+	float scaledRadius = sphereRadius.get() * 1.1f;
+	outlineShader.setUniform1f( "radius", scaledRadius );
+
+	glStencilFunc( GL_NOTEQUAL, 1, 0xFF );
+	glStencilMask( 0x00 );
+	glDisable( GL_DEPTH_TEST );
+	vboSphere.drawInstanced( OF_MESH_FILL, N_CELLS_X * N_CELLS_Y );
+
+	glStencilMask( 0xFF );
+	glStencilFunc( GL_ALWAYS, 0, 0xFF );
+
+	outlineShader.end();
+
+	//glDisable( GL_CULL_FACE );
 	ofEnableAlphaBlending();
 
-	ofPopStyle();
 
 	//drawCoordinateSystem();
 	//renderFBO.draw( 0, 0 );
+	
+	ofPopStyle();
 	camera.end();
 
+	cellPingPong.dst->draw( 0, 0, width / (10 - dataSrcSize), height / (10 - dataSrcSize) );
 	ofSetColor( 255 );
 	gui.draw();
 }

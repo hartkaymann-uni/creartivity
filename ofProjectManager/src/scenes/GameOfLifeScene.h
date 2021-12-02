@@ -43,10 +43,10 @@ private:
 	ofFbo   FBOs[2];    // Real addresses of ping/pong FBO«s
 };
 
-class GameOfLifeScene : public ofxFadeScene {
+class GameOfLifeScene : public ofxScene {
 
 public:
-	GameOfLifeScene( int cells_x = 102, int cells_y = 77 );
+	GameOfLifeScene( int cells_x = 100, int cells_y = 77 );
 	void setup();
 	void update();
 	void draw();
@@ -64,6 +64,7 @@ private:
 	ofShader    updateCells;
 	ofShader    updateRender;
 	ofShader    instancedShader;
+	ofShader    outlineShader;
 
 	pingPongBuffer cellPingPong;
 

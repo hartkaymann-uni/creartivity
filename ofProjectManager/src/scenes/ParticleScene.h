@@ -6,7 +6,7 @@
 #include "ofxGui.h";
 #include "ofxAppUtils.h"
 
-class ParticleScene : public ofxFadeScene{
+class ParticleScene : public ofxScene{
 
 	public:
 		ParticleScene();

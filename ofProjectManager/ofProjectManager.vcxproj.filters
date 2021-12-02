@@ -212,5 +212,6 @@
     <None Include="res\shader\instancedParticles.frag" />
     <None Include="res\shader\renderInstanced.frag" />
     <None Include="res\shader\renderInstanced.vert" />
+    <None Include="res\shader\outline.frag" />
   </ItemGroup>
 </Project>

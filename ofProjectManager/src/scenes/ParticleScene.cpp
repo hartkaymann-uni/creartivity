@@ -3,9 +3,8 @@
 
 ParticleScene::ParticleScene() : ParticleScene(10) {}
 
-ParticleScene::ParticleScene( int n_particles ) : ofxFadeScene( "Particles" ) {
-	setSingleSetup( false );
-	setFade( 1000, 1000 );
+ParticleScene::ParticleScene( int n_particles ) : ofxScene( "Particles" ) {
+	setSingleSetup( true );
 }
 
 //--------------------------------------------------------------
@@ -114,6 +113,13 @@ void ParticleScene::update() {
 //--------------------------------------------------------------
 void ParticleScene::draw() {
 	//ofEnableBlendMode( OF_BLENDMODE_ADD );
+
+
+
+	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT );
+
+	ofPushStyle();
+
 	ofEnableDepthTest();
 	ofDisableAlphaBlending();
 
@@ -148,6 +154,8 @@ void ParticleScene::draw() {
 	
 	ofSetColor( 255 );
 	gui.draw();
+
+	ofPopStyle();
 }
 
 //--------------------------------------------------------------
