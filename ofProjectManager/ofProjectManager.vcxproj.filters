@@ -71,6 +71,7 @@
       <Filter>addons\ofxUbo\src</Filter>
     </ClCompile>
     <ClCompile Include="src\scenes\GameOfLifeScene.cpp" />
+    <ClCompile Include="src\scenes\ContourLinesScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -194,6 +195,7 @@
     </ClInclude>
     <ClInclude Include="src\scenes\LineScene.h" />
     <ClInclude Include="src\scenes\GameOfLifeScene.h" />
+    <ClInclude Include="src\scenes\ContourLinesScene.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="icon.rc" />

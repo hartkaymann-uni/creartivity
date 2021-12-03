@@ -180,6 +180,7 @@
     <PostBuildEvent />
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\scenes\ContourLinesScene.cpp" />
     <ClCompile Include="src\scenes\GameOfLifeScene.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\ofApp.cpp" />
@@ -204,6 +205,7 @@
     <ClCompile Include="..\..\..\addons\ofxUbo\src\ofxUbo.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\scenes\ContourLinesScene.h" />
     <ClInclude Include="src\scenes\GameOfLifeScene.h" />
     <ClInclude Include="src\ofApp.h" />
     <ClInclude Include="src\scenes\LineScene.h" />
