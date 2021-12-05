@@ -3,6 +3,7 @@
 #include "ofMain.h"
 
 #include "ofxAppUtils.h"
+#include "ofxOsc.h"
 
 #define HAVE_OFX_GUI
 
@@ -45,4 +46,5 @@ public:
 	ofxTransformPanel panel;
 #endif
 
+	ofxOscReceiver receiver;
 };

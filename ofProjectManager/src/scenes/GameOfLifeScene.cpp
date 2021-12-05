@@ -2,22 +2,18 @@
 
 #include <random>
 
-GameOfLifeScene::GameOfLifeScene( int cells_x, int cells_y)
-	: ofxScene( "GameOfLife" ),
-	width( ofGetWindowWidth() ),
-	height( ofGetWindowHeight() ),
+GameOfLifeScene::GameOfLifeScene( int cells_x, int cells_y )
+	: ccScene( "GameOfLife" ),
 	N_CELLS_X( cells_x ),
 	N_CELLS_Y( cells_y ),
 	mouseIsDown( false ),
-	mousePosition( 0.f, 0.f, 0.f),
+	mousePosition( 0.f, 0.f, 0.f ),
 	time( 0.f )
-{
-	setSingleSetup( true );
-	
-}
+{}
 
 void GameOfLifeScene::setup()
 {
+
 	// Load Shaders
 	filesystem::path shader_path( "../../res/shader" );
 	bool loadUpdateShader = updateCells.load( shader_path / "passthru.vert", shader_path / "gol.frag" );
@@ -74,7 +70,7 @@ void GameOfLifeScene::setup()
 	mouseRadius.set( "mouseRad", 5, 0, 10 );
 	mouseStrength.set( "mouseStr", 0.1, 0.0, 1.0 );
 	jiggleFactor.set( "jiggle", 1.0, 0.0, 10.0 );
-	
+
 	sphereResolution.addListener( this, &GameOfLifeScene::handleSphereResolutionChanged );
 	cellSize.addListener( this, &GameOfLifeScene::handleSphereRadiusChanged );
 
@@ -114,7 +110,7 @@ void GameOfLifeScene::setup()
 	axisMesh = ofMesh::axis();
 
 	ofSpherePrimitive sphere;
-	sphere.set( cellSize, sphereResolution);
+	sphere.set( cellSize, sphereResolution );
 	vboSphere = sphere.getMesh();
 }
 
@@ -124,8 +120,10 @@ void GameOfLifeScene::update()
 	std::stringstream strm;
 	strm << "fps: " << ofGetFrameRate();
 	ofSetWindowTitle( strm.str() );
-	
+
 	time = ofGetElapsedTimef();
+
+	receiveMessage();
 
 	cellPingPong.dst->begin();
 	ofClear( 0 );
@@ -136,7 +134,6 @@ void GameOfLifeScene::update()
 	updateCells.setUniform2f( "screen", (float)width, (float)height );
 	updateCells.setUniform1i( "mouseDown", mouseIsDown );
 	updateCells.setUniform3f( "mousePos", mousePosition );
-
 
 	// Draw cell texture to call shaders, logic happens in shaders
 	cellPingPong.src->draw( 0, 0 );
@@ -184,17 +181,17 @@ void GameOfLifeScene::draw()
 
 	axisMesh.draw();
 
-	
+
 	// Draw outlines with stencil testing
 	glEnable( GL_STENCIL_TEST );
 	glDepthFunc( GL_LESS );
 	glStencilFunc( GL_NOTEQUAL, 1, 0xFF );
-	glStencilOp( GL_KEEP, GL_KEEP, GL_REPLACE);
-	
+	glStencilOp( GL_KEEP, GL_KEEP, GL_REPLACE );
+
 	glClearStencil( 0 );
 	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT );
 
-	
+
 	instancedShader.begin();
 	instancedShader.setUniforms( shaderUniforms );
 	instancedShader.setUniformTexture( "cellData", cellPingPong.src->getTexture(), 0 );
@@ -209,7 +206,7 @@ void GameOfLifeScene::draw()
 	vboSphere.drawInstanced( OF_MESH_FILL, N_CELLS_X * N_CELLS_Y );
 
 	instancedShader.end();
-	
+
 	outlineShader.begin();
 	outlineShader.setUniforms( shaderUniforms );
 	outlineShader.setUniformTexture( "cellData", cellPingPong.src->getTexture(), 0 );
@@ -239,7 +236,7 @@ void GameOfLifeScene::draw()
 
 	//drawCoordinateSystem();
 	//renderFBO.draw( 0, 0 );
-	
+
 	ofPopStyle();
 	camera.end();
 
@@ -296,4 +293,15 @@ void GameOfLifeScene::mouseDragged( int x, int y, int button )
 {
 	if (mouseIsDown)
 		mousePosition.set( x, y, 0.0 );
+}
+
+ofVec3f GameOfLifeScene::getProjectedMousePosition( ofVec3f mp ) {
+
+	glm::vec3 pos = camera.screenToWorld( mp );
+
+	pos.z = 0.0;
+
+	std::cout << "X: " << pos.x << " Y: " << pos.y << " Z: " << pos.z << std::endl;
+
+	return ofVec3f( pos );
 }

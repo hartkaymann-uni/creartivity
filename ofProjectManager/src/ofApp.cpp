@@ -27,6 +27,11 @@ void ofApp::setup() {
 	sceneManager.setOverlap( true ); // Overlap scenes when transitioned
 
 	setSceneManager( &sceneManager );
+
+	receiver.setup( PORT );
+	particleScene->setReceiver( &receiver );
+	gameOfLifeScene->setReceiver( &receiver );
+	ofLog() << "Listening on port " << PORT;
 }
 
 //--------------------------------------------------------------
@@ -38,7 +43,6 @@ void ofApp::update() {
 		panel.update();
 	}
 #endif
-
 }
 
 //--------------------------------------------------------------

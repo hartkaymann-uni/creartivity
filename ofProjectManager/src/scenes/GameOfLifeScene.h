@@ -1,8 +1,7 @@
 #pragma once
 
-#include "ofMain.h"
+#include "ccScene.h"
 
-#include "ofxAppUtils.h"
 #include "ofxUbo.h"
 #include "ofxGui.h"
 
@@ -43,7 +42,7 @@ private:
 	ofFbo   FBOs[2];    // Real addresses of ping/pong FBO«s
 };
 
-class GameOfLifeScene : public ofxScene {
+class GameOfLifeScene : public ccScene {
 
 public:
 	GameOfLifeScene( int cells_x = 100, int cells_y = 77 );
@@ -94,10 +93,11 @@ private:
 	const int N_CELLS_X;
 	const int N_CELLS_Y;
 
-	int width, height;
 	float time;
 
 	bool mouseIsDown;
 	ofVec3f mousePosition;
+
+	ofVec3f getProjectedMousePosition( ofVec3f mp);
 
 };

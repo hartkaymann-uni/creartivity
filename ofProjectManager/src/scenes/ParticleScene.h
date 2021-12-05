@@ -1,16 +1,16 @@
 #pragma once
 
-#include "ofMain.h"
+#include "ccScene.h"
+
 #include "ofBufferObject.h"
 
 #include "ofxGui.h";
 #include "ofxAppUtils.h"
 
-class ParticleScene : public ofxScene{
+class ParticleScene : public ccScene{
 
 	public:
-		ParticleScene();
-		ParticleScene(int n_particles);
+		ParticleScene(int n_particles = 10);
 		void setup();
 		void update();
 		void draw();
@@ -58,4 +58,7 @@ class ParticleScene : public ofxScene{
 		static const int FIELD_X = 25;
 		static const int FIELD_Y = 10;
 		float noiseField[FIELD_X][FIELD_Y];
+
+		ofVec3f screenToWorldSpace( ofVec3f mp );
+
 };
