@@ -10,23 +10,24 @@ ContourLinesScene::ContourLinesScene():ofxScene("ContourLines"),
 
 void ContourLinesScene::setup()
 {
+	// Load Shader
 	filesystem::path shader_path("../../res/shader");
 	contourLineShader.load(shader_path / "contourLines.vert", shader_path / "contourLines.frag");
 	
-	// set camera in the middle of the scene
+	// Set camera in the middle of the scene
+	camera.disableMouseInput();
 	camera.setPosition(width / 2, height / 2, (width + height) / 2);
 
-	// fill mesh with vertices
+	// Fill mesh with vertices
 	spaceBetweenVetices = 5;
-	for (int y = spaceBetweenVetices; y < height; y += spaceBetweenVetices)
-	{
-		for (int x = spaceBetweenVetices; x < width; x += spaceBetweenVetices)
-		{
+	for (int y = 0; y < height; y++){
+		for (int x = 0; x < width; x++){
 			mesh.addVertex(glm::vec3(x, y, 0));
 			mesh.addTexCoord({ x / width , y / height });
 		}
 	}
 
+	// Setup gui and parameters
 	gui.setup();
 	shaderUniforms.setName("Shader Parameters");
 	shaderUniforms.add(speed.set("u_speed", 0.015, 0.00, 0.1));
@@ -35,6 +36,7 @@ void ContourLinesScene::setup()
 
 	gui.add(shaderUniforms);
 	gui.setPosition(width - gui.getWidth() - 10, height - gui.getHeight() - 10);
+
 }
 
 void ContourLinesScene::update()
@@ -54,22 +56,32 @@ void ContourLinesScene::draw()
 	{
 		contourLineShader.begin(); 
 		{
-			contourLineShader.setUniform1f("time", time);
+			contourLineShader.setUniform1f("u_time", time);
+			contourLineShader.setUniform2f("u_mouse", ofGetMouseX(), height - ofGetMouseY());
 			contourLineShader.setUniforms(shaderUniforms);
 			mesh.drawVertices();
 		}
 		contourLineShader.end();
 
-		// draw circles at the corners of the sceen
+		// Draw circles at the corners of the sceen and at mouseposition
 		ofNoFill();
 		ofDrawCircle(0, 0, 30);
 		ofDrawCircle(width, 0, 30);
 		ofDrawCircle(width, height, 30);
 		ofDrawCircle(0, height, 30);
-
 		ofDrawCircle(ofGetMouseX(), height - ofGetMouseY(), 30);
+
+		/*
+		ofSetColor(50,0, 0);
+		mesh.drawVertices();
+		ofSetColor(0, 50, 0);
+		mesh.drawFaces();
+		ofSetColor(0, 0, 50);
+		mesh.drawWireframe();
+		*/
 	}
 	camera.end();
+
 	ofSetColor(255);
 	gui.draw();
 				

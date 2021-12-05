@@ -1,10 +1,11 @@
 #version 150
 
 uniform mat4 modelViewProjectionMatrix;
-uniform float time;
+uniform float u_time;
 uniform float u_speed;
 uniform float u_scale;
 uniform float u_amplitude;
+uniform vec2 u_mouse;
 
 
 in vec4 position;
@@ -96,9 +97,9 @@ float rand(vec2 co){
 
 void main(){
 	vec4 pos = position;
-
-	float shift = cnoise(vec3(position.xy * u_scale, u_speed * time))*u_amplitude;
+	float shift = cnoise(vec3(position.xy * u_scale, u_speed * u_time))*u_amplitude;
 	pos.z += shift;
+
 
 	vPosition = pos;
 	gl_Position = modelViewProjectionMatrix * pos;

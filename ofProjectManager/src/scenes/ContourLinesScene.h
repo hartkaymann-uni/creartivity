@@ -25,21 +25,22 @@ public:
 
 private:
 
-	ofMesh mesh;
+	ofShader contourLineShader;
 
 	ofEasyCam camera;
-	
-	ofShader contourLineShader;
-	int width, height;
 
-	float time;
-
-	int spaceBetweenVetices;
+	ofMesh mesh;
 
 	ofxPanel gui;
 	ofParameterGroup shaderUniforms;
 	ofParameter<float> speed;
 	ofParameter<float> scale;
 	ofParameter<float> amplitude;
+
+	int width, height;
+	int meshWidth, meshHeight;
+	float time;
+	int spaceBetweenVetices;
+
 };
 
