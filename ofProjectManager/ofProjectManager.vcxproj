@@ -254,6 +254,8 @@
     <Text Include="src\Controls.txt" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="res\shader\contourLines.frag" />
+    <None Include="res\shader\contourLines.vert" />
     <None Include="res\shader\gol.frag" />
     <None Include="res\shader\instancedParticles.frag" />
     <None Include="res\shader\instancedParticles.vert" />

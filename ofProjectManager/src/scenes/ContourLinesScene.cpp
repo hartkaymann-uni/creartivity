@@ -1,48 +1,92 @@
 #include "ContourLinesScene.h"
 
-ContourLinesScene::ContourLinesScene():ofxScene("ContourLines")
+ContourLinesScene::ContourLinesScene():ofxScene("ContourLines"),
+				width(ofGetWidth()),
+				height(ofGetHeight()),
+				time(0.f)
 {
+	setSingleSetup(true);
 }
 
 void ContourLinesScene::setup()
 {
-	camera.setPosition(ofGetWidth() / 2, ofGetHeight() / 2, (ofGetWidth() + ofGetHeight()) / 2);
+	filesystem::path shader_path("../../res/shader");
+	contourLineShader.load(shader_path / "contourLines.vert", shader_path / "contourLines.frag");
+	
+	// set camera in the middle of the scene
+	camera.setPosition(width / 2, height / 2, (width + height) / 2);
 
-	int spaceBetweenVetices = 10;
-	for (int y = spaceBetweenVetices; y < ofGetHeight(); y += spaceBetweenVetices)
+	// fill mesh with vertices
+	spaceBetweenVetices = 5;
+	for (int y = spaceBetweenVetices; y < height; y += spaceBetweenVetices)
 	{
-		for (int x = spaceBetweenVetices; x < ofGetWidth(); x += spaceBetweenVetices)
+		for (int x = spaceBetweenVetices; x < width; x += spaceBetweenVetices)
 		{
 			mesh.addVertex(glm::vec3(x, y, 0));
-			mesh.addColor(255);
+			mesh.addTexCoord({ x / width , y / height });
 		}
 	}
+
+	gui.setup();
+	shaderUniforms.setName("Shader Parameters");
+	shaderUniforms.add(speed.set("u_speed", 0.015, 0.00, 0.1));
+	shaderUniforms.add(scale.set("u_scale", 0.005, 0.0, 0.01));
+	shaderUniforms.add(amplitude.set("u_amplitude", 2.0, 0.0, 5.0));
+
+	gui.add(shaderUniforms);
+	gui.setPosition(width - gui.getWidth() - 10, height - gui.getHeight() - 10);
 }
 
 void ContourLinesScene::update()
 {
-	camera.setPosition(ofGetWidth() / 2, ofGetHeight() / 2, (ofGetWidth() + ofGetHeight()) / 2);
+	// Display framerate in window title
+	std::stringstream strm;
+	strm << "fps: " << ofGetFrameRate();
+	ofSetWindowTitle(strm.str());
 
+	time = ofGetElapsedTimef();
 }
 
 void ContourLinesScene::draw()
 {
 
-	camera.begin();
-	ofDrawCircle(0, 0, 30);
-	ofDrawCircle(ofGetWidth(), 0, 30);
-	ofDrawCircle(ofGetWidth(), ofGetHeight(), 30);
-	ofDrawCircle(0, ofGetHeight(), 30);
-	mesh.drawVertices();
+	camera.begin(); 
+	{
+		contourLineShader.begin(); 
+		{
+			contourLineShader.setUniform1f("time", time);
+			contourLineShader.setUniforms(shaderUniforms);
+			mesh.drawVertices();
+		}
+		contourLineShader.end();
+
+		// draw circles at the corners of the sceen
+		ofNoFill();
+		ofDrawCircle(0, 0, 30);
+		ofDrawCircle(width, 0, 30);
+		ofDrawCircle(width, height, 30);
+		ofDrawCircle(0, height, 30);
+
+		ofDrawCircle(ofGetMouseX(), height - ofGetMouseY(), 30);
+	}
 	camera.end();
+	ofSetColor(255);
+	gui.draw();
+				
 }
 
 void ContourLinesScene::keyPressed(int key)
 {
+	// reset the camera to the middle of the scene
+	if (key == 'r') {
+		camera.reset();
+		camera.setPosition(width / 2, height / 2, (width + height) / 2);
+	}
 }
 
 void ContourLinesScene::keyReleased(int key)
 {
+
 }
 
 void ContourLinesScene::mouseMoved(int x, int y)

@@ -1,6 +1,7 @@
 #pragma once
 #include "ofMain.h"
 #include "ofxAppUtils.h"
+#include "ofxGui.h"
 
 class ContourLinesScene:public ofxScene
 {
@@ -25,7 +26,20 @@ public:
 private:
 
 	ofMesh mesh;
-	ofEasyCam camera;
 
+	ofEasyCam camera;
+	
+	ofShader contourLineShader;
+	int width, height;
+
+	float time;
+
+	int spaceBetweenVetices;
+
+	ofxPanel gui;
+	ofParameterGroup shaderUniforms;
+	ofParameter<float> speed;
+	ofParameter<float> scale;
+	ofParameter<float> amplitude;
 };
 
