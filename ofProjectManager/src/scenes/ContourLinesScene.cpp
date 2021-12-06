@@ -26,6 +26,17 @@ void ContourLinesScene::setup()
 			mesh.addTexCoord({ x / width , y / height });
 		}
 	}
+	for (int y = 0; y < height - 1; y++) {
+		for (int x = 0; x < width - 1; x++) {
+			mesh.addIndex(x + y * width);
+			mesh.addIndex((x + 1) + y * width);
+			mesh.addIndex(x + (y + 1) * width);
+
+			mesh.addIndex((x + 1) + y * width);
+			mesh.addIndex((x + 1) + (y + 1) * width);
+			mesh.addIndex(x + (y + 1) * width);
+		}
+	}
 
 	// Setup gui and parameters
 	gui.setup();
@@ -79,6 +90,7 @@ void ContourLinesScene::draw()
 		ofSetColor(0, 0, 50);
 		mesh.drawWireframe();
 		*/
+
 	}
 	camera.end();
 
@@ -94,11 +106,17 @@ void ContourLinesScene::keyPressed(int key)
 		camera.reset();
 		camera.setPosition(width / 2, height / 2, (width + height) / 2);
 	}
+
+	if (key == ofKey::OF_KEY_SHIFT){
+		camera.enableMouseInput();
+	}
 }
 
 void ContourLinesScene::keyReleased(int key)
 {
-
+	if (key == ofKey::OF_KEY_SHIFT){
+		camera.disableMouseInput();
+	}
 }
 
 void ContourLinesScene::mouseMoved(int x, int y)

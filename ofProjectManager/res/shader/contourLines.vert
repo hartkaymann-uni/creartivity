@@ -97,10 +97,15 @@ float rand(vec2 co){
 
 void main(){
 	vec4 pos = position;
-	float shift = cnoise(vec3(position.xy * u_scale, u_speed * u_time))*u_amplitude;
+	float dist = distance(position.xy, u_mouse.xy);
+	float shift = cnoise(vec3(position.xy * u_scale, u_speed * u_time))* u_amplitude;
 	pos.z += shift;
-
-
+	if (dist < 100){
+	float force = (dist / 100.0);
+	float amonunt_of_Steps = 1.0;
+	pos.z = (pos.z + amonunt_of_Steps) * force;
+	}
 	vPosition = pos;
 	gl_Position = modelViewProjectionMatrix * pos;
+
 }
