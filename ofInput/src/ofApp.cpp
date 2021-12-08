@@ -71,7 +71,9 @@ void ofApp::sendUser( int id, user& user ) {
 	ofxOscMessage m;
 	std::string addr = "/user/data/";
 	addr += ofToString( id );
-	m.setAddress( addr );
+
+	string leftAdr = addr + "/left";
+	m.setAddress( leftAdr);
 
 	m.addFloatArg( user.position.x );
 	m.addFloatArg( user.position.y );
