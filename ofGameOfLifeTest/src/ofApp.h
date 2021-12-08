@@ -22,5 +22,5 @@ private:
 
 	int getNeighbourCount( int x, int y );
 	void setRadius( int x, int y, int r, bool val );
-
 };
+
