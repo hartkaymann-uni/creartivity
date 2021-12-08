@@ -1,12 +1,6 @@
 #include "ParticleScene.h"
 
-
-ParticleScene::ParticleScene() : ParticleScene(10) {}
-
-ParticleScene::ParticleScene( int n_particles ) : ofxFadeScene( "Particles" ) {
-	setSingleSetup( false );
-	setFade( 1000, 1000 );
-}
+ParticleScene::ParticleScene( int n_particles ) : ccScene( "Particles" ) {}
 
 //--------------------------------------------------------------
 void ParticleScene::setup() {
@@ -15,11 +9,6 @@ void ParticleScene::setup() {
 	bool linked = compute.linkProgram();
 
 	bool renderLinked = renderShader.load( res_path / "shader/instancedParticles.vert", res_path / "shader/instancedParticles.frag" );
-
-	camera.disableMouseInput();
-	camera.setupPerspective();
-	camera.setPosition( 0, 0, 665 );
-	camera.setFarClip( ofGetWidth() * 10 );
 
 	particles.resize( 1024 * 8 * 1 );
 	int i = 0;
@@ -114,6 +103,11 @@ void ParticleScene::update() {
 //--------------------------------------------------------------
 void ParticleScene::draw() {
 	//ofEnableBlendMode( OF_BLENDMODE_ADD );
+
+	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT );
+
+	ofPushStyle();
+
 	ofEnableDepthTest();
 	ofDisableAlphaBlending();
 
@@ -148,6 +142,8 @@ void ParticleScene::draw() {
 	
 	ofSetColor( 255 );
 	gui.draw();
+
+	ofPopStyle();
 }
 
 //--------------------------------------------------------------
@@ -178,13 +174,13 @@ void ParticleScene::mouseMoved( int x, int y ) {
 //--------------------------------------------------------------
 void ParticleScene::mouseDragged( int x, int y, int button ) {
 	if (m_MousePressed)
-		m_MousePosition = glm::vec3( x, y, 0 );
+		m_MousePosition = screenToWorldSpace( ofVec3f( x, y, 0.0 ) );
 }
 
 //--------------------------------------------------------------
 void ParticleScene::mousePressed( int x, int y, int button ) {
 	m_MousePressed = true;
-	m_MousePosition = glm::vec3( x, y, 0 );
+	m_MousePosition = screenToWorldSpace( ofVec3f( x, y, 0.0 ) );
 }
 
 //--------------------------------------------------------------
@@ -215,4 +211,36 @@ void ParticleScene::gotMessage( ofMessage msg ) {
 //--------------------------------------------------------------
 void ParticleScene::dragEvent( ofDragInfo dragInfo ) {
 
+}
+
+ofVec3f ParticleScene::screenToWorldSpace( ofVec3f coords ) {
+
+	glm::mat4 p = camera.getProjectionMatrix();
+	glm::mat4 v = camera.getModelViewMatrix();
+	glm::mat4 mvp = camera.getModelViewProjectionMatrix();
+
+	glm::mat4 mvpi = glm::inverse( mvp );
+
+	//glReadPixels( coords.x, coords.y, width, height, GL_DEPTH_COMPONENT, GL_FLOAT, &renderFBO);
+	glm::vec4 pos;
+	pos.x = (2.0f * ((float)(coords.x - 0) / (ofGetWidth() - 0))) - 1.0f;
+	pos.y = 1.0f - (2.0f * ((float)(coords.y - 0) / (ofGetHeight()- 0)));
+	pos.z = 0.0;
+	pos.w = 1.0;
+
+	pos = mvpi * pos;
+
+	pos.w = 1.0 / pos.w;
+
+	pos.x *= pos.w;
+	pos.y *= pos.w;
+	
+	pos = glm::vec4(camera.screenToWorld( coords ), 1.0);
+	pos.z = 0.0;
+
+	
+
+	//std::cout << "X: " << pos.x << " Y: " << pos.y << " X: " << pos.z << std::endl;
+
+	return ofVec3f( pos);
 }

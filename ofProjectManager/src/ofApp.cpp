@@ -18,15 +18,20 @@ void ofApp::setup() {
 	// Load scenes
 	particleScene = (ParticleScene*)sceneManager.add( new ParticleScene() );
 	gameOfLifeScene = (GameOfLifeScene*)sceneManager.add( new GameOfLifeScene() );
-	sceneManager.add( new LineScene() );
+	//sceneManager.add( new LineScene() );
 	sceneManager.setup( true ); // Setup all scenes now
 	ofSetLogLevel( "ofxScenemanager", OF_LOG_VERBOSE );
 
-	sceneManager.gotoScene( "Particles", true );
+	sceneManager.gotoScene( "GameOfLife", true );
 	lastScene = sceneManager.getCurrentSceneIndex();
-	sceneManager.setOverlap( true ); // Overlap scenes when transitioned
+	sceneManager.setOverlap( false ); 
 
 	setSceneManager( &sceneManager );
+
+	receiver.setup( PORT );
+	particleScene->setReceiver( &receiver );
+	gameOfLifeScene->setReceiver( &receiver );
+	ofLog() << "Listening on port " << PORT;
 }
 
 //--------------------------------------------------------------
@@ -38,7 +43,6 @@ void ofApp::update() {
 		panel.update();
 	}
 #endif
-
 }
 
 //--------------------------------------------------------------

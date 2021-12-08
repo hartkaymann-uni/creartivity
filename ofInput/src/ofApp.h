@@ -1,21 +1,17 @@
 #pragma once
 
 #include "ofMain.h"
-
-#include "ofxAppUtils.h"
 #include "ofxOsc.h"
 
-#define HAVE_OFX_GUI
+#define HOST "localhost"
+#define PORT 12345
+#define NO_USERS 10
 
-#ifdef HAVE_OFX_GUI
-#include "ofxGui.h"
-#include "ofxTransformPanel.h"
-#endif
+class ofApp : public ofBaseApp {
 
-class ParticleScene;
-class GameOfLifeScene;
-
-class ofApp : public ofxApp {
+	struct user {
+		ofVec2f position;
+	};
 
 public:
 	void setup();
@@ -34,17 +30,12 @@ public:
 	void dragEvent( ofDragInfo dragInfo );
 	void gotMessage( ofMessage msg );
 
-	ofxTransformer transformer;
+	int width, height;
 
-	ofxSceneManager sceneManager;
-	int lastScene;
+	ofxOscSender sender;
 
-	ParticleScene* particleScene;
-	GameOfLifeScene* gameOfLifeScene;
+	std::map<int, user> users;
 
-#ifdef HAVE_OFX_GUI
-	ofxTransformPanel panel;
-#endif
+	void sendUser(int id, user& user);
 
-	ofxOscReceiver receiver;
 };

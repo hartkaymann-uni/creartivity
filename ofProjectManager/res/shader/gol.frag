@@ -4,11 +4,14 @@ uniform sampler2DRect cellData; // Previous generation cell data
 
 uniform float evolutionFac;
 uniform vec2 screen;
+uniform float offset;
 
 uniform bool mouseDown;
 uniform vec3 mousePos;
 uniform float mouseRad;
 uniform float mouseStr;
+
+uniform vec3 user_positions;
 
 in vec2 vTexCoord;
 
@@ -54,10 +57,17 @@ void main(void){
         }
     }
 
-
-    if(mouseDown && distance(vTexCoord, mousePos.xy / 10) <= mouseRad) {
+    // Interaction
+    if(mouseDown && distance(vTexCoord, mousePos.xy / offset) <= mouseRad) {
         next_state.x += mouseStr;
     }
+
+    float user_x = user_positions.x / offset;
+    float user_y = user_positions.y /offset;
+    if(distance(vTexCoord, vec2(user_x, user_y)) <= mouseRad) {
+        next_state.x += mouseStr;
+    }
+    
 
     next_state.y = n_neighbours / 8.0;
 
