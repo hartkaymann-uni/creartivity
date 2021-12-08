@@ -34,6 +34,7 @@ void GameOfLifeScene::setup()
 	mouseStrength.set( "mouseStr", 0.1, 0.0, 1.0 );
 	jiggleFactor.set( "jiggle", 1.0, 0.0, 10.0 );
 
+
 	sphereResolution.addListener( this, &GameOfLifeScene::handleSphereResolutionChanged );
 	dimensions.addListener( this, &GameOfLifeScene::handleDimensionsChanged );
 
