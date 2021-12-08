@@ -8,7 +8,6 @@
 #include "ofxOsc.h"
 
 #define HOST "localhost"
-
 #define PORT 12345
 
 class ofApp : public ofBaseApp{
@@ -36,6 +35,8 @@ class ofApp : public ofBaseApp{
 		void windowResized(int w, int h);
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
+
+		int width, height;
 
 		// Tracker
 		ofxNI2::Device device;
