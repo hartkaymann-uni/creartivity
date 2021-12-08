@@ -14,7 +14,7 @@ in vec4 normal;
 uniform sampler2DRect cellTex;
 uniform vec2 screen;
 uniform vec2 resolution;
-uniform float size;
+uniform float offset;
 uniform float radius;
 uniform float time;
 uniform float jiggle;
@@ -108,15 +108,18 @@ void main() {
     vec4 col = texture( cellTex, coords );
     vColor = vec4( vec3(col.x), 1.0 );
 
+    // Change size of spheres according to "life strength"
     float r = col.y * radius;
     vec4 pos = vec4( position.xyz * r, 1.0 ) ;
-    vec4 offset = vec4( coords.xy * 2 * size, 0.0, 0.0);
+
+    // Adjust sphere position
+    vec4 pos_offset = vec4( coords.xy * offset, 0.0, 0.0);
     
     float noise = cnoise(vec3(coords.xy, time));
 	float rad = noise * (2 * M_PI);
-	offset.xyz += vec3(sin(rad), cos(rad), 0.) * jiggle;
+	pos_offset.xyz += vec3(sin(rad), cos(rad), 0.) * jiggle;
 
-    vPosition =  pos + offset;
+    vPosition =  pos + pos_offset;
 
     gl_Position = modelViewProjectionMatrix * vPosition;
     
