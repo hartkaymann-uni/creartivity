@@ -3,15 +3,25 @@
 #include "ofMain.h"
 #include "ofxGui.h"
 #include "ofxOpenCv.h"
+#include "ofxNiTE2.h";
 #include "ofxNI2.h"
-#include "ofxNiTE2.h"
 #include "ofxOsc.h"
 
+#define HOST "localhost"
+
+#define PORT 12345
+
 class ofApp : public ofBaseApp{
+
+	struct user {
+		ofVec2f positionLeft;
+		ofVec2f positionRight;
+	};
 
 	public:
 		void setup();
 		void update();
+		void sendUser(int id, user& user);
 		void draw();
 		void exit();
 
@@ -27,27 +37,13 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
 
-		// 2D input contourFinder
-		/*
-		ofVideoGrabber cam;
-
-		ofxCvColorImage color;
-		ofxCvGrayscaleImage gray;
-		ofxCvGrayscaleImage background;
-		ofxCvGrayscaleImage difference;
-
-		ofxCvContourFinder contour;
-
-		// for difference, so we can either see more or less contours, threshold for face=80
-		int threshold = 57;
-		// find contours on-screen
-		bool learn = true;
-		*/
-
-		// 3D input
+		// Tracker
 		ofxNI2::Device device;
 		ofxNiTE2::UserTracker tracker;
 		ofPixels depthPixels;
 		ofTexture depthTexture;
 
+		std::map<int, user> users;
+
+		ofxOscSender sender;
 };

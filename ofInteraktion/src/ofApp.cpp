@@ -4,18 +4,6 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
-	// 2D input contourFinder
-	/*
-	cam.setup(width, height);
-	cam.videoSettings();
-
-	color.allocate(width, height);
-	gray.allocate(width, height);
-	background.allocate(width, height);
-	difference.allocate(width, height);
-	*/
-
-	// 3D input
 	ofSetFrameRate(60);
 	ofSetVerticalSync(true);
 	ofBackground(0);
@@ -28,69 +16,63 @@ void ofApp::setup(){
 
 //--------------------------------------------------------------
 void ofApp::update(){
-	// 2D input contourFinder
-	/*
-	cam.update();
-
-	if (cam.isFrameNew()) {
-		color.setFromPixels(cam.getPixels());
-		gray = color;
-
-		if (learn) {
-			background = gray;
-			learn = false;
-		}
-
-		// background-subtraction = Hintergrundsubtraktion
-		difference.absDiff(background, gray);
-
-		// binarisation = Binarisierung
-		difference.threshold(threshold);	
-
-		contour.findContours(difference, 10, width * height, 10, true);
-	}
-	*/
-
-	// 3D input
 	device.update();
 
-	// how many users
+	// How many users
 	for (int u = 0; u < tracker.getNumUser(); u++) {
 		cout << "userNumber: " + ofToString(u) << endl;
-		// in this case: show position of joint from left hand of all users
-		tracker.getUser(u)->getJoint(NITE_JOINT_LEFT_HAND).getPosition();
+		// Show position of joint from left and right hand of all users
+		cout << "position of left hand: x= " + ofToString(tracker.getUser(u)->getJoint(NITE_JOINT_LEFT_HAND).getPosition().x) 
+			+ ", y= " + ofToString(tracker.getUser(u)->getJoint(NITE_JOINT_LEFT_HAND).getPosition().y) << endl;
+		cout << "position of right hand: x= " + ofToString(tracker.getUser(u)->getJoint(NITE_JOINT_RIGHT_HAND).getPosition().x)
+			+ ", y= " + ofToString(tracker.getUser(u)->getJoint(NITE_JOINT_RIGHT_HAND).getPosition().y) << endl;
+
+		// Position left hand
+		users[u].positionLeft.x = tracker.getUser(u)->getJoint(NITE_JOINT_LEFT_HAND).getPosition().x;
+		users[u].positionLeft.y = tracker.getUser(u)->getJoint(NITE_JOINT_LEFT_HAND).getPosition().y;
+
+		// Position right hand
+		users[u].positionRight.x = tracker.getUser(u)->getJoint(NITE_JOINT_RIGHT_HAND).getPosition().x;
+		users[u].positionRight.y = tracker.getUser(u)->getJoint(NITE_JOINT_RIGHT_HAND).getPosition().y;
 	};
 
+	std::map<int, user>::iterator it = users.begin();
+	std::map<int, user>::iterator itEnd = users.end();
+	while (it != itEnd) {
+		sendUser(it -> first, it -> second);
+		it++;
+	}
+}
+
+//--------------------------------------------------------------
+void ofApp::sendUser(int id, user& user) {
+	ofxOscMessage m;
+	std::string addr = "/user/data/";
+	addr += ofToString(id);
+	m.setAddress(addr);
+
+	// Position left hand
+	m.addFloatArg(user.positionLeft.x);
+	m.addFloatArg(user.positionLeft.y);
+
+	// Position rigt hand
+	m.addFloatArg(user.positionRight.x);
+	m.addFloatArg(user.positionRight.y);
+
+	sender.sendMessage(m);
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-	// 2D input contourFinder
-	/*
-	// we can draw the whole contour
-	// contour.draw(0, 0, -width, height);
-	// or, instead we can draw each blob individually,
-	ofPushMatrix();
-	ofTranslate(cam.getWidth(), 0);
-	ofScale(-1, 1);
-	for (int i = 0; i < contour.nBlobs; i++) {
-		contour.blobs[i].draw(0, 0);
-
-		printf("x = %f, y = %f\n", contour.blobs[1].boundingRect.getCenter().x, contour.blobs[1].boundingRect.getCenter().y);
-	}
-	ofPopMatrix();
-	*/
-
-	// 3D input
 	depthPixels = tracker.getPixelsRef(1000, 4000);
 	depthTexture.loadData(depthPixels);
 
-		// draw skeleton in 2D
+	// Draw skeleton 2D
 	ofSetColor(255);
 	depthTexture.draw(0, 0);
 	tracker.draw();
-
-		// draw skeleton in 3D skeleton in 2D
+	
+	// Draw skeleton 2D in 3D
 	/*
 	ofPushView();
 	tracker.getOverlayCamera().begin(ofRectangle(0, 0, depthTexture.getWidth(), depthTexture.getHeight()));
@@ -102,36 +84,17 @@ void ofApp::draw(){
 
 	ofDrawBitmapString("Tracker FPS: " + ofToString(tracker.getFrameRate()), 20, ofGetHeight() - 40);
 	ofDrawBitmapString("Application FPS: " + ofToString(ofGetFrameRate()), 20, ofGetHeight() - 20);
-
 }
 
 //--------------------------------------------------------------
 void ofApp::exit(){
-	// 3D input
 	tracker.exit();
 	device.exit();
 }
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
-	// 2D input contourFinder
-	/*
-	switch (key) {
-	case 'q':
-		threshold++;
-		printf("threshold = %d\n", threshold);
-		break;
-
-	case 'w':
-		threshold--;
-		printf("threshold = %d\n", threshold);
-		break;
-
-	default:
-		break;
-	}
-	*/
-
+	
 }
 
 //--------------------------------------------------------------
