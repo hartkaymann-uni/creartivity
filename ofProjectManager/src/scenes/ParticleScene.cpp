@@ -10,11 +10,6 @@ void ParticleScene::setup() {
 
 	bool renderLinked = renderShader.load( res_path / "shader/instancedParticles.vert", res_path / "shader/instancedParticles.frag" );
 
-	camera.disableMouseInput();
-	camera.setupPerspective();
-	camera.setPosition( ofGetWidth() / 2, ofGetHeight() / 2, 665 );
-	camera.setFarClip( ofGetWidth() * 10 );
-
 	particles.resize( 1024 * 8 * 1 );
 	int i = 0;
 	for (auto& p : particles)
@@ -108,8 +103,6 @@ void ParticleScene::update() {
 //--------------------------------------------------------------
 void ParticleScene::draw() {
 	//ofEnableBlendMode( OF_BLENDMODE_ADD );
-
-
 
 	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT );
 
@@ -244,6 +237,8 @@ ofVec3f ParticleScene::screenToWorldSpace( ofVec3f coords ) {
 	
 	pos = glm::vec4(camera.screenToWorld( coords ), 1.0);
 	pos.z = 0.0;
+
+	
 
 	//std::cout << "X: " << pos.x << " Y: " << pos.y << " X: " << pos.z << std::endl;
 

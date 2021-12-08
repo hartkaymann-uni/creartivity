@@ -37,7 +37,6 @@ class ParticleScene : public ccScene{
 		ofShader renderShader;
 		vector<Particle> particles;
 		ofBufferObject particlesBuffer, particlesBuffer2;
-		ofEasyCam camera;
 		ofVbo vbo;
 
 		ofxPanel gui;

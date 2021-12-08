@@ -2,16 +2,14 @@
 #include "ofApp.h"
 
 //========================================================================
-int main() {
-
+int main( ){
+	
 	ofGLFWWindowSettings settings;
 	settings.setGLVersion( 3, 2 );
-	settings.setSize( 1024, 768 );
-	settings.setPosition( ofVec2f( 660.0, 100.0 ) );
-	//settings.decorated = false;
-	settings.stencilBits = 8;
+	settings.setSize( 640, 360 );
+	settings.setPosition( ofVec2f(10, 100) );
 	ofCreateWindow( settings );
+	
+	ofRunApp(new ofApp());
 
-
-	ofRunAppWithAppUtils( new ofApp() );
 }

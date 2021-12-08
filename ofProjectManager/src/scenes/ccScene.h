@@ -10,21 +10,28 @@
 
 class ccScene : public ofxScene
 {
+	struct user {
+		ofVec2f position;
+	};
+
 public:
 	ccScene(std::string name = "Unnamed Scene");
 
 	inline ofxOscReceiver* getReceiver() const { return receiver; }
-	
 	inline void setReceiver( ofxOscReceiver* r ) { receiver = r; }
 
 protected:
 
-	void receiveMessage();
-
 	int width, height;
-	
+
+	ofEasyCam camera;
 	ofxOscReceiver* receiver;
-	float blobsXf = 0.f;
-	float blobsYf = 0.f;
+	
+	std::map<int, user> users;
+
+	void receiveUsers();
+	void resetCamera();
+	ofVec3f getProjectedMousePosition( ofVec3f mp );
+
 };
 

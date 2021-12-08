@@ -45,10 +45,11 @@ private:
 class GameOfLifeScene : public ccScene {
 
 public:
-	GameOfLifeScene( int cells_x = 100, int cells_y = 77 );
+	GameOfLifeScene( int cells_x = 102, int cells_y = 77 );
 	void setup();
 	void update();
 	void draw();
+	void reset();
 
 	void keyPressed( int key );
 	void keyReleased( int key );
@@ -56,48 +57,40 @@ public:
 	void mouseReleased( int x, int y, int button );
 	void mouseDragged( int x, int y, int button );
 
-	void handleSphereResolutionChanged( int& sphereRes);
-	void handleSphereRadiusChanged( float& cellSize );
+	void handleSphereResolutionChanged( int& sphereRes );
+	void handleDimensionsChanged( ofVec2f& value );
 
 private:
+	int n_cells_x;
+	int n_cells_y;
+
+	float time;
+
 	ofShader    updateCells;
-	ofShader    updateRender;
 	ofShader    instancedShader;
 	ofShader    outlineShader;
 
 	pingPongBuffer cellPingPong;
 
-	ofFbo   renderFBO;
-
-	ofVboMesh vboGrid;
 	ofVboMesh vboSphere;
-	ofMesh axisMesh;
-
-	ofEasyCam camera;
-
-	ofLight light;
-	ofVec3f lightPos;
-	ofColor materialColor;
 
 	ofxPanel gui;
 	ofParameterGroup shaderUniforms;
+	ofParameter<ofVec2f> dimensions;
 	ofParameter<int> sphereResolution;
 	ofParameter<float> sphereRadius;
 	ofParameter<float> evolutionFactor;
-	ofParameter<float> cellSize;
 	ofParameter<float> dataSrcSize;
 	ofParameter<float> mouseRadius;
 	ofParameter<float> mouseStrength;
 	ofParameter<float> jiggleFactor;
 
-	const int N_CELLS_X;
-	const int N_CELLS_Y;
-
-	float time;
-
 	bool mouseIsDown;
 	ofVec3f mousePosition;
 
-	ofVec3f getProjectedMousePosition( ofVec3f mp);
+	float cellOffset;
+
+	void allocateCellBuffer(int rows, int cols);
+	float calculateSphereRadius( ofVec2f dim );
 
 };
