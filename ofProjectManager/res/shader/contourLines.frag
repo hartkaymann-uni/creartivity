@@ -8,7 +8,7 @@ out vec4 vFragColor;
 
 void main() {
 
-	float c = 1.0 - mod(vPosition.z * 100 , 50);
+	float c = 1.0 - mod(vPosition.z * 10 , 5);
 
 	vFragColor = vec4(c);
 

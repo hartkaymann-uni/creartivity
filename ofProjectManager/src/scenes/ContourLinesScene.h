@@ -40,7 +40,7 @@ private:
 	int width, height;
 	int meshWidth, meshHeight;
 	float time;
-	int spaceBetweenVetices;
+	int sbv;
 
 };
 

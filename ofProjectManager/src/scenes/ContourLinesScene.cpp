@@ -18,23 +18,28 @@ void ContourLinesScene::setup()
 	camera.disableMouseInput();
 	camera.setPosition(width / 2, height / 2, (width + height) / 2);
 
+	
+	sbv = 5; // SpaceBetweenVetices 
+	meshWidth = width / sbv + 1;
+	meshHeight = height / sbv + 1;
+
 	// Fill mesh with vertices
-	spaceBetweenVetices = 5;
-	for (int y = 0; y < height; y++){
-		for (int x = 0; x < width; x++){
-			mesh.addVertex(glm::vec3(x, y, 0));
-			mesh.addTexCoord({ x / width , y / height });
+	mesh.setMode(OF_PRIMITIVE_TRIANGLES);
+	for (int y = 0; y < meshHeight; y++){
+		for (int x = 0; x < meshWidth; x++){
+			mesh.addVertex(glm::vec3(x * sbv, y * sbv, 0));
+			mesh.addTexCoord({ (x * sbv) / width , (y * sbv) / height });
 		}
 	}
-	for (int y = 0; y < height - 1; y++) {
-		for (int x = 0; x < width - 1; x++) {
-			mesh.addIndex(x + y * width);
-			mesh.addIndex((x + 1) + y * width);
-			mesh.addIndex(x + (y + 1) * width);
+	for (int y = 0; y < meshHeight - 1; y++) {
+		for (int x = 0; x < meshWidth - 1; x++) {
+			mesh.addIndex( x + y * meshWidth);
+			mesh.addIndex((x + 1) + y * meshWidth);
+			mesh.addIndex( x + (y + 1) * meshWidth);
 
-			mesh.addIndex((x + 1) + y * width);
-			mesh.addIndex((x + 1) + (y + 1) * width);
-			mesh.addIndex(x + (y + 1) * width);
+			mesh.addIndex((x + 1) + y * meshWidth);
+			mesh.addIndex((x + 1) + (y + 1) * meshWidth);
+			mesh.addIndex(x + (y + 1) * meshWidth);
 		}
 	}
 
@@ -42,8 +47,8 @@ void ContourLinesScene::setup()
 	gui.setup();
 	shaderUniforms.setName("Shader Parameters");
 	shaderUniforms.add(speed.set("u_speed", 0.015, 0.00, 0.1));
-	shaderUniforms.add(scale.set("u_scale", 0.005, 0.0, 0.01));
-	shaderUniforms.add(amplitude.set("u_amplitude", 2.0, 0.0, 5.0));
+	shaderUniforms.add(scale.set("u_scale", 0.01, 0.0, 0.05));
+	shaderUniforms.add(amplitude.set("u_amplitude", 1.0, 0.5, 2.0));
 
 	gui.add(shaderUniforms);
 	gui.setPosition(width - gui.getWidth() - 10, height - gui.getHeight() - 10);
@@ -70,7 +75,7 @@ void ContourLinesScene::draw()
 			contourLineShader.setUniform1f("u_time", time);
 			contourLineShader.setUniform2f("u_mouse", ofGetMouseX(), height - ofGetMouseY());
 			contourLineShader.setUniforms(shaderUniforms);
-			mesh.drawVertices();
+			mesh.draw();
 		}
 		contourLineShader.end();
 
@@ -83,14 +88,13 @@ void ContourLinesScene::draw()
 		ofDrawCircle(ofGetMouseX(), height - ofGetMouseY(), 30);
 
 		/*
-		ofSetColor(50,0, 0);
-		mesh.drawVertices();
+		ofSetColor(255,0, 0);
+		//mesh.drawVertices();
 		ofSetColor(0, 50, 0);
-		mesh.drawFaces();
-		ofSetColor(0, 0, 50);
-		mesh.drawWireframe();
+		//mesh.drawFaces();
+		ofSetColor(0, 0, 250);
+		//mesh.drawWireframe();
 		*/
-
 	}
 	camera.end();
 

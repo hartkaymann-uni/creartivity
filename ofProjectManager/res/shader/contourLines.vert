@@ -102,8 +102,8 @@ void main(){
 	pos.z += shift;
 	if (dist < 100){
 	float force = (dist / 100.0);
-	float amonunt_of_Steps = 1.0;
-	pos.z = (pos.z + amonunt_of_Steps) * force;
+	float amonunt_of_Steps = float(int(round(u_amplitude + 0.25) / 1));
+	pos.z = (pos.z + amonunt_of_Steps)* force ;
 	}
 	vPosition = pos;
 	gl_Position = modelViewProjectionMatrix * pos;
