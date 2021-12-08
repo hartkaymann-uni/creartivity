@@ -36,11 +36,12 @@ private:
 	ofParameter<float> speed;
 	ofParameter<float> scale;
 	ofParameter<float> amplitude;
-
+	
 	int width, height;
 	int meshWidth, meshHeight;
 	float time;
 	int sbv;
+	int count;
 
 };
 

@@ -10,6 +10,8 @@ ContourLinesScene::ContourLinesScene():ofxScene("ContourLines"),
 
 void ContourLinesScene::setup()
 {
+	ofSetFrameRate(60);
+	
 	// Load Shader
 	filesystem::path shader_path("../../res/shader");
 	contourLineShader.load(shader_path / "contourLines.vert", shader_path / "contourLines.frag");
@@ -18,8 +20,9 @@ void ContourLinesScene::setup()
 	camera.disableMouseInput();
 	camera.setPosition(width / 2, height / 2, (width + height) / 2);
 
-	
-	sbv = 5; // SpaceBetweenVetices 
+	// Set variables
+	count = 1;
+	sbv = 4; // SpaceBetweenVetices 
 	meshWidth = width / sbv + 1;
 	meshHeight = height / sbv + 1;
 
@@ -57,12 +60,12 @@ void ContourLinesScene::setup()
 
 void ContourLinesScene::update()
 {
+	time = ofGetElapsedTimef();
+
 	// Display framerate in window title
 	std::stringstream strm;
-	strm << "fps: " << ofGetFrameRate();
+	strm << "fps: " << ofGetFrameRate() << " time: " << int(time);
 	ofSetWindowTitle(strm.str());
-
-	time = ofGetElapsedTimef();
 }
 
 void ContourLinesScene::draw()
