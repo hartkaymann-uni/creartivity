@@ -77,7 +77,6 @@ void ofApp::sendUser( int id, user& user ) {
 	m.addFloatArg( user.position.y );
 
 	sender.sendMessage( m );
-
 }
 
 
