@@ -11,7 +11,8 @@
 class ccScene : public ofxScene
 {
 	struct user {
-		ofVec2f position;
+		ofVec2f positionLeft;
+		ofVec2f positionRight;
 	};
 
 public:

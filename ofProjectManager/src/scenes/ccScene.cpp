@@ -29,16 +29,20 @@ void ccScene::receiveUsers() {
 		int found = address.find( userAdr );
 		if (found != string::npos) {
 			string idUs = address.substr( 11 );
-
 			int id = ofToInt( idUs );
 
-			float x = m.getArgAsFloat( 0 );
-			float y = m.getArgAsFloat( 1 );
 
-			printf( "user %i: %.3f %.3f\n", id, x, y );
+			float xl = m.getArgAsFloat( 0 );
+			float yl = m.getArgAsFloat( 1 );
+			float xr = m.getArgAsFloat( 2 );
+			float yr = m.getArgAsFloat( 3 );
 
-			users[id].position.x = x;
-			users[id].position.y = y;
+			printf( "user %i: Left:[ %.3f, %.3f] Right:[ %.3f, %.3f ] \n", id, xl, yl, xr, yr );
+
+			users[id].positionLeft.x = xl;
+			users[id].positionLeft.y = yl;
+			users[id].positionRight.x = xr;
+			users[id].positionRight.y = yr;
 		}
 		m.clear();
 	}
