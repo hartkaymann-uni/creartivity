@@ -22,7 +22,7 @@ void ContourLinesScene::setup()
 
 	// Set variables
 	count = 1;
-	sbv = 4; // SpaceBetweenVetices 
+	sbv = 3; // SpaceBetweenVetices 
 	meshWidth = width / sbv + 1;
 	meshHeight = height / sbv + 1;
 
@@ -51,7 +51,7 @@ void ContourLinesScene::setup()
 	shaderUniforms.setName("Shader Parameters");
 	shaderUniforms.add(speed.set("u_speed", 0.015, 0.00, 0.1));
 	shaderUniforms.add(scale.set("u_scale", 0.01, 0.0, 0.05));
-	shaderUniforms.add(amplitude.set("u_amplitude", 1.0, 0.5, 2.0));
+	shaderUniforms.add(amplitude.set("u_amplitude", 2.5, 2.5, 10.0));
 
 	gui.add(shaderUniforms);
 	gui.setPosition(width - gui.getWidth() - 10, height - gui.getHeight() - 10);

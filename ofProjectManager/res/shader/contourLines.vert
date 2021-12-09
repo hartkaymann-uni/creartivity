@@ -98,7 +98,7 @@ float rand(vec2 co){
 void main(){
 	vec4 pos = position;
 	float dist = distance(position.xy, u_mouse.xy);
-	float shift = cnoise(vec3(position.xy * u_scale, u_speed * u_time))*10;
+	float shift = abs(cnoise(vec3(position.xy * u_scale, u_speed * u_time)))*10;
 	pos.z += shift;
 	if (dist < 100.0){
 	float force =(dist / 100.0);
