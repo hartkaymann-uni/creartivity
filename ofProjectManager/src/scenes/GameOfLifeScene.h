@@ -92,5 +92,5 @@ private:
 
 	void allocateCellBuffer(int rows, int cols);
 	float calculateSphereRadius( ofVec2f dim );
-
+	void updateUserPositions();
 };

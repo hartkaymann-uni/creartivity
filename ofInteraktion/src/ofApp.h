@@ -13,6 +13,7 @@
 class ofApp : public ofBaseApp{
 
 	struct user {
+		int id;
 		ofVec2f positionLeft;
 		ofVec2f positionRight;
 	};
@@ -24,19 +25,8 @@ class ofApp : public ofBaseApp{
 		void draw();
 		void exit();
 
-		void keyPressed(int key);
-		void keyReleased(int key);
-		void mouseMoved(int x, int y );
-		void mouseDragged(int x, int y, int button);
-		void mousePressed(int x, int y, int button);
-		void mouseReleased(int x, int y, int button);
-		void mouseEntered(int x, int y);
-		void mouseExited(int x, int y);
-		void windowResized(int w, int h);
-		void dragEvent(ofDragInfo dragInfo);
-		void gotMessage(ofMessage msg);
-
 		int width, height;
+		int left, right, top, bottom;
 
 		// Tracker
 		ofxNI2::Device device;
@@ -47,4 +37,11 @@ class ofApp : public ofBaseApp{
 		std::map<int, user> users;
 
 		ofxOscSender sender;
+		ofEventListener newUserListener;
+		ofEventListener lostUserListener;
+
+		void sendConnectionStarted();
+		void registerUser(ofxNiTE2::User::Ref user);
+		void removeUser(ofxNiTE2::User::Ref user);
+		void printUsers();
 };

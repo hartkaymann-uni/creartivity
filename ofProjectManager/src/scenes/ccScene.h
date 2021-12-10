@@ -8,15 +8,19 @@
 #define HOST "localhost"
 #define PORT 12345
 
+#define MAX_USERS 10
+
+struct user {
+	int id;
+	ofVec2f positionLeft;
+	ofVec2f positionRight;
+};
+
 class ccScene : public ofxScene
 {
-	struct user {
-		ofVec2f positionLeft;
-		ofVec2f positionRight;
-	};
-
 public:
-	ccScene(std::string name = "Unnamed Scene");
+
+	ccScene( std::string name = "Unnamed Scene" );
 
 	inline ofxOscReceiver* getReceiver() const { return receiver; }
 	inline void setReceiver( ofxOscReceiver* r ) { receiver = r; }
@@ -27,12 +31,15 @@ protected:
 
 	ofEasyCam camera;
 	ofxOscReceiver* receiver;
-	
-	std::map<int, user> users;
 
-	void receiveUsers();
+	std::map<int, user> users;
+	ofVec2f user_positions[MAX_USERS];
+
+	string connectionStatusString = "Status: off";
+
+	void receiveMessage();
 	void resetCamera();
-	ofVec3f getProjectedMousePosition( ofVec3f mp );
+	ofVec3f getProjectedPosition( ofVec3f mp );
 
 };
 

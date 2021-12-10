@@ -10,24 +10,35 @@ void ofApp::setup() {
 
 	width = ofGetWidth();
 	height = ofGetHeight();
-
 	device.setLogLevel( OF_LOG_VERBOSE );
-	device.setup( 0 );
+	bool steup = device.setup( 0 );
 	tracker.setup( device );
 	tracker.enableTrackingOutOfFrame( true );
 
 	sender.setup( HOST, PORT );
 
+	newUserListener = tracker.newUser.newListener( [this]( ofxNiTE2::User::Ref u ) {
+		std::cout << "New user: " << u->getId() << std::endl;
+		registerUser( u );
+		printUsers();
+		} );
+
+	lostUserListener = tracker.lostUser.newListener( [this]( ofxNiTE2::User::Ref u ) {
+		std::cout << "Lost user: " << u->getId() << std::endl;
+		removeUser( u );
+		printUsers();
+		} );
+
+	sendConnectionStarted();
 }
 
 //--------------------------------------------------------------
 void ofApp::update() {
 	device.update();
-
 	// How many users
-	for (auto u = 0; u < tracker.getNumUser(); u++) {
+	for (auto i = 0; i < tracker.getNumUser(); i++) {
 
-		ofxNiTE2::User::Ref user = tracker.getUser( u );
+		ofxNiTE2::User::Ref user = tracker.getUser( i );
 
 		const ofxNiTE2::Joint& LHD = user->getJoint( NITE_JOINT_LEFT_HAND );
 		const ofxNiTE2::Joint& RHD = user->getJoint( NITE_JOINT_RIGHT_HAND );
@@ -38,15 +49,28 @@ void ofApp::update() {
 		float xr = RHD.getGlobalPosition().x;
 		float yr = RHD.getGlobalPosition().y;
 
-		printf( "user %i: Left:[ %.3f, %.3f] Right:[ %.3f, %.3f ] \n", u, xl, yl, xr, yr );
+		// Calibration
+		if (xl < left)left = xl;
+		if (xl > right)right = xl;
+		if (yl < top)top = yl;
+		if (yl > bottom)bottom = yl;
 
+		if (xr < left)left = xr;
+		if (xr > right)right = xr;
+		if (yr < top)top = yr;
+		if (yr > bottom)bottom = yr;
+
+		int id = user->getId();
 		// Position left hand
-		users[u].positionLeft.x = ofMap( xl, -width / 2.f, width / 2.f, 0.f, 1.f, true );
-		users[u].positionLeft.y = ofMap( yl, -height / 2.f, height / 2.f, 0.f, 1.f, true );
+		users[id].positionLeft.x = ofMap( xl,left, right, 0.f, 1.f, true );
+		users[id].positionLeft.y = 1.f - ofMap( yl, top, bottom, 0.f, 1.f, true );
 
 		// Position right hand
-		users[u].positionRight.x = ofMap( xr, -width / 2.f, width / 2.f, 0.f, 1.f, true );
-		users[u].positionRight.y = ofMap( yr, -height / 2.f, height / 2.f, 0.f, 1.f, true );
+		users[id].positionRight.x = ofMap( xr, left, right, 0.f, 1.f, true );
+		users[id].positionRight.y = 1.f - ofMap( yr, top, bottom, 0.f, 1.f, true );
+
+		ofApp::user& u = users[id];
+		printf( "user %i: Left:[ %.3f, %.3f] Right:[ %.3f, %.3f ] \n", i, u.positionLeft.x, u.positionLeft.y, u.positionRight.x, u.positionRight.y );
 	};
 
 	std::map<int, user>::iterator it = users.begin();
@@ -116,57 +140,36 @@ void ofApp::exit() {
 	device.exit();
 }
 
-//--------------------------------------------------------------
-void ofApp::keyPressed( int key ) {
 
+void ofApp::registerUser( ofxNiTE2::User::Ref u )
+{
+	user newUser;
+	newUser.id = u->getId();
+	users[newUser.id] = newUser;
 }
 
-//--------------------------------------------------------------
-void ofApp::keyReleased( int key ) {
-
+void ofApp::removeUser( ofxNiTE2::User::Ref user )
+{
+	users.erase( user->getId() );
 }
 
-//--------------------------------------------------------------
-void ofApp::mouseMoved( int x, int y ) {
-
+void ofApp::printUsers() {
+	std::cout << "Users: [ ";
+	std::map<int, user>::iterator it = users.begin();
+	std::map<int, user>::iterator itEnd = users.end();
+	while (it != itEnd) {
+		std::cout << it->first << " ";
+		it++;
+	}
+	std::cout << " ]" << std::endl;
 }
 
-//--------------------------------------------------------------
-void ofApp::mouseDragged( int x, int y, int button ) {
-
-}
-
-//--------------------------------------------------------------
-void ofApp::mousePressed( int x, int y, int button ) {
-
-}
-
-//--------------------------------------------------------------
-void ofApp::mouseReleased( int x, int y, int button ) {
-
-}
-
-//--------------------------------------------------------------
-void ofApp::mouseEntered( int x, int y ) {
-
-}
-
-//--------------------------------------------------------------
-void ofApp::mouseExited( int x, int y ) {
-
-}
-
-//--------------------------------------------------------------
-void ofApp::windowResized( int w, int h ) {
-
-}
-
-//--------------------------------------------------------------
-void ofApp::gotMessage( ofMessage msg ) {
-
-}
-
-//--------------------------------------------------------------
-void ofApp::dragEvent( ofDragInfo dragInfo ) {
-
+void ofApp::sendConnectionStarted() {
+	
+	ofxOscMessage m;
+	m.setAddress( "/connection" );
+	m.addStringArg( "on" );
+	m.addStringArg( HOST );
+	m.addInt32Arg( PORT );
+	sender.sendMessage( m );
 }

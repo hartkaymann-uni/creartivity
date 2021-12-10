@@ -1,5 +1,7 @@
 #version 150
 
+#define N_USERS 10
+
 uniform sampler2DRect cellData; // Previous generation cell data
 
 uniform float evolutionFac;
@@ -10,8 +12,7 @@ uniform bool mouseDown;
 uniform vec3 mousePos;
 uniform float mouseRad;
 uniform float mouseStr;
-
-uniform vec3 user_positions;
+uniform vec2 hands[N_USERS];
 
 in vec2 vTexCoord;
 
@@ -57,25 +58,24 @@ void main(void){
         }
     }
 
-    // Interaction
+    // Mouse interaction
     if(mouseDown && distance(vTexCoord, mousePos.xy / offset) <= mouseRad) {
         next_state.x += mouseStr;
     }
 
-    float user_x = user_positions.x / offset;
-    float user_y = user_positions.y /offset;
-    if(distance(vTexCoord, vec2(user_x, user_y)) <= mouseRad) {
-        next_state.x += mouseStr;
+    // Hand interaction    
+    for(int i = 0; i < N_USERS; i++) {
+        if(distance(vTexCoord, hands[i].xy/offset) <= mouseRad) {
+            next_state.x += mouseStr;
+        }
     }
-    
 
     next_state.y = n_neighbours / 8.0;
 
-    // Clamp values between 0.0 and 1.0
+     // Clamp values between 0.0 and 1.0
     next_state.x = clamp(next_state.x, 0.0, 1.0);
     next_state.y = clamp(next_state.y, 0.0, 1.0);
     next_state.z = clamp(next_state.z, 0.0, 1.0);
-
 
     // And finally store it on the FBO
      vFragColor = next_state;
