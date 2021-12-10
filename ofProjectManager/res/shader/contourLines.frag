@@ -13,10 +13,11 @@ out vec4 vFragColor;
 
 void main() {
 	int colorDist = 100;
-	vec4 c = vec4(1.0 - round(mod(vPosition.z * 5, 10)));
-	if(vPosition.z <= 1.5) c = vec4(0.0);
+	vec4 c = vec4(1.0 - round(mod(vPosition.z*2, 4)));
+	if(vPosition.z <= 1.5 && vPosition.z >= -1.5) c = vec4(0.0);
 	//if(vPosition.z < 1.99 && distance(vPosition.xy, u_mouse.xy) < colorDist) c = vec4(1.0-distance(vPosition.xy, u_mouse.xy)/colorDist,0.0,0.0,1.0);
 	if(vPosition.z >= u_amplitude) c = vec4(0.0);
+	if(vPosition.z <= -2.001) c = vec4(1.0);
 
 	float r = abs(vPosition.z / 5);
 

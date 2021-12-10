@@ -6,6 +6,7 @@ uniform float u_speed;
 uniform float u_scale;
 uniform float u_amplitude;
 uniform vec2 u_mouse;
+uniform int u_radius;
 
 
 in vec4 position;
@@ -100,11 +101,12 @@ void main(){
 	float dist = distance(position.xy, u_mouse.xy);
 	float shift = abs(cnoise(vec3(position.xy * u_scale, u_speed * u_time)))*10;
 	pos.z += shift;
-	if (dist < 100.0){
-	float force =(dist / 100.0);
-	float amonunt_of_Steps = float(int(round(u_amplitude + 0.25) / 1));
-	pos.z = 0.0 + pos.z * force;
+	if (dist < float(u_radius)){
+	float force =(dist / float(u_radius));
+	pos.z *= force * force;
+	pos.z -= 5.5 * (1.0 - force)* (1.0 - force)* (1.0 - force);
 	}
+
 	vPosition = pos;
 	gl_Position = modelViewProjectionMatrix * pos;
 
