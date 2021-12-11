@@ -115,6 +115,7 @@
     <ClCompile Include="src\scenes\ccScene.cpp">
       <Filter>src\scenes</Filter>
     </ClCompile>
+    <ClCompile Include="src\ccReceiver.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -329,6 +330,7 @@
     <ClInclude Include="src\scenes\ccScene.h">
       <Filter>src\scenes</Filter>
     </ClInclude>
+    <ClInclude Include="src\ccReceiver.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="icon.rc" />

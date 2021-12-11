@@ -86,7 +86,6 @@ void GameOfLifeScene::update()
 
 	time = ofGetElapsedTimef();
 
-	receiveMessage();
 	updateUserPositions();
 
 	cellPingPong.dst->begin();
@@ -178,8 +177,9 @@ void GameOfLifeScene::draw()
 	// Draw secondary objects
 	ofFill();
 	ofSetColor( ofColor::red );
-	std::map<int, user>::iterator it = users.begin();
-	std::map<int, user>::iterator itEnd = users.end();
+	std::unique_ptr<std::map<int, user>> users = receiver->getUsers();
+	std::map<int, user>::iterator it = users->begin();
+	std::map<int, user>::iterator itEnd = users->end();
 	while (it != itEnd) {
 		float xl = it->second.positionLeft.x * width;
 		float yl = it->second.positionLeft.y * height;
@@ -202,7 +202,7 @@ void GameOfLifeScene::draw()
 	cellPingPong.dst->draw( 0, 0, width / (10 - dataSrcSize), height / (10 - dataSrcSize) );
 	gui.draw();
 
-	ofDrawBitmapString( connectionStatusString, 10, ofGetHeight() - 20 );
+	ofDrawBitmapString( receiver->getConnectionStatus(), 10, ofGetHeight() - 20 );
 
 }
 
@@ -235,27 +235,6 @@ void GameOfLifeScene::handleDimensionsChanged( ofVec2f& value )
 
 float GameOfLifeScene::calculateSphereRadius( ofVec2f dim ) {
 	return std::min( (float)width / (float)dim.x, (float)height / (float)dim.y );
-}
-
-void GameOfLifeScene::updateUserPositions()
-{
-	std::map<int, user>::iterator it = users.begin();
-	std::map<int, user>::iterator itEnd = users.end();
-	auto i = 0;
-	while (it != itEnd) {
-		float xl = it->second.positionLeft.x * width;
-		float yl = it->second.positionLeft.y * height;
-		float xr = it->second.positionRight.x * width;
-		float yr = it->second.positionRight.y * height;
-
-		ofVec2f left = getProjectedPosition( ofVec3f( xl, yl, 0.f ));
-		ofVec2f right = getProjectedPosition( ofVec3f( xr, yr, 0.f ));
-
-		user_positions[i++] = left;
-		user_positions[i++] = right;
-		
-		it++;
-	}
 }
 
 void GameOfLifeScene::keyPressed( int key ) {

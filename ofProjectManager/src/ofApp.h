@@ -5,6 +5,8 @@
 #include "ofxAppUtils.h"
 #include "ofxOsc.h"
 
+#include "ccReceiver.h"
+
 #define HAVE_OFX_GUI
 
 #ifdef HAVE_OFX_GUI
@@ -12,8 +14,10 @@
 #include "ofxTransformPanel.h"
 #endif
 
-class ParticleScene;
-class GameOfLifeScene;
+#define HOST "localhost"
+#define PORT 12345
+
+class ccScene;
 
 class ofApp : public ofxApp {
 
@@ -35,16 +39,14 @@ public:
 	void gotMessage( ofMessage msg );
 
 	ofxTransformer transformer;
-
 	ofxSceneManager sceneManager;
 	int lastScene;
 
-	ParticleScene* particleScene;
-	GameOfLifeScene* gameOfLifeScene;
+	ccReceiver receiver;
+	vector<ccScene*> scenes;
 
 #ifdef HAVE_OFX_GUI
 	ofxTransformPanel panel;
 #endif
 
-	ofxOscReceiver receiver;
 };

@@ -109,16 +109,6 @@ void ofApp::draw() {
 	depthTexture.draw( 0, 0 );
 	tracker.draw();
 
-	// Draw skeleton 2D in 3D
-	/*
-	ofPushView();
-	tracker.getOverlayCamera().begin(ofRectangle(0, 0, depthTexture.getWidth(), depthTexture.getHeight()));
-	ofDrawAxis(100);
-	tracker.draw3D();
-	tracker.getOverlayCamera().end();
-	ofPopView();
-	*/
-
 	std::map<int, user>::iterator it = users.begin();
 	std::map<int, user>::iterator itEnd = users.end();
 	while (it != itEnd) {
@@ -144,13 +134,26 @@ void ofApp::exit() {
 void ofApp::registerUser( ofxNiTE2::User::Ref u )
 {
 	user newUser;
-	newUser.id = u->getId();
-	users[newUser.id] = newUser;
+	int id = u->getId();
+	newUser.id = id;
+	users[id] = newUser;
+
+	ofxOscMessage m;
+	m.setAddress("/user/new/") ;
+	m.addInt32Arg( id );
+	sender.sendMessage( m );
+
 }
 
 void ofApp::removeUser( ofxNiTE2::User::Ref user )
 {
-	users.erase( user->getId() );
+	int id = user->getId();
+	users.erase( id );
+
+	ofxOscMessage m;
+	m.setAddress( "/user/lost/" );
+	m.addInt32Arg( id );
+	sender.sendMessage( m );
 }
 
 void ofApp::printUsers() {

@@ -12,30 +12,30 @@ void ofApp::setup() {
 	setTransformer( &transformer );
 
 #ifdef HAVE_OFX_GUI
-		panel.setup( &transformer );
+	panel.setup( &transformer );
 #endif
 
 	// Load scenes
-	particleScene = (ParticleScene*)sceneManager.add( new ParticleScene() );
-	gameOfLifeScene = (GameOfLifeScene*)sceneManager.add( new GameOfLifeScene() );
-	//sceneManager.add( new LineScene() );
+	scenes.push_back( (ParticleScene*)sceneManager.add( new ParticleScene() ) );
+	scenes.push_back( (GameOfLifeScene*)sceneManager.add( new GameOfLifeScene() ) );
 	sceneManager.setup( true ); // Setup all scenes now
 	ofSetLogLevel( "ofxScenemanager", OF_LOG_VERBOSE );
 
 	sceneManager.gotoScene( "GameOfLife", true );
 	lastScene = sceneManager.getCurrentSceneIndex();
-	sceneManager.setOverlap( false ); 
+	sceneManager.setOverlap( false );
 
 	setSceneManager( &sceneManager );
 
-	receiver.setup( PORT );
-	particleScene->setReceiver( &receiver );
-	gameOfLifeScene->setReceiver( &receiver );
-	ofLog() << "Listening on port " << PORT;
+	for (ccScene* scene : scenes) {
+		scene->setReceiver( &receiver );
+	}
 }
 
 //--------------------------------------------------------------
 void ofApp::update() {
+
+	receiver.receiveMessages();
 
 #ifdef HAVE_OFX_GUI
 	// update the transform panel when in debug mode

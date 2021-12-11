@@ -184,6 +184,7 @@
     <PostBuildEvent />
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\ccReceiver.cpp" />
     <ClCompile Include="src\scenes\ccScene.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\ofApp.cpp" />
@@ -222,6 +223,7 @@
     <ClCompile Include="..\..\..\addons\ofxUbo\src\ofxUbo.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\ccReceiver.h" />
     <ClInclude Include="src\scenes\ccScene.h" />
     <ClInclude Include="src\ofApp.h" />
     <ClInclude Include="src\scenes\GameOfLifeScene.h" />
