@@ -4,3 +4,4 @@
 #include "GameOfLifeScene.h"
 #include "LineScene.h"
 #include "SwarmScene.h"
+#include "ContourLinesScene.h"

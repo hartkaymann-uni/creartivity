@@ -184,6 +184,7 @@
     <PostBuildEvent />
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\scenes\ContourLinesScene.cpp" />
     <ClCompile Include="src\ccReceiver.cpp" />
     <ClCompile Include="src\HelperFunctions.cpp" />
     <ClCompile Include="src\scenes\ccScene.cpp" />
@@ -225,6 +226,7 @@
     <ClCompile Include="src\scenes\SwarmScene.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\scenes\ContourLinesScene.h" />
     <ClInclude Include="src\ccReceiver.h" />
     <ClInclude Include="src\HelperFunctions.h" />
     <ClInclude Include="src\scenes\ccScene.h" />
@@ -295,6 +297,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shader\colorSplash.comp" />
+    <None Include="res\shader\contour.frag" />
+    <None Include="res\shader\contour.vert" />
     <None Include="res\shader\gol.frag" />
     <None Include="res\shader\instancedParticles.frag" />
     <None Include="res\shader\instancedParticles.vert" />
