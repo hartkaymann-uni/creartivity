@@ -100,7 +100,7 @@ float rand(vec2 co){
 
 void main(){
 	vec4 pos = position;
-	float dist = distance(position.xy, u_mouse.xz);
+	float dist = distance(position.xy, hands[0].xy);
 	float shift = abs(cnoise(vec3(position.xy * u_scale, u_speed * u_time)))*10;
 	pos.z += shift;
 	if (dist < float(u_radius)){
