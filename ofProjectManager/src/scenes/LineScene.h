@@ -16,14 +16,12 @@
 #include <vector>
 #include <ofNoise.h>
 
-class LineScene : public ofxFadeScene {
+class LineScene : public ofxScene {
 
 public:
-
 	// set the scene name through the base class initializer
-	LineScene() : ofxFadeScene( "Lines" ) {
+	LineScene() : ofxScene( "Lines" ) {
 		setSingleSetup( false ); // call setup each time the scene is loaded
-		setFade( 1000, 1000 ); // 1 second fade in/out
 	}
 
 	// scene setup
@@ -42,7 +40,7 @@ public:
 		}
 
 		// fade scene calculates normalized alpha value for us
-		ofxFadeScene::updateEnter();
+		ofxScene::updateEnter();
 
 		// finished entering?
 		if (!isEntering()) {
@@ -67,7 +65,7 @@ public:
 		}
 
 		// fade scene calculates normalized alpha value for us
-		ofxFadeScene::updateExit();
+		ofxScene::updateExit();
 
 		// finished exiting?
 		if (!isExiting()) {
@@ -79,7 +77,7 @@ public:
 	void draw() {
 		ofEnableAlphaBlending();
 		ofSetLineWidth( 5 );
-		ofSetColor( 255, 255, 255, 255 * alpha );	// alpha member variable for fade in/out
+		ofSetColor( 255, 255, 255, 255 * 1.0 );	// alpha member variable for fade in/out
 		for (unsigned int i = 0; i < lines.size(); ++i) {
 			lines[i]->draw();
 		}
