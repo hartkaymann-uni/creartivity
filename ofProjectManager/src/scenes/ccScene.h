@@ -36,5 +36,7 @@ protected:
 	void updateUserPositions();
 	ofVec3f getProjectedPosition( ofVec3f mp );
 
+	bool isInBounds( int x, int y );
+
 };
 

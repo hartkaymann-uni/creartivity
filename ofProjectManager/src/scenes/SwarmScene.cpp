@@ -171,7 +171,7 @@ void SwarmScene::dirAsColorChanged(bool& dirAsColor) {
 
 //--------------------------------------------------------------
 void SwarmScene::UpdateMousePos(int x, int y, string action) {
-	if (IsInBounds(x, y))
+	if (isInBounds(x, y))
 	{
 		mouseX = x;
 		mouseY = y;
