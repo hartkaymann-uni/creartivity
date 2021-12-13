@@ -65,8 +65,10 @@ void main(void){
 
     // Hand interaction    
     for(int i = 0; i < N_USERS; i++) {
-        if(distance(vTexCoord, hands[i].xy/offset) <= mouseRad) {
-            next_state.x += mouseStr;
+        if(hands[i].xy != vec2(0.0)){
+            if(distance(vTexCoord, hands[i].xy/offset) <= mouseRad) {
+                next_state.x += mouseStr;
+            }
         }
     }
 

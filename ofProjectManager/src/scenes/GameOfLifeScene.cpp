@@ -221,7 +221,7 @@ void GameOfLifeScene::handleSphereResolutionChanged( int& val )
 
 void GameOfLifeScene::handleDimensionsChanged( ofVec2f& value )
 {
-	sphereRadius = calculateSphereRadius( value );
+	sphereRadius = (float)width / (float)value.x;
 
 	n_cells_x = width / sphereRadius;
 	n_cells_y = height / sphereRadius;
