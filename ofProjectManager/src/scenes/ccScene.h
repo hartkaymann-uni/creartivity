@@ -5,34 +5,36 @@
 #include "ofxAppUtils.h"
 #include "ofxOsc.h"
 
+#include "ccReceiver.h"
+
 #define HOST "localhost"
 #define PORT 12345
 
+#define MAX_USERS 10
+
 class ccScene : public ofxScene
 {
-	struct user {
-		ofVec2f positionLeft;
-		ofVec2f positionRight;
-	};
-
 public:
-	ccScene(std::string name = "Unnamed Scene");
 
-	inline ofxOscReceiver* getReceiver() const { return receiver; }
-	inline void setReceiver( ofxOscReceiver* r ) { receiver = r; }
+	ccScene( std::string name = "Unnamed Scene" );
+
+	virtual void setup();
+	virtual void update();
+	virtual void draw();
+
+	inline void setReceiver( ccReceiver* r ) { receiver = r; }
 
 protected:
-
 	int width, height;
+	ofVec2f user_positions[MAX_USERS];
 
 	ofEasyCam camera;
-	ofxOscReceiver* receiver;
-	
-	std::map<int, user> users;
 
-	void receiveUsers();
+	ccReceiver* receiver;
+
 	void resetCamera();
-	ofVec3f getProjectedMousePosition( ofVec3f mp );
+	void updateUserPositions();
+	ofVec3f getProjectedPosition( ofVec3f mp );
 
 };
 

@@ -34,7 +34,6 @@ void GameOfLifeScene::setup()
 	mouseStrength.set( "mouseStr", 0.1, 0.0, 1.0 );
 	jiggleFactor.set( "jiggle", 1.0, 0.0, 10.0 );
 
-
 	sphereResolution.addListener( this, &GameOfLifeScene::handleSphereResolutionChanged );
 	dimensions.addListener( this, &GameOfLifeScene::handleDimensionsChanged );
 
@@ -87,7 +86,7 @@ void GameOfLifeScene::update()
 
 	time = ofGetElapsedTimef();
 
-	receiveUsers();
+	updateUserPositions();
 
 	cellPingPong.dst->begin();
 	ofClear( 0 );
@@ -99,6 +98,7 @@ void GameOfLifeScene::update()
 	updateCells.setUniform1f( "offset", cellOffset );
 	updateCells.setUniform1i( "mouseDown", mouseIsDown );
 	updateCells.setUniform3f( "mousePos", mousePosition );
+	updateCells.setUniform2fv( "hands", &user_positions[0].x, sizeof(ofVec2f) * 10);
 
 
 	// Draw cell texture to call shaders, logic happens in shaders
@@ -175,8 +175,25 @@ void GameOfLifeScene::draw()
 	ofPopStyle();
 
 	// Draw secondary objects
-	ofSetColor( 255 );
+	ofFill();
+	ofSetColor( ofColor::red );
+	std::unique_ptr<std::map<int, user>> users = receiver->getUsers();
+	std::map<int, user>::iterator it = users->begin();
+	std::map<int, user>::iterator itEnd = users->end();
+	while (it != itEnd) {
+		float xl = it->second.positionLeft.x * width;
+		float yl = it->second.positionLeft.y * height;
+		float xr = it->second.positionRight.x * width;
+		float yr = it->second.positionRight.y * height;
+
+		ofDrawCircle( getProjectedPosition(ofVec3f(xl, yl, 0.f)), 10) ;
+		ofDrawCircle( getProjectedPosition(ofVec3f(xr, yr, 0.f)), 10) ;
+
+		it++;
+	}
+
 	ofNoFill();
+	ofSetColor( 255 );
 	ofDrawBox( ofVec3f( width / 2, height / 2, 0.0 ), width, height, sphereRadius );
 
 	camera.end();
@@ -184,6 +201,9 @@ void GameOfLifeScene::draw()
 	// Draw overlay
 	cellPingPong.dst->draw( 0, 0, width / (10 - dataSrcSize), height / (10 - dataSrcSize) );
 	gui.draw();
+
+	ofDrawBitmapString( receiver->getConnectionStatus(), 10, ofGetHeight() - 20 );
+
 }
 
 void GameOfLifeScene::reset()
@@ -201,7 +221,7 @@ void GameOfLifeScene::handleSphereResolutionChanged( int& val )
 
 void GameOfLifeScene::handleDimensionsChanged( ofVec2f& value )
 {
-	sphereRadius = calculateSphereRadius( value );
+	sphereRadius = (float)width / (float)value.x;
 
 	n_cells_x = width / sphereRadius;
 	n_cells_y = height / sphereRadius;
@@ -235,14 +255,13 @@ void GameOfLifeScene::keyReleased( int key ) {
 	if (key == ofKey::OF_KEY_SHIFT)
 	{
 		camera.disableMouseInput();
-
 	}
 }
 
 void GameOfLifeScene::mousePressed( int x, int y, int button )
 {
 	mouseIsDown = true;
-	mousePosition.set( getProjectedMousePosition( ofVec3f( x, y, 0.0 ) ) );
+	mousePosition.set( getProjectedPosition( ofVec3f( x, y, 0.0 ) ) );
 }
 
 void GameOfLifeScene::mouseReleased( int x, int y, int button )
@@ -253,5 +272,5 @@ void GameOfLifeScene::mouseReleased( int x, int y, int button )
 void GameOfLifeScene::mouseDragged( int x, int y, int button )
 {
 	if (mouseIsDown)
-		mousePosition.set( getProjectedMousePosition( ofVec3f( x, y, 0.0 ) ) );
+		mousePosition.set( getProjectedPosition( ofVec3f( x, y, 0.0 ) ) );
 }

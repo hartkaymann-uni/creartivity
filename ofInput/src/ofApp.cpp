@@ -6,7 +6,7 @@ void ofApp::setup()
 	width = ofGetWidth();
 	height = ofGetHeight();
 
-	sender.setup( HOST, PORT );
+	//sender.setup( HOST, PORT );
 
 	for (auto i = 0; i < NO_USERS; i++) {
 		users[i].position = ofVec3f( 0.f );
