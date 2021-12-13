@@ -1,9 +1,11 @@
 #pragma once
 #include "ofMain.h"
-#include "ofxAppUtils.h"
+
+#include "ccScene.h"
+
 #include "ofxGui.h"
 
-class ContourLinesScene:public ofxScene
+class ContourLinesScene:public ccScene
 {
 public:
 	ContourLinesScene();

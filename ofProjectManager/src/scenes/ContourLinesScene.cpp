@@ -1,6 +1,6 @@
 #include "ContourLinesScene.h"
 
-ContourLinesScene::ContourLinesScene():ofxScene("ContourLines"),
+ContourLinesScene::ContourLinesScene():ccScene("ContourLines"),
 				width(ofGetWidth()),
 				height(ofGetHeight()),
 				time(0.f)

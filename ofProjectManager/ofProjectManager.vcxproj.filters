@@ -116,6 +116,7 @@
       <Filter>src\scenes</Filter>
     </ClCompile>
     <ClCompile Include="src\ccReceiver.cpp" />
+    <ClCompile Include="src\scenes\ContourLinesScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -331,6 +332,7 @@
       <Filter>src\scenes</Filter>
     </ClInclude>
     <ClInclude Include="src\ccReceiver.h" />
+    <ClInclude Include="src\scenes\ContourLinesScene.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="icon.rc" />
