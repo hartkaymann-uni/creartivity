@@ -115,7 +115,13 @@
     <ClCompile Include="src\scenes\ccScene.cpp">
       <Filter>src\scenes</Filter>
     </ClCompile>
-    <ClCompile Include="src\ccReceiver.cpp" />
+    <ClCompile Include="src\ccReceiver.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\scenes\SwarmScene.cpp">
+      <Filter>src\scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="src\HelperFunctions.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -330,9 +336,32 @@
     <ClInclude Include="src\scenes\ccScene.h">
       <Filter>src\scenes</Filter>
     </ClInclude>
-    <ClInclude Include="src\ccReceiver.h" />
+    <ClInclude Include="src\ccReceiver.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\scenes\SwarmScene.h">
+      <Filter>src\scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="src\HelperFunctions.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="icon.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\shader\gol.frag" />
+    <None Include="res\shader\instancedParticles.frag" />
+    <None Include="res\shader\instancedParticles.vert" />
+    <None Include="res\shader\outline.frag" />
+    <None Include="res\shader\particle.comp" />
+    <None Include="res\shader\passthru.vert" />
+    <None Include="res\shader\render.frag" />
+    <None Include="res\shader\render.geom" />
+    <None Include="res\shader\render.vert" />
+    <None Include="res\shader\renderInstanced.frag" />
+    <None Include="res\shader\renderInstanced.vert" />
+    <None Include="res\shader\swarm.comp" />
+    <None Include="res\shader\swarm.frag" />
+    <None Include="res\shader\swarm.vert" />
+    <None Include="res\shader\colorSplash.comp" />
   </ItemGroup>
 </Project>

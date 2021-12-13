@@ -47,7 +47,7 @@ ofVec3f ccScene::getProjectedPosition( ofVec3f p ) {
 
 	pos.z = 0.0;
 
-	std::cout << "Projected: X=[ " << pos.x << " ] Y=[ " << pos.y << " ] Z=[ " << pos.z << " ]" << std::endl;
+	//std::cout << "Projected: X=[ " << pos.x << " ] Y=[ " << pos.y << " ] Z=[ " << pos.z << " ]" << std::endl;
 
 	return ofVec3f( pos );
 }

@@ -175,6 +175,7 @@ void GameOfLifeScene::draw()
 	ofPopStyle();
 
 	// Draw secondary objects
+#if 0
 	ofFill();
 	ofSetColor( ofColor::red );
 	std::unique_ptr<std::map<int, user>> users = receiver->getUsers();
@@ -191,7 +192,7 @@ void GameOfLifeScene::draw()
 
 		it++;
 	}
-
+#endif
 	ofNoFill();
 	ofSetColor( 255 );
 	ofDrawBox( ofVec3f( width / 2, height / 2, 0.0 ), width, height, sphereRadius );
@@ -273,4 +274,8 @@ void GameOfLifeScene::mouseDragged( int x, int y, int button )
 {
 	if (mouseIsDown)
 		mousePosition.set( getProjectedPosition( ofVec3f( x, y, 0.0 ) ) );
+}
+
+void GameOfLifeScene::windowResized(int w, int h)
+{
 }
