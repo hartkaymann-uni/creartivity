@@ -3,7 +3,6 @@
 
 #include "ccScene.h"
 
-#include "ofxGui.h"
 
 class ContourLinesScene :public ccScene
 {
@@ -31,7 +30,6 @@ private:
 
 	ofMesh mesh;
 
-	ofxPanel gui;
 	ofParameterGroup shaderUniforms;
 	ofParameter<float> speed;
 	ofParameter<float> scale;

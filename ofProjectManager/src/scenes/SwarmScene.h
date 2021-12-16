@@ -2,8 +2,6 @@
 
 #include "ofMain.h"
 #include "ofBufferObject.h"
-#include "ofxGui.h"
-#include "../HelperFunctions.h"
 
 #include "ccScene.h"
 
@@ -43,7 +41,7 @@ public:
 	GLuint vaoID;
 	ofVbo vbo;
 	glm::vec3 atractor1, atractor2, atractor3;
-	ofxPanel gui;
+
 	ofParameter<float> attractionCoeff, cohesionCoeff, repulsionCoeff;
 	ofParameter<float> maxSpeed;
 	ofParameter<float> attractor1Force, attractor2Force, attractor3Force;

@@ -4,7 +4,7 @@ uniform float size;
 uniform float radius;
 
 in vec4 vPosition;
-in vec4 vColor;
+flat in vec4 vColor;
 in vec3 vNormal;
 
 out vec4 vFragColor;

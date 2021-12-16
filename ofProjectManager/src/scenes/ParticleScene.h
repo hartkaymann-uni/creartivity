@@ -4,9 +4,6 @@
 
 #include "ofBufferObject.h"
 
-#include "ofxGui.h";
-#include "ofxAppUtils.h"
-
 class ParticleScene : public ccScene{
 
 	public:
@@ -38,8 +35,6 @@ class ParticleScene : public ccScene{
 		vector<Particle> particles;
 		ofBufferObject particlesBuffer, particlesBuffer2;
 		ofVbo vbo;
-
-		ofxPanel gui;
 
 		ofVboMesh groundGrid;
 		ofVboMesh m_VboMesh;

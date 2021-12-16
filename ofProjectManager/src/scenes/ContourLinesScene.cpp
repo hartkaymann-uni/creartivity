@@ -52,23 +52,16 @@ void ContourLinesScene::setup()
 
 	gui.add(shaderUniforms);
 	gui.setPosition(width - gui.getWidth() - 10, height - gui.getHeight() - 10);
-
 }
 
 void ContourLinesScene::update()
 {
 	time = ofGetElapsedTimef();
 	updateUserPositions();
-
-	// Display framerate in window title
-	std::stringstream strm;
-	strm << "fps: " << ofGetFrameRate() << " time: " << int(time);
-	ofSetWindowTitle(strm.str());
 }
 
 void ContourLinesScene::draw()
 {
-
 	camera.begin();
 	{
 		contourLineShader.begin();
@@ -102,8 +95,6 @@ void ContourLinesScene::draw()
 	camera.end();
 
 	ofSetColor(255);
-	gui.draw();
-
 }
 
 void ContourLinesScene::keyPressed(int key)

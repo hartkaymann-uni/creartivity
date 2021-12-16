@@ -79,11 +79,6 @@ void GameOfLifeScene::allocateCellBuffer( int rows, int cols ) {
 
 void GameOfLifeScene::update()
 {
-	// Display framerate in window title
-	std::stringstream strm;
-	strm << "fps: " << ofGetFrameRate();
-	ofSetWindowTitle( strm.str() );
-
 	time = ofGetElapsedTimef();
 
 	updateUserPositions();
@@ -99,7 +94,6 @@ void GameOfLifeScene::update()
 	updateCells.setUniform1i( "mouseDown", mouseIsDown );
 	updateCells.setUniform3f( "mousePos", mousePosition );
 	updateCells.setUniform2fv( "hands", &user_positions[0].x, sizeof(ofVec2f) * 10);
-
 
 	// Draw cell texture to call shaders, logic happens in shaders
 	cellPingPong.src->draw( 0, 0 );
@@ -201,7 +195,6 @@ void GameOfLifeScene::draw()
 
 	// Draw overlay
 	cellPingPong.dst->draw( 0, 0, width / (10 - dataSrcSize), height / (10 - dataSrcSize) );
-	gui.draw();
 
 	ofDrawBitmapString( receiver->getConnectionStatus(), 10, ofGetHeight() - 20 );
 

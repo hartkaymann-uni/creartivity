@@ -138,7 +138,6 @@ void SwarmScene::draw() {
 	/*ofSetColor(ofColor::red);
 	ofDrawRectangle(atractor3, 15, 15);
 	*/ofSetColor(255);
-	gui.draw();
 }
 
 //--------------------------------------------------------------

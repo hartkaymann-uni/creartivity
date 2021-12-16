@@ -185,7 +185,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\ccReceiver.cpp" />
-    <ClCompile Include="src\HelperFunctions.cpp" />
     <ClCompile Include="src\scenes\ccScene.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\ofApp.cpp" />
@@ -227,12 +226,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\ccReceiver.h" />
-    <ClInclude Include="src\HelperFunctions.h" />
     <ClInclude Include="src\scenes\ccScene.h" />
     <ClInclude Include="src\ofApp.h" />
     <ClInclude Include="src\scenes\ContourLinesScene.h" />
     <ClInclude Include="src\scenes\GameOfLifeScene.h" />
-    <ClInclude Include="src\scenes\LineScene.h" />
     <ClInclude Include="src\scenes\ParticleScene.h" />
     <ClInclude Include="src\scenes\scenes.h" />
     <ClInclude Include="..\..\..\addons\ofxAppUtils\src\matrix_funcs.h" />

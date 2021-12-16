@@ -118,7 +118,6 @@
     <ClCompile Include="src\ccReceiver.cpp" />
     <ClCompile Include="src\scenes\ContourLinesScene.cpp" />
     <ClCompile Include="src\scenes\SwarmScene.cpp" />
-    <ClCompile Include="src\HelperFunctions.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -181,9 +180,6 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\scenes\GameOfLifeScene.h">
-      <Filter>src\scenes</Filter>
-    </ClInclude>
-    <ClInclude Include="src\scenes\LineScene.h">
       <Filter>src\scenes</Filter>
     </ClInclude>
     <ClInclude Include="src\scenes\ParticleScene.h">
@@ -336,7 +332,6 @@
     <ClInclude Include="src\ccReceiver.h" />
     <ClInclude Include="src\scenes\ContourLinesScene.h" />
     <ClInclude Include="src\scenes\SwarmScene.h" />
-    <ClInclude Include="src\HelperFunctions.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="icon.rc" />
