@@ -37,7 +37,7 @@ void ccReceiver::receiveMessages() {
 				users[id].positionRight.y = yr != yr ? 0.f : yr;
 
 				user* u = &users[id];
-				printf( "user %i: Left:[ %.3f, %.3f] Right:[ %.3f, %.3f ] \n", id, u->positionLeft.x, u->positionLeft.y, u->positionRight.x, u->positionRight.y );
+				//printf( "user %i: Left:[ %.3f, %.3f] Right:[ %.3f, %.3f ] \n", id, u->positionLeft.x, u->positionLeft.y, u->positionRight.x, u->positionRight.y );
 			}
 			else if (address.find( "new/" ) != string::npos) {
 				int id = m.getArgAsInt32( 0 );

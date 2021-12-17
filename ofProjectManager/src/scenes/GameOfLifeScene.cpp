@@ -79,11 +79,6 @@ void GameOfLifeScene::allocateCellBuffer( int rows, int cols ) {
 
 void GameOfLifeScene::update()
 {
-	// Display framerate in window title
-	std::stringstream strm;
-	strm << "fps: " << ofGetFrameRate();
-	ofSetWindowTitle( strm.str() );
-
 	time = ofGetElapsedTimef();
 
 	updateUserPositions();
@@ -99,7 +94,6 @@ void GameOfLifeScene::update()
 	updateCells.setUniform1i( "mouseDown", mouseIsDown );
 	updateCells.setUniform3f( "mousePos", mousePosition );
 	updateCells.setUniform2fv( "hands", &user_positions[0].x, sizeof(ofVec2f) * 10);
-
 
 	// Draw cell texture to call shaders, logic happens in shaders
 	cellPingPong.src->draw( 0, 0 );
@@ -175,6 +169,7 @@ void GameOfLifeScene::draw()
 	ofPopStyle();
 
 	// Draw secondary objects
+#if 0
 	ofFill();
 	ofSetColor( ofColor::red );
 	std::unique_ptr<std::map<int, user>> users = receiver->getUsers();
@@ -191,7 +186,7 @@ void GameOfLifeScene::draw()
 
 		it++;
 	}
-
+#endif
 	ofNoFill();
 	ofSetColor( 255 );
 	ofDrawBox( ofVec3f( width / 2, height / 2, 0.0 ), width, height, sphereRadius );
@@ -200,7 +195,6 @@ void GameOfLifeScene::draw()
 
 	// Draw overlay
 	cellPingPong.dst->draw( 0, 0, width / (10 - dataSrcSize), height / (10 - dataSrcSize) );
-	gui.draw();
 
 	ofDrawBitmapString( receiver->getConnectionStatus(), 10, ofGetHeight() - 20 );
 
@@ -273,4 +267,8 @@ void GameOfLifeScene::mouseDragged( int x, int y, int button )
 {
 	if (mouseIsDown)
 		mousePosition.set( getProjectedPosition( ofVec3f( x, y, 0.0 ) ) );
+}
+
+void GameOfLifeScene::windowResized(int w, int h)
+{
 }

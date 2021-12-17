@@ -141,7 +141,6 @@ void ParticleScene::draw() {
 	ofEnableBlendMode( OF_BLENDMODE_ALPHA );
 	
 	ofSetColor( 255 );
-	gui.draw();
 
 	ofPopStyle();
 }

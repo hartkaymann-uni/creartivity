@@ -47,7 +47,7 @@ ofVec3f ccScene::getProjectedPosition( ofVec3f p ) {
 
 	pos.z = 0.0;
 
-	std::cout << "Projected: X=[ " << pos.x << " ] Y=[ " << pos.y << " ] Z=[ " << pos.z << " ]" << std::endl;
+	//std::cout << "Projected: X=[ " << pos.x << " ] Y=[ " << pos.y << " ] Z=[ " << pos.z << " ]" << std::endl;
 
 	return ofVec3f( pos );
 }
@@ -57,6 +57,7 @@ void ccScene::updateUserPositions()
 	unique_ptr<map<int, user>> users = receiver->getUsers();
 	std::map<int, user>::iterator it = users->begin();
 	std::map<int, user>::iterator itEnd = users->end();
+	user_positions.fill( ofVec2f( .0f ) ); // refilling array every call might take a while, maybe just handle the lostUser event smarter
 	auto i = 0;
 	while (it != itEnd) {
 		float xl = it->second.positionLeft.x * width;
@@ -74,3 +75,6 @@ void ccScene::updateUserPositions()
 	}
 }
 
+bool ccScene::isInBounds( int x, int y ) {
+	return ((x > 0 && x < width) && (y > 0 && y < height));
+}

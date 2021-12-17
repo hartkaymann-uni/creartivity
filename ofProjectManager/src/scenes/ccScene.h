@@ -3,7 +3,7 @@
 #include "ofMain.h"
 
 #include "ofxAppUtils.h"
-#include "ofxOsc.h"
+#include "ofxGui.h"
 
 #include "ccReceiver.h"
 
@@ -23,18 +23,22 @@ public:
 	virtual void draw();
 
 	inline void setReceiver( ccReceiver* r ) { receiver = r; }
+	inline ofxPanel& getGui() { return gui; };
 
 protected:
 	int width, height;
-	ofVec2f user_positions[MAX_USERS];
+	array<ofVec2f, MAX_USERS> user_positions;
 
 	ofEasyCam camera;
+	ofxPanel gui;
 
 	ccReceiver* receiver;
 
 	void resetCamera();
 	void updateUserPositions();
 	ofVec3f getProjectedPosition( ofVec3f mp );
+
+	bool isInBounds( int x, int y );
 
 };
 

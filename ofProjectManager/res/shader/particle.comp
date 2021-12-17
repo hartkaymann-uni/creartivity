@@ -8,11 +8,11 @@ struct Particle{
 	vec4 color;
 };
 
-layout(std140, binding=0) buffer particle{
+layout(std140, binding=0) buffer particle {
     Particle p[];
 };
 
-layout(std140, binding=1) buffer particleBack{
+layout(std140, binding=1) buffer particleBack {
     Particle p2[];
 };
 
@@ -24,7 +24,7 @@ uniform float	u_NoiseShift;
 uniform vec2	u_Screen;
 uniform vec3	u_MousePosition;
 
-float rand(vec2 co){
+float rand(vec2 co) {
     return fract(sin(dot(co, vec2(12.9898, 78.233))) * 43758.5453);
 }
 
@@ -36,7 +36,7 @@ vec4 permute(vec4 x){return mod(((x*34.0)+1.0)*x, 289.0);}
 vec4 taylorInvSqrt(vec4 r){return 1.79284291400159 - 0.85373472095314 * r;}
 vec3 fade(vec3 t) {return t*t*t*(t*(t*6.0-15.0)+10.0);}
 
-float cnoise(vec3 P){
+float cnoise(vec3 P) {
   vec3 Pi0 = floor(P); // Integer part for indexing
   vec3 Pi1 = Pi0 + vec3(1.0); // Integer part + 1
   Pi0 = mod(Pi0, 289.0);
@@ -106,7 +106,7 @@ float cnoise(vec3 P){
 //--------------------------------------------------------------
 
 layout(local_size_x = 1024, local_size_y = 1, local_size_z = 1) in;
-void main(){
+void main() {
     uint index = gl_GlobalInvocationID.x;
 	vec3 particle = p2[index].pos.xyz;
 	vec3 acc = vec3(0.0, 0.0, 0.0);

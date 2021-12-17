@@ -11,13 +11,11 @@ void ofApp::setup() {
 	transformer.setTransforms( true, true, false, true, true );
 	setTransformer( &transformer );
 
-#ifdef HAVE_OFX_GUI
-	panel.setup( &transformer );
-#endif
-
 	// Load scenes
-	scenes.push_back( (ParticleScene*)sceneManager.add( new ParticleScene() ) );
+	//scenes.push_back( (ParticleScene*)sceneManager.add( new ParticleScene() ) );
 	scenes.push_back( (GameOfLifeScene*)sceneManager.add( new GameOfLifeScene() ) );
+	scenes.push_back( (SwarmScene*)sceneManager.add( new SwarmScene() ) );
+	scenes.push_back( (ContourLinesScene*)sceneManager.add( new ContourLinesScene() ) );
 	sceneManager.setup( true ); // Setup all scenes now
 	ofSetLogLevel( "ofxScenemanager", OF_LOG_VERBOSE );
 
@@ -37,12 +35,10 @@ void ofApp::update() {
 
 	receiver.receiveMessages();
 
-#ifdef HAVE_OFX_GUI
-	// update the transform panel when in debug mode
-	if (isDebug()) {
-		panel.update();
-	}
-#endif
+	// Display framerate in window title
+	std::stringstream strm;
+	strm << "fps: " << ofGetFrameRate();
+	ofSetWindowTitle( strm.str() );
 }
 
 //--------------------------------------------------------------
@@ -58,18 +54,17 @@ void ofApp::draw() {
 
 	transformer.pop();
 
-#ifdef HAVE_OFX_GUI
-	// draw the transform panel when in debug mode
-	if (isDebug()) {
-		panel.draw();
-	}
-#endif
-
 	// Draw current scene info
 	ofSetColor( 200 );
 	ofxBitmapString( 12, ofGetHeight() - 8 )
 		<< "Current Scene: " << sceneManager.getCurrentSceneIndex()
 		<< " " << sceneManager.getCurrentSceneName() << endl;
+	
+	for (ccScene* s : scenes) {
+		if (s->getName() == sceneManager.getCurrentSceneName()) {
+			s->getGui().draw();
+		}
+	}
 
 	transformer.push();
 }

@@ -44,9 +44,4 @@ public:
 
 	ccReceiver receiver;
 	vector<ccScene*> scenes;
-
-#ifdef HAVE_OFX_GUI
-	ofxTransformPanel panel;
-#endif
-
 };
