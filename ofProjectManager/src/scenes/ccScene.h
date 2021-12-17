@@ -27,7 +27,7 @@ public:
 
 protected:
 	int width, height;
-	ofVec2f user_positions[MAX_USERS];
+	array<ofVec2f, MAX_USERS> user_positions;
 
 	ofEasyCam camera;
 	ofxPanel gui;

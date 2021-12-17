@@ -30,6 +30,5 @@ private:
 	string connectionStatusString = "Status: off";
 
 	map<int, user> users;
-
 };
 

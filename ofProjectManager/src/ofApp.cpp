@@ -63,7 +63,6 @@ void ofApp::draw() {
 	for (ccScene* s : scenes) {
 		if (s->getName() == sceneManager.getCurrentSceneName()) {
 			s->getGui().draw();
-
 		}
 	}
 

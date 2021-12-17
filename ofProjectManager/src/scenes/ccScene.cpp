@@ -57,6 +57,7 @@ void ccScene::updateUserPositions()
 	unique_ptr<map<int, user>> users = receiver->getUsers();
 	std::map<int, user>::iterator it = users->begin();
 	std::map<int, user>::iterator itEnd = users->end();
+	user_positions.fill( ofVec2f( .0f ) ); // refilling array every call might take a while, maybe just handle the lostUser event smarter
 	auto i = 0;
 	while (it != itEnd) {
 		float xl = it->second.positionLeft.x * width;
