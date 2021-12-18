@@ -34,7 +34,9 @@ private:
 	ofParameter<float> speed;
 	ofParameter<float> scale;
 	ofParameter<float> amplitude;
-	ofParameter<int> radius;
+	ofParameter<float> radius;
+	ofParameter<float> thickness;
+	ofParameter<float> limit;
 
 	int meshWidth, meshHeight;
 	float time;

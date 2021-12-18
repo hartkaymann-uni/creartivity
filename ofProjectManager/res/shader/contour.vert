@@ -6,8 +6,9 @@ uniform float u_time;
 uniform float u_speed;
 uniform float u_scale;
 uniform float u_amplitude;
+uniform float u_limit;
+uniform float u_radius;
 uniform vec2 u_mouse;
-uniform int u_radius;
 
 uniform vec2 hands[N_USERS];
 
@@ -100,16 +101,18 @@ float rand(vec2 co){
 
 void main(){
 	vec4 pos = position;
-	float dist = distance(position.xy, hands[0].xy);
-	float shift = abs(cnoise(vec3(position.xy * u_scale, u_speed * u_time)))*10;
+	vColor = vec4( -1.0 * pos.z / u_limit, 0.0, 0.0, 1.0);
+
+	float shift = abs(cnoise(vec3(position.xy * u_scale, u_speed * u_time))) * u_amplitude;
 	pos.z += shift;
+
+	float dist = distance(position.xy, hands[0].xy);
 	if (dist < float(u_radius)){
-	float force =(dist / float(u_radius));
-	pos.z *= force * force;
-	pos.z -= 5.5 * (1.0 - force)* (1.0 - force)* (1.0 - force);
+		float force =(dist / float(u_radius));
+		pos.z *= force * force;
+		pos.z -= 5.5 * (1.0 - force)* (1.0 - force)* (1.0 - force);
 	}
 
 	vPosition = pos;
 	gl_Position = modelViewProjectionMatrix * pos;
-
 }
