@@ -1,0 +1,39 @@
+#version 440
+
+struct Particle{
+	vec4 pos;
+	vec4 vel;
+	vec4 color;
+	vec4 unique;
+	vec4 bufferPos;
+	vec4 unique3;
+};
+layout(std140, binding=0) buffer particle{
+    Particle p[];
+};
+
+layout(std140, binding=1) buffer particleBack{
+    Particle p2[];
+};
+
+layout(std140, binding=2) buffer indices{
+	uint idx[];
+};
+
+
+uniform vec3 color;
+uniform vec2 range;
+uniform float user;
+
+layout(local_size_x = 1024, local_size_y = 1, local_size_z = 1) in;
+void main(){
+	// #####
+	// Normal Particle
+	if(p[gl_GlobalInvocationID.x].unique.x == 0) {
+		if(gl_GlobalInvocationID.x >= range.x && gl_GlobalInvocationID.x < range.y) {
+			p[gl_GlobalInvocationID.x].unique.x = 1;
+			p[gl_GlobalInvocationID.x].unique.y = user;
+			p[gl_GlobalInvocationID.x].color.rgb = color;
+		}
+	}
+}
