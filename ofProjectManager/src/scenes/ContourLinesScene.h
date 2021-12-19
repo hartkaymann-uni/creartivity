@@ -5,7 +5,7 @@
 
 #include "ofxGui.h"
 
-class ContourLinesScene:public ccScene
+class ContourLinesScene :public ccScene
 {
 public:
 	ContourLinesScene();
@@ -38,8 +38,10 @@ private:
 	ofParameter<float> speed;
 	ofParameter<float> scale;
 	ofParameter<float> amplitude;
-	ofParameter<int> radius;
-	
+	ofParameter<float> radius;
+	ofParameter<float> thickness;
+	ofParameter<float> limit;
+
 	int width, height;
 	int meshWidth, meshHeight;
 	float time;

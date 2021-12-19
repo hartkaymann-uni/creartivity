@@ -20,7 +20,7 @@ uniform float time;
 uniform float jiggle;
 
 out vec4 vPosition;
-out vec4 vColor;
+flat out vec4 vColor;
 out vec3 vNormal;
 
 //--------------------------------------------------------------
@@ -124,4 +124,5 @@ void main() {
     gl_Position = modelViewProjectionMatrix * vPosition;
     
     vNormal = normal.xyz;
+    vColor = vec4(1.0, 1.0-col.z, 1.0-col.z, 1.0);
 }

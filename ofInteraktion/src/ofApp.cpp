@@ -70,7 +70,7 @@ void ofApp::update() {
 		users[id].positionRight.y = 1.f - ofMap( yr, top, bottom, 0.f, 1.f, true );
 
 		ofApp::user& u = users[id];
-		printf( "user %i: Left:[ %.3f, %.3f] Right:[ %.3f, %.3f ] \n", i, u.positionLeft.x, u.positionLeft.y, u.positionRight.x, u.positionRight.y );
+		//printf( "user %i: Left:[ %.3f, %.3f] Right:[ %.3f, %.3f ] \n", i, u.positionLeft.x, u.positionLeft.y, u.positionRight.x, u.positionRight.y );
 	};
 
 	std::map<int, user>::iterator it = users.begin();
@@ -107,6 +107,7 @@ void ofApp::draw() {
 	// Draw skeleton 2D
 	ofSetColor( 255 );
 	depthTexture.draw( 0, 0 );
+	ofSetColor(ofColor::green);
 	tracker.draw();
 
 	std::map<int, user>::iterator it = users.begin();

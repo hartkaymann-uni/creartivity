@@ -3,7 +3,6 @@
 #include "ccScene.h"
 
 #include "ofxUbo.h"
-#include "ofxGui.h"
 
 struct pingPongBuffer {
 public:
@@ -56,6 +55,7 @@ public:
 	void mousePressed( int x, int y, int button );
 	void mouseReleased( int x, int y, int button );
 	void mouseDragged( int x, int y, int button );
+	void windowResized(int w, int h);
 
 	void handleSphereResolutionChanged( int& sphereRes );
 	void handleDimensionsChanged( ofVec2f& value );
@@ -74,7 +74,6 @@ private:
 
 	ofVboMesh vboSphere;
 
-	ofxPanel gui;
 	ofParameterGroup shaderUniforms;
 	ofParameter<ofVec2f> dimensions;
 	ofParameter<int> sphereResolution;

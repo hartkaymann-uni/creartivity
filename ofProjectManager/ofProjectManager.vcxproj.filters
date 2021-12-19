@@ -117,6 +117,8 @@
     </ClCompile>
     <ClCompile Include="src\ccReceiver.cpp" />
     <ClCompile Include="src\scenes\ContourLinesScene.cpp" />
+    <ClCompile Include="src\scenes\ContourLinesScene.cpp" />
+    <ClCompile Include="src\scenes\SwarmScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -179,9 +181,6 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\scenes\GameOfLifeScene.h">
-      <Filter>src\scenes</Filter>
-    </ClInclude>
-    <ClInclude Include="src\scenes\LineScene.h">
       <Filter>src\scenes</Filter>
     </ClInclude>
     <ClInclude Include="src\scenes\ParticleScene.h">
@@ -333,8 +332,28 @@
     </ClInclude>
     <ClInclude Include="src\ccReceiver.h" />
     <ClInclude Include="src\scenes\ContourLinesScene.h" />
+    <ClInclude Include="src\scenes\SwarmScene.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="icon.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\shader\gol.frag" />
+    <None Include="res\shader\instancedParticles.frag" />
+    <None Include="res\shader\instancedParticles.vert" />
+    <None Include="res\shader\outline.frag" />
+    <None Include="res\shader\particle.comp" />
+    <None Include="res\shader\passthru.vert" />
+    <None Include="res\shader\render.frag" />
+    <None Include="res\shader\render.geom" />
+    <None Include="res\shader\render.vert" />
+    <None Include="res\shader\renderInstanced.frag" />
+    <None Include="res\shader\renderInstanced.vert" />
+    <None Include="res\shader\colorSplash.comp" />
+    <None Include="res\shader\contour.frag" />
+    <None Include="res\shader\contour.vert" />
+    <None Include="res\shader\swarm.comp" />
+    <None Include="res\shader\swarm.frag" />
+    <None Include="res\shader\swarm.vert" />
   </ItemGroup>
 </Project>
