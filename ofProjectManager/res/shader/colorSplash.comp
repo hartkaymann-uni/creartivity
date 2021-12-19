@@ -4,6 +4,9 @@ struct Particle{
 	vec4 pos;
 	vec4 vel;
 	vec4 color;
+	vec4 unique;
+	vec4 bufferPos;
+	vec4 unique3;
 };
 layout(std140, binding=0) buffer particle{
     Particle p[];
@@ -23,12 +26,16 @@ uniform vec2 mousePos;
 
 layout(local_size_x = 1024, local_size_y = 1, local_size_z = 1) in;
 void main(){
-	//p[gl_GlobalInvocationID.x].color.r = 1.0;
-	vec2 particle = p2[gl_GlobalInvocationID.x].pos.xy;
+	// #####
+	// Normal Particle
+	if(p[gl_GlobalInvocationID.x].unique.x == 0) {
 
-	vec2 dir = particle-mousePos;
-	float sqd = dot(dir,dir);
-	if(sqd < 50.0*50.0){
-		p[gl_GlobalInvocationID.x].color.r = 1.0;
+		vec2 particle = p2[gl_GlobalInvocationID.x].pos.xy;
+
+		vec2 dir = particle-mousePos;
+		float sqd = dot(dir,dir);
+		if(sqd < 50.0*50.0){
+			p[gl_GlobalInvocationID.x].color.rgb = color;
+		} 
 	}
 }

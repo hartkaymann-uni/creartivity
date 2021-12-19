@@ -32,19 +32,22 @@ public:
 		glm::vec4 pos;
 		glm::vec4 vel;
 		ofFloatColor color;
+		glm::vec4 unique;
+		glm::vec4 bufferPos;
+		glm::vec4 unique3;
 	};
 
 	int particleAmount;
-	ofShader compute, colorSplash, particleShader;
+	ofShader compute, colorSplash, particleShader, userEnter;
 	vector<Particle> particles;
 	ofBufferObject particlesBuffer, particlesBuffer2;
 	GLuint vaoID;
 	ofVbo vbo;
-	glm::vec3 atractor1, atractor2, atractor3;
+	glm::vec3 atractor;
 
 	ofParameter<float> attractionCoeff, cohesionCoeff, repulsionCoeff;
 	ofParameter<float> maxSpeed;
-	ofParameter<float> attractor1Force, attractor2Force, attractor3Force;
+	ofParameter<float> attractorForce;
 	ofParameterGroup shaderUniforms;
 	ofParameter<float> fps;
 	ofParameter<bool> dirAsColor;
@@ -53,12 +56,11 @@ private:
 	//--------------------------------------------------------------
 	// Controls
 
-	int mouseX;
-	int mouseY;
-	int mouseXClick;
-	int mouseYClick;
+	ofVec3f mousePosition;
+	ofVec3f mouseClickPosition;
 	bool isPressingMouse;
 
 	void UpdateMousePos(int x, int y, string action = "default");
 	void ColorSplash();
+	void UserEnter();
 };
