@@ -92,10 +92,10 @@ void main(){
 
 	// #####
 	// Normal Particle
-	if(p[gl_GlobalInvocationID.x].unique.x != 5) {
+	if(p[gl_GlobalInvocationID.x].unique.x == 0) {
 		for(uint i=start;i<end;i++){
 			if(i!=gl_GlobalInvocationID.x){
-				if(p2[i].unique.x != 2) {
+				if(p2[i].unique.x == 0) {
 					acc += rule1(particle,p2[i].pos.xyz) * repulsion;
 					acc += rule2(particle,p2[i].pos.xyz, p2[gl_GlobalInvocationID.x].vel.xyz, p2[i].vel.xyz) * cohesion;
 					acc += rule3(particle,p2[i].pos.xyz) * attraction;
@@ -114,37 +114,37 @@ void main(){
 
 	// #####
 	// User specific Particle
-	// if(p[gl_GlobalInvocationID.x].unique.x == 1) {
-	// 	for(uint i=start;i<end;i++){
-	// 		if((i!=gl_GlobalInvocationID.x) && (p2[i].unique.x == 1)){
-	// 			acc += rule1(particle,p2[i].pos.xyz) * 1.5;
-	// 		}
-	// 	}
+	if(p[gl_GlobalInvocationID.x].unique.x == 1) {
+		for(uint i=start;i<end;i++){
+			if((i!=gl_GlobalInvocationID.x) && (p2[i].unique.x == 1)){
+				acc += rule1(particle,p2[i].pos.xyz) * 1.5;
+			}
+		}
 
-	// 	modAttractor.z = 500;
-	// 	vec3 attrDir = modAttractor - particle;
-	// 	float sqd = dot(attrDir,attrDir);
+		modAttractor.z = 500;
+		vec3 attrDir = modAttractor - particle;
+		float sqd = dot(attrDir,attrDir);
 
-	// 	if(sqd == 0) {
-	// 		return;
-	// 	}
-	// 	if(sqd > 30.0 * 30.0) {
-	// 		p[gl_GlobalInvocationID.x].bufferPos.xyz += normalize(attrDir) * 40;
-	// 	}
+		if(sqd == 0) {
+			return;
+		}
+		if(sqd > 30.0 * 30.0) {
+			p[gl_GlobalInvocationID.x].bufferPos.xyz += normalize(attrDir) * 40;
+		}
 
-	// 	acc += normalize(attrDir)* 450;
+		acc += normalize(attrDir)* 450;
 
-	// 	p[gl_GlobalInvocationID.x].bufferPos.xyz += p[gl_GlobalInvocationID.x].vel.xyz*timeLastFrame;
-	// 	p[gl_GlobalInvocationID.x].pos.xyz = p[gl_GlobalInvocationID.x].bufferPos.xyz + modAttractor;	
-	// 	p[gl_GlobalInvocationID.x].vel.xyz += acc*timeLastFrame;
-	// 	p[gl_GlobalInvocationID.x].vel.xyz *= 0.99;
-	// 	applyMaxSpeed(500);
-	// }
+		p[gl_GlobalInvocationID.x].bufferPos.xyz += p[gl_GlobalInvocationID.x].vel.xyz*timeLastFrame;
+		p[gl_GlobalInvocationID.x].pos.xyz = p[gl_GlobalInvocationID.x].bufferPos.xyz + modAttractor;	
+		p[gl_GlobalInvocationID.x].vel.xyz += acc*timeLastFrame;
+		p[gl_GlobalInvocationID.x].vel.xyz *= 0.99;
+		applyMaxSpeed(500);
+	}
 	
 	
 	if(p[gl_GlobalInvocationID.x].unique.x == 1) {
-		p[gl_GlobalInvocationID.x].color.r = 1.0;
-		p[gl_GlobalInvocationID.x].color.b = 0.0;
+		p[gl_GlobalInvocationID.x].color.r = 0.0;
+		p[gl_GlobalInvocationID.x].color.b = 1.0;
 	}
 
 	// Set Transparency depending on how far away the particle is

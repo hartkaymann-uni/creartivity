@@ -76,7 +76,7 @@ void SwarmScene::update() {
 	compute.setUniforms(shaderUniforms);
 	compute.setUniform1f("timeLastFrame", ofGetLastFrameTime());
 	compute.setUniform1f("elapsedTime", ofGetElapsedTimef());
-	compute.setUniform1i("particleGroups", particleAmount);
+	compute.setUniform1i("particleAmount", particleAmount);
 	float size = 4;
 	/*atractor3 = {ofMap(ofNoise(ofGetElapsedTimef()*0.9+0.1),0,1,-ofGetWidth()*size,ofGetWidth()*size),
 				ofMap(ofNoise(ofGetElapsedTimef()*0.9+0.5),0,1,-ofGetHeight()*size,ofGetHeight()*size),
