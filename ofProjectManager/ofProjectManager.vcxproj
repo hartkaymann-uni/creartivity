@@ -296,15 +296,14 @@
     <None Include="res\shader\colorSplash.comp" />
     <None Include="res\shader\contour.frag" />
     <None Include="res\shader\contour.vert" />
+    <None Include="res\shader\contourLines.frag" />
+    <None Include="res\shader\contourLines.vert" />
     <None Include="res\shader\gol.frag" />
     <None Include="res\shader\instancedParticles.frag" />
     <None Include="res\shader\instancedParticles.vert" />
     <None Include="res\shader\outline.frag" />
     <None Include="res\shader\particle.comp" />
     <None Include="res\shader\passthru.vert" />
-    <None Include="res\shader\render.frag" />
-    <None Include="res\shader\render.geom" />
-    <None Include="res\shader\render.vert" />
     <None Include="res\shader\renderInstanced.frag" />
     <None Include="res\shader\renderInstanced.vert" />
     <None Include="res\shader\swarm.comp" />

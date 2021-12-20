@@ -22,6 +22,8 @@ public:
 	virtual void update();
 	virtual void draw();
 
+	void windowResized( int w, int h );
+
 	inline void setReceiver( ccReceiver* r ) { receiver = r; }
 	inline ofxPanel& getGui() { return gui; };
 

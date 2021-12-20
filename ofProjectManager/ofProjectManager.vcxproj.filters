@@ -344,9 +344,6 @@
     <None Include="res\shader\outline.frag" />
     <None Include="res\shader\particle.comp" />
     <None Include="res\shader\passthru.vert" />
-    <None Include="res\shader\render.frag" />
-    <None Include="res\shader\render.geom" />
-    <None Include="res\shader\render.vert" />
     <None Include="res\shader\renderInstanced.frag" />
     <None Include="res\shader\renderInstanced.vert" />
     <None Include="res\shader\colorSplash.comp" />
@@ -355,5 +352,7 @@
     <None Include="res\shader\swarm.comp" />
     <None Include="res\shader\swarm.frag" />
     <None Include="res\shader\swarm.vert" />
+    <None Include="res\shader\contourLines.frag" />
+    <None Include="res\shader\contourLines.vert" />
   </ItemGroup>
 </Project>

@@ -9,7 +9,7 @@ ccScene::ccScene( std::string name )
 	setSingleSetup( true );
 	camera.disableMouseInput();
 	camera.enableOrtho();
-	camera.setPosition( ofGetWidth() / 2, ofGetHeight() / 2, 665 );
+	camera.setPosition( width / 2, height / 2, (width + height) / 2);
 	camera.setNearClip( -10 * ofGetWidth() );
 	camera.setFarClip( ofGetWidth() * 10 );
 }
@@ -38,7 +38,7 @@ void ccScene::draw()
 void ccScene::resetCamera()
 {
 	camera.reset();
-	camera.setPosition( width / 2, height / 2, 665 );
+	camera.setPosition( width / 2, height / 2, (width + height) / 2 );
 }
 
 ofVec3f ccScene::getProjectedPosition( ofVec3f p ) {
@@ -77,4 +77,9 @@ void ccScene::updateUserPositions()
 
 bool ccScene::isInBounds( int x, int y ) {
 	return ((x > 0 && x < width) && (y > 0 && y < height));
+}
+
+void ccScene::windowResized( int w, int h ) {
+	width = w;
+	height = h;
 }
