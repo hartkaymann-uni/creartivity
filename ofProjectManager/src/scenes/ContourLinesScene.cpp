@@ -1,7 +1,11 @@
 #include "ContourLinesScene.h"
 
 ContourLinesScene::ContourLinesScene() :ccScene( "ContourLines" ),
-time( 0.f )
+time( 0.f ),
+sbv( 0 ),
+meshWidth( 0 ),
+meshHeight( 0 ),
+count( 0 )
 {}
 
 void ContourLinesScene::setup()
