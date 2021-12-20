@@ -110,6 +110,7 @@ void ContourLinesScene::update()
 
 void ContourLinesScene::draw()
 {
+
 	camera.begin();
 	{
 		contourLineShader.begin();

@@ -268,7 +268,3 @@ void GameOfLifeScene::mouseDragged( int x, int y, int button )
 	if (mouseIsDown)
 		mousePosition.set( getProjectedPosition( ofVec3f( x, y, 0.0 ) ) );
 }
-
-void GameOfLifeScene::windowResized(int w, int h)
-{
-}

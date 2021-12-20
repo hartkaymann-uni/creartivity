@@ -164,6 +164,9 @@ void ofApp::mouseExited( int x, int y ) {
 //--------------------------------------------------------------
 void ofApp::windowResized( int w, int h ) {
 	// transformer.setNewScreenSize() is automatically called if the transformer is set
+	for (ccScene* scene : scenes) {
+		scene->windowResized( w, h );
+	}
 }
 
 //--------------------------------------------------------------
