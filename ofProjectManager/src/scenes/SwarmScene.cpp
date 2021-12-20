@@ -10,7 +10,7 @@ SwarmScene::SwarmScene() : ccScene("Swarm") {
 void SwarmScene::setup() {
 	//camera.setFarClip(ofGetWidth() * 10);
 
-	particleAmount = 1024 * 100;
+	particleAmount = 1024 * 50;
 
 	particles.resize(std::max(particleAmount, 1024));
 	int i = 0;

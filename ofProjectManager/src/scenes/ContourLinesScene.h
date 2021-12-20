@@ -33,7 +33,6 @@ private:
 
 	ofMesh mesh;
 
-	ofxPanel gui;
 	ofParameterGroup shaderUniforms;
 	ofParameter<float> speed;
 	ofParameter<float> scale;
@@ -42,7 +41,6 @@ private:
 	ofParameter<float> thickness;
 	ofParameter<float> limit;
 
-	int width, height;
 	int meshWidth, meshHeight;
 	float time;
 	int sbv;
