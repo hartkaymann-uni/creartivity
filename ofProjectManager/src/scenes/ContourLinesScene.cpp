@@ -1,6 +1,6 @@
 #include "ContourLinesScene.h"
 
-ContourLinesScene::ContourLinesScene() :ccScene( "ContourLines" ),
+ContourLinesScene::ContourLinesScene() : ccScene( "ContourLines" ),
 time( 0.f ),
 sbv( 0 ),
 meshWidth( 0 ),

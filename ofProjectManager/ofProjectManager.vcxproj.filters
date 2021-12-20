@@ -119,6 +119,7 @@
     <ClCompile Include="src\scenes\ContourLinesScene.cpp" />
     <ClCompile Include="src\scenes\ContourLinesScene.cpp" />
     <ClCompile Include="src\scenes\SwarmScene.cpp" />
+    <ClCompile Include="src\scenes\IntroductionScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -333,6 +334,7 @@
     <ClInclude Include="src\ccReceiver.h" />
     <ClInclude Include="src\scenes\ContourLinesScene.h" />
     <ClInclude Include="src\scenes\SwarmScene.h" />
+    <ClInclude Include="src\scenes\IntroductionScene.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="icon.rc" />

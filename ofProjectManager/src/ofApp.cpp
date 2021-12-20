@@ -12,14 +12,15 @@ void ofApp::setup() {
 	setTransformer( &transformer );
 
 	// Load scenes
-	//scenes.push_back( (ParticleScene*)sceneManager.add( new ParticleScene() ) );
+	scenes.push_back( (IntroductionScene*)sceneManager.add( new IntroductionScene() ) );
 	scenes.push_back( (GameOfLifeScene*)sceneManager.add( new GameOfLifeScene() ) );
 	scenes.push_back( (SwarmScene*)sceneManager.add( new SwarmScene() ) );
 	scenes.push_back( (ContourLinesScene*)sceneManager.add( new ContourLinesScene() ) );
+	//scenes.push_back( (ParticleScene*)sceneManager.add( new ParticleScene() ) );
 	sceneManager.setup( true ); // Setup all scenes now
 	ofSetLogLevel( "ofxScenemanager", OF_LOG_VERBOSE );
 
-	sceneManager.gotoScene( "GameOfLife", true );
+	sceneManager.gotoScene( "Introduction", true );
 	lastScene = sceneManager.getCurrentSceneIndex();
 	sceneManager.setOverlap( false );
 
