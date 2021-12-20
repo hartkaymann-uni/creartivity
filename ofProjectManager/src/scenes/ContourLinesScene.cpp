@@ -105,7 +105,7 @@ void ContourLinesScene::update()
 		}
 
 		if (v.z < 0.f) {
-			v.z += 0.01 * limit;
+			v.z += 0.05 * limit;
 		}
 
 		mesh.setVertex( i, v );

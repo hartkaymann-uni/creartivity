@@ -194,9 +194,9 @@ void GameOfLifeScene::draw()
 	camera.end();
 
 	// Draw overlay
-	cellPingPong.dst->draw( 0, 0, width / (10 - dataSrcSize), height / (10 - dataSrcSize) );
+	//cellPingPong.dst->draw( 0, 0, width / (10 - dataSrcSize), height / (10 - dataSrcSize) );
 
-	ofDrawBitmapString( receiver->getConnectionStatus(), 10, ofGetHeight() - 20 );
+	//ofDrawBitmapString( receiver->getConnectionStatus(), 10, ofGetHeight() - 20 );
 
 }
 

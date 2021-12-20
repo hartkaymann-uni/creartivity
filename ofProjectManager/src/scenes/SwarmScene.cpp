@@ -10,7 +10,7 @@ SwarmScene::SwarmScene() : ccScene("Swarm") {
 void SwarmScene::setup() {
 	//camera.setFarClip(ofGetWidth() * 10);
 
-	particleAmount = 1024 * 50;
+	particleAmount = 1024 * 100;
 
 	particles.resize(std::max(particleAmount, 1024));
 	int i = 0;
@@ -85,6 +85,7 @@ void SwarmScene::update() {
 
 	compute.setUniform3f("attractor", atractor.x, atractor.y, atractor.z);
 	compute.setUniform2fv("hands", &user_positions[0].x, sizeof(ofVec2f) * 10);
+	compute.setUniform2f("mouse", (float) ofGetMouseX(), (float) ofGetMouseY());
 
 	compute.setUniform3f("baseColor", 0.0, 0.0, 0.0);
 
