@@ -14,6 +14,7 @@ void ofApp::setup() {
 	// Load scenes
 	//scenes.push_back( (ParticleScene*)sceneManager.add( new ParticleScene() ) );
 	scenes.push_back( (GameOfLifeScene*)sceneManager.add( new GameOfLifeScene() ) );
+	scenes.push_back( (CuboidScene*)sceneManager.add( new CuboidScene() ) );
 	scenes.push_back( (SwarmScene*)sceneManager.add( new SwarmScene() ) );
 	scenes.push_back( (ContourLinesScene*)sceneManager.add( new ContourLinesScene() ) );
 	sceneManager.setup( true ); // Setup all scenes now
