@@ -9,7 +9,7 @@ ccScene::ccScene( std::string name )
 	setSingleSetup( true );
 	camera.disableMouseInput();
 	camera.enableOrtho();
-	camera.setPosition( width / 2, height / 2, (width + height) / 2);
+	camera.setPosition( width / 2, height / 2, (width + height) / 2 );
 	camera.setNearClip( -10 * ofGetWidth() );
 	camera.setFarClip( ofGetWidth() * 10 );
 }
@@ -77,6 +77,13 @@ void ccScene::updateUserPositions()
 
 bool ccScene::isInBounds( int x, int y ) {
 	return ((x > 0 && x < width) && (y > 0 && y < height));
+}
+
+// Changes value of parameter to a value between its min and max value, value is calculated using perlin noise
+void ccScene::randomizeFloatParameter( ofParameter<float>& param, float time)
+{
+	float val = ofMap( ofNoise( time / 10 ), 0.f, 1.f, param.getMin(), param.getMax() );
+	param.set( val );
 }
 
 void ccScene::windowResized( int w, int h ) {

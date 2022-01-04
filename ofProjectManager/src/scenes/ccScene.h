@@ -41,6 +41,7 @@ protected:
 	ofVec3f getProjectedPosition( ofVec3f mp );
 
 	bool isInBounds( int x, int y );
+	void randomizeFloatParameter( ofParameter<float>& param, float time = ofGetElapsedTimef());
 
 };
 

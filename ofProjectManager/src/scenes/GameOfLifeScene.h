@@ -44,6 +44,7 @@ private:
 class GameOfLifeScene : public ccScene {
 
 public:
+
 	GameOfLifeScene( int cells_x = 102, int cells_y = 77 );
 	void setup();
 	void update();
@@ -82,6 +83,7 @@ private:
 	ofParameter<float> mouseRadius;
 	ofParameter<float> mouseStrength;
 	ofParameter<float> jiggleFactor;
+	ofParameter<bool> fluctuateParameters;
 
 	bool mouseIsDown;
 	ofVec3f mousePosition;

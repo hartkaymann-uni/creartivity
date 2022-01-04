@@ -26,13 +26,14 @@ void GameOfLifeScene::setup()
 
 	// Set all Parameters once
 	dimensions.set( "dimensions", ofVec2f( n_cells_x, n_cells_y ), ofVec2f( 1.0, 1.0 ), ofVec2f( n_cells_x * 10.0, n_cells_y * 10.0 ) );
-	evolutionFactor.set( "evolutionFac", 0.05, 0.0, 1.0 );
+	evolutionFactor.set( "evolutionFac", 0.05, 0.0, 0.25 );
 	sphereResolution.set( "circleRes", 20, 1, 100 );
 	sphereRadius.set( "radius", cellOffset, 0.0, cellOffset * 5.0 );
 	dataSrcSize.set( "srcSize", 0, 0, 9 );
 	mouseRadius.set( "mouseRad", 5, 0, 10 );
 	mouseStrength.set( "mouseStr", 0.1, 0.0, 1.0 );
 	jiggleFactor.set( "jiggle", 1.0, 0.0, 10.0 );
+	fluctuateParameters.set( "fluctuate", true );
 
 	sphereResolution.addListener( this, &GameOfLifeScene::handleSphereResolutionChanged );
 	dimensions.addListener( this, &GameOfLifeScene::handleDimensionsChanged );
@@ -44,10 +45,11 @@ void GameOfLifeScene::setup()
 	shaderUniforms.add( jiggleFactor );
 	shaderUniforms.add( mouseRadius );
 	shaderUniforms.add( mouseStrength );
-	shaderUniforms.add( dataSrcSize );
+	//shaderUniforms.add( dataSrcSize );
 
 	gui.add( shaderUniforms );
 	gui.add( sphereResolution );
+	gui.add( fluctuateParameters );
 	gui.add( dimensions );
 	gui.setPosition( width - gui.getWidth() - 10, height - gui.getHeight() - 10 );
 
@@ -83,7 +85,15 @@ void GameOfLifeScene::update()
 
 	updateUserPositions();
 
-	cellPingPong.dst->begin();
+	// Gradually change parameters
+	if (fluctuateParameters.get()) {
+		randomizeFloatParameter( evolutionFactor );
+		randomizeFloatParameter( sphereRadius );
+		randomizeFloatParameter( jiggleFactor );
+
+	}
+
+		cellPingPong.dst->begin();
 	ofClear( 0 );
 	updateCells.begin();
 	updateCells.setUniforms( shaderUniforms );
@@ -93,7 +103,7 @@ void GameOfLifeScene::update()
 	updateCells.setUniform1f( "offset", cellOffset );
 	updateCells.setUniform1i( "mouseDown", mouseIsDown );
 	updateCells.setUniform3f( "mousePos", mousePosition );
-	updateCells.setUniform2fv( "hands", &user_positions[0].x, sizeof(ofVec2f) * 10);
+	updateCells.setUniform2fv( "hands", &user_positions[0].x, sizeof( ofVec2f ) * 10 );
 
 	// Draw cell texture to call shaders, logic happens in shaders
 	cellPingPong.src->draw( 0, 0 );
@@ -181,11 +191,11 @@ void GameOfLifeScene::draw()
 		float xr = it->second.positionRight.x * width;
 		float yr = it->second.positionRight.y * height;
 
-		ofDrawCircle( getProjectedPosition(ofVec3f(xl, yl, 0.f)), 10) ;
-		ofDrawCircle( getProjectedPosition(ofVec3f(xr, yr, 0.f)), 10) ;
+		ofDrawCircle( getProjectedPosition( ofVec3f( xl, yl, 0.f ) ), 10 );
+		ofDrawCircle( getProjectedPosition( ofVec3f( xr, yr, 0.f ) ), 10 );
 
 		it++;
-	}
+}
 #endif
 	ofNoFill();
 	ofSetColor( 255 );
