@@ -184,6 +184,7 @@
     <PostBuildEvent />
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\scenes\IntroScene.cpp" />
     <ClCompile Include="src\scenes\CuboidScene.cpp" />
     <ClCompile Include="src\ccReceiver.cpp" />
     <ClCompile Include="src\scenes\ccScene.cpp" />
@@ -226,6 +227,7 @@
     <ClCompile Include="src\scenes\SwarmScene.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\scenes\IntroScene.h" />
     <ClInclude Include="src\scenes\CuboidScene.h" />
     <ClInclude Include="src\ccReceiver.h" />
     <ClInclude Include="src\scenes\ccScene.h" />

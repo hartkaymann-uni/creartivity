@@ -90,10 +90,9 @@ void GameOfLifeScene::update()
 		randomizeFloatParameter( evolutionFactor );
 		randomizeFloatParameter( sphereRadius );
 		randomizeFloatParameter( jiggleFactor );
-
 	}
 
-		cellPingPong.dst->begin();
+	cellPingPong.dst->begin();
 	ofClear( 0 );
 	updateCells.begin();
 	updateCells.setUniforms( shaderUniforms );
