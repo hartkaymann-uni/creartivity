@@ -38,7 +38,6 @@ void ParticleScene::setup() {
 	m_MaxSpeed.set( "u_MaxSpeed", 2500, 0, 5000 );
 	m_DeltaNoiseShift.set( "Noise Shift", 0.001, 0.0, 1.0 );
 
-	gui.setup();
 	m_ShaderUniforms.setName( "Shader Parameters" );
 	m_ShaderUniforms.add( m_MaxSpeed );
 	gui.add( m_ShaderUniforms );

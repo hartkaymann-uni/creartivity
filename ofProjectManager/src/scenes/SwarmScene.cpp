@@ -52,7 +52,7 @@ void SwarmScene::setup() {
 
 	ofBackground(0);
 	ofEnableBlendMode(OF_BLENDMODE_ADD);
-	gui.setup();
+
 	shaderUniforms.setName("shader params");
 	shaderUniforms.add(attractionCoeff.set("attraction", 0.18, 0, 1));
 	shaderUniforms.add(cohesionCoeff.set("cohesion", 0.05, 0, 1));

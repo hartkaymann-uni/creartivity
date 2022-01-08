@@ -12,6 +12,8 @@ ccScene::ccScene( std::string name )
 	camera.setPosition( width / 2, height / 2, (width + height) / 2 );
 	camera.setNearClip( -10 * ofGetWidth() );
 	camera.setFarClip( ofGetWidth() * 10 );
+
+	gui.setup();
 }
 
 void ccScene::setup()

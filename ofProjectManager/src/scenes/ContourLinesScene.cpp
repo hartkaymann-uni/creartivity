@@ -47,7 +47,6 @@ void ContourLinesScene::setup()
 	}
 
 	// Setup gui and parameters
-	gui.setup();
 	shaderUniforms.setName( "Shader Parameters" );
 	shaderUniforms.add( speed.set( "u_speed", 0.015, 0.00, 0.1 ) );
 	shaderUniforms.add( scale.set( "u_scale", 0.01, 0.0, 0.05 ) );

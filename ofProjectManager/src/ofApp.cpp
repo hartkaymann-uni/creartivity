@@ -13,7 +13,7 @@ void ofApp::setup() {
 
 	// Load scenes
 	//scenes.push_back( (ParticleScene*)sceneManager.add( new ParticleScene() ) );
-	scenes.push_back( (IntroScene*)sceneManager.add( new IntroScene() ) );
+	scenes.push_back( (SpiralScene*)sceneManager.add( new SpiralScene() ) );
 	scenes.push_back( (GameOfLifeScene*)sceneManager.add( new GameOfLifeScene() ) );
 	scenes.push_back( (CuboidScene*)sceneManager.add( new CuboidScene() ) );
 	scenes.push_back( (SwarmScene*)sceneManager.add( new SwarmScene() ) );
@@ -21,7 +21,7 @@ void ofApp::setup() {
 	sceneManager.setup( true ); // Setup all scenes now
 	ofSetLogLevel( "ofxScenemanager", OF_LOG_VERBOSE );
 
-	sceneManager.gotoScene( "Intro", true );
+	sceneManager.gotoScene( "Spiral", true );
 	lastScene = sceneManager.getCurrentSceneIndex();
 	sceneManager.setOverlap( false );
 

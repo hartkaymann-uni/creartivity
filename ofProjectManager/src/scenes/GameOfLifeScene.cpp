@@ -38,7 +38,6 @@ void GameOfLifeScene::setup()
 	sphereResolution.addListener( this, &GameOfLifeScene::handleSphereResolutionChanged );
 	dimensions.addListener( this, &GameOfLifeScene::handleDimensionsChanged );
 
-	gui.setup();
 	shaderUniforms.setName( "Shader Parameters" );
 	shaderUniforms.add( evolutionFactor );
 	shaderUniforms.add( sphereRadius );

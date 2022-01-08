@@ -5,4 +5,4 @@
 #include "SwarmScene.h"
 #include "ContourLinesScene.h"
 #include "CuboidScene.h"
-#include "IntroScene.h"
+#include "SpiralScene.h"
