@@ -77,12 +77,17 @@ void ccScene::updateUserPositions()
 	}
 }
 
+bool ccScene::isInBounds( ofVec2f pos )
+{
+	return isInBounds( pos.x, pos.y );
+}
+
 bool ccScene::isInBounds( int x, int y ) {
 	return ((x > 0 && x < width) && (y > 0 && y < height));
 }
 
 // Changes value of parameter to a value between its min and max value, value is calculated using perlin noise
-void ccScene::randomizeFloatParameter( ofParameter<float>& param, float time)
+void ccScene::randomizeFloatParameter( ofParameter<float>& param, float time )
 {
 	float val = ofMap( ofNoise( time / 10 ), 0.f, 1.f, param.getMin(), param.getMax() );
 	param.set( val );
