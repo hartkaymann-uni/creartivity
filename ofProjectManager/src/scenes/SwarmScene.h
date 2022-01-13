@@ -6,6 +6,7 @@
 #include "ccScene.h"
 
 
+
 class SwarmScene : public ccScene
 {
 public:
@@ -28,6 +29,14 @@ public:
 	void dragEvent(ofDragInfo dragInfo);
 	void gotMessage(ofMessage msg);
 
+	enum class SequenceType {
+		BlackHole,
+		Explosion,
+		NormalAttraction,
+		BrainNeurons,
+		Swarm
+	};
+
 	struct Particle {
 		glm::vec4 pos;
 		glm::vec4 vel;
@@ -37,6 +46,18 @@ public:
 		glm::vec4 unique3;
 	};
 
+	struct ParameterSequence
+	{
+		float duration;
+		SequenceType sequence;
+
+		ParameterSequence(float newDuration, SequenceType newType) {
+			duration = newDuration;
+			sequence = newType;
+		}
+	};
+
+	int particleGroups;
 	int particleAmount;
 	ofShader compute, colorSplash, particleShader, userEnter;
 	vector<Particle> particles;
@@ -48,9 +69,11 @@ public:
 	ofParameter<float> attractionCoeff, cohesionCoeff, repulsionCoeff;
 	ofParameter<float> maxSpeed;
 	ofParameter<float> attractorForce;
+	ofParameter<int> ruleIterationMod;
 	ofParameterGroup shaderUniforms;
 	ofParameter<float> fps;
 	ofParameter<bool> dirAsColor;
+
 
 private:
 	//--------------------------------------------------------------
@@ -63,4 +86,14 @@ private:
 	void UpdateMousePos(int x, int y, string action = "default");
 	void ColorSplash();
 	void UserEnter();
+
+	//--------------------------------------------------------------
+	// Sequence Stuff
+	vector<ParameterSequence> sequences;
+	float nextSequenceTime;
+	int currentSequenceIndex;
+	SequenceType currentSequenceType;
+	void UpdateSequences();
+	void UpdateParameters();
+	void InitSequence();
 };
