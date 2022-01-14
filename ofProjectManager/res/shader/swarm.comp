@@ -88,25 +88,9 @@ layout(local_size_x = 1024, local_size_y = 1, local_size_z = 1) in;
 void main(){
 	vec3 particle = p2[gl_GlobalInvocationID.x].pos.xyz;
 
-	int radius = 100;
-	//vec3 modAttractor = attractor + vec3(0, 0, 1000);
-	vec3 modAttractor = vec3(0.0, 0.0, 1000);
-	for(int i = 0; i < N_USERS; i++) {
-		vec2 hand = hands[i].xy;
-		if(hand != vec2(0.0)) {
-			float dist = distance(particle.xy, hand);
-			float influence = map(dist, radius, 0.0, 0.0, 1.0);
-			//modAttractor.xy += (hand - particle.xy) * influence;
-		}
-	}
+	vec3 modAttractor = attractor + vec3(0, 0, 1000);
 
-	// Mouse also interacts
-	{
-		float dist = distance(particle.xy, attractor.xy);
-		float influence = map(dist, radius, 0.0, 0.0, 1.0);
-		modAttractor.xy += (attractor.xy - particle.xy) * influence;
-	}
-	modAttractor = vec3(hands[0].x, hands[0].y, 1000);
+	
 
 	vec3 acc = vec3(0.0,0.0,0.0);
 	uint m = uint(particleAmount * elapsedTime);
@@ -188,4 +172,24 @@ void main(){
 	// 	p[gl_GlobalInvocationID.x].color.rgb = vec3(0.0f, 0.0f, 1.0f);
 	// }
 	
+}
+
+void calculateAttraction(vec3 particle){
+	int radius = 100;
+	vec3 modAttractor = vec3(0.0, 0.0, 1000);
+	for(int i = 0; i < N_USERS; i++) {
+		vec2 hand = hands[i].xy;
+		if(hand != vec2(0.0)) {
+			float dist = distance(particle.xy, hand);
+			float influence = map(dist, radius, 0.0, 0.0, 1.0);
+			//modAttractor.xy += (hand - particle.xy) * influence;
+		}
+	}
+
+	// Mouse also interacts
+	float dist = distance(particle.xy, attractor.xy);
+	float influence = map(dist, radius, 0.0, 0.0, 1.0);
+	modAttractor.xy += (attractor.xy - particle.xy) * influence;
+	
+	modAttractor = vec3(hands[0].x, hands[0].y, 1000);
 }

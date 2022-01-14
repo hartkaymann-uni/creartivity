@@ -9,8 +9,10 @@ SwarmScene::SwarmScene() : ccScene("Swarm") {
 //--------------------------------------------------------------
 void SwarmScene::setup() {
 	//camera.setFarClip(ofGetWidth() * 10);
+	ofShowCursor();
 
-	particleAmount = 1024 * 100;
+	particleGroups = 500;
+	particleAmount = 1024 * particleGroups;
 
 	particles.resize(std::max(particleAmount, 1024));
 	int i = 0;
@@ -30,7 +32,7 @@ void SwarmScene::setup() {
 
 	filesystem::path shader_path("../../res/shader");
 
-	compute.setupShaderFromFile(GL_COMPUTE_SHADER, shader_path /"swarm.comp");
+	compute.setupShaderFromFile(GL_COMPUTE_SHADER, shader_path / "swarm.comp");
 	compute.linkProgram();
 
 	colorSplash.setupShaderFromFile(GL_COMPUTE_SHADER, shader_path / "colorSplash.comp");
@@ -52,18 +54,28 @@ void SwarmScene::setup() {
 
 	ofBackground(0);
 	ofEnableBlendMode(OF_BLENDMODE_ADD);
-
 	shaderUniforms.setName("shader params");
-	shaderUniforms.add(attractionCoeff.set("attraction", 0.18, 0, 1));
-	shaderUniforms.add(cohesionCoeff.set("cohesion", 0.05, 0, 1));
+	shaderUniforms.add(attractionCoeff.set("attraction", 0, 0, 1));
+	shaderUniforms.add(cohesionCoeff.set("cohesion", 0.5, 0, 1));
 	shaderUniforms.add(repulsionCoeff.set("repulsion", 0.2, 0, 1));
 	shaderUniforms.add(maxSpeed.set("max_speed", 500, 0, 5000));
 	shaderUniforms.add(attractorForce.set("attr_force", 2000, 0, 5000));
+	shaderUniforms.add(ruleIterationMod.set("rule_iteration_mod", particleGroups, 0, particleGroups));
 	gui.add(shaderUniforms);
 	gui.add(fps.set("fps", 60, 0, 60));
 
 	gui.add(dirAsColor.set("Useless Button", true));
 	//dirAsColor.addListener(this, &SwarmScene::dirAsColorChanged);
+
+	currentSequenceIndex = 0;
+	nextSequenceTime = 5;
+	currentSequenceType = SequenceType::NormalAttraction;
+	sequences.push_back(ParameterSequence(10, SequenceType::BlackHole));
+	sequences.push_back(ParameterSequence(10, SequenceType::Explosion));
+	sequences.push_back(ParameterSequence(5, SequenceType::NormalAttraction));
+	sequences.push_back(ParameterSequence(10, SequenceType::BrainNeurons));
+	sequences.push_back(ParameterSequence(10, SequenceType::Swarm));
+	InitSequence();
 }
 
 //--------------------------------------------------------------
@@ -71,12 +83,14 @@ void SwarmScene::update() {
 	fps = ofGetFrameRate();
 
 	updateUserPositions();
+	UpdateSequences();
 
 	compute.begin();
 	compute.setUniforms(shaderUniforms);
 	compute.setUniform1f("timeLastFrame", ofGetLastFrameTime());
 	compute.setUniform1f("elapsedTime", ofGetElapsedTimef());
-	compute.setUniform1i("particleAmount", particleAmount);
+	//compute.setUniform1i("particleAmount", particleAmount);
+	compute.setUniform1i("particleAmount", ruleIterationMod * 1024);
 	float size = 4;
 	/*atractor3 = {ofMap(ofNoise(ofGetElapsedTimef()*0.9+0.1),0,1,-ofGetWidth()*size,ofGetWidth()*size),
 				ofMap(ofNoise(ofGetElapsedTimef()*0.9+0.5),0,1,-ofGetHeight()*size,ofGetHeight()*size),
@@ -85,7 +99,7 @@ void SwarmScene::update() {
 
 	compute.setUniform3f("attractor", atractor.x, atractor.y, atractor.z);
 	compute.setUniform2fv("hands", &user_positions[0].x, sizeof(ofVec2f) * 10);
-	compute.setUniform2f("mouse", (float) ofGetMouseX(), (float) ofGetMouseY());
+	compute.setUniform2f("mouse", (float)ofGetMouseX(), (float)ofGetMouseY());
 
 	compute.setUniform3f("baseColor", 0.0, 0.0, 0.0);
 
@@ -129,8 +143,8 @@ void SwarmScene::draw() {
 	ofEnableBlendMode(OF_BLENDMODE_ALPHA);
 	ofFill();
 	ofSetColor(ofColor::red);
-	//ofDrawRectangle(ofVec2f(user_positions[0].x, user_positions[0].y), 20, 20);
-	//ofDrawRectangle(mousePosition, 20, 20);
+	ofDrawRectangle(ofVec2f(user_positions[0].x, user_positions[0].y), 20, 20);
+	ofDrawRectangle(mousePosition, 20, 20);
 	ofSetColor(255);
 }
 
@@ -259,4 +273,98 @@ void SwarmScene::gotMessage(ofMessage msg) {
 //--------------------------------------------------------------
 void SwarmScene::dragEvent(ofDragInfo dragInfo) {
 
+}
+
+
+//--------------------------------------------------------------
+void SwarmScene::UpdateSequences() {
+	if (ofGetElapsedTimef() > nextSequenceTime) {
+		InitSequence();
+
+		if (currentSequenceIndex >= sequences.size()) currentSequenceIndex = 0;
+
+		currentSequenceType = sequences[currentSequenceIndex].sequence;
+		nextSequenceTime = ofGetElapsedTimef() + sequences[currentSequenceIndex].duration;
+
+
+		currentSequenceIndex++;
+	}
+
+	UpdateParameters();
+}
+
+//--------------------------------------------------------------
+void SwarmScene::InitSequence() {
+	switch (currentSequenceType)
+	{
+	case SequenceType::BlackHole:
+		attractionCoeff.set(attractionCoeff.getMin());
+		attractorForce.set(attractorForce.getMax());
+		repulsionCoeff.set(repulsionCoeff.getMin());
+		maxSpeed.set(maxSpeed.getMax() / 2);
+		break;
+	case SequenceType::Explosion:
+		attractionCoeff.set(attractionCoeff.getMin());
+		attractorForce.set(attractorForce.getMin());
+		repulsionCoeff.set(repulsionCoeff.getMax());
+		maxSpeed.set(maxSpeed.getMax());
+		break;
+	case SequenceType::NormalAttraction:
+		attractionCoeff.set(attractionCoeff.getMin());
+		attractorForce.set(attractorForce.getMax() / 2);
+		repulsionCoeff.set(0.1f);
+		maxSpeed.set(maxSpeed.getMax() * 0.1f);
+		break;
+	case SequenceType::BrainNeurons:
+		attractionCoeff.set(attractionCoeff.getMin());
+		attractorForce.set(attractorForce.getMax());
+		repulsionCoeff.set(repulsionCoeff.getMax());
+		maxSpeed.set(maxSpeed.getMax());
+		break;
+	case SequenceType::Swarm:
+		attractionCoeff.set(attractionCoeff.getMax());
+		attractorForce.set(attractorForce.getMax() * 0.75f);
+		repulsionCoeff.set(repulsionCoeff.getMax());
+		maxSpeed.set(maxSpeed.getMax() * 0.75f);
+		break;
+	default:
+		break;
+	}
+}
+
+//--------------------------------------------------------------
+void SwarmScene::UpdateParameters() {
+	float time = ofGetElapsedTimef();
+	float mod = ruleIterationMod.getMax()/2 + (abs(sin(ofGetElapsedTimef()/10)) * ruleIterationMod.getMax()/2);
+	ruleIterationMod.set(mod);
+
+	switch (currentSequenceType)
+	{
+	case SequenceType::BlackHole: {
+
+		break;
+	}
+	case SequenceType::Explosion: {
+
+		break;
+	}
+	case SequenceType::NormalAttraction: {
+
+		break;
+	}
+	case SequenceType::BrainNeurons:
+	{
+
+		break;
+	}
+	case SequenceType::Swarm:
+	{
+		float newSpeed = maxSpeed.get() - 5;
+		if (newSpeed < 250) newSpeed = 250;
+		maxSpeed.set(newSpeed);
+		break;
+	}
+	default:
+		break;
+	}
 }
