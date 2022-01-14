@@ -64,7 +64,6 @@ void SpiralScene::update()
 	for (Particle& p : particles) {
 		float x, y;
 
-		// TODO: make jiggle not dependable on theta so particles on same angle wint have the same offset
 		float jiggle = jiggleAmplitude * (ofNoise( p.rnd * time * jiggleSpeed ) - .5f);
 		float r = p.r + jiggle;
 		r = ofMap( r, 0.0f, 1.0f, spiralInner, spiralOuter, false );
@@ -74,7 +73,7 @@ void SpiralScene::update()
 
 		p.pos.set( x, y );
 	}
-
+	
 	// Draw onto FBO
 	spiralFbo.begin();
 	ofPushStyle();
@@ -86,9 +85,10 @@ void SpiralScene::update()
 	ofSetColor( 0, 255 - (255 * trailLength) );
 	ofDrawRectangle( ofVec3f( 0.f ), spiralFbo.getWidth(), spiralFbo.getHeight() );
 
+	ofSetColor( 255 );
 	ofVec2f center = ofVec2f( spiralFbo.getWidth() / 2 );
 	for (Particle p : particles) {
-		ofSetColor( p.col );
+		//ofSetColor( p.col );
 		float radius = ofMap( p.r * p.r, 0.f, 1.f, particleRadius * .1f, particleRadius );
 		ofDrawCircle( center + p.pos, radius );
 	}
