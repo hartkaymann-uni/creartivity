@@ -34,7 +34,21 @@ public:
 		Explosion,
 		NormalAttraction,
 		BrainNeurons,
-		Swarm
+		Swarm,
+		RepulsionStutter
+	};
+
+	struct ParameterSequence
+	{
+		float duration;
+		float modifier;
+		SequenceType sequence;
+
+		ParameterSequence(float newDuration, SequenceType newType, float newModifier = 1) {
+			duration = newDuration;
+			modifier = std::max(0.0f, std::min(newModifier, 5.0f));
+			sequence = newType;
+		}
 	};
 
 	struct Particle {
@@ -42,19 +56,8 @@ public:
 		glm::vec4 vel;
 		ofFloatColor color;
 		glm::vec4 unique;
+		glm::vec4 initialPos;
 		glm::vec4 bufferPos;
-		glm::vec4 unique3;
-	};
-
-	struct ParameterSequence
-	{
-		float duration;
-		SequenceType sequence;
-
-		ParameterSequence(float newDuration, SequenceType newType) {
-			duration = newDuration;
-			sequence = newType;
-		}
 	};
 
 	int particleGroups;
@@ -67,6 +70,8 @@ public:
 	glm::vec3 atractor;
 
 	ofParameter<float> attractionCoeff, cohesionCoeff, repulsionCoeff;
+	ofParameter<bool> UseAttraction, UseCohesion, UseRepulsion;
+	ofParameter<bool> only2D;
 	ofParameter<float> maxSpeed;
 	ofParameter<float> attractorForce;
 	ofParameter<int> ruleIterationMod;
@@ -89,11 +94,17 @@ private:
 
 	//--------------------------------------------------------------
 	// Sequence Stuff
+	void InitSequences();
+	void UpdateSequences();
+	void StartSequence();
+	void UpdateParameters();
+	void ActivateRules();
+
+
 	vector<ParameterSequence> sequences;
+	float lastSequenceTime;
 	float nextSequenceTime;
 	int currentSequenceIndex;
+	float currentSequenceMod;
 	SequenceType currentSequenceType;
-	void UpdateSequences();
-	void UpdateParameters();
-	void InitSequence();
 };
