@@ -34,10 +34,7 @@ void SwarmScene::setup() {
 		i++;
 	}
 
-
-
-	filesystem::path shader_path("../../res/shader");
-
+	filesystem::path shader_path = getShaderPath();
 	compute.setupShaderFromFile(GL_COMPUTE_SHADER, shader_path / "swarm.comp");
 	compute.linkProgram();
 

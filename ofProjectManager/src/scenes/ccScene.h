@@ -28,6 +28,8 @@ public:
 	inline ofxPanel& getGui() { return gui; };
 
 protected:
+	filesystem::path scenesPath;
+
 	int width, height;
 	array<ofVec2f, MAX_USERS> user_positions;
 
@@ -44,5 +46,7 @@ protected:
 	bool isInBounds( int x, int y );
 	void randomizeFloatParameter( ofParameter<float>& param, float time = ofGetElapsedTimef());
 
+	filesystem::path getCurrentPath();
+	filesystem::path getShaderPath();
 };
 

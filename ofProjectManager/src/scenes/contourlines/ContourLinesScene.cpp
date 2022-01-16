@@ -13,7 +13,7 @@ void ContourLinesScene::setup()
 	ofSetFrameRate( 60 );
 
 	// Load Shader
-	filesystem::path shader_path( "../../res/shader" );
+	filesystem::path shader_path = getShaderPath();
 	bool shadersloaded = contourLineShader.load( shader_path / "contour.vert", shader_path / "contour.frag" );
 
 	// Set camera in the middle of the scene
