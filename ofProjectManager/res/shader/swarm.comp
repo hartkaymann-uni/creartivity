@@ -6,15 +6,20 @@ struct Particle{
 	vec4 vel;
 	vec4 color;
 	vec4 unique;
+	vec4 initialPos;
 	vec4 bufferPos;
-	vec4 unique3;
 };
+
 layout(std140, binding=0) buffer particle{
     Particle p[];
 };
 
 layout(std140, binding=1) buffer particleBack{
     Particle p2[];
+};
+
+layout(std140, binding=3) buffer particleDraw{
+    Particle p3[];
 };
 
 layout(std140, binding=2) buffer indices{
@@ -35,6 +40,7 @@ uniform float attr_force;
 uniform vec2 hands[N_USERS];
 uniform vec2 mouse;
 
+uniform int only_2d;
 uniform int particleAmount;
 uniform vec3 baseColor;
 
@@ -90,6 +96,9 @@ void applyMaxSpeed(float limit){
 }
 
 void calculateMovement(vec3 acc){
+	if(only_2d == 0) {
+		return;
+	}
 	//p[gl_GlobalInvocationID.x].pos.xyz += p[gl_GlobalInvocationID.x].vel.xyz*timeLastFrame;
 	p[gl_GlobalInvocationID.x].pos.xy += p[gl_GlobalInvocationID.x].vel.xy*timeLastFrame;
 
@@ -107,8 +116,8 @@ void main(){
 	vec3 particle = p2[gl_GlobalInvocationID.x].pos.xyz;
 
 	vec3 modAttractor = attractor + vec3(0, 0, 1000);
-
-	
+	//vec3 modAttractor = attractor;
+	//vec3 modAttractor = attractor + vec3(0, 0, -5000);
 
 	vec3 acc = vec3(0.0,0.0,0.0);
 	uint m = uint(particleAmount * elapsedTime);
@@ -175,29 +184,31 @@ void main(){
 	}
 
 	// Set Transparency depending on how far away the particle is
-	float depth = clamp(p[gl_GlobalInvocationID.x].pos.z, -500, 500);
-	float alpha = 0.05 + (depth + 500) / 1000 * 0.9;
-	p[gl_GlobalInvocationID.x].color.a = alpha;
+	float depth2 = clamp(p[gl_GlobalInvocationID.x].pos.z, -500, 0);
+	// float alpha2 = 0.05 + (depth2 + 500) / 1000 * 0.9;
+	// p[gl_GlobalInvocationID.x].color.a = alpha2;
 
 
-	if(use_cohesion == 0) {
-		p[gl_GlobalInvocationID.x].color.b = 0;
-	} else {
-		p[gl_GlobalInvocationID.x].color.b = 1;
+	int maxDepth = 10000;
+	float depth = abs(clamp(p[gl_GlobalInvocationID.x].pos.z, -maxDepth, 0));
+	float depthPercentage = (depth/maxDepth);
+
+	//p[gl_GlobalInvocationID.x].color.a = 0.05 + (1 - depth2/maxDepth) * 0.2;
+	p[gl_GlobalInvocationID.x].color.a =  0.05 + (1 - depthPercentage) * 0.95 * 0.05;
+	if(use_attraction == 0) {
+		p[gl_GlobalInvocationID.x].color.a = 1;
 	}
-
-	//p[gl_GlobalInvocationID.x].color.b = 1-alpha;
-	//p[gl_GlobalInvocationID.x].color.g = 1-alpha;
+	
+	p[gl_GlobalInvocationID.x].color.rgb = vec3(1);
+	p[gl_GlobalInvocationID.x].color.r -= depthPercentage;
+	p[gl_GlobalInvocationID.x].color.g -= depthPercentage;
 	
 	//p[gl_GlobalInvocationID.x].color.rgb = baseColor;
-	
-	// if(p[gl_GlobalInvocationID.x].pos.z < 0) {
-	// 	p[gl_GlobalInvocationID.x].color.rgb = vec3(1.0f, 0.0f, 0.0f);
-	// }
-	// else {
-	// 	p[gl_GlobalInvocationID.x].color.rgb = vec3(0.0f, 0.0f, 1.0f);
-	// }
-	
+
+
+	int index = int(p[gl_GlobalInvocationID.x].unique.y);
+	p3[index].pos.xy = p[gl_GlobalInvocationID.x].pos.xy;
+	p3[index].color = p[gl_GlobalInvocationID.x].color;
 }
 
 void calculateAttraction(vec3 particle){

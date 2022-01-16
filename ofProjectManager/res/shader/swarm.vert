@@ -15,9 +15,10 @@ void main(){
 
     fragColor = color;
     
-    float depth = clamp(position.z, -10000, 0) + 10000;
-    float sizeMod = (depth)/10000 * 1.0f + 0.5f;
-    //sizeMod = clamp(sizeMod, 0.5, 1.5);
+    int maxDepth = 10000;
+    float depth = abs(clamp(position.z, -maxDepth, 0));
+    float sizeMod = (1-depth/maxDepth) * 1.5f + 0.5f;
+    sizeMod = clamp(sizeMod, 0.5, 10.0);
     gl_PointSize = pointSize * sizeMod;
 
 }

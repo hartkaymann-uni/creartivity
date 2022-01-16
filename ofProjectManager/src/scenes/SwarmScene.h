@@ -60,11 +60,16 @@ public:
 		glm::vec4 bufferPos;
 	};
 
+	struct SortByDepthOperator
+	{
+		bool operator() (Particle const& L, Particle const& R) { return L.pos.z < R.pos.z; }
+	};
+
 	int particleGroups;
 	int particleAmount;
 	ofShader compute, colorSplash, particleShader, userEnter;
 	vector<Particle> particles;
-	ofBufferObject particlesBuffer, particlesBuffer2;
+	ofBufferObject particlesBuffer, particlesBuffer2, particlesBuffer3;
 	GLuint vaoID;
 	ofVbo vbo;
 	glm::vec3 atractor;
@@ -91,6 +96,7 @@ private:
 	void UpdateMousePos(int x, int y, string action = "default");
 	void ColorSplash();
 	void UserEnter();
+	vector<Particle> SortParticles();
 
 	//--------------------------------------------------------------
 	// Sequence Stuff

@@ -8,27 +8,33 @@ SwarmScene::SwarmScene() : ccScene("Swarm") {
 
 //--------------------------------------------------------------
 void SwarmScene::setup() {
-	//camera.setFarClip(ofGetWidth() * 10);
 	ofShowCursor();
-
 	particleGroups = 400;
 	particleAmount = 1024 * particleGroups;
 
+
+
 	particles.resize(std::max(particleAmount, 1024));
 	int i = 0;
+	float step = (10000.0f / particleAmount);
 	for (auto& p : particles) {
-		p.pos.x = ofRandom(0, 500);
-		p.pos.y = ofRandom(0, 500);
-		//p.pos.z = ofRandom(-ofGetHeight()*0.5,ofGetHeight()*0.5);
+		p.pos.x = ofRandom(0, 1000);
+		p.pos.y = ofRandom(0, 1000);
 		p.pos.z = ofRandom(-10000, 0);
 		p.pos.w = 1;
+
 		p.vel = { 0,0,0,0 };
-		p.unique = { 0, 0 ,0, 0 };
 		p.color = { 1, 1, 1, 1 };
 		p.initialPos = p.pos;
 		p.bufferPos = p.pos;
+
+		//int .z = (int)(-step * i);
+		p.unique = { 0, i ,0, 0 };
+
 		i++;
 	}
+
+
 
 	filesystem::path shader_path("../../res/shader");
 
@@ -43,14 +49,18 @@ void SwarmScene::setup() {
 
 	particleShader.load(shader_path / "swarm.vert", shader_path / "swarm.frag");
 
+	vector<Particle> sorted = SortParticles();
+
 	particlesBuffer.allocate(particles, GL_DYNAMIC_DRAW);
 	particlesBuffer2.allocate(particles, GL_DYNAMIC_DRAW);
+	particlesBuffer3.allocate(sorted, GL_DYNAMIC_DRAW);
 
 	particlesBuffer.bindBase(GL_SHADER_STORAGE_BUFFER, 0);
 	particlesBuffer2.bindBase(GL_SHADER_STORAGE_BUFFER, 1);
+	particlesBuffer3.bindBase(GL_SHADER_STORAGE_BUFFER, 3);
 
-	vbo.setVertexBuffer(particlesBuffer, 4, sizeof(Particle));
-	vbo.setColorBuffer(particlesBuffer, sizeof(Particle), sizeof(glm::vec4) * 2);
+	vbo.setVertexBuffer(particlesBuffer3, 4, sizeof(Particle));
+	vbo.setColorBuffer(particlesBuffer3, sizeof(Particle), sizeof(glm::vec4) * 2);
 
 	ofBackground(0);
 	ofEnableBlendMode(OF_BLENDMODE_ADD);
@@ -77,8 +87,9 @@ void SwarmScene::setup() {
 //--------------------------------------------------------------
 void SwarmScene::InitSequences() {
 	currentSequenceIndex = 100;
-	nextSequenceTime = ofGetElapsedTimef() + 5;
+	nextSequenceTime = ofGetElapsedTimef() + 2;
 	currentSequenceType = SequenceType::NormalAttraction;
+	sequences.push_back(ParameterSequence(20, SequenceType::BrainNeurons));
 	sequences.push_back(ParameterSequence(7, SequenceType::BlackHole, 10000));
 	sequences.push_back(ParameterSequence(0.1f, SequenceType::Explosion));
 	sequences.push_back(ParameterSequence(6, SequenceType::RepulsionStutter));
@@ -86,8 +97,44 @@ void SwarmScene::InitSequences() {
 	sequences.push_back(ParameterSequence(20, SequenceType::BrainNeurons));
 	sequences.push_back(ParameterSequence(15, SequenceType::Swarm));
 	sequences.push_back(ParameterSequence(7, SequenceType::BlackHole));
-	sequences.push_back(ParameterSequence(20, SequenceType::BrainNeurons));
 	StartSequence();
+}
+
+//--------------------------------------------------------------
+vector<SwarmScene::Particle> SwarmScene::SortParticles() {
+	vector<Particle> output(particles);
+	std::sort(output.begin(), output.end(), SortByDepthOperator());
+
+	/*for (auto &p : particles) {
+		int index = 0;
+		for (auto const &x : output) {
+			if (p.unique.y == x.unique.y) {
+				p.unique.y = index;
+				break;
+			}
+			index++;
+		}
+	}*/
+
+	vector<int> lookup(output.size());
+
+	int index = 0;
+	for (auto const& p : output) {
+		lookup[p.unique.y] = index;
+		index++;
+	}
+
+	index = 0;
+	for (auto& p : particles) {
+		p.unique.y = lookup[index];
+		index++;
+	}
+
+	/*for (auto& p : particles) {
+		cout << "Pos: " << p.pos << " refers id: " << p.unique.y << " is pos: " << output[p.unique.y].pos << endl;
+	};*/
+
+	return output;
 }
 
 //--------------------------------------------------------------
@@ -102,6 +149,7 @@ void SwarmScene::update() {
 	compute.setUniform1i("use_attraction", (UseAttraction.get() ? 1 : 0));
 	compute.setUniform1i("use_cohesion", (UseCohesion.get() ? 1 : 0));
 	compute.setUniform1i("use_repulsion", (UseRepulsion.get() ? 1 : 0));
+	compute.setUniform1i("only_2d", (only2D.get() ? 1 : 0));
 	compute.setUniform1f("timeLastFrame", ofGetLastFrameTime());
 	compute.setUniform1f("elapsedTime", ofGetElapsedTimef());
 	//compute.setUniform1i("particleAmount", particleAmount);
@@ -133,29 +181,37 @@ void SwarmScene::update() {
 //--------------------------------------------------------------
 void SwarmScene::draw() {
 	ofClear(ofColor(0, 0, 0, 255));
-	//ofEnableBlendMode(OF_BLENDMODE_ADD);
+
 	camera.begin();
 	glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
 
+	/*glEnable(GL_DEPTH_TEST);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glAlphaFunc(GL_GREATER, 0.1);
+	glEnable(GL_ALPHA_TEST);*/
+	ofEnableDepthTest();
+	ofEnableBlendMode(OF_BLENDMODE_ALPHA);
+
 	particleShader.begin();
 
-	particleShader.setUniform1f("alphaMod", 0.2);
-	particleShader.setUniform1f("pointSize", 5);
-	glPointSize(5);
-	vbo.draw(GL_POINTS, 0, particles.size());
 	particleShader.setUniform1f("alphaMod", 1.0);
 	particleShader.setUniform1f("pointSize", 2);
 	glPointSize(2);
 	vbo.draw(GL_POINTS, 0, particles.size());
 
+	ofDisableDepthTest();
+
+	particleShader.setUniform1f("alphaMod", 0.3);
+	particleShader.setUniform1f("pointSize", 5);
+	glPointSize(5);
+	vbo.draw(GL_POINTS, 0, particles.size());
+
 	particleShader.end();
 
-	/*ofSetColor(ofColor(0, 0, 0, 255));
-	ofNoFill();
-	ofDrawBox(0,0,-ofGetHeight()*2,ofGetWidth()*4,ofGetHeight()*4,ofGetHeight()*4);*/
 	camera.end();
 
-	ofEnableBlendMode(OF_BLENDMODE_ALPHA);
+	//ofEnableBlendMode(OF_BLENDMODE_ADD);
 	ofFill();
 	ofSetColor(ofColor::red);
 	ofDrawRectangle(ofVec2f(user_positions[0].x, user_positions[0].y), 20, 20);
@@ -380,7 +436,7 @@ void SwarmScene::UpdateParameters() {
 	{
 		float diff = currentTime - lastSequenceTime;
 		float newSpeed = maxSpeed.getMax() - 250 * diff;
-		newSpeed = std::max(newSpeed, 500.0f);
+		newSpeed = std::max(newSpeed, 1500.0f);
 		maxSpeed.set(newSpeed);
 		break;
 	}
@@ -394,8 +450,8 @@ void SwarmScene::UpdateParameters() {
 	}
 	case SequenceType::RepulsionStutter:
 	{
-		float diff = currentTime - (int) currentTime;
-		if(diff < 0.1f) UseRepulsion.set(true);
+		float diff = currentTime - (int)currentTime;
+		if (diff < 0.1f) UseRepulsion.set(true);
 		else UseRepulsion.set(false);
 		break;
 	}
