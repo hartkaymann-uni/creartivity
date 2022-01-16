@@ -4,7 +4,8 @@ ccScene::ccScene( std::string name )
 	: ofxScene( name ),
 	width( ofGetWidth() ),
 	height( ofGetHeight() ),
-	receiver( nullptr )
+	receiver( nullptr ),
+	scenesPath( "../../src/scenes" )
 {
 	setSingleSetup( true );
 	camera.disableMouseInput();
@@ -91,6 +92,15 @@ void ccScene::randomizeFloatParameter( ofParameter<float>& param, float time )
 {
 	float val = ofMap( ofNoise( time / 10 ), 0.f, 1.f, param.getMin(), param.getMax() );
 	param.set( val );
+}
+
+filesystem::path ccScene::getCurrentPath()
+{
+	return scenesPath / getName();
+}
+
+filesystem::path ccScene::getShaderPath() {
+	return getCurrentPath() / "shader";
 }
 
 void ccScene::windowResized( int w, int h ) {

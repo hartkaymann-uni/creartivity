@@ -2,7 +2,7 @@
 
 CuboidScene::CuboidScene() : ccScene( "Cuboids" )
 {
-	filesystem::path shader_path( "../../res/shader" );
+	filesystem::path shader_path = getShaderPath();
 	cuboidShader.load( shader_path / "cuboids.vert", shader_path / "cuboids.frag" );
 
 	uniforms.add( gridDimensions.set( "grid", { 100.0, 100.0 } ) );

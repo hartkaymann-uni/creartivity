@@ -6,7 +6,6 @@
 #include "ccScene.h"
 
 
-
 class SwarmScene : public ccScene
 {
 public:

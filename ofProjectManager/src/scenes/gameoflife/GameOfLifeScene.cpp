@@ -11,10 +11,10 @@ GameOfLifeScene::GameOfLifeScene( int cells_x, int cells_y )
 	time( 0.f )
 {
 	// Load Shaders
-	filesystem::path shader_path( "../../res/shader" );
-	updateCells.load( shader_path / "passthru.vert", shader_path / "gol.frag" );
-	instancedShader.load( shader_path / "renderInstanced.vert", shader_path / "renderInstanced.frag" );
-	outlineShader.load( shader_path / "renderInstanced.vert", shader_path / "outline.frag" );
+	filesystem::path shader_path = getShaderPath();
+	bool load1 = updateCells.load( shader_path / "passthru.vert", shader_path / "gol.frag" );
+	bool load2 = instancedShader.load( shader_path / "renderInstanced.vert", shader_path / "renderInstanced.frag" );
+	bool load3 = outlineShader.load( shader_path / "renderInstanced.vert", shader_path / "outline.frag" );
 }
 
 
@@ -193,7 +193,7 @@ void GameOfLifeScene::draw()
 		ofDrawCircle( getProjectedPosition( ofVec3f( xr, yr, 0.f ) ), 10 );
 
 		it++;
-}
+	}
 #endif
 	ofNoFill();
 	ofSetColor( 255 );
