@@ -1,5 +1,4 @@
 #version 150
-#define N_USERS 10
 
 uniform mat4 modelViewProjectionMatrix;
 uniform float u_time;
@@ -9,7 +8,6 @@ uniform float u_amplitude;
 uniform vec2 u_mouse;
 uniform int u_radius;
 
-uniform vec2 hands[N_USERS];
 
 in vec4 position;
 in vec2 texcoord;
@@ -100,7 +98,7 @@ float rand(vec2 co){
 
 void main(){
 	vec4 pos = position;
-	float dist = distance(position.xy, hands[0].xy);
+	float dist = distance(position.xy, u_mouse.xy);
 	float shift = abs(cnoise(vec3(position.xy * u_scale, u_speed * u_time)))*10;
 	pos.z += shift;
 	if (dist < float(u_radius)){

@@ -4,14 +4,17 @@ ccScene::ccScene( std::string name )
 	: ofxScene( name ),
 	width( ofGetWidth() ),
 	height( ofGetHeight() ),
-	receiver( nullptr )
+	receiver( nullptr ),
+	scenesPath( "../../src/scenes" )
 {
 	setSingleSetup( true );
 	camera.disableMouseInput();
 	camera.enableOrtho();
-	camera.setPosition( ofGetWidth() / 2, ofGetHeight() / 2, 665 );
+	camera.setPosition( width / 2, height / 2, (width + height) / 2 );
 	camera.setNearClip( -10 * ofGetWidth() );
 	camera.setFarClip( ofGetWidth() * 10 );
+
+	gui.setup();
 }
 
 void ccScene::setup()
@@ -38,7 +41,7 @@ void ccScene::draw()
 void ccScene::resetCamera()
 {
 	camera.reset();
-	camera.setPosition( width / 2, height / 2, 665 );
+	camera.setPosition( width / 2, height / 2, (width + height) / 2 );
 }
 
 ofVec3f ccScene::getProjectedPosition( ofVec3f p ) {
@@ -75,6 +78,32 @@ void ccScene::updateUserPositions()
 	}
 }
 
+bool ccScene::isInBounds( ofVec2f pos )
+{
+	return isInBounds( pos.x, pos.y );
+}
+
 bool ccScene::isInBounds( int x, int y ) {
 	return ((x > 0 && x < width) && (y > 0 && y < height));
+}
+
+// Changes value of parameter to a value between its min and max value, value is calculated using perlin noise
+void ccScene::randomizeFloatParameter( ofParameter<float>& param, float time )
+{
+	float val = ofMap( ofNoise( time / 10 ), 0.f, 1.f, param.getMin(), param.getMax() );
+	param.set( val );
+}
+
+filesystem::path ccScene::getCurrentPath()
+{
+	return scenesPath / getName();
+}
+
+filesystem::path ccScene::getShaderPath() {
+	return getCurrentPath() / "shader";
+}
+
+void ccScene::windowResized( int w, int h ) {
+	width = w;
+	height = h;
 }

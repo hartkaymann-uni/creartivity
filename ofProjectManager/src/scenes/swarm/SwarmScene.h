@@ -28,37 +28,82 @@ public:
 	void dragEvent(ofDragInfo dragInfo);
 	void gotMessage(ofMessage msg);
 
+	enum class SequenceType {
+		BlackHole,
+		Explosion,
+		NormalAttraction,
+		BrainNeurons,
+		Swarm,
+		RepulsionStutter
+	};
+
+	struct ParameterSequence
+	{
+		float duration;
+		float modifier;
+		SequenceType sequence;
+
+		ParameterSequence(float newDuration, SequenceType newType, float newModifier = 1) {
+			duration = newDuration;
+			modifier = std::max(0.0f, std::min(newModifier, 5.0f));
+			sequence = newType;
+		}
+	};
+
 	struct Particle {
 		glm::vec4 pos;
 		glm::vec4 vel;
 		ofFloatColor color;
+		glm::vec4 unique;
+		glm::vec4 initialPos;
+		glm::vec4 bufferPos;
 	};
 
+	int particleGroups;
 	int particleAmount;
-	ofShader compute, colorSplash, particleShader;
+	ofShader compute, colorSplash, particleShader, userEnter;
 	vector<Particle> particles;
 	ofBufferObject particlesBuffer, particlesBuffer2;
 	GLuint vaoID;
 	ofVbo vbo;
-	glm::vec3 atractor1, atractor2, atractor3;
+	glm::vec3 atractor;
 
 	ofParameter<float> attractionCoeff, cohesionCoeff, repulsionCoeff;
+	ofParameter<bool> UseAttraction, UseCohesion, UseRepulsion;
+	ofParameter<bool> only2D;
 	ofParameter<float> maxSpeed;
-	ofParameter<float> attractor1Force, attractor2Force, attractor3Force;
+	ofParameter<float> attractorForce;
+	ofParameter<int> ruleIterationMod;
 	ofParameterGroup shaderUniforms;
 	ofParameter<float> fps;
 	ofParameter<bool> dirAsColor;
+
 
 private:
 	//--------------------------------------------------------------
 	// Controls
 
-	int mouseX;
-	int mouseY;
-	int mouseXClick;
-	int mouseYClick;
+	ofVec3f mousePosition;
+	ofVec3f mouseClickPosition;
 	bool isPressingMouse;
 
 	void UpdateMousePos(int x, int y, string action = "default");
 	void ColorSplash();
+	void UserEnter();
+
+	//--------------------------------------------------------------
+	// Sequence Stuff
+	void InitSequences();
+	void UpdateSequences();
+	void StartSequence();
+	void UpdateParameters();
+	void ActivateRules();
+
+
+	vector<ParameterSequence> sequences;
+	float lastSequenceTime;
+	float nextSequenceTime;
+	int currentSequenceIndex;
+	float currentSequenceMod;
+	SequenceType currentSequenceType;
 };

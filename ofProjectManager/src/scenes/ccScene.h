@@ -22,10 +22,14 @@ public:
 	virtual void update();
 	virtual void draw();
 
+	void windowResized( int w, int h );
+
 	inline void setReceiver( ccReceiver* r ) { receiver = r; }
 	inline ofxPanel& getGui() { return gui; };
 
 protected:
+	filesystem::path scenesPath;
+
 	int width, height;
 	array<ofVec2f, MAX_USERS> user_positions;
 
@@ -38,7 +42,11 @@ protected:
 	void updateUserPositions();
 	ofVec3f getProjectedPosition( ofVec3f mp );
 
+	bool isInBounds( ofVec2f pos );
 	bool isInBounds( int x, int y );
+	void randomizeFloatParameter( ofParameter<float>& param, float time = ofGetElapsedTimef());
 
+	filesystem::path getCurrentPath();
+	filesystem::path getShaderPath();
 };
 

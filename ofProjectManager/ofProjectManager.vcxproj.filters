@@ -16,12 +16,6 @@
     <ClCompile Include="src\ofApp.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\scenes\GameOfLifeScene.cpp">
-      <Filter>src\scenes</Filter>
-    </ClCompile>
-    <ClCompile Include="src\scenes\ParticleScene.cpp">
-      <Filter>src\scenes</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\addons\ofxAppUtils\src\ofxApp.cpp">
       <Filter>addons\ofxAppUtils\src</Filter>
     </ClCompile>
@@ -116,8 +110,12 @@
       <Filter>src\scenes</Filter>
     </ClCompile>
     <ClCompile Include="src\ccReceiver.cpp" />
-    <ClCompile Include="src\scenes\ContourLinesScene.cpp" />
-    <ClCompile Include="src\scenes\SwarmScene.cpp" />
+    <ClCompile Include="src\scenes\contourlines\ContourLinesScene.cpp" />
+    <ClCompile Include="src\scenes\cuboid\CuboidScene.cpp" />
+    <ClCompile Include="src\scenes\gameoflife\GameOfLifeScene.cpp" />
+    <ClCompile Include="src\scenes\swarm\SwarmScene.cpp" />
+    <ClCompile Include="src\scenes\particles\ParticleScene.cpp" />
+    <ClCompile Include="src\scenes\spiral\SpiralScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -178,12 +176,6 @@
     </ClInclude>
     <ClInclude Include="src\ofApp.h">
       <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\scenes\GameOfLifeScene.h">
-      <Filter>src\scenes</Filter>
-    </ClInclude>
-    <ClInclude Include="src\scenes\ParticleScene.h">
-      <Filter>src\scenes</Filter>
     </ClInclude>
     <ClInclude Include="src\scenes\scenes.h">
       <Filter>src\scenes</Filter>
@@ -330,29 +322,36 @@
       <Filter>src\scenes</Filter>
     </ClInclude>
     <ClInclude Include="src\ccReceiver.h" />
-    <ClInclude Include="src\scenes\ContourLinesScene.h" />
-    <ClInclude Include="src\scenes\SwarmScene.h" />
+    <ClInclude Include="src\scenes\contourlines\ContourLinesScene.h" />
+    <ClInclude Include="src\scenes\cuboid\CuboidScene.h" />
+    <ClInclude Include="src\scenes\gameoflife\GameOfLifeScene.h" />
+    <ClInclude Include="src\scenes\swarm\SwarmScene.h" />
+    <ClInclude Include="src\scenes\particles\ParticleScene.h" />
+    <ClInclude Include="src\scenes\spiral\SpiralScene.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="icon.rc" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="res\shader\gol.frag" />
-    <None Include="res\shader\instancedParticles.frag" />
-    <None Include="res\shader\instancedParticles.vert" />
-    <None Include="res\shader\outline.frag" />
-    <None Include="res\shader\particle.comp" />
-    <None Include="res\shader\passthru.vert" />
-    <None Include="res\shader\render.frag" />
-    <None Include="res\shader\render.geom" />
-    <None Include="res\shader\render.vert" />
-    <None Include="res\shader\renderInstanced.frag" />
-    <None Include="res\shader\renderInstanced.vert" />
-    <None Include="res\shader\colorSplash.comp" />
-    <None Include="res\shader\contour.frag" />
-    <None Include="res\shader\contour.vert" />
-    <None Include="res\shader\swarm.comp" />
-    <None Include="res\shader\swarm.frag" />
-    <None Include="res\shader\swarm.vert" />
+    <None Include="src\scenes\gameoflife\shader\gol.frag" />
+    <None Include="src\scenes\particles\shader\instancedParticles.frag" />
+    <None Include="src\scenes\particles\shader\instancedParticles.vert" />
+    <None Include="src\scenes\gameoflife\shader\outline.frag" />
+    <None Include="src\scenes\particles\shader\particle.comp" />
+    <None Include="src\scenes\gameoflife\shader\passthru.vert" />
+    <None Include="src\scenes\gameoflife\shader\renderInstanced.frag" />
+    <None Include="src\scenes\gameoflife\shader\renderInstanced.vert" />
+    <None Include="src\scenes\swarm\shader\colorSplash.comp" />
+    <None Include="src\scenes\contourlines\shader\contour.frag" />
+    <None Include="src\scenes\contourlines\shader\contour.vert" />
+    <None Include="src\scenes\swarm\shader\swarm.comp" />
+    <None Include="src\scenes\swarm\shader\swarm.frag" />
+    <None Include="src\scenes\swarm\shader\swarm.vert" />
+    <None Include="src\scenes\contourlines\shader\contourLines.frag" />
+    <None Include="src\scenes\contourlines\shader\contourLines.vert" />
+    <None Include="src\scenes\cuboid\shader\cuboids.vert" />
+    <None Include="src\scenes\cuboid\shader\cuboids.frag" />
+    <None Include="src\scenes\swarm\shader\swarmUserEnter.comp" />
+    <None Include="addons.make" />
   </ItemGroup>
 </Project>

@@ -1,0 +1,221 @@
+#version 440
+#define N_USERS 10
+
+struct Particle{
+	vec4 pos;
+	vec4 vel;
+	vec4 color;
+	vec4 unique;
+	vec4 bufferPos;
+	vec4 unique3;
+};
+layout(std140, binding=0) buffer particle{
+    Particle p[];
+};
+
+layout(std140, binding=1) buffer particleBack{
+    Particle p2[];
+};
+
+layout(std140, binding=2) buffer indices{
+	uint idx[];
+};
+
+uniform float timeLastFrame;
+uniform float elapsedTime;
+uniform vec3 attractor;
+uniform float attraction;
+uniform int use_attraction;
+uniform float cohesion;
+uniform int use_cohesion;
+uniform float repulsion;
+uniform int use_repulsion;
+uniform float max_speed;
+uniform float attr_force;
+uniform vec2 hands[N_USERS];
+uniform vec2 mouse;
+
+uniform int particleAmount;
+uniform vec3 baseColor;
+
+// repulsion
+vec3 rule1(vec3 my_pos, vec3 their_pos){
+	if(use_repulsion == 0) {
+		return vec3(0.0);
+	}
+
+	vec3 dir = my_pos-their_pos;
+	float sqd = dot(dir,dir);
+	if(sqd < 300.0*300.0){
+		return dir;
+	}
+	return vec3(0.0);
+} 
+
+// cohesion
+vec3 rule2(vec3 my_pos, vec3 their_pos, vec3 my_vel, vec3 their_vel){
+	if(use_cohesion == 0) {
+		return vec3(0.0);
+	}
+
+	vec3 d = their_pos - my_pos;
+	vec3 dv = their_vel - my_vel;
+	return dv / (dot(dv,dv) + 10.0);
+}
+
+// attraction
+vec3 rule3(vec3 my_pos, vec3 their_pos){
+	if(use_attraction == 0) {
+		return vec3(0.0);
+	}
+
+	vec3 dir = their_pos-my_pos;
+	float sqd = dot(dir,dir);
+	if(sqd == 0) {
+		return vec3(0.0);
+	}
+	if(sqd < 50.0*50.0){
+		float f = 1000000.0/sqd;
+		return normalize(dir)*f;
+	}
+	return vec3(0.0);
+}
+
+void applyMaxSpeed(float limit){
+	vec3 dir = normalize(p[gl_GlobalInvocationID.x].vel.xyz);
+	// If current velocity exeeds the max_speed, set it to max_speed
+	if(length(p[gl_GlobalInvocationID.x].vel.xyz)>limit){
+		p[gl_GlobalInvocationID.x].vel.xyz = dir * limit;
+	}
+}
+
+void calculateMovement(vec3 acc){
+	//p[gl_GlobalInvocationID.x].pos.xyz += p[gl_GlobalInvocationID.x].vel.xyz*timeLastFrame;
+	p[gl_GlobalInvocationID.x].pos.xy += p[gl_GlobalInvocationID.x].vel.xy*timeLastFrame;
+
+
+	p[gl_GlobalInvocationID.x].vel.xyz += acc*timeLastFrame;
+	p[gl_GlobalInvocationID.x].vel.xyz *= 0.99;
+}
+
+float map(float value, float min1, float max1, float min2, float max2) {
+  return min2 + (value - min1) * (max2 - min2) / (max1 - min1);
+}
+
+layout(local_size_x = 1024, local_size_y = 1, local_size_z = 1) in;
+void main(){
+	vec3 particle = p2[gl_GlobalInvocationID.x].pos.xyz;
+
+	vec3 modAttractor = attractor + vec3(0, 0, 1000);
+
+	
+
+	vec3 acc = vec3(0.0,0.0,0.0);
+	uint m = uint(particleAmount * elapsedTime);
+	uint start = m%(particleAmount -512);
+	uint end = start + 512;
+
+
+	// #####
+	// Normal Particle
+	if(p[gl_GlobalInvocationID.x].unique.x == 0) {
+		for(uint i=start;i<end;i++){
+			if(i!=gl_GlobalInvocationID.x){
+				if(p2[i].unique.x == 0) {
+					acc += rule1(particle,p2[i].pos.xyz) * repulsion;
+					acc += rule2(particle,p2[i].pos.xyz, p2[gl_GlobalInvocationID.x].vel.xyz, p2[i].vel.xyz) * cohesion;
+					acc += rule3(particle,p2[i].pos.xyz) * attraction;
+				}
+			}
+		}
+
+		vec3 attrDir = modAttractor - particle;
+		//attrDir = vec3(0);
+		//vec3 attrDir = vec3(hands[0].xy, 0.0) - particle;
+
+		acc += normalize(attrDir) * attr_force;
+		calculateMovement(acc);
+		applyMaxSpeed(max_speed);
+	}
+
+
+	// #####
+	// User specific Particle
+	if(p[gl_GlobalInvocationID.x].unique.x == 1) {
+		for(uint i=start;i<end;i++){
+			if((i!=gl_GlobalInvocationID.x) && (p2[i].unique.x == 1)){
+				acc += rule1(particle,p2[i].pos.xyz) * 1.5;
+			}
+		}
+
+		modAttractor.z = 500;
+		vec3 attrDir = modAttractor - particle;
+		float sqd = dot(attrDir,attrDir);
+
+		if(sqd == 0) {
+			return;
+		}
+		if(sqd > 30.0 * 30.0) {
+			p[gl_GlobalInvocationID.x].bufferPos.xyz += normalize(attrDir) * 40;
+		}
+
+		acc += normalize(attrDir)* 450;
+
+		p[gl_GlobalInvocationID.x].bufferPos.xyz += p[gl_GlobalInvocationID.x].vel.xyz*timeLastFrame;
+		p[gl_GlobalInvocationID.x].pos.xyz = p[gl_GlobalInvocationID.x].bufferPos.xyz + modAttractor;	
+		p[gl_GlobalInvocationID.x].vel.xyz += acc*timeLastFrame;
+		p[gl_GlobalInvocationID.x].vel.xyz *= 0.99;
+		applyMaxSpeed(500);
+	}
+	
+	
+	if(p[gl_GlobalInvocationID.x].unique.x == 1) {
+		p[gl_GlobalInvocationID.x].color.r = 0.0;
+		p[gl_GlobalInvocationID.x].color.b = 1.0;
+	}
+
+	// Set Transparency depending on how far away the particle is
+	float depth = clamp(p[gl_GlobalInvocationID.x].pos.z, -500, 500);
+	float alpha = 0.05 + (depth + 500) / 1000 * 0.9;
+	p[gl_GlobalInvocationID.x].color.a = alpha;
+
+
+	if(use_cohesion == 0) {
+		p[gl_GlobalInvocationID.x].color.b = 0;
+	} else {
+		p[gl_GlobalInvocationID.x].color.b = 1;
+	}
+
+	//p[gl_GlobalInvocationID.x].color.b = 1-alpha;
+	//p[gl_GlobalInvocationID.x].color.g = 1-alpha;
+	
+	//p[gl_GlobalInvocationID.x].color.rgb = baseColor;
+	
+	// if(p[gl_GlobalInvocationID.x].pos.z < 0) {
+	// 	p[gl_GlobalInvocationID.x].color.rgb = vec3(1.0f, 0.0f, 0.0f);
+	// }
+	// else {
+	// 	p[gl_GlobalInvocationID.x].color.rgb = vec3(0.0f, 0.0f, 1.0f);
+	// }
+	
+}
+
+void calculateAttraction(vec3 particle){
+	int radius = 100;
+	vec3 modAttractor = vec3(0.0, 0.0, 1000);
+	for(int i = 0; i < N_USERS; i++) {
+		vec2 hand = hands[i].xy;
+		if(hand != vec2(0.0)) {
+			float dist = distance(particle.xy, hand);
+			float influence = map(dist, radius, 0.0, 0.0, 1.0);
+			//modAttractor.xy += (hand - particle.xy) * influence;
+		}
+	}
+
+	// Mouse also interacts
+	float dist = distance(particle.xy, attractor.xy);
+	float influence = map(dist, radius, 0.0, 0.0, 1.0);
+	modAttractor.xy += (attractor.xy - particle.xy) * influence;
+	
+	modAttractor = vec3(hands[0].x, hands[0].y, 1000);
+}

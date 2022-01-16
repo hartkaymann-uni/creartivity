@@ -4,11 +4,11 @@ ParticleScene::ParticleScene( int n_particles ) : ccScene( "Particles" ) {}
 
 //--------------------------------------------------------------
 void ParticleScene::setup() {
-	filesystem::path res_path( "../../res/" );
-	compute.setupShaderFromFile( GL_COMPUTE_SHADER, res_path / "shader/particle.comp" );
+	filesystem::path shader_path = getShaderPath();
+	compute.setupShaderFromFile( GL_COMPUTE_SHADER, shader_path / "shader/particle.comp" );
 	bool linked = compute.linkProgram();
 
-	bool renderLinked = renderShader.load( res_path / "shader/instancedParticles.vert", res_path / "shader/instancedParticles.frag" );
+	bool renderLinked = renderShader.load( shader_path / "shader/instancedParticles.vert", shader_path / "shader/instancedParticles.frag" );
 
 	particles.resize( 1024 * 8 * 1 );
 	int i = 0;
@@ -38,7 +38,6 @@ void ParticleScene::setup() {
 	m_MaxSpeed.set( "u_MaxSpeed", 2500, 0, 5000 );
 	m_DeltaNoiseShift.set( "Noise Shift", 0.001, 0.0, 1.0 );
 
-	gui.setup();
 	m_ShaderUniforms.setName( "Shader Parameters" );
 	m_ShaderUniforms.add( m_MaxSpeed );
 	gui.add( m_ShaderUniforms );

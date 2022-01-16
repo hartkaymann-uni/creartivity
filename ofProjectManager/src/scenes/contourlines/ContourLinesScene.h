@@ -3,6 +3,7 @@
 
 #include "ccScene.h"
 
+#include "ofxGui.h"
 
 class ContourLinesScene :public ccScene
 {
@@ -28,13 +29,17 @@ private:
 
 	ofShader contourLineShader;
 
+	ofEasyCam camera;
+
 	ofMesh mesh;
 
 	ofParameterGroup shaderUniforms;
 	ofParameter<float> speed;
 	ofParameter<float> scale;
 	ofParameter<float> amplitude;
-	ofParameter<int> radius;
+	ofParameter<float> radius;
+	ofParameter<float> thickness;
+	ofParameter<float> limit;
 
 	int meshWidth, meshHeight;
 	float time;
@@ -42,3 +47,4 @@ private:
 	int count;
 
 };
+
