@@ -115,18 +115,18 @@ float map(float value, float min1, float max1, float min2, float max2) {
 
 
 vec4 applyBlink(vec4 my_color, float depth) {
-	float blinkDuration = 5;
+	float blinkDuration = 2;
 	float val = mod(elapsedTime, blinkDuration);
 	float percentage = val / blinkDuration;
 
-	uint blinkRange = 2000;
+	uint blinkRange = 1000;
 	float maxBlinkIntensity = (1-percentage) * (max_particle_depth + blinkRange * 2)  - blinkRange;
 	if(use_attraction == 1) {
 		float diff = 1-(abs(depth - maxBlinkIntensity) / blinkRange);
-		if(diff <= 1) {
+		if(diff >= 0) {
 			my_color.a += diff * 0.3f;
-			//my_color.rgb += vec3(diff) * 0.3f;
-			my_color.rgb += vec3(10);
+			my_color.rgb += vec3(diff) * 0.3f;
+			//my_color.rgb += vec3(10);
 		}
 	}
 
