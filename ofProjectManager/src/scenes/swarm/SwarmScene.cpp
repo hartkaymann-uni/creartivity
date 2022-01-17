@@ -8,19 +8,21 @@ SwarmScene::SwarmScene() : ccScene("Swarm") {
 
 //--------------------------------------------------------------
 void SwarmScene::setup() {
+	camera.setFarClip(ofGetWidth() * 100);
 	ofShowCursor();
 	particleGroups = 400;
+	maxParticleDepth = 10000;
 	particleAmount = 1024 * particleGroups;
 
 
 
 	particles.resize(std::max(particleAmount, 1024));
 	int i = 0;
-	float step = (10000.0f / particleAmount);
+	float step = (maxParticleDepth / (float) particleAmount);
 	for (auto& p : particles) {
 		p.pos.x = ofRandom(0, 1000);
 		p.pos.y = ofRandom(0, 1000);
-		p.pos.z = ofRandom(-10000, 0);
+		p.pos.z = ofRandom(-maxParticleDepth, 0);
 		p.pos.w = 1;
 
 		p.vel = { 0,0,0,0 };
@@ -71,7 +73,9 @@ void SwarmScene::setup() {
 	shaderUniforms.add(maxSpeed.set("max_speed", 500, 0, 5000));
 	shaderUniforms.add(attractorForce.set("attr_force", 2000, 0, 5000));
 	shaderUniforms.add(ruleIterationMod.set("rule_iteration_mod", particleGroups, 0, particleGroups));
-	shaderUniforms.add(only2D.set("only_2d", true));
+	shaderUniforms.add(particleColorStart.set("particle_color_start", glm::vec3(1,1,1), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1)));
+	shaderUniforms.add(particleColorEnd.set("particle_color_end", glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1)));
+	shaderUniforms.add(freezeParticles.set("freeze_particles", false));
 	gui.add(shaderUniforms);
 	gui.add(fps.set("fps", 60, 0, 60));
 
@@ -86,14 +90,14 @@ void SwarmScene::InitSequences() {
 	currentSequenceIndex = 100;
 	nextSequenceTime = ofGetElapsedTimef() + 2;
 	currentSequenceType = SequenceType::NormalAttraction;
-	sequences.push_back(ParameterSequence(20, SequenceType::BrainNeurons));
-	sequences.push_back(ParameterSequence(7, SequenceType::BlackHole, 10000));
-	sequences.push_back(ParameterSequence(0.1f, SequenceType::Explosion));
-	sequences.push_back(ParameterSequence(6, SequenceType::RepulsionStutter));
-	sequences.push_back(ParameterSequence(5, SequenceType::NormalAttraction));
-	sequences.push_back(ParameterSequence(20, SequenceType::BrainNeurons));
-	sequences.push_back(ParameterSequence(15, SequenceType::Swarm));
-	sequences.push_back(ParameterSequence(7, SequenceType::BlackHole));
+	sequences.push_back(ParameterSequence(16, SequenceType::BrainNeurons));
+	sequences.push_back(ParameterSequence(7, SequenceType::BlackHole, 5));
+	sequences.push_back(ParameterSequence(4, SequenceType::Explosion));
+	sequences.push_back(ParameterSequence(0.1f, SequenceType::NormalAttraction));
+	sequences.push_back(ParameterSequence(16, SequenceType::BrainNeurons));
+	sequences.push_back(ParameterSequence(10, SequenceType::Swarm));
+	sequences.push_back(ParameterSequence(5, SequenceType::RepulsionStutter));
+	sequences.push_back(ParameterSequence(7, SequenceType::BlackHole, 3));
 	StartSequence();
 }
 
@@ -146,11 +150,12 @@ void SwarmScene::update() {
 	compute.setUniform1i("use_attraction", (UseAttraction.get() ? 1 : 0));
 	compute.setUniform1i("use_cohesion", (UseCohesion.get() ? 1 : 0));
 	compute.setUniform1i("use_repulsion", (UseRepulsion.get() ? 1 : 0));
-	compute.setUniform1i("only_2d", (only2D.get() ? 1 : 0));
+	compute.setUniform1i("freeze_particles", (freezeParticles.get() ? 1 : 0));
 	compute.setUniform1f("timeLastFrame", ofGetLastFrameTime());
 	compute.setUniform1f("elapsedTime", ofGetElapsedTimef());
 	//compute.setUniform1i("particleAmount", particleAmount);
 	compute.setUniform1i("particleAmount", ruleIterationMod * 1024);
+	compute.setUniform1i("max_particle_depth", maxParticleDepth);
 	float size = 4;
 	/*atractor3 = {ofMap(ofNoise(ofGetElapsedTimef()*0.9+0.1),0,1,-ofGetWidth()*size,ofGetWidth()*size),
 				ofMap(ofNoise(ofGetElapsedTimef()*0.9+0.5),0,1,-ofGetHeight()*size,ofGetHeight()*size),
@@ -160,8 +165,6 @@ void SwarmScene::update() {
 	compute.setUniform3f("attractor", atractor.x, atractor.y, atractor.z);
 	compute.setUniform2fv("hands", &user_positions[0].x, sizeof(ofVec2f) * 10);
 	compute.setUniform2f("mouse", (float)ofGetMouseX(), (float)ofGetMouseY());
-
-	compute.setUniform3f("baseColor", 0.0, 0.0, 0.0);
 
 	// since each work group has a local_size of 1024 (this is defined in the shader)
 	// we only have to issue 1 / 1024 workgroups to cover the full workload.
@@ -192,6 +195,7 @@ void SwarmScene::draw() {
 
 	particleShader.begin();
 
+	particleShader.setUniform1i("max_particle_depth", maxParticleDepth);
 	particleShader.setUniform1f("alphaMod", 1.0);
 	particleShader.setUniform1f("pointSize", 2);
 	glPointSize(2);
@@ -380,7 +384,7 @@ void SwarmScene::StartSequence() {
 		break;
 	case SequenceType::NormalAttraction:
 		attractionCoeff.set(attractionCoeff.getMin());
-		attractorForce.set(2500);
+		attractorForce.set(3500);
 		repulsionCoeff.set(0.1f);
 		maxSpeed.set(500);
 		break;
@@ -403,8 +407,8 @@ void SwarmScene::StartSequence() {
 
 //--------------------------------------------------------------
 void SwarmScene::ActivateRules() {
-	UseAttraction.set(true);
-	UseCohesion.set(true);
+	//UseAttraction.set(true);
+	//UseCohesion.set(true);
 	UseRepulsion.set(true);
 }
 
@@ -432,7 +436,7 @@ void SwarmScene::UpdateParameters() {
 	case SequenceType::BrainNeurons:
 	{
 		float diff = currentTime - lastSequenceTime;
-		float newSpeed = maxSpeed.getMax() - 250 * diff;
+		float newSpeed = maxSpeed.getMax() - 200 * diff;
 		newSpeed = std::max(newSpeed, 1500.0f);
 		maxSpeed.set(newSpeed);
 		break;

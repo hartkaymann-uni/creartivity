@@ -32,7 +32,7 @@ void main(){
 	if(p[gl_GlobalInvocationID.x].unique.x == 0) {
 		if(gl_GlobalInvocationID.x >= range.x && gl_GlobalInvocationID.x < range.y) {
 			p[gl_GlobalInvocationID.x].unique.x = 1;
-			p[gl_GlobalInvocationID.x].unique.y = user;
+			p[gl_GlobalInvocationID.x].unique.z = user;
 			p[gl_GlobalInvocationID.x].color.rgb = color;
 		}
 	}
