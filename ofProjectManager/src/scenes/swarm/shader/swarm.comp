@@ -40,9 +40,11 @@ uniform float attr_force;
 uniform vec2 hands[N_USERS];
 uniform vec2 mouse;
 
-uniform int only_2d;
+uniform int freeze_particles;
 uniform int particleAmount;
-uniform vec3 baseColor;
+uniform int max_particle_depth;
+uniform vec3 particle_color_start;
+uniform vec3 particle_color_end;
 
 // repulsion
 vec3 rule1(vec3 my_pos, vec3 their_pos){
@@ -96,7 +98,7 @@ void applyMaxSpeed(float limit){
 }
 
 void calculateMovement(vec3 acc){
-	if(only_2d == 0) {
+	if(freeze_particles == 1) {
 		return;
 	}
 	//p[gl_GlobalInvocationID.x].pos.xyz += p[gl_GlobalInvocationID.x].vel.xyz*timeLastFrame;
@@ -109,6 +111,43 @@ void calculateMovement(vec3 acc){
 
 float map(float value, float min1, float max1, float min2, float max2) {
   return min2 + (value - min1) * (max2 - min2) / (max1 - min1);
+}
+
+
+vec4 applyBlink(vec4 my_color, float depth) {
+	float blinkDuration = 2;
+	float val = mod(elapsedTime, blinkDuration);
+	float percentage = val / blinkDuration;
+
+	uint blinkRange = 1000;
+	float maxBlinkIntensity = (1-percentage) * (max_particle_depth + blinkRange * 2)  - blinkRange;
+	if(use_attraction == 1) {
+		float diff = 1-(abs(depth - maxBlinkIntensity) / blinkRange);
+		if(diff >= 0) {
+			my_color.a += diff * 0.3f;
+			my_color.rgb += vec3(diff) * 0.3f;
+			//my_color.rgb += vec3(10);
+		}
+	}
+
+	return my_color;
+}
+
+vec4 calculateColor(vec3 my_pos) {
+	vec4 newColor = vec4(1);
+
+	float depth = abs(clamp(my_pos.z, -max_particle_depth, 0));
+	float depthPercentage = (depth/max_particle_depth);
+
+	// Set Transparency depending on how far away the particle is
+	newColor.a =  0.05 + (1 - depthPercentage) * 0.95 * 0.05;
+
+	vec3 colorDiff = particle_color_start - particle_color_end;
+	newColor.rgb = particle_color_start.rgb - (colorDiff.rgb * depthPercentage);
+
+	newColor = applyBlink(newColor, depth);
+
+	return newColor;
 }
 
 layout(local_size_x = 1024, local_size_y = 1, local_size_z = 1) in;
@@ -177,33 +216,7 @@ void main(){
 		applyMaxSpeed(500);
 	}
 	
-	
-	if(p[gl_GlobalInvocationID.x].unique.x == 1) {
-		p[gl_GlobalInvocationID.x].color.r = 0.0;
-		p[gl_GlobalInvocationID.x].color.b = 1.0;
-	}
-
-	// Set Transparency depending on how far away the particle is
-	float depth2 = clamp(p[gl_GlobalInvocationID.x].pos.z, -500, 0);
-	// float alpha2 = 0.05 + (depth2 + 500) / 1000 * 0.9;
-	// p[gl_GlobalInvocationID.x].color.a = alpha2;
-
-
-	int maxDepth = 10000;
-	float depth = abs(clamp(p[gl_GlobalInvocationID.x].pos.z, -maxDepth, 0));
-	float depthPercentage = (depth/maxDepth);
-
-	//p[gl_GlobalInvocationID.x].color.a = 0.05 + (1 - depth2/maxDepth) * 0.2;
-	p[gl_GlobalInvocationID.x].color.a =  0.05 + (1 - depthPercentage) * 0.95 * 0.05;
-	if(use_attraction == 0) {
-		p[gl_GlobalInvocationID.x].color.a = 1;
-	}
-	
-	p[gl_GlobalInvocationID.x].color.rgb = vec3(1);
-	p[gl_GlobalInvocationID.x].color.r -= depthPercentage;
-	p[gl_GlobalInvocationID.x].color.g -= depthPercentage;
-	
-	//p[gl_GlobalInvocationID.x].color.rgb = baseColor;
+	p[gl_GlobalInvocationID.x].color = calculateColor(particle);
 
 
 	int index = int(p[gl_GlobalInvocationID.x].unique.y);
