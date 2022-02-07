@@ -4,6 +4,8 @@
 
 #include "ofxUbo.h"
 
+#include <map>
+
 struct pingPongBuffer {
 public:
 	void allocate( int _width, int _height, int _internalformat = GL_RGBA ) {
@@ -63,6 +65,7 @@ public:
 private:
 	int n_cells_x;
 	int n_cells_y;
+	float cellOffset;
 
 	float time;
 
@@ -88,8 +91,26 @@ private:
 	bool mouseIsDown;
 	ofVec3f mousePosition;
 
-	float cellOffset;
-
-	void allocateCellBuffer(int rows, int cols);
 	float calculateSphereRadius( ofVec2f dim );
+	void allocateCellBuffer( int rows, int cols );
+
+	void initSequences();
+	void updateParameters();
+
+	enum Sequence {
+		Default,
+		NoJiggle,
+		BigCells,
+		SmallCells,
+		FastEvolution,
+		NUM_SEQ
+	};
+
+	// Variables for sequences
+	Sequence lastSequene;
+	Sequence currentSequence;
+	float lastSequenceTime;
+	float sequenceDuration = 5.0;
+	float sequenceTransitionDuration = 3.0;
+	map<Sequence, vector<float>> sequenceMap;
 };
