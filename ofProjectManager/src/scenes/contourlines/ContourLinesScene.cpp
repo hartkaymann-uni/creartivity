@@ -10,8 +10,6 @@ count( 0 )
 
 void ContourLinesScene::setup()
 {
-	ofSetFrameRate( 60 );
-
 	// Load Shader
 	filesystem::path shader_path = getShaderPath();
 	bool shadersloaded = contourLineShader.load( shader_path / "contour.vert", shader_path / "contour.frag" );
