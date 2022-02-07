@@ -4,10 +4,9 @@
 
 //--------------------------------------------------------------
 void ofApp::setup() {
-	ofSetVerticalSync( true );
 	ofBackground( 0 );
 
-	ofSetFrameRate( 144 );
+	ofSetFrameRate( 60 );
 	ofSetVerticalSync( false );
 
 	transformer.setRenderSize( 1024, 768 );
