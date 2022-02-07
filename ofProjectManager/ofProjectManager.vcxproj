@@ -184,6 +184,7 @@
     <PostBuildEvent />
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\ccUser.cpp" />
     <ClCompile Include="src\scenes\contourlines\ContourLinesScene.cpp" />
     <ClCompile Include="src\scenes\cuboid\CuboidScene.cpp" />
     <ClCompile Include="src\scenes\gameoflife\GameOfLifeScene.cpp" />
@@ -227,6 +228,7 @@
     <ClCompile Include="src\scenes\swarm\SwarmScene.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\ccUser.h" />
     <ClInclude Include="src\scenes\contourlines\ContourLinesScene.h" />
     <ClInclude Include="src\scenes\cuboid\CuboidScene.h" />
     <ClInclude Include="src\scenes\gameoflife\GameOfLifeScene.h" />

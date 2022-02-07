@@ -116,6 +116,7 @@
     <ClCompile Include="src\scenes\swarm\SwarmScene.cpp" />
     <ClCompile Include="src\scenes\particles\ParticleScene.cpp" />
     <ClCompile Include="src\scenes\spiral\SpiralScene.cpp" />
+    <ClCompile Include="src\ccUser.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -328,6 +329,7 @@
     <ClInclude Include="src\scenes\swarm\SwarmScene.h" />
     <ClInclude Include="src\scenes\particles\ParticleScene.h" />
     <ClInclude Include="src\scenes\spiral\SpiralScene.h" />
+    <ClInclude Include="src\ccUser.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="icon.rc" />
