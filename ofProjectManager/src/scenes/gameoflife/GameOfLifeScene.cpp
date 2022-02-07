@@ -33,7 +33,7 @@ void GameOfLifeScene::setup()
 	mouseRadius.set( "mouseRad", 5, 0, 10 );
 	mouseStrength.set( "mouseStr", 0.1, 0.0, 1.0 );
 	jiggleFactor.set( "jiggle", 1.0, 0.0, 10.0 );
-	fluctuateParameters.set( "fluctuate", true );
+	fluctuateParameters.set( "fluctuate", false );
 
 	sphereResolution.addListener( this, &GameOfLifeScene::handleSphereResolutionChanged );
 	dimensions.addListener( this, &GameOfLifeScene::handleDimensionsChanged );
@@ -44,7 +44,7 @@ void GameOfLifeScene::setup()
 	shaderUniforms.add( jiggleFactor );
 	shaderUniforms.add( mouseRadius );
 	shaderUniforms.add( mouseStrength );
-	//shaderUniforms.add( dataSrcSize );
+	shaderUniforms.add( dataSrcSize );
 
 	gui.add( shaderUniforms );
 	gui.add( sphereResolution );
@@ -202,7 +202,7 @@ void GameOfLifeScene::draw()
 	camera.end();
 
 	// Draw overlay
-	//cellPingPong.dst->draw( 0, 0, width / (10 - dataSrcSize), height / (10 - dataSrcSize) );
+	cellPingPong.dst->draw( 0, 0, width / (10 - dataSrcSize), height / (10 - dataSrcSize) );
 
 	//ofDrawBitmapString( receiver->getConnectionStatus(), 10, ofGetHeight() - 20 );
 
