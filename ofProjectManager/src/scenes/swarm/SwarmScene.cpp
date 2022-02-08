@@ -215,9 +215,9 @@ void SwarmScene::draw() {
 
 	//ofEnableBlendMode(OF_BLENDMODE_ADD);
 	ofFill();
-	ofSetColor(ofColor::red);
-	ofDrawRectangle(ofVec2f(user_positions[0].x, user_positions[0].y), 20, 20);
-	ofDrawRectangle(mousePosition, 20, 20);
+	//ofSetColor(ofColor::red);
+	//ofDrawRectangle(ofVec2f(user_positions[0].x, user_positions[0].y), 20, 20);
+	//ofDrawRectangle(mousePosition, 20, 20);
 	ofSetColor(255);
 }
 
