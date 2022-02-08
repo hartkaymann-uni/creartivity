@@ -164,6 +164,7 @@ void SwarmScene::update() {
 
 	compute.setUniform3f("attractor", atractor.x, atractor.y, atractor.z);
 	compute.setUniform2fv("hands", &user_positions[0].x, sizeof(ofVec2f) * 10);
+	compute.setUniform2fv("hands", &user_positions[0].x, sizeof(ofVec2f) * 10);
 	compute.setUniform2f("mouse", (float)ofGetMouseX(), (float)ofGetMouseY());
 
 	// since each work group has a local_size of 1024 (this is defined in the shader)
