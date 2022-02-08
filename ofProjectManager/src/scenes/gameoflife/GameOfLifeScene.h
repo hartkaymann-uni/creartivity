@@ -4,6 +4,8 @@
 
 #include "ofxUbo.h"
 
+#include <map>
+
 struct pingPongBuffer {
 public:
 	void allocate( int _width, int _height, int _internalformat = GL_RGBA ) {
@@ -56,13 +58,15 @@ public:
 	void mousePressed( int x, int y, int button );
 	void mouseReleased( int x, int y, int button );
 	void mouseDragged( int x, int y, int button );
-
+	void windowResized( int w, int h );
+	
 	void handleSphereResolutionChanged( int& sphereRes );
 	void handleDimensionsChanged( ofVec2f& value );
 
 private:
 	int n_cells_x;
 	int n_cells_y;
+	float cellOffset;
 
 	float time;
 
@@ -83,13 +87,32 @@ private:
 	ofParameter<float> mouseRadius;
 	ofParameter<float> mouseStrength;
 	ofParameter<float> jiggleFactor;
-	ofParameter<bool> fluctuateParameters;
+	ofParameter<bool> runSequences;
 
 	bool mouseIsDown;
 	ofVec3f mousePosition;
 
-	float cellOffset;
-
-	void allocateCellBuffer(int rows, int cols);
 	float calculateSphereRadius( ofVec2f dim );
+	void allocateCellBuffer( int rows, int cols );
+
+	void initSequences();
+	void updateSequence();
+	void updateParameters();
+
+	enum Sequence {
+		Default,
+		NoJiggle,
+		BigCells,
+		SmallCells,
+		FastEvolution,
+		NUM_SEQ
+	};
+
+	// Variables for sequences
+	Sequence lastSequene;
+	Sequence currentSequence;
+	float lastSequenceTime;
+	float sequenceDuration = 10.0;
+	float sequenceTransitionDuration = 3.0;
+	map<Sequence, vector<float>> sequenceMap;
 };
