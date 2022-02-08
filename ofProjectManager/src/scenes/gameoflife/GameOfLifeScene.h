@@ -58,7 +58,8 @@ public:
 	void mousePressed( int x, int y, int button );
 	void mouseReleased( int x, int y, int button );
 	void mouseDragged( int x, int y, int button );
-
+	void windowResized( int w, int h );
+	
 	void handleSphereResolutionChanged( int& sphereRes );
 	void handleDimensionsChanged( ofVec2f& value );
 
@@ -86,7 +87,7 @@ private:
 	ofParameter<float> mouseRadius;
 	ofParameter<float> mouseStrength;
 	ofParameter<float> jiggleFactor;
-	ofParameter<bool> fluctuateParameters;
+	ofParameter<bool> runSequences;
 
 	bool mouseIsDown;
 	ofVec3f mousePosition;
@@ -95,6 +96,7 @@ private:
 	void allocateCellBuffer( int rows, int cols );
 
 	void initSequences();
+	void updateSequence();
 	void updateParameters();
 
 	enum Sequence {
@@ -110,7 +112,7 @@ private:
 	Sequence lastSequene;
 	Sequence currentSequence;
 	float lastSequenceTime;
-	float sequenceDuration = 5.0;
+	float sequenceDuration = 10.0;
 	float sequenceTransitionDuration = 3.0;
 	map<Sequence, vector<float>> sequenceMap;
 };
