@@ -73,8 +73,8 @@ void SwarmScene::setup() {
 	shaderUniforms.add(maxSpeed.set("max_speed", 500, 0, 5000));
 	shaderUniforms.add(attractorForce.set("attr_force", 2000, 0, 5000));
 	shaderUniforms.add(ruleIterationMod.set("rule_iteration_mod", particleGroups, 0, particleGroups));
-	shaderUniforms.add(particleColorStart.set("particle_color_start", glm::vec3(1,1,1), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1)));
-	shaderUniforms.add(particleColorEnd.set("particle_color_end", glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1)));
+	shaderUniforms.add(particleColorStart.set("particle_color_start", glm::vec3(0.1, 0.1, 0.1), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1)));
+	shaderUniforms.add(particleColorEnd.set("particle_color_end", glm::vec3(0.75, 0.75, 0.75), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1)));
 	shaderUniforms.add(freezeParticles.set("freeze_particles", false));
 	gui.add(shaderUniforms);
 	gui.add(fps.set("fps", 60, 0, 60));
