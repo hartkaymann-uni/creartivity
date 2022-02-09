@@ -17,12 +17,16 @@ GameOfLifeScene::GameOfLifeScene( int cells_x, int cells_y )
 	bool load3 = outlineShader.load( shader_path / "renderInstanced.vert", shader_path / "outline.frag" );
 }
 
-
+///////////
+// Setup //
+///////////
 void GameOfLifeScene::setup()
 {
 	allocateCellBuffer( n_cells_x, n_cells_y );
 
 	cellOffset = calculateSphereRadius( ofVec2f( n_cells_x, n_cells_y ) );
+
+	initSequences();
 
 	// Set all Parameters once
 	dimensions.set( "dimensions", ofVec2f( n_cells_x, n_cells_y ), ofVec2f( 1.0, 1.0 ), ofVec2f( n_cells_x * 10.0, n_cells_y * 10.0 ) );
@@ -33,7 +37,7 @@ void GameOfLifeScene::setup()
 	mouseRadius.set( "mouseRad", 5, 0, 10 );
 	mouseStrength.set( "mouseStr", 0.1, 0.0, 1.0 );
 	jiggleFactor.set( "jiggle", 1.0, 0.0, 10.0 );
-	fluctuateParameters.set( "fluctuate", false );
+	runSequences.set( "Run sequences", true );
 
 	sphereResolution.addListener( this, &GameOfLifeScene::handleSphereResolutionChanged );
 	dimensions.addListener( this, &GameOfLifeScene::handleDimensionsChanged );
@@ -48,7 +52,7 @@ void GameOfLifeScene::setup()
 
 	gui.add( shaderUniforms );
 	gui.add( sphereResolution );
-	gui.add( fluctuateParameters );
+	gui.add( runSequences );
 	gui.add( dimensions );
 	gui.setPosition( width - gui.getWidth() - 10, height - gui.getHeight() - 10 );
 
@@ -78,19 +82,36 @@ void GameOfLifeScene::allocateCellBuffer( int rows, int cols ) {
 }
 
 
+void GameOfLifeScene::initSequences()
+{
+	lastSequene = Sequence::Default;
+	currentSequence = Sequence::Default;
+	lastSequenceTime = time;
+
+	// Standart
+	sequenceMap.insert( pair<GameOfLifeScene::Sequence, vector<float>>( Sequence::Default, { 0.05, cellOffset, 1.0 } ) );
+	// No Jiggle
+	sequenceMap.insert( pair<GameOfLifeScene::Sequence, vector<float>>( Sequence::NoJiggle, { 0.05, cellOffset, 0.0 } ) );
+	// Big cells
+	sequenceMap.insert( pair<GameOfLifeScene::Sequence, vector<float>>( Sequence::BigCells, { 0.03, cellOffset * 4.f, 3.0 } ) );
+	// Small cell
+	sequenceMap.insert( pair<GameOfLifeScene::Sequence, vector<float>>( Sequence::SmallCells, { 0.075, cellOffset * .5f, 0.5 } ) );
+	// Fast evolution
+	sequenceMap.insert( pair<GameOfLifeScene::Sequence, vector<float>>( Sequence::FastEvolution, { 0.15, cellOffset, 2.0 } ) );
+}
+
+////////////
+// Update //
+////////////
 void GameOfLifeScene::update()
 {
 	time = ofGetElapsedTimef();
 
 	updateUserPositions();
+	updateSequence();
+	updateParameters();
 
-	// Gradually change parameters
-	if (fluctuateParameters.get()) {
-		randomizeFloatParameter( evolutionFactor );
-		randomizeFloatParameter( sphereRadius );
-		randomizeFloatParameter( jiggleFactor );
-	}
-
+	// Main logic
 	cellPingPong.dst->begin();
 	ofClear( 0 );
 	updateCells.begin();
@@ -108,23 +129,50 @@ void GameOfLifeScene::update()
 
 	updateCells.end();
 
+	// Ping pong
 	cellPingPong.dst->end();
 	cellPingPong.swap();
-
-	//std::cout << camera.getPosition() << std::endl;
 }
 
+// Handles sequence changes
+void GameOfLifeScene::updateSequence() {
+	if (!runSequences)
+		return;
+
+	// Change sequences periodically
+	if (time - lastSequenceTime > sequenceDuration) {
+
+		lastSequene = currentSequence;
+		currentSequence = static_cast<Sequence>(rand() % NUM_SEQ);
+
+		cout << "Chaning Sequence! Current Sequence: " << currentSequence << endl;
+
+		lastSequenceTime = time;
+	}
+}
+
+// Updates parameters e.g. after sequence change
+void GameOfLifeScene::updateParameters() {
+	if (time - lastSequenceTime <= sequenceTransitionDuration)
+	{
+
+		float timeSinceSequenceChange = time - lastSequenceTime;
+		evolutionFactor.set( ofMap( timeSinceSequenceChange, 0.0, sequenceTransitionDuration, sequenceMap.at( lastSequene )[0], sequenceMap.at( currentSequence )[0] ) );
+		sphereRadius.set( ofMap( timeSinceSequenceChange, 0.0, sequenceTransitionDuration, sequenceMap.at( lastSequene )[1], sequenceMap.at( currentSequence )[1] ) );
+		jiggleFactor.set( ofMap( timeSinceSequenceChange, 0.0, sequenceTransitionDuration, sequenceMap.at( lastSequene )[2], sequenceMap.at( currentSequence )[2] ) );
+	}
+}
+
+///////////////
+// Rendering //
+///////////////
 void GameOfLifeScene::draw()
 {
 	ofBackground( 0 );
 
 	ofPushStyle();
 
-	//ofSetColor( 100, 255, 255 );
-
 	camera.begin();
-	//glEnable( GL_CULL_FACE );
-	//glCullFace( GL_BACK );
 
 	// Draw outlines with stencil testing
 	glEnable( GL_STENCIL_TEST );
@@ -171,7 +219,6 @@ void GameOfLifeScene::draw()
 
 	outlineShader.end();
 
-	//glDisable( GL_CULL_FACE );
 	ofEnableAlphaBlending();
 
 	ofPopStyle();
@@ -202,10 +249,12 @@ void GameOfLifeScene::draw()
 	camera.end();
 
 	// Draw overlay
-	cellPingPong.dst->draw( 0, 0, width / (10 - dataSrcSize), height / (10 - dataSrcSize) );
+	if (dataSrcSize > 0)
+	{
+		cellPingPong.dst->draw( 0, 0, width / (10 - dataSrcSize), height / (10 - dataSrcSize) );
+	}
 
-	//ofDrawBitmapString( receiver->getConnectionStatus(), 10, ofGetHeight() - 20 );
-
+	ofDrawBitmapString( receiver->getConnectionStatus(), 10, ofGetHeight() - 20 );
 }
 
 void GameOfLifeScene::reset()
@@ -214,6 +263,9 @@ void GameOfLifeScene::reset()
 	ofResetElapsedTimeCounter();
 }
 
+///////////////////////
+// Function Handlers //
+///////////////////////
 void GameOfLifeScene::handleSphereResolutionChanged( int& val )
 {
 	ofSpherePrimitive sphere;
@@ -239,6 +291,9 @@ float GameOfLifeScene::calculateSphereRadius( ofVec2f dim ) {
 	return std::min( (float)width / (float)dim.x, (float)height / (float)dim.y );
 }
 
+//////////////////
+// Input Events //
+//////////////////
 void GameOfLifeScene::keyPressed( int key ) {
 
 	// std::cout << key << std::endl;
@@ -276,3 +331,12 @@ void GameOfLifeScene::mouseDragged( int x, int y, int button )
 	if (mouseIsDown)
 		mousePosition.set( getProjectedPosition( ofVec3f( x, y, 0.0 ) ) );
 }
+
+void GameOfLifeScene::windowResized( int w, int h ) {
+	width = ofGetWidth();
+	height = ofGetHeight();
+
+	ofVec2f dim = dimensions.get();
+	handleDimensionsChanged( dim );
+}
+

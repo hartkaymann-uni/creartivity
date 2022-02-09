@@ -23,7 +23,7 @@ void ofApp::setup() {
 	sceneManager.setup( true ); // Setup all scenes now
 	ofSetLogLevel( "ofxScenemanager", OF_LOG_VERBOSE );
 
-	sceneManager.gotoScene( "Swarm", true );
+	sceneManager.gotoScene( "GameOfLife", true );
 	lastScene = sceneManager.getCurrentSceneIndex();
 	sceneManager.setOverlap( false );
 
@@ -81,24 +81,8 @@ void ofApp::keyPressed( int key ) {
 		bDebug = !bDebug;
 		break;
 
-	case 'a':
-		transformer.setAspect( !transformer.getAspect() );
-		break;
-
 	case 'c':
-		transformer.setCentering( !transformer.getCentering() );
-		break;
-
-	case 'm':
-		transformer.setMirrorX( !transformer.getMirrorX() );
-		break;
-
-	case 'n':
-		transformer.setMirrorY( !transformer.getMirrorY() );
-		break;
-
-	case 'q':
-		transformer.setWarp( !transformer.getWarp() );
+		ofShowCursor;
 		break;
 
 	case 'f':
