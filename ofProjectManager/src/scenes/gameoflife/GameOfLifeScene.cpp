@@ -12,7 +12,7 @@ GameOfLifeScene::GameOfLifeScene( int cells_x, int cells_y )
 {
 	// Load Shaders
 	filesystem::path shader_path = getShaderPath();
-	bool load1 = updateCells.load( shader_path / "passthru.vert", shader_path / "gol.frag" );
+	bool load1 = logicShader.load( shader_path / "passthru.vert", shader_path / "gol.frag" );
 	bool load2 = instancedShader.load( shader_path / "renderInstanced.vert", shader_path / "renderInstanced.frag" );
 	bool load3 = outlineShader.load( shader_path / "renderInstanced.vert", shader_path / "outline.frag" );
 }
@@ -87,19 +87,18 @@ void GameOfLifeScene::initSequences()
 	lastSequene = Sequence::Default;
 	currentSequence = Sequence::Default;
 	lastSequenceTime = time;
-
 	// Standart
-	sequenceMap.insert( pair<GameOfLifeScene::Sequence, vector<float>>( Sequence::Default, { 0.05, cellOffset, 1.0 } ) );
+	sequenceMap.insert( pair<GameOfLifeScene::Sequence, SequenceParameters>( Sequence::Default, { 0.05, cellOffset, 1.0 } ) );
 	// No Jiggle
-	sequenceMap.insert( pair<GameOfLifeScene::Sequence, vector<float>>( Sequence::NoJiggle, { 0.05, cellOffset, 0.0 } ) );
+	sequenceMap.insert( pair<GameOfLifeScene::Sequence, SequenceParameters>( Sequence::NoJiggle, { 0.05, cellOffset, 0.0 } ) );
 	// Big cells
-	sequenceMap.insert( pair<GameOfLifeScene::Sequence, vector<float>>( Sequence::BigCells, { 0.03, cellOffset * 4.f, 3.0 } ) );
+	sequenceMap.insert( pair<GameOfLifeScene::Sequence, SequenceParameters>( Sequence::BigCells, { 0.03, cellOffset * 4.f, 3.0 } ) );
 	// Small cell
-	sequenceMap.insert( pair<GameOfLifeScene::Sequence, vector<float>>( Sequence::SmallCells, { 0.075, cellOffset * .5f, 0.5 } ) );
+	sequenceMap.insert( pair<GameOfLifeScene::Sequence, SequenceParameters>( Sequence::SmallCells, { 0.085, cellOffset * .5f, 0.5 } ) );
 	// Fast evolution
-	sequenceMap.insert( pair<GameOfLifeScene::Sequence, vector<float>>( Sequence::FastEvolution, { 0.15, cellOffset, 2.0 } ) );
+	sequenceMap.insert( pair<GameOfLifeScene::Sequence, SequenceParameters>( Sequence::FastEvolution, { 0.15, cellOffset, 2.0 } ) );
 	// Slow evolution
-	sequenceMap.insert( pair<GameOfLifeScene::Sequence, vector<float>>( Sequence::SlowEvolution, { 0.015, cellOffset * 0.75f, 1.5 } ) );
+	sequenceMap.insert( pair<GameOfLifeScene::Sequence, SequenceParameters>( Sequence::SlowEvolution, { 0.015, cellOffset * 0.75f, 1.5 } ) );
 }
 
 ////////////
@@ -116,20 +115,20 @@ void GameOfLifeScene::update()
 	// Main logic
 	cellPingPong.dst->begin();
 	ofClear( 0 );
-	updateCells.begin();
-	updateCells.setUniforms( shaderUniforms );
-	updateCells.setUniformTexture( "cellData", cellPingPong.src->getTexture(), 0 );
-	updateCells.setUniform2f( "resolution", (float)n_cells_x, (float)n_cells_y );
-	updateCells.setUniform2f( "screen", (float)width, (float)height );
-	updateCells.setUniform1f( "offset", cellOffset );
-	updateCells.setUniform1i( "mouseDown", mouseIsDown );
-	updateCells.setUniform3f( "mousePos", mousePosition );
-	updateCells.setUniform2fv( "hands", &user_positions[0].x, sizeof( ofVec2f ) * 10 );
+	logicShader.begin();
+	logicShader.setUniforms( shaderUniforms );
+	logicShader.setUniformTexture( "cellData", cellPingPong.src->getTexture(), 0 );
+	logicShader.setUniform2f( "resolution", (float)n_cells_x, (float)n_cells_y );
+	logicShader.setUniform2f( "screen", (float)width, (float)height );
+	logicShader.setUniform1f( "offset", cellOffset );
+	logicShader.setUniform1i( "mouseDown", mouseIsDown );
+	logicShader.setUniform3f( "mousePos", mousePosition );
+	logicShader.setUniform2fv( "hands", &user_positions[0].x, sizeof( ofVec2f ) * 10 );
 
 	// Draw cell texture to call shaders, logic happens in shaders
 	cellPingPong.src->draw( 0, 0 );
 
-	updateCells.end();
+	logicShader.end();
 
 	// Ping pong
 	cellPingPong.dst->end();
@@ -147,7 +146,7 @@ void GameOfLifeScene::updateSequence() {
 		lastSequene = currentSequence;
 		currentSequence = static_cast<Sequence>(rand() % NUM_SEQ);
 
-		cout << "Chaning Sequence! Current Sequence: " << currentSequence << endl;
+		cout << "Chaning Sequence! Current Sequence: " << static_cast<int>(currentSequence) << endl;
 
 		lastSequenceTime = time;
 	}
@@ -157,11 +156,10 @@ void GameOfLifeScene::updateSequence() {
 void GameOfLifeScene::updateParameters() {
 	if (runSequences.get() && time - lastSequenceTime <= sequenceTransitionDuration)
 	{
-
 		float timeSinceSequenceChange = time - lastSequenceTime;
-		evolutionFactor.set( ofMap( timeSinceSequenceChange, 0.0, sequenceTransitionDuration, sequenceMap.at( lastSequene )[0], sequenceMap.at( currentSequence )[0] ) );
-		sphereRadius.set( ofMap( timeSinceSequenceChange, 0.0, sequenceTransitionDuration, sequenceMap.at( lastSequene )[1], sequenceMap.at( currentSequence )[1] ) );
-		jiggleFactor.set( ofMap( timeSinceSequenceChange, 0.0, sequenceTransitionDuration, sequenceMap.at( lastSequene )[2], sequenceMap.at( currentSequence )[2] ) );
+		evolutionFactor.set( ofMap( timeSinceSequenceChange, 0.0, sequenceTransitionDuration, sequenceMap.at( lastSequene ).evolution, sequenceMap.at( currentSequence ).evolution ) );
+		sphereRadius.set( ofMap( timeSinceSequenceChange, 0.0, sequenceTransitionDuration, sequenceMap.at( lastSequene ).radius, sequenceMap.at( currentSequence ).radius ) );
+		jiggleFactor.set( ofMap( timeSinceSequenceChange, 0.0, sequenceTransitionDuration, sequenceMap.at( lastSequene ).jiggle, sequenceMap.at( currentSequence ).jiggle ) );
 	}
 }
 
@@ -172,61 +170,14 @@ void GameOfLifeScene::draw()
 {
 	ofBackground( 0 );
 
-	ofPushStyle();
-
 	camera.begin();
 
-	// Draw outlines with stencil testing
-	glEnable( GL_STENCIL_TEST );
-	glDepthFunc( GL_LESS );
-	glStencilFunc( GL_NOTEQUAL, 1, 0xFF );
-	glStencilOp( GL_KEEP, GL_KEEP, GL_REPLACE );
+	drawOutlined( vboSphere, instancedShader, outlineShader );
 
-	glClearStencil( 0 );
-	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT );
-
-	instancedShader.begin();
-	instancedShader.setUniforms( shaderUniforms );
-	instancedShader.setUniformTexture( "cellData", cellPingPong.src->getTexture(), 0 );
-	instancedShader.setUniform2f( "resolution", (float)n_cells_x, (float)n_cells_y );
-	instancedShader.setUniform2f( "screen", (float)width, (float)height );
-	instancedShader.setUniform1f( "offset", cellOffset );
-	instancedShader.setUniform1f( "time", time );
-
-	glStencilFunc( GL_ALWAYS, 1, 0xFF );
-	glStencilMask( 0xFF );
-	vboSphere.drawInstanced( OF_MESH_FILL, n_cells_x * n_cells_y );
-
-	instancedShader.end();
-
-	outlineShader.begin();
-	outlineShader.setUniforms( shaderUniforms );
-	outlineShader.setUniformTexture( "cellData", cellPingPong.src->getTexture(), 0 );
-	outlineShader.setUniform2f( "resolution", (float)n_cells_x, (float)n_cells_y );
-	outlineShader.setUniform2f( "screen", (float)width, (float)height );
-	instancedShader.setUniform1f( "offset", cellOffset );
-	outlineShader.setUniform1f( "time", time );
-
-	// Scale up spheres for second draw
-	float scaledRadius = sphereRadius.get() * 1.1f;
-	outlineShader.setUniform1f( "radius", scaledRadius );
-
-	glStencilFunc( GL_NOTEQUAL, 1, 0xFF );
-	glStencilMask( 0x00 );
-	glDisable( GL_DEPTH_TEST );
-	vboSphere.drawInstanced( OF_MESH_FILL, n_cells_x * n_cells_y );
-
-	glStencilMask( 0xFF );
-	glStencilFunc( GL_ALWAYS, 0, 0xFF );
-
-	outlineShader.end();
-
-	ofEnableAlphaBlending();
-
-	ofPopStyle();
-
+	
 	// Draw secondary objects
 #if 0
+	ofPushStyle();
 	ofFill();
 	ofSetColor( ofColor::red );
 	std::unique_ptr<std::map<int, user>> users = receiver->getUsers();
@@ -243,7 +194,9 @@ void GameOfLifeScene::draw()
 
 		it++;
 	}
+	ofPopStyle();
 #endif
+
 	ofNoFill();
 	ofSetColor( 255 );
 	ofDrawBox( ofVec3f( width / 2, height / 2, 0.0 ), width, height, sphereRadius );
@@ -255,8 +208,61 @@ void GameOfLifeScene::draw()
 	{
 		cellPingPong.dst->draw( 0, 0, width / (10 - dataSrcSize), height / (10 - dataSrcSize) );
 	}
+	//ofDrawBitmapString( receiver->getConnectionStatus(), 10, ofGetHeight() - 20 );
+}
 
-	ofDrawBitmapString( receiver->getConnectionStatus(), 10, ofGetHeight() - 20 );
+// Draw outlines with stencil testing
+void GameOfLifeScene::drawOutlined( const ofVboMesh& mesh, ofShader& instance, ofShader& outline) {
+	ofPushStyle();
+
+	glEnable( GL_STENCIL_TEST );
+	glDepthFunc( GL_LESS );
+	glStencilFunc( GL_NOTEQUAL, 1, 0xFF );
+	glStencilOp( GL_KEEP, GL_KEEP, GL_REPLACE );
+
+	glClearStencil( 0 );
+	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT );
+
+	instance.begin();
+	instance.setUniforms( shaderUniforms );
+	instance.setUniformTexture( "cellData", cellPingPong.src->getTexture(), 0 );
+	instance.setUniform2f( "resolution", (float)n_cells_x, (float)n_cells_y );
+	instance.setUniform2f( "screen", (float)width, (float)height );
+	instance.setUniform1f( "offset", cellOffset );
+	instance.setUniform1f( "time", time );
+
+	glStencilFunc( GL_ALWAYS, 1, 0xFF );
+	glStencilMask( 0xFF );
+	mesh.drawInstanced( OF_MESH_FILL, n_cells_x * n_cells_y );
+
+	instance.end();
+
+	outline.begin();
+	outline.setUniforms( shaderUniforms );
+	outline.setUniformTexture( "cellData", cellPingPong.src->getTexture(), 0 );
+	outline.setUniform2f( "resolution", (float)n_cells_x, (float)n_cells_y );
+	outline.setUniform2f( "screen", (float)width, (float)height );
+	outline.setUniform1f( "offset", cellOffset );
+	outline.setUniform1f( "time", time );
+
+	// Scale up spheres for second draw
+	float scaledRadius = sphereRadius.get() * 1.1f;
+	outline.setUniform1f( "radius", scaledRadius );
+
+	glStencilFunc( GL_NOTEQUAL, 1, 0xFF );
+	glStencilMask( 0x00 );
+	glDisable( GL_DEPTH_TEST );
+	mesh.drawInstanced( OF_MESH_FILL, n_cells_x * n_cells_y );
+
+	glStencilMask( 0xFF );
+	glStencilFunc( GL_ALWAYS, 0, 0xFF );
+
+	outline.end();
+
+	ofEnableAlphaBlending();
+
+	ofPopStyle();
+
 }
 
 void GameOfLifeScene::reset()
