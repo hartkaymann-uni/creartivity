@@ -82,7 +82,7 @@ void ofApp::keyPressed( int key ) {
 		break;
 
 	case 'c':
-		ofShowCursor;
+		ofShowCursor();
 		break;
 
 	case 'f':
@@ -102,14 +102,6 @@ void ofApp::keyPressed( int key ) {
 			lastScene = sceneManager.getCurrentSceneIndex();
 		}
 		sceneManager.noScene();
-		break;
-
-	case OF_KEY_UP:
-		sceneManager.gotoScene( lastScene );
-		break;
-
-	case 'o':
-		sceneManager.setOverlap( !sceneManager.getOverlap() );
 		break;
 	}
 }

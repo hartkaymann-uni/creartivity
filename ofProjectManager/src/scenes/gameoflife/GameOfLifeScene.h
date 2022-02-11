@@ -121,7 +121,7 @@ private:
 	Sequence lastSequene;
 	Sequence currentSequence;
 	float lastSequenceTime;
-	float sequenceDuration = 10.0;
-	float sequenceTransitionDuration = 3.0;
+	float sequenceDuration;
+	float sequenceTransitionDuration;
 	map<Sequence, SequenceParameters> sequenceMap;
 };
