@@ -8,13 +8,32 @@ GameOfLifeScene::GameOfLifeScene( int cells_x, int cells_y )
 	n_cells_y( cells_y ),
 	mouseIsDown( false ),
 	mousePosition( 0.f, 0.f, 0.f ),
-	time( 0.f )
+	time( 0.f ),
+	cellOffset( 0.f ),
+	sequenceDuration( 10.f ),
+	sequenceTransitionDuration( 3.f ),
+	lastSequene(Sequence::Default),
+	currentSequence(Sequence::Default),
+	lastSequenceTime(0.f)
 {
 	// Load Shaders
 	filesystem::path shader_path = getShaderPath();
-	bool load1 = logicShader.load( shader_path / "passthru.vert", shader_path / "gol.frag" );
-	bool load2 = instancedShader.load( shader_path / "renderInstanced.vert", shader_path / "renderInstanced.frag" );
-	bool load3 = outlineShader.load( shader_path / "renderInstanced.vert", shader_path / "outline.frag" );
+	string module = "GameOfLife Setup";
+
+	bool err_logic = logicShader.load( shader_path / "passthru.vert", shader_path / "gol.frag" );
+	if (err_logic) {
+		(void)ofLogError( module, "Failed to load logic shader!" );
+	}
+
+	bool err_instanced = instancedShader.load( shader_path / "renderInstanced.vert", shader_path / "renderInstanced.frag" );
+	if (err_instanced) {
+		(void)ofLogError( module, "Failed to load logic shader!" );
+	}
+
+	bool err_outline = outlineShader.load( shader_path / "renderInstanced.vert", shader_path / "outline.frag" );
+	if (err_outline) {
+		(void)ofLogError( module, "Failed to load outline shader!" );
+	}
 }
 
 ///////////
@@ -63,7 +82,8 @@ void GameOfLifeScene::setup()
 
 void GameOfLifeScene::allocateCellBuffer( int rows, int cols ) {
 	ofSeedRandom();
-	vector<float> cells( rows * cols * 3 );
+	int n_cells = rows * cols * 3;
+	vector<float> cells( n_cells );
 	for (size_t x = 0; x < rows; x++) {
 		for (size_t y = 0; y < cols; y++) {
 			size_t i = x * cols + y;
@@ -211,7 +231,7 @@ void GameOfLifeScene::draw()
 }
 
 // Draw outlines with stencil testing
-void GameOfLifeScene::drawOutlined( ofVboMesh& mesh, ofShader& instance, ofShader& outline) {
+void GameOfLifeScene::drawOutlined( ofVboMesh& mesh, ofShader& instance, ofShader& outline ) {
 	ofPushStyle();
 
 	glEnable( GL_STENCIL_TEST );
