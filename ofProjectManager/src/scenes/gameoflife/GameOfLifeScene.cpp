@@ -174,7 +174,6 @@ void GameOfLifeScene::draw()
 
 	drawOutlined( vboSphere, instancedShader, outlineShader );
 
-	
 	// Draw secondary objects
 #if 0
 	ofPushStyle();
@@ -212,7 +211,7 @@ void GameOfLifeScene::draw()
 }
 
 // Draw outlines with stencil testing
-void GameOfLifeScene::drawOutlined( const ofVboMesh& mesh, ofShader& instance, ofShader& outline) {
+void GameOfLifeScene::drawOutlined( ofVboMesh& mesh, ofShader& instance, ofShader& outline) {
 	ofPushStyle();
 
 	glEnable( GL_STENCIL_TEST );

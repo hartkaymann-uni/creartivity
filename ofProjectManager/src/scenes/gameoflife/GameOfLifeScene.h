@@ -99,9 +99,7 @@ private:
 	void updateSequence();
 	void updateParameters();
 
-	
-	void drawShaded( ofVboMesh& mesh, ofShader shader);
-	void drawOutlined( ofVboMesh& mesh, ofShader& instance, ofShader& outline);
+		void drawOutlined( ofVboMesh& mesh, ofShader& instance, ofShader& outline);
 
 	// Members for sequences
 	enum class Sequence {
