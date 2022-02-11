@@ -98,6 +98,8 @@ void GameOfLifeScene::initSequences()
 	sequenceMap.insert( pair<GameOfLifeScene::Sequence, vector<float>>( Sequence::SmallCells, { 0.075, cellOffset * .5f, 0.5 } ) );
 	// Fast evolution
 	sequenceMap.insert( pair<GameOfLifeScene::Sequence, vector<float>>( Sequence::FastEvolution, { 0.15, cellOffset, 2.0 } ) );
+	// Slow evolution
+	sequenceMap.insert( pair<GameOfLifeScene::Sequence, vector<float>>( Sequence::SlowEvolution, { 0.015, cellOffset * 0.75f, 1.5 } ) );
 }
 
 ////////////
@@ -153,7 +155,7 @@ void GameOfLifeScene::updateSequence() {
 
 // Updates parameters e.g. after sequence change
 void GameOfLifeScene::updateParameters() {
-	if (time - lastSequenceTime <= sequenceTransitionDuration)
+	if (runSequences.get() && time - lastSequenceTime <= sequenceTransitionDuration)
 	{
 
 		float timeSinceSequenceChange = time - lastSequenceTime;

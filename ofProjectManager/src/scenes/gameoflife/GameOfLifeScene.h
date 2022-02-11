@@ -105,6 +105,7 @@ private:
 		BigCells,
 		SmallCells,
 		FastEvolution,
+		SlowEvolution,
 		NUM_SEQ
 	};
 
