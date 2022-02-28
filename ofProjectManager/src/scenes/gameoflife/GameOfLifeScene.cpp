@@ -21,17 +21,17 @@ GameOfLifeScene::GameOfLifeScene( int cells_x, int cells_y )
 	string module = "GameOfLife Setup";
 
 	bool err_logic = logicShader.load( shader_path / "passthru.vert", shader_path / "gol.frag" );
-	if (err_logic) {
+	if (!err_logic) {
 		(void)ofLogError( module, "Failed to load logic shader!" );
 	}
 
 	bool err_instanced = instancedShader.load( shader_path / "renderInstanced.vert", shader_path / "renderInstanced.frag" );
-	if (err_instanced) {
+	if (!err_instanced) {
 		(void)ofLogError( module, "Failed to load logic shader!" );
 	}
 
 	bool err_outline = outlineShader.load( shader_path / "renderInstanced.vert", shader_path / "outline.frag" );
-	if (err_outline) {
+	if (!err_outline) {
 		(void)ofLogError( module, "Failed to load outline shader!" );
 	}
 }

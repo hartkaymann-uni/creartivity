@@ -184,6 +184,7 @@
     <PostBuildEvent />
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\scenes\fluid\FluidScene.cpp" />
     <ClCompile Include="src\ccUser.cpp" />
     <ClCompile Include="src\scenes\contourlines\ContourLinesScene.cpp" />
     <ClCompile Include="src\scenes\cuboid\CuboidScene.cpp" />
@@ -228,6 +229,7 @@
     <ClCompile Include="src\scenes\swarm\SwarmScene.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\scenes\fluid\FluidScene.h" />
     <ClInclude Include="src\ccUser.h" />
     <ClInclude Include="src\scenes\contourlines\ContourLinesScene.h" />
     <ClInclude Include="src\scenes\cuboid\CuboidScene.h" />
