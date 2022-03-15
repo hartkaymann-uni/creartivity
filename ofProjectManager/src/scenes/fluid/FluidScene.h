@@ -4,6 +4,9 @@
 
 class FluidScene : public ccScene
 {
+
+	const int NUM_PARTICLES = 1000;
+
 public:
 	FluidScene();
 	void setup();
@@ -11,6 +14,7 @@ public:
 	void draw();
 
 private:
+	vector<ofPoint> particles;
 
 };
 

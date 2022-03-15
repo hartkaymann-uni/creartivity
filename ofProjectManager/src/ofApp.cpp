@@ -4,7 +4,7 @@
 
 //--------------------------------------------------------------
 void ofApp::setup() {
-	ofBackground( 0 );
+	ofBackground( 255, 255, 0 );
 
 	ofSetFrameRate( 60 );
 	ofSetVerticalSync( false );
@@ -15,6 +15,7 @@ void ofApp::setup() {
 
 	// Load scenes
 	//scenes.push_back( (SpiralScene*)sceneManager.add( new SpiralScene() ) );
+	scenes.push_back( (FluidScene*)sceneManager.add( new FluidScene() ) );
 	scenes.push_back( (GameOfLifeScene*)sceneManager.add( new GameOfLifeScene() ) );
 	scenes.push_back( (SwarmScene*)sceneManager.add( new SwarmScene() ) );
 	scenes.push_back( (ContourLinesScene*)sceneManager.add( new ContourLinesScene() ) );
@@ -61,7 +62,7 @@ void ofApp::draw() {
 	ofxBitmapString( 12, ofGetHeight() - 8 )
 		<< "Current Scene: " << sceneManager.getCurrentSceneIndex()
 		<< " " << sceneManager.getCurrentSceneName() << endl;
-	
+
 	for (ccScene* s : scenes) {
 		if (s->getName() == sceneManager.getCurrentSceneName()) {
 			s->getGui().draw();

@@ -4,3 +4,4 @@
 #include "swarm/SwarmScene.h"
 #include "contourlines/ContourLinesScene.h"
 #include "spiral/SpiralScene.h"
+#include "fluid/FluidScene.h"

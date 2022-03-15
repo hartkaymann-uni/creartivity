@@ -4,6 +4,8 @@ ccScene::ccScene( std::string name )
 	: ofxScene( name ),
 	width( ofGetWidth() ),
 	height( ofGetHeight() ),
+	mouseIsDown( false ),
+	mousePosition( 0.f, 0.f, 0.f ),
 	receiver( nullptr ),
 	scenesPath( "../../src/scenes" )
 {
@@ -14,7 +16,7 @@ ccScene::ccScene( std::string name )
 	camera.setNearClip( -10 * ofGetWidth() );
 	camera.setFarClip( ofGetWidth() * 10 );
 
-	gui.setup(); 
+	gui.setup();
 }
 
 void ccScene::setup()
@@ -94,6 +96,44 @@ filesystem::path ccScene::getCurrentPath()
 
 filesystem::path ccScene::getShaderPath() {
 	return getCurrentPath() / "shader";
+}
+
+void ccScene::keyPressed( int key ) {
+
+	// std::cout << key << std::endl;
+	if (key == ofKey::OF_KEY_SHIFT)
+	{
+		camera.enableMouseInput();
+		//std::cout << camera.getPosition() << std::endl;
+	}
+	else if (key == 'r' || key == 'R') {
+		resetCamera();
+	}
+}
+
+void ccScene::keyReleased( int key ) {
+
+	if (key == ofKey::OF_KEY_SHIFT)
+	{
+		camera.disableMouseInput();
+	}
+}
+
+void ccScene::mousePressed( int x, int y, int button )
+{
+	mouseIsDown = true;
+	mousePosition.set( getProjectedPosition( ofVec3f( x, y, 0.0 ) ) );
+}
+
+void ccScene::mouseReleased( int x, int y, int button )
+{
+	mouseIsDown = false;
+}
+
+void ccScene::mouseDragged( int x, int y, int button )
+{
+	if (mouseIsDown)
+		mousePosition.set( getProjectedPosition( ofVec3f( x, y, 0.0 ) ) );
 }
 
 void ccScene::windowResized( int w, int h ) {

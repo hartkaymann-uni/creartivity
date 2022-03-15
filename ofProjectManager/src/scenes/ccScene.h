@@ -22,12 +22,21 @@ public:
 	virtual void update();
 	virtual void draw();
 
+	void keyPressed( int key );
+	void keyReleased( int key );
+	void mousePressed( int x, int y, int button );
+	void mouseReleased( int x, int y, int button );
+	void mouseDragged( int x, int y, int button );
 	void windowResized( int w, int h );
 
 	inline void setReceiver( ccReceiver* r ) { receiver = r; }
 	inline ofxPanel& getGui() { return gui; };
 
 protected:
+
+	bool mouseIsDown;
+	ofVec3f mousePosition;
+
 	filesystem::path scenesPath;
 
 	int width, height;

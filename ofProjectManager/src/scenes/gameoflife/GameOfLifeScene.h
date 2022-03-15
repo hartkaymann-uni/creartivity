@@ -53,11 +53,6 @@ public:
 	void draw();
 	void reset();
 
-	void keyPressed( int key );
-	void keyReleased( int key );
-	void mousePressed( int x, int y, int button );
-	void mouseReleased( int x, int y, int button );
-	void mouseDragged( int x, int y, int button );
 	void windowResized( int w, int h );
 
 	void handleSphereResolutionChanged( int& sphereRes );
@@ -88,9 +83,6 @@ private:
 	ofParameter<float> mouseStrength;
 	ofParameter<float> jiggleFactor;
 	ofParameter<bool> runSequences;
-
-	bool mouseIsDown;
-	ofVec3f mousePosition;
 
 	float calculateSphereRadius( ofVec2f dim );
 	void allocateCellBuffer( int rows, int cols );
