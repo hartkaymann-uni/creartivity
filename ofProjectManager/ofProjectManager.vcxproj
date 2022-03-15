@@ -187,9 +187,7 @@
     <ClCompile Include="src\scenes\fluid\FluidScene.cpp" />
     <ClCompile Include="src\ccUser.cpp" />
     <ClCompile Include="src\scenes\contourlines\ContourLinesScene.cpp" />
-    <ClCompile Include="src\scenes\cuboid\CuboidScene.cpp" />
     <ClCompile Include="src\scenes\gameoflife\GameOfLifeScene.cpp" />
-    <ClCompile Include="src\scenes\particles\ParticleScene.cpp" />
     <ClCompile Include="src\ccReceiver.cpp" />
     <ClCompile Include="src\scenes\ccScene.cpp" />
     <ClCompile Include="src\main.cpp" />
@@ -232,9 +230,7 @@
     <ClInclude Include="src\scenes\fluid\FluidScene.h" />
     <ClInclude Include="src\ccUser.h" />
     <ClInclude Include="src\scenes\contourlines\ContourLinesScene.h" />
-    <ClInclude Include="src\scenes\cuboid\CuboidScene.h" />
     <ClInclude Include="src\scenes\gameoflife\GameOfLifeScene.h" />
-    <ClInclude Include="src\scenes\particles\ParticleScene.h" />
     <ClInclude Include="src\ccReceiver.h" />
     <ClInclude Include="src\scenes\ccScene.h" />
     <ClInclude Include="src\ofApp.h" />
@@ -307,13 +303,8 @@
     <None Include="src\scenes\contourlines\shader\contour.vert" />
     <None Include="src\scenes\contourlines\shader\contourLines.frag" />
     <None Include="src\scenes\contourlines\shader\contourLines.vert" />
-    <None Include="src\scenes\cuboid\shader\cuboids.frag" />
-    <None Include="src\scenes\cuboid\shader\cuboids.vert" />
     <None Include="src\scenes\gameoflife\shader\gol.frag" />
-    <None Include="src\scenes\particles\shader\instancedParticles.frag" />
-    <None Include="src\scenes\particles\shader\instancedParticles.vert" />
     <None Include="src\scenes\gameoflife\shader\outline.frag" />
-    <None Include="src\scenes\particles\shader\particle.comp" />
     <None Include="src\scenes\gameoflife\shader\passthru.vert" />
     <None Include="src\scenes\gameoflife\shader\renderInstanced.frag" />
     <None Include="src\scenes\gameoflife\shader\renderInstanced.vert" />
