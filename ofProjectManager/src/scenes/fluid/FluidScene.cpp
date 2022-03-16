@@ -5,18 +5,26 @@ FluidScene::FluidScene() : ccScene( "Fluid" ) {}
 void FluidScene::setup()
 {
 	for (int i = 0; i < NUM_PARTICLES; i++) {
-		particles.push_back( ofPoint( i, i, i ) );
+		Particle p = {
+			{ofRandom( ofGetWidth() ), ofRandom( ofGetHeight() )},
+			{ofRandomf(), ofRandomf()},
+			0.f
+		};
+
+		particles.push_back( p );
 	}
 }
 
 void FluidScene::update()
 {
-	for (ofPoint& p : particles) {
-		if (p.x > ofGetWidth()) p.x = 0;
-		if (p.y > ofGetHeight()) p.y = 0;
-		if (p.z > ofGetHeight()) p.z = 0;
+	// TODO set dimensions of domain in setup
+	glm::vec2 center = glm::vec2( ofGetWidth(), ofGetHeight() ) * 0.5f;
 
-		
+	for (Particle& p : particles) {
+		if (p.pos.x > ofGetWidth() || p.pos.x < 0
+			|| p.pos.y > ofGetHeight() || p.pos.x < 0) p.pos = center;
+
+		p.pos += p.vel;
 	}
 }
 
@@ -26,12 +34,11 @@ void FluidScene::draw()
 
 	float width = ofGetWidth();
 	float height = ofGetHeight();
-	float depth = height;
 
-	ofDrawBox( width * 0.5f, height * 0.5f, depth * 0.5f, width, height, depth );
+	ofDrawRectangle( width * 0.5f, height * 0.5f, width, height );
 
-	for (ofPoint const& p : particles) {
-		ofDrawCircle( p, 3 );
+	for (Particle const& p : particles) {
+		ofDrawCircle( p.pos, 3 );
 	}
 
 	camera.end();
