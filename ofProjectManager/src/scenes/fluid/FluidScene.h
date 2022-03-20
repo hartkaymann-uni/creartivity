@@ -8,12 +8,15 @@
 
 #include "ccScene.h"
 
-struct Particle;
+struct Particle {
+	glm::vec2 pos;
+};
 
 class FluidScene : public ccScene
 {
 
 	const int NUM_PARTICLES = 1000;
+	const int NUM_CELLS = 1000;
 
 public:
 	FluidScene();
@@ -24,13 +27,13 @@ public:
 private:
 	vector<Particle> particles;
 
+	int cells;
+	int grid_width, grid_height;
+
 	ofTexture velocityGrid;
+	ofTexture pressureGrid;
+	ofTexture vorticityGrid;
+
+	void calculateGridDimensions();
 
 };
-
-struct Particle {
-	glm::vec2 pos;
-	glm::vec2 vel;
-	float p;
-};
-

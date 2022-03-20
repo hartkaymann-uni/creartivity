@@ -12,7 +12,7 @@ public:
 	void setTarget( ofVec3f target );
 
 	ofVec3f pos;
-	ofVec3f vel;
+	ofVec3f u;
 
 	ofVec3f targetPos;
 

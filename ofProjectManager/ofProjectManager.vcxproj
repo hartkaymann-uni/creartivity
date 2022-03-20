@@ -298,6 +298,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="addons.make" />
+    <None Include="src\scenes\fluid\shader\advect.frag" />
+    <None Include="src\scenes\fluid\shader\boundaries.frag" />
+    <None Include="src\scenes\fluid\shader\divergence.frag" />
+    <None Include="src\scenes\fluid\shader\jacobi.frag" />
     <None Include="src\scenes\swarm\shader\colorSplash.comp" />
     <None Include="src\scenes\contourlines\shader\contour.frag" />
     <None Include="src\scenes\contourlines\shader\contour.vert" />
