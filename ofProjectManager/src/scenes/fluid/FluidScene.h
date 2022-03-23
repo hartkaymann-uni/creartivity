@@ -33,6 +33,14 @@ private:
 	ofTexture velocityGrid;
 	ofTexture pressureGrid;
 	ofTexture vorticityGrid;
+	ofTexture forceGrid;
+
+	ofShader advectProgram;
+	ofShader jacobiProgram;
+	ofShader forceProgram;
+	ofShader divergenceProgram;
+	ofShader gradientProgram;
+	ofShader boundariesProgram;
 
 	void calculateGridDimensions();
 

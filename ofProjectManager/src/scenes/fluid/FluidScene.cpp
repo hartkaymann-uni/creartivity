@@ -18,32 +18,59 @@ void FluidScene::setup()
 
 	calculateGridDimensions();
 
-	int n_cells = grid_width * grid_height * 3;
-	vector<float> cells( n_cells );
-	for (size_t x = 0; x < grid_width; x++) {
-		for (size_t y = 0; y < grid_height; y++) {
-			size_t i = x * grid_height + y;
-
-			cells[i * 3 + 0] = ofRandom( 1.0 );
-			cells[i * 3 + 1] = ofRandom( 1.0 );
-			cells[i * 3 + 2] = 0.f;
-		}
-	}
-
 	velocityGrid.allocate( grid_width, grid_height, GL_RGB32F );
 	velocityGrid.setTextureMinMagFilter( GL_NEAREST, GL_NEAREST );
 	velocityGrid.setTextureWrap( GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE );
-	velocityGrid.loadData( cells.data(), grid_width, grid_height, GL_RGB );
+
+	pressureGrid.allocate( grid_width, grid_height, GL_RGB32F );
+	pressureGrid.setTextureMinMagFilter( GL_NEAREST, GL_NEAREST );
+	pressureGrid.setTextureWrap( GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE );
+
+	vorticityGrid.allocate( grid_width, grid_height, GL_RGB32F );
+	vorticityGrid.setTextureMinMagFilter( GL_NEAREST, GL_NEAREST );
+	vorticityGrid.setTextureWrap( GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE );
+
+	forceGrid.allocate( grid_width, grid_height, GL_RGB32F );
+	forceGrid.setTextureMinMagFilter( GL_NEAREST, GL_NEAREST );
+	forceGrid.setTextureWrap( GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE );
+
+	// Create shader programs
+	filesystem::path shaderPath = getShaderPath();
+	string module = "Fluid Shader Loading";
+
+	bool err_adv = advectProgram.load( shaderPath / "passthru.vert", shaderPath / "advect.frag" );
+	if (!err_adv) {
+		(void)ofLogError( module, "Failed to load advection shader!" );
+	}
+
+	bool err_jac = jacobiProgram.load( shaderPath / "passthru.vert", shaderPath / "jacobi.frag" );
+	if (!err_jac) {
+		(void)ofLogError( module, "Failed to load jacobi shader!" );
+	}
+
+	bool err_for = forceProgram.load( shaderPath / "passthru.vert", shaderPath / "force.frag" );
+	if (!err_for) {
+		(void)ofLogError( module, "Failed to load force shader!" );
+	}
+
+	bool err_div = divergenceProgram.load( shaderPath / "passthru.vert", shaderPath / "divergence.frag" );
+	if (!err_div) {
+		(void)ofLogError( module, "Failed to load divergence shader!" );
+	}
+
+	bool err_grad = gradientProgram.load( shaderPath / "passthru.vert", shaderPath / "gradient.frag" );
+	if (!err_grad) {
+		(void)ofLogError( module, "Failed to load gradient shader!" );
+	}
+	bool err_bounds = boundariesProgram.load( shaderPath / "passthru.vert", shaderPath / "boundaries.frag" );
+	if (!err_bounds) {
+		(void)ofLogError( module, "Failed to load boundaries shader!" );
+	}
 }
 
 void FluidScene::calculateGridDimensions() {
 
 	float aspect = (width * 1.f) / (height * 1.f);
-
-	//grid_height = ceil( sqrt( width * height ) / (cells * 1.f * aspect) ); // rounding up
-
-	//while (cells > floor( width / (aspect * grid_height) ))
-	//	grid_height--;
 
 	grid_width = sqrt( (cells * 1.f) * aspect );
 
@@ -54,13 +81,8 @@ void FluidScene::calculateGridDimensions() {
 
 void FluidScene::update()
 {
-	glm::vec2 center = glm::vec2( width, height ) * 0.5f;
 
-	for (Particle& p : particles) {
-		if (p.pos.x > width || p.pos.x < 0
-			|| p.pos.y > height || p.pos.y < 0) p.pos = center;
 
-	}
 }
 
 void FluidScene::draw()
@@ -71,11 +93,10 @@ void FluidScene::draw()
 	ofNoFill();
 	ofDrawRectangle( 0, 0, width, height );
 
-	for (Particle const& p : particles) {
-		ofDrawCircle( p.pos, 3 );
-	}
-
-	velocityGrid.draw( 0, 0, width, height );
+	velocityGrid.draw( 0, 0, width * 0.5f, height * 0.5f );
+	pressureGrid.draw( width * 0.5f, 0, width * 0.5f, height * 0.5f );
+	vorticityGrid.draw( 0, height * 0.5f, width * 0.5f, height * 0.5f );
+	forceGrid.draw( width * 0.5f, height * 0.5f, width * 0.5f, height * 0.5f );
 
 	camera.end();
 }

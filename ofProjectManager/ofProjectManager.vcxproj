@@ -187,6 +187,9 @@
     <ClCompile Include="src\scenes\fluid\FluidScene.cpp" />
     <ClCompile Include="src\ccUser.cpp" />
     <ClCompile Include="src\scenes\contourlines\ContourLinesScene.cpp" />
+    <None Include="src\scenes\fluid\shader\force.frag">
+      <FileType>Document</FileType>
+    </None>
     <ClCompile Include="src\scenes\gameoflife\GameOfLifeScene.cpp" />
     <ClCompile Include="src\ccReceiver.cpp" />
     <ClCompile Include="src\scenes\ccScene.cpp" />
@@ -301,7 +304,9 @@
     <None Include="src\scenes\fluid\shader\advect.frag" />
     <None Include="src\scenes\fluid\shader\boundaries.frag" />
     <None Include="src\scenes\fluid\shader\divergence.frag" />
+    <None Include="src\scenes\fluid\shader\gradient.frag" />
     <None Include="src\scenes\fluid\shader\jacobi.frag" />
+    <None Include="src\scenes\fluid\shader\passthru.vert" />
     <None Include="src\scenes\swarm\shader\colorSplash.comp" />
     <None Include="src\scenes\contourlines\shader\contour.frag" />
     <None Include="src\scenes\contourlines\shader\contour.vert" />
