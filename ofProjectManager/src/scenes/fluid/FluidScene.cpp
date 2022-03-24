@@ -19,20 +19,20 @@ void FluidScene::setup()
 	calculateGridDimensions();
 
 	velocityGrid.allocate( grid_width, grid_height, GL_RGB32F );
-	velocityGrid.setTextureMinMagFilter( GL_NEAREST, GL_NEAREST );
-	velocityGrid.setTextureWrap( GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE );
+	velocityGrid.getTexture().setTextureMinMagFilter( GL_NEAREST, GL_NEAREST );
+	velocityGrid.getTexture().setTextureWrap( GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE );
 
 	pressureGrid.allocate( grid_width, grid_height, GL_RGB32F );
-	pressureGrid.setTextureMinMagFilter( GL_NEAREST, GL_NEAREST );
-	pressureGrid.setTextureWrap( GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE );
+	pressureGrid.getTexture().setTextureMinMagFilter( GL_NEAREST, GL_NEAREST );
+	pressureGrid.getTexture().setTextureWrap( GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE );
 
 	vorticityGrid.allocate( grid_width, grid_height, GL_RGB32F );
-	vorticityGrid.setTextureMinMagFilter( GL_NEAREST, GL_NEAREST );
-	vorticityGrid.setTextureWrap( GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE );
+	vorticityGrid.getTexture().setTextureMinMagFilter( GL_NEAREST, GL_NEAREST );
+	vorticityGrid.getTexture().setTextureWrap( GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE );
 
 	forceGrid.allocate( grid_width, grid_height, GL_RGB32F );
-	forceGrid.setTextureMinMagFilter( GL_NEAREST, GL_NEAREST );
-	forceGrid.setTextureWrap( GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE );
+	forceGrid.getTexture().setTextureMinMagFilter( GL_NEAREST, GL_NEAREST );
+	forceGrid.getTexture().setTextureWrap( GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE );
 
 	// Create shader programs
 	filesystem::path shaderPath = getShaderPath();
@@ -81,7 +81,19 @@ void FluidScene::calculateGridDimensions() {
 
 void FluidScene::update()
 {
+	float dt = ofGetLastFrameTime();
 
+	velocityGrid.begin();
+	advectProgram.begin();
+	advectProgram.setUniform1f( "timestep", dt );
+	advectProgram.setUniform1f( "rdx", 1.0 );
+	advectProgram.setUniformTexture( "u", velocityGrid.getTexture(), 0 );
+	advectProgram.setUniformTexture( "x", velocityGrid.getTexture(), 1 );
+	
+	velocityGrid.getTexture().draw(0, 0);
+
+	advectProgram.end();
+	velocityGrid.end();
 
 }
 
@@ -94,9 +106,6 @@ void FluidScene::draw()
 	ofDrawRectangle( 0, 0, width, height );
 
 	velocityGrid.draw( 0, 0, width * 0.5f, height * 0.5f );
-	pressureGrid.draw( width * 0.5f, 0, width * 0.5f, height * 0.5f );
-	vorticityGrid.draw( 0, height * 0.5f, width * 0.5f, height * 0.5f );
-	forceGrid.draw( width * 0.5f, height * 0.5f, width * 0.5f, height * 0.5f );
 
 	camera.end();
 }

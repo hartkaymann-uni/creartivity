@@ -25,15 +25,18 @@ public:
 	void draw();
 
 private:
+	float time;
+
 	vector<Particle> particles;
 
 	int cells;
 	int grid_width, grid_height;
 
-	ofTexture velocityGrid;
-	ofTexture pressureGrid;
-	ofTexture vorticityGrid;
-	ofTexture forceGrid;
+	ofFbo velocityGrid;
+	ofFbo pressureGrid;
+	ofFbo vorticityGrid;
+	ofFbo forceGrid;
+	ofFbo inkGrid;
 
 	ofShader advectProgram;
 	ofShader jacobiProgram;

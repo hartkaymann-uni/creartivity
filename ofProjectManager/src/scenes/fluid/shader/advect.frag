@@ -6,6 +6,7 @@ uniform sampler2DRect u; // velocity grid
 uniform sampler2DRect x; // field to be advected
 
 uniform float timestep;
+uniform float rdx;
 
 out vec4 vFragColor;
 
@@ -28,7 +29,7 @@ vec4 texRectBilinear(sampler2DRect tex, vec2 uv) {
 
 void main() {
 	// follow velocity "back in time"
-	vec2 pos = vTexCoord - timestep * texture(u, vTexCoord).xy;
+	vec2 pos = vTexCoord - timestep * rdx * texture(u, vTexCoord).xy;
 	
 	// interpolate and write to output
 	vFragColor = texRectBilinear(x, pos);
