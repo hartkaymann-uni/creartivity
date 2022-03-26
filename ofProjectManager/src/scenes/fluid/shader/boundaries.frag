@@ -1,15 +1,14 @@
 #version 150
 
-in vec2 vTexCoord;
+uniform sampler2DRect read;
 
-uniform sampler2DRect x; // state field
-
-uniform vec2 offset;
-
+uniform vec2 gridSize;
+uniform vec2 gridOffset;
 uniform float scale; 
 
 out vec4 vFragColor; 
 
 void main() {
-	vFragColor = scale * texture(x, vTexCoord + offset);
+	vec2 uv = (gl_FragCoord.xy + gridOffset.xy) / gridSize.xy;
+	vFragColor = vec4(scale * texture(read, uv).xyz, 1.0);
 }

@@ -1,36 +1,60 @@
 #version 150
 
-in vec2 vTexCoord;
+uniform sampler2DRect velocity; 
+uniform sampler2DRect advected; 
 
-uniform sampler2DRect u; // velocity grid
-uniform sampler2DRect x; // field to be advected
+uniform vec2 gridSize;
+uniform float gridScale;
 
 uniform float timestep;
-uniform float rdx;
+uniform float dissipation;
 
 out vec4 vFragColor;
 
-// Biliear Interpolation of rectangular texture
-// Source: https://community.khronos.org/t/bilinear-interpolation-texture-rendering/52613/2
-vec4 texRectBilinear(sampler2DRect tex, vec2 uv) {
-	vec2 weight = fract(uv);
-	
-	vec4 bottom = mix(texture(tex, uv), 
-		texture(tex, uv + vec2(1, 0)), 
-		weight.x);
+// Biliear Interpolation
+// Source: https://github.com/mharrys/fluids-2d/blob/feb725984d2fe3f3830930e669afaea47d65d9a1/shaders/advect.fs
+vec2 bilerp(sampler2DRect tex, vec2 p) {
+	vec4 ij; // i0, j0, i1, j1
+    ij.xy = floor(p - 0.5) + 0.5;
+    ij.zw = ij.xy + 1.0;
 
-	vec4 top = mix(texture(tex, uv + vec2(0, 1)), 
-		texture(tex, uv + vec2(1, 1)), 
-		weight.x);
+    vec4 uv = ij / gridSize.xyxy;
+    vec2 d11 = texture(tex, uv.xy).xy;
+    vec2 d21 = texture(tex, uv.zy).xy;
+    vec2 d12 = texture(tex, uv.xw).xy;
+    vec2 d22 = texture(tex, uv.zw).xy;
 
-	return mix(bottom, top, weight.y);
+    vec2 a = p - ij.xy;
+    
+    return mix(mix(d11, d21, a.x), mix(d12, d22, a.x), a.y);
+}
 
+// Biliear Interpolation
+// Source: https://github.com/dushyantbehl/2D-fluid-simulation/blob/master/pShader.cg
+vec4 f4texRECTbilerp(sampler2DRect tex, vec2 s)
+{
+  vec4 st;
+  st.xy = floor(s - 0.5) + 0.5;
+  st.zw = st.xy + 1;
+ 
+  vec2 t = s - st.xy; //interpolating factors
+   
+  vec4 tex11 = texture(tex, st.xy);
+  vec4 tex21 = texture(tex, st.zy);
+  vec4 tex12 = texture(tex, st.xw);
+  vec4 tex22 = texture(tex, st.zw);
+
+  // bilinear interpolation
+  return mix(mix(tex11, tex21, t.x), mix(tex12, tex22, t.x), t.y);
 }
 
 void main() {
-	// follow velocity "back in time"
-	vec2 pos = vTexCoord - timestep * rdx * texture(u, vTexCoord).xy;
-	
-	// interpolate and write to output
-	vFragColor = texRectBilinear(x, pos);
+	vec2 uv = gl_FragCoord.xy / gridSize;
+    float scale = 1.0 / gridScale;
+
+    // trace points back in time
+    vec2 p = gl_FragCoord.xy - timestep * scale * texture(velocity, uv).xy;
+
+    vFragColor = vec4(dissipation * f4texRECTbilerp(advected, p));
+    //vFragColor = texture(advected, gl_FragCoord.yx);
 }

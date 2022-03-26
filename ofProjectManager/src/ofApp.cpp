@@ -77,7 +77,7 @@ void ofApp::keyPressed( int key ) {
 	switch (key) {
 
 	case 'd':
-		bDebug = !bDebug;
+		//bDebug = !bDebug;
 		break;
 
 	case 'c':

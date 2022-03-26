@@ -349,11 +349,14 @@
     <None Include="src\scenes\swarm\shader\swarmUserEnter.comp" />
     <None Include="addons.make" />
     <None Include="src\scenes\fluid\shader\advect.frag" />
-    <None Include="src\scenes\fluid\shader\jacobi.frag" />
+    <None Include="src\scenes\fluid\shader\jacobiscalar.frag" />
     <None Include="src\scenes\fluid\shader\boundaries.frag" />
     <None Include="src\scenes\fluid\shader\divergence.frag" />
     <None Include="src\scenes\fluid\shader\gradient.frag" />
     <None Include="src\scenes\fluid\shader\passthru.vert" />
     <None Include="src\scenes\fluid\shader\force.frag" />
+    <None Include="src\scenes\fluid\shader\jacobivector.frag" />
+    <None Include="src\scenes\fluid\shader\vorticity.frag" />
+    <None Include="src\scenes\fluid\shader\vorticityforce.frag" />
   </ItemGroup>
 </Project>

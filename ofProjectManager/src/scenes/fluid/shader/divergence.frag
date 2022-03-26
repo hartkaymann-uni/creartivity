@@ -2,17 +2,26 @@
 
 in vec2 vTexCoord;
 
-uniform sampler2DRect w; // vector field
+uniform sampler2DRect velocity;
 
-uniform float rdx; // gridscale / 0.5 
+uniform vec2 gridSize;
+uniform float gridScale;
 
-out vec4 vFragColor; // divergence
+out vec4 vFragColor; 
 
 void main() {
-	vec4 wL = texture(w, vTexCoord - vec2(1, 0));
-	vec4 wR = texture(w, vTexCoord + vec2(1, 0));
-	vec4 wB = texture(w, vTexCoord - vec2(0, 1));
-	vec4 wT = texture(w, vTexCoord + vec2(0, 1));
+	vec2 uv = vTexCoord.xy / gridSize.xy;
 
-	vFragColor = rdx * vec4((wR.x - wL.x) + (wT.y - wB.y));
+	vec2 xOffset = vec2(1.0 / gridSize.x, 0.0);
+	vec2 yOffset = vec2(0.0, 1.0 / gridSize.y);
+
+	float vl = texture(velocity, uv - xOffset).x;
+	float vr = texture(velocity, uv + xOffset).x;
+	float vb = texture(velocity, uv - yOffset).x;
+	float vt = texture(velocity, uv + yOffset).x;
+
+	float scale = 0.5 / gridScale;
+	float divergence = scale * (vr - vl + vt - vb);
+
+	vFragColor = vec4(divergence, 0.0, 0.0, 1.0);
 }
