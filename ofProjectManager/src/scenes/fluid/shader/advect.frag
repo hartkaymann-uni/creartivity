@@ -49,12 +49,13 @@ vec4 f4texRECTbilerp(sampler2DRect tex, vec2 s)
 }
 
 void main() {
-	vec2 uv = gl_FragCoord.xy / gridSize;
+	vec2 uv = gl_FragCoord.xy;
     float scale = 1.0 / gridScale;
 
     // trace points back in time
-    vec2 p = gl_FragCoord.xy - timestep * scale * texture(velocity, uv).xy;
+    vec2 p = gl_FragCoord.xy - timestep * scale * (texture(velocity, uv).xy * gridSize);
 
     vFragColor = vec4(dissipation * f4texRECTbilerp(advected, p));
-    //vFragColor = texture(advected, gl_FragCoord.yx);
+    vFragColor = texture(advected, uv);
+    vFragColor = vec4(p, 0.0, 1.0);
 }

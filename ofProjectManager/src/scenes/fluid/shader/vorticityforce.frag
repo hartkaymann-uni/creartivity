@@ -1,7 +1,5 @@
 #version 150
 
-in vec2 vTexCoord;
-
 uniform sampler2D velocity;
 uniform sampler2D vorticity;
 

@@ -23,8 +23,11 @@ public:
 private:
 	float time;
 	float dt;
+	float timestep;
 	bool debug;
 	bool step;
+
+	ofPlanePrimitive plane;
 
 	struct Grid {
 		glm::vec2 size;
@@ -48,7 +51,9 @@ private:
 
 	float dissipation = 0.998; // none:1, slow:0.998, fast=0.992, veryfast=0.9
 
+	// vec2
 	ofFbo velocity;
+	//scalar
 	ofFbo density;
 	ofFbo velocityDivergence;
 	ofFbo velocityVorticity;
@@ -68,8 +73,13 @@ private:
 	void boundary( ofFbo& input, ofFbo& output, float scale = -1.f);
 	void vortex( ofFbo& output );
 	void vortexConfine( ofFbo& vorticity, ofFbo& output );
-	void diffuse( ofFbo& x, ofFbo& b, ofFbo& output, float alpha = -1.f, float beta = 4.f, float scale = -1.f);
-	void diffuseStep( ofFbo& x, ofFbo& b, ofFbo& output, float alpha, float beta);
+	void diffuse( ofShader& jacobi, ofFbo& x, ofFbo& b, ofFbo& output, float alpha = -1.f, float beta = 4.f, float scale = -1.f);
+	void diffuseStep( ofShader& jacobi, ofFbo& x, ofFbo& b, ofFbo& output, float alpha, float beta);
+	
 	void project();
+	void diverge(ofFbo& divergence);
+	void gradiate(ofFbo& output);
+
+	void clearBuffer( ofFbo& buffer);
 
 };
