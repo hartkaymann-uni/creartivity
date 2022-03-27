@@ -12,8 +12,8 @@ void SpiralScene::setup()
 	jiggleAmplitude.set( "Jiggle Amplitude", .5f, 0.f, 1.f );
 	jiggleSpeed.set( "Jiggle Speed", .5f, 0.f, 1.f );
 
-	particleCount.addListener( this, &SpiralScene::createParticles );
-	spiralOuter.addListener( this, &SpiralScene::allocateSpiralFbo );
+	//particleCount.addListener( this, &SpiralScene::createParticles );
+	//spiralOuter.addListener( this, &SpiralScene::allocateSpiralFbo );
 
 	createParticles( (int)particleCount.get() );
 	allocateSpiralFbo( (int)spiralOuter.get() );
@@ -32,7 +32,7 @@ void SpiralScene::setup()
 	ofHideCursor();
 }
 
-void SpiralScene::createParticles( int& count ) {
+void SpiralScene::createParticles( int count ) {
 	particles.resize( count );
 	for (Particle& p : particles) {
 		float r = sqrt( ofRandom( 1.0 ) );
@@ -50,7 +50,7 @@ void SpiralScene::createParticles( int& count ) {
 	}
 }
 
-void SpiralScene::allocateSpiralFbo( int& r ) {
+void SpiralScene::allocateSpiralFbo( int r ) {
 	spiralFbo.allocate( r * 2.5, r * 2.5, GL_RGB16F );
 
 	particleRadius = r * 0.02;

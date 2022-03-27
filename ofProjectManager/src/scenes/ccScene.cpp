@@ -89,7 +89,7 @@ bool ccScene::isInBounds( int x, int y ) {
 
 filesystem::path ccScene::getCurrentPath()
 {
-	return scenesPath / getName();
+	return scenesPath / ofToLower(getName());
 }
 
 filesystem::path ccScene::getShaderPath() {

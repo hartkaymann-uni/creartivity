@@ -14,8 +14,8 @@ public:
 	void keyReleased( int key );
 	void mouseMoved( int x, int y );
 
-	void createParticles( int& count );
-	void allocateSpiralFbo( int& radius );
+	void createParticles( int count );
+	void allocateSpiralFbo( int radius );
 
 private:
 
