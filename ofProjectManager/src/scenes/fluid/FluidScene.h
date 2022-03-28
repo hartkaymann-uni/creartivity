@@ -37,9 +37,6 @@ private:
 
 	Grid grid;
 
-	float displayScalar;
-	float displayVector;
-
 	float viscosity = 0.3;
 	bool applyViscosity = false;
 	bool applyVorticity = false;

@@ -25,12 +25,13 @@ void FluidScene::setup()
 				size_t i = x * grid.size.x + y;
 
 				cells[i * 3 + 0] = ofNoise(2.f * x / grid.size.y, 2.f * y / grid.size.x);
+				cells[i * 3 + 0] = 0.2;
 				cells[i * 3 + 1] = ofNoise(x / grid.size.x, y / grid.size.y);
 				cells[i * 3 + 2] = 0.0;
 			}
 		}
 
-		velocity.allocate(grid.size.x, grid.size.y, GL_RGB32F);
+		velocity.allocate(grid.size.x, grid.size.y, GL_RGB8_SNORM);
 		velocity.getTexture().setTextureMinMagFilter(GL_NEAREST, GL_NEAREST);
 		velocity.getTexture().setTextureWrap(GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE);
 		velocity.getTexture().loadData(cells.data(), grid.size.x, grid.size.y, GL_RGB);
@@ -50,21 +51,21 @@ void FluidScene::setup()
 			}
 		}
 
-		density.allocate(grid.size.x, grid.size.y, GL_RGB32F);
+		density.allocate(grid.size.x, grid.size.y, GL_RGB8_SNORM);
 		density.getTexture().setTextureMinMagFilter(GL_NEAREST, GL_NEAREST);
 		density.getTexture().setTextureWrap(GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE);
 		density.getTexture().loadData(cells.data(), grid.size.x, grid.size.y, GL_RGB);
 	}
 
-	velocityDivergence.allocate(grid.size.x, grid.size.y, GL_RGB32F);
+	velocityDivergence.allocate(grid.size.x, grid.size.y, GL_RGB8_SNORM);
 	velocityDivergence.getTexture().setTextureMinMagFilter(GL_NEAREST, GL_NEAREST);
 	velocityDivergence.getTexture().setTextureWrap(GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE);
 
-	velocityVorticity.allocate(grid.size.x, grid.size.y, GL_RGB32F);
+	velocityVorticity.allocate(grid.size.x, grid.size.y, GL_RGB8_SNORM);
 	velocityVorticity.getTexture().setTextureMinMagFilter(GL_NEAREST, GL_NEAREST);
 	velocityVorticity.getTexture().setTextureWrap(GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE);
 
-	pressure.allocate(grid.size.x, grid.size.y, GL_RGB32F);
+	pressure.allocate(grid.size.x, grid.size.y, GL_RGB8_SNORM);
 	pressure.getTexture().setTextureMinMagFilter(GL_NEAREST, GL_NEAREST);
 	pressure.getTexture().setTextureWrap(GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE);
 
