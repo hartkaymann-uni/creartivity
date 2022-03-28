@@ -98,7 +98,7 @@ void FluidScene::update()
 
 	dissipation = temp;
 	advect(density, density);
-#if 0
+
 	// Add external forces
 	// TODO: Implement mouse interaction here
 
@@ -118,7 +118,7 @@ void FluidScene::update()
 	}
 
 	project();
-#endif
+
 	if (debug) step = false;
 }
 
@@ -260,8 +260,8 @@ void FluidScene::project() {
 
 	float alpha = -grid.scale * grid.scale;
 	diffuse(jacobiscalarProgram, pressure, velocityDivergence, pressure, alpha, 4.f, 1.f);
-
 	gradiate(velocity);
+
 	boundary(velocity, velocity, -1.f);
 }
 

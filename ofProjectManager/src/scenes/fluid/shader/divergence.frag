@@ -8,15 +8,16 @@ uniform float gridScale;
 out vec4 vFragColor; 
 
 void main() {
-	vec2 uv = gl_FragCoord.xy / gridSize.xy;
+	vec2 coords = gl_FragCoord.xy; 
+	vec2 uv = coords / gridSize.xy;
 
-	vec2 xOffset = vec2(1.0 / gridSize.x, 0.0);
-	vec2 yOffset = vec2(0.0, 1.0 / gridSize.y);
+	vec2 xOffset = vec2(1.0, 0.0);
+	vec2 yOffset = vec2(0.0, 1.0);
 
-	float vl = texture(velocity, uv - xOffset).x;
-	float vr = texture(velocity, uv + xOffset).x;
-	float vb = texture(velocity, uv - yOffset).x;
-	float vt = texture(velocity, uv + yOffset).x;
+	float vl = texture(velocity, coords - xOffset).x;
+	float vr = texture(velocity, coords + xOffset).x;
+	float vb = texture(velocity, coords - yOffset).x;
+	float vt = texture(velocity, coords + yOffset).x;
 
 	float scale = 0.5 / gridScale;
 	float divergence = scale * (vr - vl + vt - vb);
