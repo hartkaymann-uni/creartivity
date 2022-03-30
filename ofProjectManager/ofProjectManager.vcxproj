@@ -184,11 +184,12 @@
     <PostBuildEvent />
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\scenes\fluid\FluidScene.cpp" />
+    <ClCompile Include="src\ccUserManager.cpp" />
     <ClCompile Include="src\ccUser.cpp" />
+    <ClCompile Include="src\scenes\fluid\FluidScene.cpp" />
     <ClCompile Include="src\scenes\contourlines\ContourLinesScene.cpp" />
     <None Include="src\scenes\fluid\shader\displayvector.frag" />
-    <None Include="src\scenes\fluid\shader\force.frag">
+    <None Include="src\scenes\fluid\shader\splat.frag">
       <FileType>Document</FileType>
     </None>
     <None Include="src\scenes\fluid\shader\vorticityforce.frag">
@@ -234,8 +235,9 @@
     <ClCompile Include="src\scenes\swarm\SwarmScene.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\scenes\fluid\FluidScene.h" />
+    <ClInclude Include="src\ccUserManager.h" />
     <ClInclude Include="src\ccUser.h" />
+    <ClInclude Include="src\scenes\fluid\FluidScene.h" />
     <ClInclude Include="src\scenes\contourlines\ContourLinesScene.h" />
     <ClInclude Include="src\scenes\gameoflife\GameOfLifeScene.h" />
     <ClInclude Include="src\ccReceiver.h" />

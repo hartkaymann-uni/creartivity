@@ -6,6 +6,7 @@
 #include "ofxGui.h"
 
 #include "ccReceiver.h"
+#include "ccUserManager.h"
 
 #define HOST "localhost"
 #define PORT 12345
@@ -30,6 +31,7 @@ public:
 	void windowResized( int w, int h );
 
 	inline void setReceiver( ccReceiver* r ) { receiver = r; }
+	inline void setUserManager( ccUserManager* um ) { userManager = um; }
 	inline ofxPanel& getGui() { return gui; };
 
 protected:
@@ -46,6 +48,7 @@ protected:
 	ofxPanel gui;
 
 	ccReceiver* receiver;
+	ccUserManager* userManager;
 
 	void resetCamera();
 	void updateUserPositions();

@@ -19,17 +19,20 @@ void ofApp::setup() {
 	scenes.push_back( (GameOfLifeScene*)sceneManager.add( new GameOfLifeScene() ) );
 	scenes.push_back( (SwarmScene*)sceneManager.add( new SwarmScene() ) );
 	scenes.push_back( (ContourLinesScene*)sceneManager.add( new ContourLinesScene() ) );
+	
+	// Initialize scene manager
 	sceneManager.setup( true ); // Setup all scenes now
 	ofSetLogLevel( "ofxScenemanager", OF_LOG_VERBOSE );
-
 	sceneManager.gotoScene( "Fluid", true );
 	lastScene = sceneManager.getCurrentSceneIndex();
 	sceneManager.setOverlap( false );
-
 	setSceneManager( &sceneManager );
 
+	// Give all scenes a pointer to the receiver
+	// TODO: Scenen dont need this anymore, as user array does the work here
 	for (ccScene* scene : scenes) {
 		scene->setReceiver( &receiver );
+		scene->setUserManager( &userManager);
 	}
 }
 
@@ -117,17 +120,18 @@ void ofApp::mouseMoved( int x, int y ) {
 
 //--------------------------------------------------------------
 void ofApp::mouseDragged( int x, int y, int button ) {
-
+	userManager.getMouseUser()->setPosition( { x, y } );
 }
 
 //--------------------------------------------------------------
 void ofApp::mousePressed( int x, int y, int button ) {
-
+	userManager.getMouseUser()->setPosition( { x, y } );
 }
 
 //--------------------------------------------------------------
 void ofApp::mouseReleased( int x, int y, int button ) {
-
+	// Reset user motion by moving by zero 
+	userManager.getMouseUser()->move( { 0.f, 0.f, 0.f } );
 }
 
 //--------------------------------------------------------------

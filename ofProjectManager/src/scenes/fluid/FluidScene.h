@@ -27,6 +27,8 @@ private:
 	bool debug;
 	bool step;
 
+	float mouseRadius = 0.05;
+
 	ofPlanePrimitive plane;
 
 	struct Grid {
@@ -64,11 +66,12 @@ private:
 	ofShader vorticityProgram;
 	ofShader vorticityforceProgram;
 	ofShader boundariesProgram;
+	ofShader splatProgram;
 
 	ofShader displayVectorProgram;
 
 	void project();
-	void addForce();
+	void addForces();
 
 	// Slabops
 	void advect( ofFbo& advected, ofFbo& output );
@@ -79,6 +82,7 @@ private:
 	void diffuseStep( ofShader& jacobi, ofFbo& x, ofFbo& b, ofFbo& output, float alpha, float beta);
 	void diverge(ofFbo& divergence);
 	void gradiate(ofFbo& output);
+	void splat(ofFbo& read, glm::vec3 color, glm::vec2 point);
 
 	void clearBuffer( ofFbo& buffer);
 
