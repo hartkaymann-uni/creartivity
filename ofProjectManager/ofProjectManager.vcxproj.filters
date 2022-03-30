@@ -358,5 +358,6 @@
     <None Include="src\scenes\fluid\shader\jacobivector.frag" />
     <None Include="src\scenes\fluid\shader\vorticity.frag" />
     <None Include="src\scenes\fluid\shader\vorticityforce.frag" />
+    <None Include="src\scenes\fluid\shader\displayvector.frag" />
   </ItemGroup>
 </Project>

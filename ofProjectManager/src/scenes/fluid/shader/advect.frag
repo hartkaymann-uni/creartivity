@@ -60,4 +60,5 @@ void main() {
     // Debug outs:
     //vFragColor = vec4(dissipation * bilerp(advected, p), 0.0, 1.0);
     //vFragColor = vec4(p, 0.0, 1.0);
+    //vFragColor = vec4(uv, 0.0, 1.0);
 }

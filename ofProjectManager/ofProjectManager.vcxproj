@@ -187,6 +187,7 @@
     <ClCompile Include="src\scenes\fluid\FluidScene.cpp" />
     <ClCompile Include="src\ccUser.cpp" />
     <ClCompile Include="src\scenes\contourlines\ContourLinesScene.cpp" />
+    <None Include="src\scenes\fluid\shader\displayvector.frag" />
     <None Include="src\scenes\fluid\shader\force.frag">
       <FileType>Document</FileType>
     </None>

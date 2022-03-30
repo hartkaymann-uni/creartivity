@@ -79,6 +79,8 @@ void FluidScene::setup()
 	bool err_vor = vorticityProgram.load(shaderPath / "passthru.vert", shaderPath / "vorticity.frag");
 	bool err_vorf = vorticityforceProgram.load(shaderPath / "passthru.vert", shaderPath / "vorticityforce.frag");
 	bool err_bounds = boundariesProgram.load(shaderPath / "passthru.vert", shaderPath / "boundaries.frag");
+
+	bool err_dispvec = displayVectorProgram.load(shaderPath / "passthru.vert", shaderPath / "displayvector.frag");
 }
 
 void FluidScene::update()
@@ -315,18 +317,27 @@ void FluidScene::draw()
 {
 	//ofBackground( 0 );
 
-	camera.begin();
-	ofNoFill();
-	ofDrawRectangle(0, 0, width, height);
-
-	camera.end();
 
 	// Draw fields
 	ofDrawBitmapString("density", 0.f, 0.f + 10.f);
 	density.draw(0.f, 0.f);
 
+
 	ofDrawBitmapString("velocity", 0.f, grid.size.y + 10.f);
+	/*
 	velocity.draw(0.f, grid.size.y);
+	*/
+	displayVectorProgram.begin();
+	displayVectorProgram.setUniformTexture("read", velocity.getTexture(), 1);
+	displayVectorProgram.setUniform3f("bias", glm::vec3(0.5, 0.5, 0.5));
+	displayVectorProgram.setUniform3f("scale", glm::vec3(0.5, 0.5, 0.5));
+	displayVectorProgram.setUniform2f("gridSize", grid.size);
+
+	plane.setPosition(grid.size.x * .5f, grid.size.y * 1.5f, 0.f);
+	plane.draw();
+	plane.setPosition(grid.size.x * .5f, grid.size.y * .5f, 0.f);
+	
+	displayVectorProgram.end();
 
 	ofDrawBitmapString("divergence", grid.size.x, 0.f + 10.f);
 	velocityDivergence.draw(grid.size.x, 0.f);

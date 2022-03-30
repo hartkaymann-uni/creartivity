@@ -68,6 +68,9 @@ private:
 	ofShader vorticityforceProgram;
 	ofShader boundariesProgram;
 
+	ofShader displayVectorProgram;
+
+
 	// Slabops
 	void advect( ofFbo& advected, ofFbo& output );
 	void boundary( ofFbo& input, ofFbo& output, float scale = -1.f);
