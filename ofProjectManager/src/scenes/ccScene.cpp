@@ -132,7 +132,6 @@ void ccScene::mouseReleased( int x, int y, int button )
 
 void ccScene::mouseDragged( int x, int y, int button )
 {
-	if (mouseIsDown)
 		mousePosition.set( getProjectedPosition( ofVec3f( x, y, 0.0 ) ) );
 }
 
