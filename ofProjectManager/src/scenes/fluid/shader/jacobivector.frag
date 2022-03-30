@@ -11,21 +11,20 @@ uniform float beta;
 out vec4 vFragColor;
 
 void main() {
-	vec2 coords = gl_FragCoord.xy; 
-	vec2 uv = coords / gridSize.xy;
+	vec2 coords = gl_FragCoord.xy;
 
 	vec2 xOffset = vec2(1.0, 0.0);
 	vec2 yOffset = vec2(0.0, 1.0);
 
 	// left, right, bottom and top samples
-	vec2 xl = texture(x,  coords + xOffset).xy;
-	vec2 xr = texture(x,  coords + yOffset).xy;
-	vec2 xb = texture(x,  coords - xOffset).xy;
-	vec2 xt = texture(x,  coords - yOffset).xy;
+	vec4 xl = texture(x,  coords + xOffset);
+	vec4 xr = texture(x,  coords + yOffset);
+	vec4 xb = texture(x,  coords - xOffset);
+	vec4 xt = texture(x,  coords - yOffset);
 
 	// b sample, from center
-	float bc = texture(b, coords).x;
+	vec4 bc = texture(b, coords);
 
 	// evaluate Jacobi iteration
-	vFragColor = vec4((xl + xr + xb + xt + alpha * bc) / beta, 0.0, 1.0);
+	vFragColor = (xl + xr + xb + xt + alpha * bc) / beta;
 }

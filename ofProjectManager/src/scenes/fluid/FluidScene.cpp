@@ -286,8 +286,8 @@ void FluidScene::diverge(ofFbo& divergence) {
 void FluidScene::gradiate(ofFbo& output) {
 	gradientProgram.begin();
 
-	gradientProgram.setUniformTexture("p", pressure.getTexture(), 3);
-	gradientProgram.setUniformTexture("w", velocity.getTexture(), 4);
+	gradientProgram.setUniformTexture("p", pressure.getTexture(), 1);
+	gradientProgram.setUniformTexture("w", velocity.getTexture(), 2);
 	gradientProgram.setUniform2f("gridSize", grid.size);
 	gradientProgram.setUniform1f("gridScale", grid.scale);
 
@@ -331,7 +331,7 @@ void FluidScene::draw()
 	displayVectorProgram.setUniform3f("scale", glm::vec3(0.5, 0.5, 0.5));
 	displayVectorProgram.setUniform2f("gridSize", grid.size);
 	velocity.draw(10.f, grid.size.y);
-	
+
 	displayVectorProgram.end();
 
 	ofDrawBitmapString("divergence", grid.size.x, 0.f + 10.f);

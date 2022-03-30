@@ -16,11 +16,11 @@ void main() {
 
 	float vl = texture(velocity, coords - xOffset).x;
 	float vr = texture(velocity, coords + xOffset).x;
-	float vb = texture(velocity, coords - yOffset).x;
-	float vt = texture(velocity, coords + yOffset).x;
+	float vb = texture(velocity, coords - yOffset).y;
+	float vt = texture(velocity, coords + yOffset).y;
 
 	float scale = 0.5 / gridScale;
-	float divergence = scale * (vr - vl + vt - vb);
+	float divergence = scale * ((vr - vl) + (vt - vb));
 
 	vFragColor = vec4(divergence, 0.0, 0.0, 1.0);
 }
