@@ -67,6 +67,8 @@ private:
 
 	ofShader displayVectorProgram;
 
+	void project();
+	void addForce();
 
 	// Slabops
 	void advect( ofFbo& advected, ofFbo& output );
@@ -75,8 +77,6 @@ private:
 	void vortexConfine( ofFbo& vorticity, ofFbo& output );
 	void diffuse( ofShader& jacobi, ofFbo& x, ofFbo& b, ofFbo& output, float alpha = -1.f, float beta = 4.f, float scale = -1.f);
 	void diffuseStep( ofShader& jacobi, ofFbo& x, ofFbo& b, ofFbo& output, float alpha, float beta);
-	
-	void project();
 	void diverge(ofFbo& divergence);
 	void gradiate(ofFbo& output);
 
