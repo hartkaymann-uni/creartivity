@@ -27,7 +27,7 @@ private:
 	bool debug;
 	bool step;
 
-	float mouseRadius = 0.05;
+	float mouseRadius = 0.1;
 
 	ofPlanePrimitive plane;
 

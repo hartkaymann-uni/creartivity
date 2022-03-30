@@ -145,9 +145,13 @@ void FluidScene::addForces() {
 
 	if (color.x != 0.f || color.y != 0) {
 		glm::vec3 pos = u->getPositon();
-		glm::vec2 point = { pos.x, pos.y };
+		float xMapped = ofMap( pos.x, 0, width, 0, grid.size.x );
+		float yMapped = ofMap( pos.y, 0, height, 0, grid.size.y );
 
-		splat( velocity, { 1.0, 0.0, 0.0 }, point );
+		glm::vec2 point = { xMapped , yMapped };
+
+		splat( velocity, color, point );
+		splat( density, {1.0, 1.0, 1.0}, point );
 	}
 
 }
