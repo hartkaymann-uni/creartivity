@@ -13,9 +13,8 @@ out vec4 vFragColor;
 
 void main()
 {
-    vec2 coords = gl_FragCoord.xy;
-    vec2 uv = gl_FragCoord.xy / gridSize.xy;
+	vec2 uv = vTexCoord / gridSize;
 
-    vFragColor = vec4(texture(read, vTexCoord * gridSize).xyz, 1.0);
-    vFragColor = vec4(uv, 0.0, 1.0);
+    vFragColor = vec4(bias + scale * texture(read,  vTexCoord).xyz, 1.0);
+	//vFragColor = vec4(vTexCoord / gridSize, 0.0, 1.0);
 }

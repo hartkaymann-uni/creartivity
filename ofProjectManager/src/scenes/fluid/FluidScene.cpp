@@ -24,9 +24,8 @@ void FluidScene::setup()
 			for (size_t y = 0; y < grid.size.x; y++) {
 				size_t i = x * grid.size.x + y;
 
-				cells[i * 3 + 0] = ofNoise(2.f * x / grid.size.y, 2.f * y / grid.size.x);
-				cells[i * 3 + 0] = 0.2;
-				cells[i * 3 + 1] = ofNoise(x / grid.size.x, y / grid.size.y);
+				cells[i * 3 + 0] = ofMap(ofNoise(2.f * x / grid.size.y, 2.f * y / grid.size.x), 0.0, 1.0, -1.0, 1.0);
+				cells[i * 3 + 1] = ofMap(ofNoise(x / grid.size.x, y / grid.size.y), 0.0, 1.0, -1.0, 1.0);
 				cells[i * 3 + 2] = 0.0;
 			}
 		}
@@ -318,7 +317,6 @@ void FluidScene::draw()
 {
 	//ofBackground( 0 );
 
-
 	// Draw fields
 	ofDrawBitmapString("density", 0.f, 0.f + 10.f);
 	density.draw(0.f, 0.f);
@@ -326,17 +324,13 @@ void FluidScene::draw()
 
 	ofDrawBitmapString("velocity", 0.f, grid.size.y + 10.f);
 	/*
-	velocity.draw(0.f, grid.size.y);
 	*/
 	displayVectorProgram.begin();
 	displayVectorProgram.setUniformTexture("read", velocity.getTexture(), 1);
 	displayVectorProgram.setUniform3f("bias", glm::vec3(0.5, 0.5, 0.5));
 	displayVectorProgram.setUniform3f("scale", glm::vec3(0.5, 0.5, 0.5));
 	displayVectorProgram.setUniform2f("gridSize", grid.size);
-
-	plane.setPosition(grid.size.x * .5f, grid.size.y * 1.5f, 0.f);
-	plane.draw();
-	plane.setPosition(grid.size.x * .5f, grid.size.y * .5f, 0.f);
+	velocity.draw(10.f, grid.size.y);
 	
 	displayVectorProgram.end();
 
