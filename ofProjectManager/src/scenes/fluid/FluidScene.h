@@ -40,8 +40,8 @@ private:
 	Grid grid;
 
 	float viscosity = 0.3;
-	bool applyViscosity = false;
-	bool applyVorticity = true;
+	bool applyViscosity = true;
+	bool applyVorticity = false;
 
 	float epsilon = 0.00024414;
 	float curl = 0.3;
