@@ -36,13 +36,19 @@ private:
 	Grid grid = { {512, 256}, 1.f, true };
 	ofPlanePrimitive plane;
 
+	bool applyVorticity = true;
+	bool applyViscosity = false;
 	float viscosity = 0.3;
-	bool applyViscosity = true;
-	bool applyVorticity = false;
 	float epsilon = 0.00024414;
 	float curl = 0.3;
-	int jacobiIterations = 20;
+	int jacobiIterations = 20; // normal: 20-50
 	float dissipation = 0.998; // none:1, slow:0.998, fast=0.992, veryfast=0.9
+
+	ofParameterGroup groupGeneral;
+	ofParameterGroup groupBounds;
+	ofParameterGroup groupViscosity;
+	ofParameterGroup groupVorticity;
+	ofParameterGroup groupSolver;
 
 	ofParameter<float> p_Timestep;
 	ofParameter<float> p_SplatRadius;
@@ -55,9 +61,9 @@ private:
 	ofParameter<int> p_JacobiIterations;
 	ofParameter<float> p_Dissipation;
 
-	// vec2
+	// Vector Field
 	ofFbo velocity;
-	//scalar
+	// Scalar Fields
 	ofFbo density;
 	ofFbo velocityDivergence;
 	ofFbo velocityVorticity;
@@ -79,7 +85,7 @@ private:
 	void addForces();
 
 	// Slabops
-	void advect( ofFbo& advected, ofFbo& output );
+	void advect( ofFbo& advected, ofFbo& output, float d );
 	void boundary( ofFbo& input, ofFbo& output, float scale = -1.f );
 	void boundarySide( ofFbo& input, ofFbo& output, ofPolyline& line, glm::vec2 offset, float scale );
 	void vortex( ofFbo& output );

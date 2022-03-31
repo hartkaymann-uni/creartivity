@@ -76,16 +76,29 @@ void FluidScene::setup()
 	bool err_disp = displayVectorProgram.load( shaderPath / "passthru.vert", shaderPath / "displayvector.frag" );
 
 	// Initialize GUI parameters
-	gui.add( p_Timestep.set( "Timestep", timestep, 0.f, 2.f ) );
-	gui.add( p_SplatRadius.set( "Splat", splatRadius, 0.f, 1.f ) );
-	gui.add( p_Bounds.set( "Bounds", grid.applyBounds ) );
-	gui.add( p_ApplyViscosity.set( "Apply Viscosity", applyViscosity ) );
-	gui.add( p_Viscosity.set( "Viscosity", viscosity, 0.f, 1.f ) );
-	gui.add( p_ApplyVorticity.set( "Apply Vorticity", applyVorticity ) );
-	gui.add( p_Epsilon.set( "Epsilon", epsilon, 0.f, .1f ) );
-	gui.add( p_Curl.set( "Curl", curl, 0.f, 1.f ) );
-	gui.add( p_JacobiIterations.set( "Solver Iterations", jacobiIterations, 0, 50 ) );
-	gui.add( p_Dissipation.set( "Dissipation", dissipation, 0.9f, 1.f ) );
+	groupGeneral.setName( "General" );
+	groupSolver.setName( "Solver" );
+	groupBounds.setName( "Bounds" );
+	groupVorticity.setName( "Vorticity" );
+	groupViscosity.setName( "Viscosity" );
+
+	groupGeneral.add( p_Timestep.set( "Timestep", timestep, 0.f, 2.f ) );
+	groupGeneral.add( p_SplatRadius.set( "Splat", splatRadius, 0.f, 1.f ) );
+	groupGeneral.add( p_Dissipation.set( "Dissipation", dissipation, 0.9f, 1.f ) );
+	groupBounds.add( p_Bounds.set( "Bounds", grid.applyBounds ) );
+	groupSolver.add( p_JacobiIterations.set( "Iterations", jacobiIterations, 0, 50 ) );
+	groupVorticity.add( p_ApplyVorticity.set( "Apply Vorticity", applyVorticity ) );
+	groupVorticity.add( p_Epsilon.set( "Epsilon", epsilon, 0.f, .1f ) );
+	groupVorticity.add( p_Curl.set( "Curl", curl, 0.f, 1.f ) );
+	groupViscosity.add( p_ApplyViscosity.set( "Apply Viscosity", applyViscosity ) );
+	groupViscosity.add( p_Viscosity.set( "Viscosity", viscosity, 0.f, 1.f ) );
+
+	gui.add( groupGeneral );
+	gui.add( groupSolver );
+	gui.add( groupBounds );
+	gui.add( groupVorticity );
+	gui.add( groupViscosity );
+
 	gui.setPosition( width - gui.getWidth() - 10, height - gui.getHeight() - 10 );
 
 }
@@ -100,27 +113,24 @@ void FluidScene::update()
 		return;
 
 	// Dissipation only affects density carried by the velocity field
-	float temp = dissipation;
-	dissipation = 1;
-	advect( velocity, velocity );
+	advect( velocity, velocity, 1 );
 	boundary( velocity, velocity, -1.f );
 
-	dissipation = temp;
-	advect( density, density );
+	advect( density, density, p_Dissipation.get() );
 
 	// Add external forces
 	addForces();
 
-	if (applyVorticity) {
+	if (p_ApplyVorticity.get()) {
 		vortex( velocityVorticity );
 		vortexConfine( velocityVorticity, velocity );
 		boundary( velocity, velocity, -1.f );
 	}
 
-	if (applyViscosity && viscosity > 0.f) {
+	if (p_ApplyViscosity.get() && p_Viscosity.get() > 0.f) {
 		float s = grid.scale;
 
-		float alpha = (s * s) / (viscosity * timestep);
+		float alpha = (s * s) / (p_Viscosity.get() * p_Timestep.get());
 		float beta = 4.f + alpha;
 
 		diffuse( jacobivectorProgram, velocity, velocity, velocity, alpha, beta, -1.f );
@@ -162,15 +172,15 @@ void FluidScene::addForces() {
 
 }
 
-void FluidScene::advect( ofFbo& advected, ofFbo& output ) {
+void FluidScene::advect( ofFbo& advected, ofFbo& output, float d ) {
 	advectProgram.begin();
 
 	advectProgram.setUniformTexture( "velocity", velocity.getTexture(), 2 );
 	advectProgram.setUniformTexture( "advected", advected.getTexture(), 1 );
 	advectProgram.setUniform2f( "gridSize", grid.size );
 	advectProgram.setUniform1f( "gridScale", grid.scale );
-	advectProgram.setUniform1f( "timestep", timestep );
-	advectProgram.setUniform1f( "dissipation", dissipation );
+	advectProgram.setUniform1f( "timestep", p_Timestep.get() );
+	advectProgram.setUniform1f( "dissipation", d );
 
 	ofFbo outBuffer;
 	outBuffer.allocate( grid.size.x, grid.size.y, GL_RGB32F );
@@ -189,7 +199,7 @@ void FluidScene::advect( ofFbo& advected, ofFbo& output ) {
 }
 
 void FluidScene::boundary( ofFbo& input, ofFbo& output, float scale ) {
-	if (!grid.applyBounds)
+	if (!p_Bounds.get())
 		return;
 
 	float xL = 0.f;
@@ -261,9 +271,9 @@ void FluidScene::vortexConfine( ofFbo& vorticity, ofFbo& output ) {
 	vorticityforceProgram.setUniformTexture( "vorticity", vorticity.getTexture(), 1 );
 	vorticityforceProgram.setUniform2f( "gridSize", grid.size );
 	vorticityforceProgram.setUniform1f( "gridScale", grid.scale );
-	vorticityforceProgram.setUniform1f( "timestep", timestep );
-	vorticityforceProgram.setUniform1f( "epsilon", epsilon );
-	vorticityforceProgram.setUniform2f( "curl", curl * grid.scale, curl * grid.scale );
+	vorticityforceProgram.setUniform1f( "timestep", p_Timestep.get() );
+	vorticityforceProgram.setUniform1f( "epsilon", p_Epsilon.get() );
+	vorticityforceProgram.setUniform2f( "curl", p_Curl.get() * grid.scale, p_Curl.get() * grid.scale );
 
 	ofFbo outBuffer;
 	outBuffer.allocate( grid.size.x, grid.size.y, GL_RGB32F );
@@ -282,7 +292,7 @@ void FluidScene::vortexConfine( ofFbo& vorticity, ofFbo& output ) {
 }
 
 void FluidScene::diffuse( ofShader& jacobi, ofFbo& x, ofFbo& b, ofFbo& output, float alpha, float beta, float scale ) {
-	for (int i = 0; i < jacobiIterations; i++) {
+	for (int i = 0; i < p_JacobiIterations.get(); i++) {
 		diffuseStep( jacobi, x, b, output, alpha, beta );
 	}
 }
@@ -361,7 +371,7 @@ void FluidScene::splat( ofFbo& read, glm::vec3 color, glm::vec2 point ) {
 	splatProgram.setUniform2f( "gridSize", grid.size );
 	splatProgram.setUniform3f( "color", color );
 	splatProgram.setUniform2f( "point", point );
-	splatProgram.setUniform1f( "radius", splatRadius );
+	splatProgram.setUniform1f( "radius", p_SplatRadius.get() );
 
 	ofFbo outBuffer;
 	outBuffer.allocate( grid.size.x, grid.size.y, GL_RGB32F );
