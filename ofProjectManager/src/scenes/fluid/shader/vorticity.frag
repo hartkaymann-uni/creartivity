@@ -15,13 +15,10 @@ void main() {
 
 	float vl = texture(velocity,  coords - xOffset).y;
 	float vr = texture(velocity,  coords + xOffset).y;
-	float vb = texture(velocity,  coords - yOffset).y;
-	float vt = texture(velocity,  coords - yOffset).x;
+	float vb = texture(velocity,  coords - yOffset).x;
+	float vt = texture(velocity,  coords + yOffset).x;
 
 	float scale = 0.5 / gridScale;
 
-	float a = (vr-vl) / scale;
-	float b = (vt-vb) / scale;
-
-	vFragColor = vec4(a + b, 0.0, 0.0, 1.0);
+	vFragColor = vec4(scale * (vr - vl - vt + vb), 0.0, 0.0, 1.0);
 }

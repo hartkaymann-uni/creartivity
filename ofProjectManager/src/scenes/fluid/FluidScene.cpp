@@ -5,12 +5,12 @@ FluidScene::FluidScene() :
 	time( 0.f ),
 	dt( 0.f ),
 	timestep( 1.f ),
-	debug( false ),
+	debug( true ),
 	step( false ) {}
 
 void FluidScene::setup()
 {
-	grid = { {512, 256}, 1.f, true };
+	grid = { {512, 256}, 1.f, false };
 
 	plane.set( grid.size.x - 2.f, grid.size.y - 2.f );
 	plane.setPosition( grid.size.x * .5f, grid.size.y * .5f, 0.f );
@@ -120,7 +120,7 @@ void FluidScene::update()
 		diffuse( jacobivectorProgram, velocity, velocity, velocity, alpha, beta, -1.f );
 	}
 
-	project();
+	//project();
 
 	if (debug) step = false;
 }
@@ -271,7 +271,6 @@ void FluidScene::vortexConfine( ofFbo& vorticity, ofFbo& output ) {
 	outBuffer.end();
 
 	output = outBuffer;
-
 
 	vorticityforceProgram.end();
 }
