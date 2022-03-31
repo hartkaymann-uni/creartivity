@@ -5,12 +5,12 @@ FluidScene::FluidScene() :
 	time( 0.f ),
 	dt( 0.f ),
 	timestep( 1.f ),
-	debug( true ),
+	debug( false ),
 	step( false ) {}
 
 void FluidScene::setup()
 {
-	grid = { {512, 256}, 1.f, false };
+	grid = { {512, 256}, 1.f, true };
 
 	plane.set( grid.size.x - 2.f, grid.size.y - 2.f );
 	plane.setPosition( grid.size.x * .5f, grid.size.y * .5f, 0.f );
@@ -151,7 +151,7 @@ void FluidScene::addForces() {
 		glm::vec2 point = { xMapped , yMapped };
 
 		splat( velocity, color, point );
-		splat( density, {1.0, 1.0, 1.0}, point );
+		splat( density, { 1.0, 1.0, 1.0 }, point );
 	}
 
 }
@@ -186,21 +186,44 @@ void FluidScene::boundary( ofFbo& input, ofFbo& output, float scale ) {
 	if (!grid.applyBounds)
 		return;
 
+	float xL = 0.f;
+	float xR = grid.size.x - 0.f;
+	float yT = 0.f;
+	float yB = grid.size.y - 0.f;
+
+	ofPolyline lineR, lineL, lineT, lineB;
+	lineR.addVertex( xR, yB );
+	lineR.addVertex( xR, yT );
+	lineL.addVertex( xL, yB );
+	lineL.addVertex( xL, yT );
+	lineT.addVertex( xL, yT );
+	lineT.addVertex( xR, yT );
+	lineB.addVertex( xL, yB );
+	lineB.addVertex( xR, yB );
+
+	boundarySide( input, output, lineR, { -1.f, 0.f }, scale );
+	boundarySide( input, output, lineL, { 1.f, 0.f }, scale );
+	boundarySide( input, output, lineT, { 0.f, -1.f }, scale );
+	boundarySide( input, output, lineB, { 0.f, 1.f }, scale );
+}
+
+void FluidScene::boundarySide( ofFbo& input, ofFbo& output, ofPolyline& line, glm::vec2 offset, float scale ) {
 	boundariesProgram.begin();
 
 	boundariesProgram.setUniformTexture( "read", input.getTexture(), 0 );
 	boundariesProgram.setUniform2f( "gridSize", grid.size );
+	boundariesProgram.setUniform2f( "gridOffset", offset );
 	boundariesProgram.setUniform1f( "scale", scale );
-	// do this for all offsets, see boundary slabop l.78
 
 	output.begin();
-	ofClear( 0 );
-	ofFill();
-	plane.draw();
-	output.end();
+		
+	// Draw one line to apply bounds to one side
+	line.draw();
 
+	output.end();
 	boundariesProgram.end();
 }
+
 
 void FluidScene::vortex( ofFbo& output ) {
 	vorticityProgram.begin();

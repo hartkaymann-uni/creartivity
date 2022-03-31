@@ -9,6 +9,7 @@ uniform float scale;
 out vec4 vFragColor; 
 
 void main() {
-	vec2 uv = (gl_FragCoord.xy + gridOffset.xy) / gridSize.xy;
-	vFragColor = vec4(scale * texture(read, uv).xyz, 1.0);
+	vec2 coords = (gl_FragCoord.xy + gridOffset.xy);
+	vFragColor = vec4(scale * texture(read, coords).xyz, 1.0);
+	//vFragColor = vec4(0.0, -1.0, 0.0, 1.0);
 }

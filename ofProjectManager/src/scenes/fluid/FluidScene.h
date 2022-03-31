@@ -76,6 +76,7 @@ private:
 	// Slabops
 	void advect( ofFbo& advected, ofFbo& output );
 	void boundary( ofFbo& input, ofFbo& output, float scale = -1.f);
+	void boundarySide( ofFbo& input, ofFbo& output, ofPolyline& line, glm::vec2 offset, float scale);
 	void vortex( ofFbo& output );
 	void vortexConfine( ofFbo& vorticity, ofFbo& output );
 	void diffuse( ofShader& jacobi, ofFbo& x, ofFbo& b, ofFbo& output, float alpha = -1.f, float beta = 4.f, float scale = -1.f);
