@@ -1,17 +1,9 @@
 #include "FluidScene.h"
 
-FluidScene::FluidScene() :
-	ccScene( "Fluid" ),
-	time( 0.f ),
-	dt( 0.f ),
-	timestep( 1.f ),
-	debug( false ),
-	step( false ) {}
+FluidScene::FluidScene() : ccScene( "Fluid" ) {}
 
 void FluidScene::setup()
 {
-	grid = { {512, 256}, 1.f, true };
-
 	plane.set( grid.size.x - 2.f, grid.size.y - 2.f );
 	plane.setPosition( grid.size.x * .5f, grid.size.y * .5f, 0.f );
 	plane.setResolution( 2, 2 );
@@ -82,6 +74,20 @@ void FluidScene::setup()
 	bool err_for = splatProgram.load( shaderPath / "passthru.vert", shaderPath / "splat.frag" );
 
 	bool err_disp = displayVectorProgram.load( shaderPath / "passthru.vert", shaderPath / "displayvector.frag" );
+
+	// Initialize GUI parameters
+	gui.add( p_Timestep.set( "Timestep", timestep, 0.f, 2.f ) );
+	gui.add( p_SplatRadius.set( "Splat", splatRadius, 0.f, 1.f ) );
+	gui.add( p_Bounds.set( "Bounds", grid.applyBounds ) );
+	gui.add( p_ApplyViscosity.set( "Apply Viscosity", applyViscosity ) );
+	gui.add( p_Viscosity.set( "Viscosity", viscosity, 0.f, 1.f ) );
+	gui.add( p_ApplyVorticity.set( "Apply Vorticity", applyVorticity ) );
+	gui.add( p_Epsilon.set( "Epsilon", epsilon, 0.f, .1f ) );
+	gui.add( p_Curl.set( "Curl", curl, 0.f, 1.f ) );
+	gui.add( p_JacobiIterations.set( "Solver Iterations", jacobiIterations, 0, 50 ) );
+	gui.add( p_Dissipation.set( "Dissipation", dissipation, 0.9f, 1.f ) );
+	gui.setPosition( width - gui.getWidth() - 10, height - gui.getHeight() - 10 );
+
 }
 
 void FluidScene::update()
@@ -216,7 +222,7 @@ void FluidScene::boundarySide( ofFbo& input, ofFbo& output, ofPolyline& line, gl
 	boundariesProgram.setUniform1f( "scale", scale );
 
 	output.begin();
-		
+
 	// Draw one line to apply bounds to one side
 	line.draw();
 
@@ -355,7 +361,7 @@ void FluidScene::splat( ofFbo& read, glm::vec3 color, glm::vec2 point ) {
 	splatProgram.setUniform2f( "gridSize", grid.size );
 	splatProgram.setUniform3f( "color", color );
 	splatProgram.setUniform2f( "point", point );
-	splatProgram.setUniform1f( "radius", mouseRadius );
+	splatProgram.setUniform1f( "radius", splatRadius );
 
 	ofFbo outBuffer;
 	outBuffer.allocate( grid.size.x, grid.size.y, GL_RGB32F );
