@@ -26,7 +26,7 @@ void ccUser::setPosition( glm::vec3 pos )
 	motion = pos - position;
 	position = pos;
 
-	cout << "User:" << id << " Position:" << position << " Motion: " << motion << endl;
+	//cout << "User:" << id << " Position:" << position << " Motion: " << motion << endl;
 }
 
 void ccUser::setPosition( glm::vec2 pos ) {

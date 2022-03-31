@@ -41,7 +41,7 @@ private:
 
 	float viscosity = 0.3;
 	bool applyViscosity = false;
-	bool applyVorticity = false;
+	bool applyVorticity = true;
 
 	float epsilon = 0.00024414;
 	float curl = 0.3;
