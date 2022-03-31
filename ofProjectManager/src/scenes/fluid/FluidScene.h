@@ -45,6 +45,7 @@ private:
 	float dissipation = 0.998; // none:1, slow:0.998, fast=0.992, veryfast=0.9
 
 	ofParameterGroup groupGeneral;
+	ofParameterGroup groupView;
 	ofParameterGroup groupBounds;
 	ofParameterGroup groupViscosity;
 	ofParameterGroup groupVorticity;
@@ -52,6 +53,7 @@ private:
 
 	ofParameter<float> p_Timestep;
 	ofParameter<float> p_SplatRadius;
+	ofParameter<bool> p_DebugView;
 	ofParameter<bool> p_Bounds;
 	ofParameter<bool> p_ApplyViscosity;
 	ofParameter<float> p_Viscosity;

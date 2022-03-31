@@ -77,6 +77,7 @@ void FluidScene::setup()
 
 	// Initialize GUI parameters
 	groupGeneral.setName( "General" );
+	groupGeneral.setName( "View" );
 	groupSolver.setName( "Solver" );
 	groupBounds.setName( "Bounds" );
 	groupVorticity.setName( "Vorticity" );
@@ -85,6 +86,7 @@ void FluidScene::setup()
 	groupGeneral.add( p_Timestep.set( "Timestep", timestep, 0.f, 2.f ) );
 	groupGeneral.add( p_SplatRadius.set( "Splat", splatRadius, 0.f, 1.f ) );
 	groupGeneral.add( p_Dissipation.set( "Dissipation", dissipation, 0.9f, 1.f ) );
+	groupView.add( p_DebugView.set( "Debug", false ) );
 	groupBounds.add( p_Bounds.set( "Bounds", grid.applyBounds ) );
 	groupSolver.add( p_JacobiIterations.set( "Iterations", jacobiIterations, 0, 50 ) );
 	groupVorticity.add( p_ApplyVorticity.set( "Apply Vorticity", applyVorticity ) );
@@ -94,6 +96,7 @@ void FluidScene::setup()
 	groupViscosity.add( p_Viscosity.set( "Viscosity", viscosity, 0.f, 1.f ) );
 
 	gui.add( groupGeneral );
+	gui.add( groupView );
 	gui.add( groupSolver );
 	gui.add( groupBounds );
 	gui.add( groupVorticity );
@@ -397,35 +400,36 @@ void FluidScene::clearBuffer( ofFbo& buffer ) {
 
 void FluidScene::draw()
 {
-	//ofBackground( 0 );
+	ofBackground( 0 );
 
-	// Draw fields
-	ofDrawBitmapString( "density", 0.f, 0.f + 10.f );
-	density.draw( 0.f, 0.f );
+	if (p_DebugView.get()) {
+		//Debug view showing all fields
 
+		ofDrawBitmapString( "density", 0.f, 0.f + 10.f );
+		density.draw( 0.f, 0.f );
 
-	ofDrawBitmapString( "velocity", 0.f, grid.size.y + 10.f );
-	/*
-	*/
-	displayVectorProgram.begin();
-	displayVectorProgram.setUniformTexture( "read", velocity.getTexture(), 1 );
-	displayVectorProgram.setUniform3f( "bias", glm::vec3( 0.5, 0.5, 0.5 ) );
-	displayVectorProgram.setUniform3f( "scale", glm::vec3( 0.5, 0.5, 0.5 ) );
-	displayVectorProgram.setUniform2f( "gridSize", grid.size );
-	velocity.draw( 0.f, grid.size.y );
+		ofDrawBitmapString( "velocity", 0.f, grid.size.y + 10.f );
+		displayVectorProgram.begin();
+		displayVectorProgram.setUniformTexture( "read", velocity.getTexture(), 1 );
+		displayVectorProgram.setUniform3f( "bias", glm::vec3( 0.5, 0.5, 0.5 ) );
+		displayVectorProgram.setUniform3f( "scale", glm::vec3( 0.5, 0.5, 0.5 ) );
+		displayVectorProgram.setUniform2f( "gridSize", grid.size );
+		velocity.draw( 0.f, grid.size.y );
 
-	displayVectorProgram.end();
+		displayVectorProgram.end();
 
-	ofDrawBitmapString( "divergence", grid.size.x, 0.f + 10.f );
-	velocityDivergence.draw( grid.size.x, 0.f );
+		ofDrawBitmapString( "divergence", grid.size.x, 0.f + 10.f );
+		velocityDivergence.draw( grid.size.x, 0.f );
 
-	ofDrawBitmapString( "vorticity", grid.size.x, grid.size.y + 10.f );
-	velocityVorticity.draw( grid.size.x, grid.size.y );
+		ofDrawBitmapString( "vorticity", grid.size.x, grid.size.y + 10.f );
+		velocityVorticity.draw( grid.size.x, grid.size.y );
 
-	ofDrawBitmapString( "pressure", 0.f, grid.size.y * 2.f + 10.f );
-	pressure.draw( 0.f, grid.size.y * 2.f );
-
-
+		ofDrawBitmapString( "pressure", 0.f, grid.size.y * 2.f + 10.f );
+		pressure.draw( 0.f, grid.size.y * 2.f );
+	}
+	else {
+		density.draw( 0.f, 0.f, width, height );
+	}
 }
 
 void FluidScene::keyPressed( int key ) {
