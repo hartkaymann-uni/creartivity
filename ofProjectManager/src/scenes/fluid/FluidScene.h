@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ccFluidSolver.h"
+#include "ccFluid.h"
 
 /*
 	Fluid Scene
@@ -46,14 +46,13 @@ private:
 	ofParameter<int> p_JacobiIterations;
 	ofParameter<float> p_Dissipation;
 
-	fluid::ccFluidSolver solver;
+	fluid::ccSolver solver;
 
 	ofShader displayVectorProgram;
 
 	inline void handleCurlChanged( float& c ) { solver.setCurl( c ); }
 	inline void handleEpsilonChanged( float& e ) { solver.setEpsilon( e ); }
 	inline void handleTimestepChanged( float& t ) { solver.setTimestep( t ); }
-	inline void handleDebugViewChanged( bool& d ) { debug = d; }
 	inline void handleViscosityChanged( float& v ) { solver.setViscosity( v ); }
 	inline void handleBoundsChanged( bool& b ) { solver.setBounds( b ); }
 	inline void handleDissipationChanged( float& d ) { solver.setDissipation( d ); }

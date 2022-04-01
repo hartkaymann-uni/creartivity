@@ -7,7 +7,7 @@ namespace fluid {
 
 	struct Field {
 	public:
-		void allocate( glm::vec2 dim, int internalFormat = GL_RGBA) {
+		void allocate( glm::vec2 dim, int internalFormat = GL_RGBA ) {
 			// Allocate
 			for (int i = 0; i < 2; i++) {
 				FBOs[i].allocate( dim.x, dim.y, internalFormat );
@@ -24,7 +24,7 @@ namespace fluid {
 		}
 
 		void swap() {
-			std::swap( read, write);
+			std::swap( read, write );
 		}
 
 		void clear() {
@@ -36,7 +36,7 @@ namespace fluid {
 		}
 
 		ofFbo& operator[]( int n ) { return FBOs[n]; }
-		ofFbo* read;       
+		ofFbo* read;
 		ofFbo* write;
 
 	private:
@@ -74,6 +74,9 @@ namespace fluid {
 		inline Grid* const getGrid() { return &grid; }
 		inline ofFbo* const getDensity() { return density.read; }
 		inline ofFbo* const getVelocity() { return velocity.read; }
+		inline ofFbo* const getDivergence() { return divergence.read; }
+		inline ofFbo* const getVorticity() { return vorticity.read; }
+		inline ofFbo* const getPressure() { return pressure.read; }
 
 		inline void setCurl( float c ) { s.curl = c; }
 		inline void setEpsilon( float e ) { s.epsilon = e; }
