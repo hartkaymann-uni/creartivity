@@ -12,6 +12,5 @@ int main() {
 	settings.stencilBits = 8;
 	ofCreateWindow( settings );
 
-
 	ofRunAppWithAppUtils( new ofApp() );
 }

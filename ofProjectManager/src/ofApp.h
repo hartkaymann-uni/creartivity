@@ -45,6 +45,7 @@ public:
 
 	ccReceiver receiver;
 	vector<ccScene*> scenes;
+	bool showGui = true;
 
 	ccUserManager userManager;
 };

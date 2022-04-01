@@ -19,7 +19,7 @@ void ofApp::setup() {
 	scenes.push_back( (GameOfLifeScene*)sceneManager.add( new GameOfLifeScene() ) );
 	scenes.push_back( (SwarmScene*)sceneManager.add( new SwarmScene() ) );
 	scenes.push_back( (ContourLinesScene*)sceneManager.add( new ContourLinesScene() ) );
-	
+
 	// Initialize scene manager
 	sceneManager.setup( true ); // Setup all scenes now
 	ofSetLogLevel( "ofxScenemanager", OF_LOG_VERBOSE );
@@ -32,7 +32,7 @@ void ofApp::setup() {
 	// TODO: Scenen dont need this anymore, as user array does the work here
 	for (ccScene* scene : scenes) {
 		scene->setReceiver( &receiver );
-		scene->setUserManager( &userManager);
+		scene->setUserManager( &userManager );
 	}
 }
 
@@ -66,9 +66,13 @@ void ofApp::draw() {
 		<< "Current Scene: " << sceneManager.getCurrentSceneIndex()
 		<< " " << sceneManager.getCurrentSceneName() << endl;
 
-	for (ccScene* s : scenes) {
-		if (s->getName() == sceneManager.getCurrentSceneName()) {
-			s->getGui().draw();
+	if (showGui) {
+		for (ccScene* s : scenes) {
+			if (s->getName() == sceneManager.getCurrentSceneName()) {
+				ofxPanel& gui = s->getGui();
+				gui.setPosition( ofGetWidth() - gui.getWidth() - 10, ofGetHeight() - gui.getHeight() - 10);
+				s->getGui().draw();
+			}
 		}
 	}
 
@@ -82,7 +86,9 @@ void ofApp::keyPressed( int key ) {
 	case 'd':
 		//bDebug = !bDebug;
 		break;
-
+	case 'h':
+		showGui = !showGui;
+		break;
 	case 'c':
 		ofShowCursor();
 		break;
