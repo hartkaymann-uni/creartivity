@@ -46,8 +46,20 @@ private:
 	ofParameter<int> p_JacobiIterations;
 	ofParameter<float> p_Dissipation;
 
-	ccFluidSolver solver;
+	fluid::ccFluidSolver solver;
 
 	ofShader displayVectorProgram;
+
+	inline void handleCurlChanged( float& c ) { solver.setCurl( c ); }
+	inline void handleEpsilonChanged( float& e ) { solver.setEpsilon( e ); }
+	inline void handleTimestepChanged( float& t ) { solver.setTimestep( t ); }
+	inline void handleDebugViewChanged( bool& d ) { debug = d; }
+	inline void handleViscosityChanged( float& v ) { solver.setViscosity( v ); }
+	inline void handleBoundsChanged( bool& b ) { solver.setBounds( b ); }
+	inline void handleDissipationChanged( float& d ) { solver.setDissipation( d ); }
+	inline void handleSplatRadiusChanged( float& r ) { solver.setSplatRadius( r ); }
+	inline void handleApplyViscosityChanged( bool& v ) { solver.setApplyViscosity( v ); }
+	inline void handleApplyVorticityChanged( bool& v ) { solver.setApplyVorticity( v ); }
+	inline void handleJacobiIterationsChanged( int& i ) { solver.setJacobiIterations( i ); }
 
 };

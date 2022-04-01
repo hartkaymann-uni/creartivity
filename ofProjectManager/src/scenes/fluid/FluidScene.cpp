@@ -43,7 +43,17 @@ void FluidScene::setup()
 	groupViscosity.add( p_ApplyViscosity.set( "Apply Viscosity", solverSettings.applyViscosity ) );
 	groupViscosity.add( p_Viscosity.set( "Viscosity", solverSettings.viscosity, 0.f, 1.f ) );
 
-	p_Timestep.addListener( this, &ccFluidSolver::setTimestep );
+	p_Timestep.addListener( this, &FluidScene::handleTimestepChanged );
+	p_SplatRadius.addListener( this, &FluidScene::handleSplatRadiusChanged );
+	p_Dissipation.addListener( this, &FluidScene::handleDissipationChanged );
+	p_DebugView.addListener( this, &FluidScene::handleDebugViewChanged );
+	p_Bounds.addListener( this, &FluidScene::handleBoundsChanged );
+	p_JacobiIterations.addListener( this, &FluidScene::handleJacobiIterationsChanged );
+	p_ApplyVorticity.addListener( this, &FluidScene::handleApplyVorticityChanged );
+	p_Epsilon.addListener( this, &FluidScene::handleEpsilonChanged );
+	p_Curl.addListener( this, &FluidScene::handleCurlChanged );
+	p_ApplyViscosity.addListener( this, &FluidScene::handleApplyViscosityChanged );
+	p_Viscosity.addListener( this, &FluidScene::handleViscosityChanged );
 
 	gui.add( groupGeneral );
 	gui.add( groupView );
@@ -75,20 +85,20 @@ void FluidScene::draw()
 
 	if (p_DebugView.get()) {
 		//Debug view showing all fields
-		/*
+		
 		ofDrawBitmapString( "density", 0.f, 0.f + 10.f );
-		density.draw( 0.f, 0.f );
+		solver.getDensity()->draw(0.f, 0.f);
 
-		ofDrawBitmapString( "velocity", 0.f, grid.size.y + 10.f );
+		ofDrawBitmapString( "velocity", 0.f, solver.getGrid()->size.y + 10.f);
 		displayVectorProgram.begin();
-		displayVectorProgram.setUniformTexture( "read", velocity.getTexture(), 1 );
+		displayVectorProgram.setUniformTexture( "read", solver.getVelocity()->getTexture(), 1);
 		displayVectorProgram.setUniform3f( "bias", glm::vec3( 0.5, 0.5, 0.5 ) );
 		displayVectorProgram.setUniform3f( "scale", glm::vec3( 0.5, 0.5, 0.5 ) );
-		displayVectorProgram.setUniform2f( "gridSize", grid.size );
-		velocity.draw( 0.f, grid.size.y );
+		displayVectorProgram.setUniform2f( "gridSize", solver.getGrid()->size);
+		solver.getVelocity()->draw(0.f, solver.getGrid()->size.y);
 
 		displayVectorProgram.end();
-
+		/*
 		ofDrawBitmapString( "divergence", grid.size.x, 0.f + 10.f );
 		velocityDivergence.draw( grid.size.x, 0.f );
 
