@@ -57,6 +57,9 @@ namespace fluid {
 			float curl = 0.3;	// 0.3
 			int jacobiIterations = 20; // normal: 20-50
 			float dissipation = 0.998; // none:1, slow:0.998, fast=0.992, veryfast=0.9
+			bool applyGravity = false;
+			glm::vec2 gravityDir = glm::vec2( 0.0, 1.0 );
+			float gravityStr = 9.81; // 9.81
 		};
 
 		struct Grid {
@@ -78,16 +81,19 @@ namespace fluid {
 		inline ofFbo* const getVorticity() { return vorticity.read; }
 		inline ofFbo* const getPressure() { return pressure.read; }
 
-		inline void setCurl( float c ) { s.curl = c; }
-		inline void setEpsilon( float e ) { s.epsilon = e; }
 		inline void setTimestep( float t ) { s.timestep = t; }
-		inline void setViscosity( float v ) { s.viscosity = v; }
-		inline void setBounds( bool b ) { grid.applyBounds = b; }
-		inline void setDissipation( float d ) { s.dissipation = d; }
 		inline void setSplatRadius( float r ) { s.splatRadius = r; }
-		inline void setApplyViscosity( bool v ) { s.applyViscosity = v; }
-		inline void setApplyVorticity( bool v ) { s.applyVorticity = v; }
+		inline void setDissipation( float d ) { s.dissipation = d; }
+		inline void setBounds( bool b ) { grid.applyBounds = b; }
 		inline void setJacobiIterations( int i ) { s.jacobiIterations = i; }
+		inline void setApplyVorticity( bool v ) { s.applyVorticity = v; }
+		inline void setEpsilon( float e ) { s.epsilon = e; }
+		inline void setCurl( float c ) { s.curl = c; }
+		inline void setApplyViscosity( bool v ) { s.applyViscosity = v; }
+		inline void setViscosity( float v ) { s.viscosity = v; }
+		inline void setApplyGravity( bool g) { s.applyGravity = g; }
+		inline void setGravityDirection( glm::vec2 d ) { s.gravityDir = d; }
+		inline void setGravityStrength( float g ) { s.gravityStr = g; }
 
 	private:
 		ofFbo createFbo( int format );
@@ -106,6 +112,7 @@ namespace fluid {
 		void diverge( Field& divergence );
 		void gradiate( Field& output );
 		void splat( Field& read, glm::vec3 color, glm::vec2 point );
+		void gravitate( Field& output);
 
 		Settings s;
 		Grid grid;
@@ -129,5 +136,6 @@ namespace fluid {
 		ofShader vorticityforceProgram;
 		ofShader boundariesProgram;
 		ofShader splatProgram;
+		ofShader gravityProgram;
 	};
 }

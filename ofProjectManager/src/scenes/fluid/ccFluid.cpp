@@ -65,6 +65,7 @@ namespace fluid {
 		bool err_jacv = jacobivectorProgram.load( shaderPath / "passthru.vert", shaderPath / "jacobivector.frag" );
 		bool err_jacs = jacobiscalarProgram.load( shaderPath / "passthru.vert", shaderPath / "jacobiscalar.frag" );
 		bool err_vorf = vorticityforceProgram.load( shaderPath / "passthru.vert", shaderPath / "vorticityforce.frag" );
+		bool err_grav = gravityProgram.load( shaderPath / "passthru.vert", shaderPath / "gravity.frag" );
 	}
 
 	ofFbo ccSolver::createFbo( int format ) {
@@ -76,7 +77,12 @@ namespace fluid {
 	}
 
 	void ccSolver::step( ccUser& user )
-	{	// Dissipation only affects density carried by the velocity field
+	{
+		if (s.applyGravity) {
+			gravitate( velocity );
+		}
+
+		// Dissipation only affects density carried by the velocity field
 		advect( velocity, velocity, 1 );
 		boundary( velocity, velocity, -1.f );
 
@@ -90,7 +96,6 @@ namespace fluid {
 			vortexConfine( vorticity, velocity );
 			boundary( velocity, velocity, -1.f );
 		}
-
 		if (s.applyViscosity && s.viscosity > 0.f) {
 			float scale = grid.scale;
 
@@ -131,7 +136,6 @@ namespace fluid {
 			splat( density, { 1.0, 1.0, 1.0 }, point );
 			boundary( velocity, velocity, -1.f );
 		}
-
 	}
 
 	void ccSolver::advect( Field& advected, Field& output, float d ) {
@@ -313,4 +317,22 @@ namespace fluid {
 
 		splatProgram.end();
 	}
+
+	void ccSolver::gravitate( Field& output ) {
+		gravityProgram.begin();
+
+		gravityProgram.setUniformTexture( "velocity", velocity.read->getTexture(), 2 );
+		gravityProgram.setUniform2f( "dir", s.gravityDir );
+		gravityProgram.setUniform1f( "str", s.gravityStr );
+
+		output.write->begin();
+		ofClear( 0 );
+		ofFill();
+		plane.draw();
+		output.write->end();
+		output.swap();
+
+		gravityProgram.end();
+	}
+
 }
