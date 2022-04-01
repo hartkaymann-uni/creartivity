@@ -6,6 +6,7 @@
 #include "ofxOsc.h"
 
 #include "ccReceiver.h"
+#include "ccUserManager.h"
 
 #define HAVE_OFX_GUI
 
@@ -44,4 +45,7 @@ public:
 
 	ccReceiver receiver;
 	vector<ccScene*> scenes;
+	bool showGui = true;
+
+	ccUserManager userManager;
 };

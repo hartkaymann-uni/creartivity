@@ -6,8 +6,6 @@ GameOfLifeScene::GameOfLifeScene( int cells_x, int cells_y )
 	: ccScene( "GameOfLife" ),
 	n_cells_x( cells_x ),
 	n_cells_y( cells_y ),
-	mouseIsDown( false ),
-	mousePosition( 0.f, 0.f, 0.f ),
 	time( 0.f ),
 	cellOffset( 0.f ),
 	sequenceDuration( 10.f ),
@@ -21,17 +19,17 @@ GameOfLifeScene::GameOfLifeScene( int cells_x, int cells_y )
 	string module = "GameOfLife Setup";
 
 	bool err_logic = logicShader.load( shader_path / "passthru.vert", shader_path / "gol.frag" );
-	if (err_logic) {
+	if (!err_logic) {
 		(void)ofLogError( module, "Failed to load logic shader!" );
 	}
 
 	bool err_instanced = instancedShader.load( shader_path / "renderInstanced.vert", shader_path / "renderInstanced.frag" );
-	if (err_instanced) {
+	if (!err_instanced) {
 		(void)ofLogError( module, "Failed to load logic shader!" );
 	}
 
 	bool err_outline = outlineShader.load( shader_path / "renderInstanced.vert", shader_path / "outline.frag" );
-	if (err_outline) {
+	if (!err_outline) {
 		(void)ofLogError( module, "Failed to load outline shader!" );
 	}
 }
@@ -321,43 +319,6 @@ float GameOfLifeScene::calculateSphereRadius( ofVec2f dim ) {
 //////////////////
 // Input Events //
 //////////////////
-void GameOfLifeScene::keyPressed( int key ) {
-
-	// std::cout << key << std::endl;
-	if (key == ofKey::OF_KEY_SHIFT)
-	{
-		camera.enableMouseInput();
-		//std::cout << camera.getPosition() << std::endl;
-	}
-	else if (key == 'r' || key == 'R') {
-		resetCamera();
-	}
-}
-
-void GameOfLifeScene::keyReleased( int key ) {
-
-	if (key == ofKey::OF_KEY_SHIFT)
-	{
-		camera.disableMouseInput();
-	}
-}
-
-void GameOfLifeScene::mousePressed( int x, int y, int button )
-{
-	mouseIsDown = true;
-	mousePosition.set( getProjectedPosition( ofVec3f( x, y, 0.0 ) ) );
-}
-
-void GameOfLifeScene::mouseReleased( int x, int y, int button )
-{
-	mouseIsDown = false;
-}
-
-void GameOfLifeScene::mouseDragged( int x, int y, int button )
-{
-	if (mouseIsDown)
-		mousePosition.set( getProjectedPosition( ofVec3f( x, y, 0.0 ) ) );
-}
 
 void GameOfLifeScene::windowResized( int w, int h ) {
 	width = ofGetWidth();

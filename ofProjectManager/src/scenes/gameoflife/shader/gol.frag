@@ -3,7 +3,7 @@
 #define N_USERS 10
 
 // Color values
-// r/x: lifeforce of cell, whats taken for gol logic isntead of 0 and 1
+// r/x: lifeforce of cell, whats taken for gol logic instead of 0 and 1
 // g/y: sum of lifeforce of neigbouring cells divided by 8 for clamping
 // b/z: amount of influece, influence stronger if recently affected by interaction, WIP
 uniform sampler2DRect cellData; // Previous generation cell data
@@ -21,10 +21,6 @@ uniform vec2 hands[N_USERS];
 in vec2 vTexCoord;
 
 out vec4 vFragColor;
-
-float rand(vec2 co){
-    return fract(sin(dot(co, vec2(12.9898, 78.233))) * 43758.5453);
-}
 
 void main(void){
     // Get the cell state 
@@ -46,7 +42,7 @@ void main(void){
     next_state.y = n_neighbours / 8.0;
 
     if ( state.x <= 0.0) {
-        // Dead with 2.5 to 3 is revived
+        // Dead with 2.5 to 3.5 is revived
         if( n_neighbours >= 2.5 && n_neighbours <= 3.5 ) {
             next_state.x += evolutionFac;
         }
@@ -78,19 +74,21 @@ void main(void){
                 next_state.x += mouseStr;
                 next_state.z = 1.0;
             }
-        }
-    }
+        } 
+     }
+    float influence = max(left_top.z, max(mid_top.z, max( right_top.z, max( left_mid.z, max( right_mid.z, max( left_bot.z, max( mid_bot.z, max( right_bot.z, state.z ))))))));
 
-    // average influence of neighbouring cells
-    float influence = (left_top.z + mid_top.z + right_top.z + left_mid.z + right_mid.z + left_bot.z + mid_bot.z+ right_bot.z ) / 8.0;
-        
-        // save z from previous maybe? its just recalculated entirely right now
     if(state.x > 0) {
-        next_state.z += influence / 2.0; 
+        next_state.z = influence * (1.0 - evolutionFac);
+
+        if(next_state.z > 0.0) {
+        influence -= evolutionFac;    
     }
-    if(state.z > 0.0) {
-        next_state.z -= influence / 2.0;
-    }
+}
+    
+
+    // average influence of neighbouring cells        
+    
 
      // Clamp values between 0.0 and 1.0
     next_state.x = clamp(next_state.x, 0.0, 1.0);

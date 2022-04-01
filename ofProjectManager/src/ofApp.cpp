@@ -4,7 +4,7 @@
 
 //--------------------------------------------------------------
 void ofApp::setup() {
-	ofBackground( 0 );
+	ofBackground( 255, 255, 0 );
 
 	ofSetFrameRate( 60 );
 	ofSetVerticalSync( false );
@@ -14,23 +14,25 @@ void ofApp::setup() {
 	setTransformer( &transformer );
 
 	// Load scenes
-	// scenes.push_back( (ParticleScene*)sceneManager.add( new ParticleScene() ) );
-	// scenes.push_back( (CuboidScene*)sceneManager.add( new CuboidScene() ) );
 	//scenes.push_back( (SpiralScene*)sceneManager.add( new SpiralScene() ) );
+	scenes.push_back( (FluidScene*)sceneManager.add( new FluidScene() ) );
 	scenes.push_back( (GameOfLifeScene*)sceneManager.add( new GameOfLifeScene() ) );
 	scenes.push_back( (SwarmScene*)sceneManager.add( new SwarmScene() ) );
 	scenes.push_back( (ContourLinesScene*)sceneManager.add( new ContourLinesScene() ) );
+
+	// Initialize scene manager
 	sceneManager.setup( true ); // Setup all scenes now
 	ofSetLogLevel( "ofxScenemanager", OF_LOG_VERBOSE );
-
-	sceneManager.gotoScene( "GameOfLife", true );
+	sceneManager.gotoScene( "Fluid", true );
 	lastScene = sceneManager.getCurrentSceneIndex();
 	sceneManager.setOverlap( false );
-
 	setSceneManager( &sceneManager );
 
+	// Give all scenes a pointer to the receiver
+	// TODO: Scenen dont need this anymore, as user array does the work here
 	for (ccScene* scene : scenes) {
 		scene->setReceiver( &receiver );
+		scene->setUserManager( &userManager );
 	}
 }
 
@@ -63,10 +65,14 @@ void ofApp::draw() {
 	ofxBitmapString( 12, ofGetHeight() - 8 )
 		<< "Current Scene: " << sceneManager.getCurrentSceneIndex()
 		<< " " << sceneManager.getCurrentSceneName() << endl;
-	
-	for (ccScene* s : scenes) {
-		if (s->getName() == sceneManager.getCurrentSceneName()) {
-			s->getGui().draw();
+
+	if (showGui) {
+		for (ccScene* s : scenes) {
+			if (s->getName() == sceneManager.getCurrentSceneName()) {
+				ofxPanel& gui = s->getGui();
+				gui.setPosition( ofGetWidth() - gui.getWidth() - 10, ofGetHeight() - gui.getHeight() - 10);
+				s->getGui().draw();
+			}
 		}
 	}
 
@@ -78,9 +84,11 @@ void ofApp::keyPressed( int key ) {
 	switch (key) {
 
 	case 'd':
-		bDebug = !bDebug;
+		//bDebug = !bDebug;
 		break;
-
+	case 'h':
+		showGui = !showGui;
+		break;
 	case 'c':
 		ofShowCursor();
 		break;
@@ -118,17 +126,18 @@ void ofApp::mouseMoved( int x, int y ) {
 
 //--------------------------------------------------------------
 void ofApp::mouseDragged( int x, int y, int button ) {
-
+	userManager.getMouseUser()->setPosition( { x, y } );
 }
 
 //--------------------------------------------------------------
 void ofApp::mousePressed( int x, int y, int button ) {
-
+	userManager.getMouseUser()->setPosition( { x, y } );
 }
 
 //--------------------------------------------------------------
 void ofApp::mouseReleased( int x, int y, int button ) {
-
+	// Reset user motion by moving by zero 
+	userManager.getMouseUser()->move( { 0.f, 0.f, 0.f } );
 }
 
 //--------------------------------------------------------------

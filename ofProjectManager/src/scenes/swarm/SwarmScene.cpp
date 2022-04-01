@@ -25,7 +25,7 @@ void SwarmScene::setup() {
 		p.pos.z = ofRandom(-maxParticleDepth, 0);
 		p.pos.w = 1;
 
-		p.vel = { 0,0,0,0 };
+		p.u = { 0,0,0,0 };
 		p.color = { 1, 1, 1, 1 };
 		p.initialPos = p.pos;
 		p.bufferPos = p.pos;

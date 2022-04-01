@@ -52,7 +52,7 @@ public:
 
 	struct Particle {
 		glm::vec4 pos;
-		glm::vec4 vel;
+		glm::vec4 u;
 		ofFloatColor color;
 		glm::vec4 unique;
 		glm::vec4 initialPos;

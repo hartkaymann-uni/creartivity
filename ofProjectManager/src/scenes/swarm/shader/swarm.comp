@@ -115,7 +115,7 @@ float map(float value, float min1, float max1, float min2, float max2) {
 
 
 vec4 applyBlink(vec4 my_color, float depth) {
-	float blinkDuration = 1f;
+	float blinkDuration = 1.f;
 
 	if(mod(elapsedTime, blinkDuration * 7) > blinkDuration){
 		return my_color;
