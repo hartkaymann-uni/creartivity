@@ -11,5 +11,5 @@ out vec4 vFragColor;
 void main() {
 	vec2 coords = (gl_FragCoord.xy + gridOffset.xy);
 	vFragColor = vec4(scale * texture(read, coords).xyz, 1.0);
-	//vFragColor = vec4(0.0, -1.0, 0.0, 1.0);
+	//vFragColor = vec4(gridOffset, 0.0, 1.0);
 }

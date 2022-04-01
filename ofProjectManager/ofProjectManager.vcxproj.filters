@@ -117,6 +117,7 @@
     <ClCompile Include="src\scenes\fluid\FluidScene.cpp" />
     <ClCompile Include="src\ccUser.cpp" />
     <ClCompile Include="src\ccUserManager.cpp" />
+    <ClCompile Include="src\scenes\fluid\ccFluid.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -330,6 +331,7 @@
     <ClInclude Include="src\scenes\fluid\FluidScene.h" />
     <ClInclude Include="src\ccUser.h" />
     <ClInclude Include="src\ccUserManager.h" />
+    <ClInclude Include="src\scenes\fluid\ccFluid.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="icon.rc" />
