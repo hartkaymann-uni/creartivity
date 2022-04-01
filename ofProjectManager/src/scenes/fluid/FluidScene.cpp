@@ -21,9 +21,8 @@ void FluidScene::setup()
 	ccSolver::Grid solverGrid;
 	solverGrid.size = glm::vec2( 512, 256 );
 	solverGrid.scale = 1.0f;
-	solverGrid.applyBounds = false;
+	solverGrid.applyBounds = true;
 	solver.setup( solverGrid );
-
 
 	// Initialize GUI parameters
 	groupGeneral.setName( "General" );
@@ -43,7 +42,7 @@ void FluidScene::setup()
 	groupVorticity.add( p_Epsilon.set( "Epsilon", solverSettings.epsilon, 0.f, .1f ) );
 	groupVorticity.add( p_Curl.set( "Curl", solverSettings.curl, 0.f, 1.f ) );
 	groupBounds.add( p_Bounds.set( "Bounds", solverGrid.applyBounds ) );
-	groupView.add( p_DebugView.set( "Debug", false ) );
+	groupView.add( p_DebugView.set( "Debug", true ) );
 
 	p_ApplyViscosity.addListener( this, &FluidScene::handleApplyViscosityChanged );
 	p_JacobiIterations.addListener( this, &FluidScene::handleJacobiIterationsChanged );

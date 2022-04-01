@@ -1,15 +1,13 @@
 #pragma once
 
 #include "ccFluid.h"
+#include "ccScene.h"
 
 /*
 	Fluid Scene
 	Simulation of an incompressible, homogenous fluid using the navier-stokes equaution.
-	Right now the simulation is two-dimensional, but three-dimensional movement should be added in the future.
+	Right now the simulation is two-dimensional, but three-dimensional movement could be added in the future.
 */
-
-#include "ccScene.h"
-#include <time.h>
 
 class FluidScene : public ccScene
 {
@@ -24,8 +22,8 @@ public:
 
 private:
 
-	bool debug = false;
-	bool step = false;
+	bool debug = true;
+	bool step = true;
 
 	ofParameterGroup groupGeneral;
 	ofParameterGroup groupView;
@@ -60,5 +58,4 @@ private:
 	inline void handleApplyViscosityChanged( bool& v ) { solver.setApplyViscosity( v ); }
 	inline void handleApplyVorticityChanged( bool& v ) { solver.setApplyVorticity( v ); }
 	inline void handleJacobiIterationsChanged( int& i ) { solver.setJacobiIterations( i ); }
-
 };
