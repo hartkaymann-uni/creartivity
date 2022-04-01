@@ -33,7 +33,7 @@ private:
 		float scale;
 		bool applyBounds;
 	};
-	Grid grid = { {512, 256}, 1.f, true };
+	Grid grid = { {512 * 2, 256*2}, 1.f, true };
 	ofPlanePrimitive plane;
 
 	bool applyVorticity = true;

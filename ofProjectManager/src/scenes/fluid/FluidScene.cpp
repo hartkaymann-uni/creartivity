@@ -102,8 +102,6 @@ void FluidScene::setup()
 	gui.add( groupVorticity );
 	gui.add( groupViscosity );
 
-	gui.setPosition( width - gui.getWidth() - 10, height - gui.getHeight() - 10 );
-
 }
 
 void FluidScene::update()
