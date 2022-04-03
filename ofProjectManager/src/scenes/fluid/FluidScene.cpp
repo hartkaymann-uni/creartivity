@@ -22,7 +22,7 @@ void FluidScene::setup()
 	solver = ccSolver( solverSettings );
 
 	ccSolver::Grid solverGrid;
-	solverGrid.size = glm::vec2( 512, 256 );
+	solverGrid.size = glm::vec2( 1024, 768);
 	solverGrid.scale = 1.0f;
 	solverGrid.applyBounds = true;
 	solver.setup( solverGrid );

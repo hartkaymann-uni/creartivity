@@ -133,7 +133,7 @@ namespace fluid {
 			glm::vec2 point = { xMapped , yMapped };
 
 			splat( velocity, color, point );
-			splat( density, { 1.0, 1.0, 1.0 }, point );
+			splat( density, { 1.0, 0.0, 0.0 }, point );
 			boundary( velocity, velocity, -1.f );
 		}
 	}
@@ -158,6 +158,7 @@ namespace fluid {
 		advectProgram.end();
 	}
 
+	// Computes the boundaries of the simulation domain
 	void ccSolver::boundary( Field& input, Field& output, float scale ) {
 		if (!grid.applyBounds)
 			return;
