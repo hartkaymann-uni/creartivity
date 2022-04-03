@@ -50,6 +50,7 @@ namespace fluid {
 		struct Settings {
 			float timestep; // 1.0
 			float splatRadius = 0.1; // 0.1
+			ofFloatColor splatColor;
 			bool applyVorticity = true;
 			bool applyViscosity = false;
 			float viscosity = 0.3; // 0.3
@@ -83,6 +84,7 @@ namespace fluid {
 
 		inline void setTimestep( float t ) { s.timestep = t; }
 		inline void setSplatRadius( float r ) { s.splatRadius = r; }
+		inline void setSplatColor( ofFloatColor c) { s.splatColor = c; }
 		inline void setDissipation( float d ) { s.dissipation = d; }
 		inline void setBounds( bool b ) { grid.applyBounds = b; }
 		inline void setJacobiIterations( int i ) { s.jacobiIterations = i; }

@@ -47,6 +47,7 @@ private:
 	ofParameter<float> p_Dissipation;
 	ofParameter<float> p_GravityStrength;
 	ofParameter<glm::vec2> p_GravityDirection;
+	ofParameter<ofFloatColor> p_SplatColor;
 
 	fluid::ccSolver solver;
 
@@ -62,6 +63,7 @@ private:
 	inline void handleApplyGravityChanged( bool& g ) { solver.setApplyGravity( g ); }
 	inline void handleApplyViscosityChanged( bool& v ) { solver.setApplyViscosity( v ); }
 	inline void handleApplyVorticityChanged( bool& v ) { solver.setApplyVorticity( v ); }
+	inline void handleSplatColorChanged( ofFloatColor& c ) { solver.setSplatColor( c ); }
 	inline void handleJacobiIterationsChanged( int& i ) { solver.setJacobiIterations( i ); }
 	inline void handleGravityStrengthChanged( float& g ) { solver.setGravityStrength( g ); }
 	inline void handleGravityDirectionChanged( glm::vec2& d ) { solver.setGravityDirection( d ); }

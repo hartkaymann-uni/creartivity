@@ -132,8 +132,10 @@ namespace fluid {
 
 			glm::vec2 point = { xMapped , yMapped };
 
-			splat( velocity, color, point );
-			splat( density, { 1.0, 0.0, 0.0 }, point );
+			ofFloatColor c = s.splatColor;
+
+			splat( velocity, glm::normalize(color), point );
+			splat( density, { c.r, c.g, c.b }, point );
 			boundary( velocity, velocity, -1.f );
 		}
 	}
@@ -163,10 +165,12 @@ namespace fluid {
 		if (!grid.applyBounds)
 			return;
 
-		float xL = 2.f;
-		float xR = grid.size.x - 1.f;
-		float yB = 2.f;
-		float yT = grid.size.y - 1.f;
+		// default offset: 1
+		float offset = 1.f; 
+		float xL = 2 * offset;
+		float xR = grid.size.x - offset;
+		float yB = 2 * offset;
+		float yT = grid.size.y - offset;
 
 		ofPolyline lineR, lineL, lineT, lineB;
 		lineR.addVertex( xR, yB );

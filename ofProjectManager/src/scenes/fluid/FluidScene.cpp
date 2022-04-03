@@ -9,11 +9,12 @@ void FluidScene::setup()
 	ccSolver::Settings solverSettings;
 	solverSettings.timestep = 1.0f;
 	solverSettings.splatRadius = 0.25f;
+	solverSettings.splatColor = ofFloatColor( 1.f );
 	solverSettings.applyVorticity = true;
 	solverSettings.applyViscosity = false;
 	solverSettings.viscosity = 0.3f;
 	solverSettings.epsilon = 0.00024414f;
-	solverSettings.curl = 0.2f;
+	solverSettings.curl = 0.1f;
 	solverSettings.jacobiIterations = 20;
 	solverSettings.dissipation = 0.998f;
 	solverSettings.applyGravity = false;
@@ -22,7 +23,7 @@ void FluidScene::setup()
 	solver = ccSolver( solverSettings );
 
 	ccSolver::Grid solverGrid;
-	solverGrid.size = glm::vec2( 1024, 768);
+	solverGrid.size = glm::vec2( 1024, 768 );
 	solverGrid.scale = 1.0f;
 	solverGrid.applyBounds = true;
 	solver.setup( solverGrid );
@@ -38,6 +39,7 @@ void FluidScene::setup()
 
 	groupGeneral.add( p_Timestep.set( "Timestep", solverSettings.timestep, 0.f, 2.f ) );
 	groupGeneral.add( p_SplatRadius.set( "Splat", solverSettings.splatRadius, 0.f, 1.f ) );
+	groupGeneral.add( p_SplatColor.set( "Color", solverSettings.splatColor ) );
 	groupGeneral.add( p_Dissipation.set( "Dissipation", solverSettings.dissipation, 0.9f, 1.f ) );
 	groupSolver.add( p_JacobiIterations.set( "Iterations", solverSettings.jacobiIterations, 0, 50 ) );
 	groupBounds.add( p_Bounds.set( "Bounds", solverGrid.applyBounds ) );
@@ -57,6 +59,7 @@ void FluidScene::setup()
 	p_Timestep.addListener( this, &FluidScene::handleTimestepChanged );
 	p_Viscosity.addListener( this, &FluidScene::handleViscosityChanged );
 	p_SplatRadius.addListener( this, &FluidScene::handleSplatRadiusChanged );
+	p_SplatColor.addListener( this, &FluidScene::handleSplatColorChanged );
 	p_Dissipation.addListener( this, &FluidScene::handleDissipationChanged );
 	p_ApplyGravity.addListener( this, &FluidScene::handleApplyGravityChanged );
 	p_ApplyVorticity.addListener( this, &FluidScene::handleApplyVorticityChanged );
@@ -98,8 +101,11 @@ void FluidScene::draw()
 		//Debug view showing all fields
 		ccSolver::Grid grid = *(solver.getGrid());
 
+		float w = width / 2;
+		float h = height / 3;
+
 		ofDrawBitmapString( "density", 0.f, 0.f + 10.f );
-		solver.getDensity()->draw( 0.f, 0.f );
+		solver.getDensity()->draw( 0.f, 0.f, w, h );
 
 		ofDrawBitmapString( "velocity", 0.f, grid.size.y + 10.f );
 		displayVectorProgram.begin();
@@ -107,18 +113,18 @@ void FluidScene::draw()
 		displayVectorProgram.setUniform3f( "bias", glm::vec3( 0.5, 0.5, 0.5 ) );
 		displayVectorProgram.setUniform3f( "scale", glm::vec3( 0.5, 0.5, 0.5 ) );
 		displayVectorProgram.setUniform2f( "gridSize", solver.getGrid()->size );
-		solver.getVelocity()->draw( 0.f, grid.size.y );
+		solver.getVelocity()->draw( 0.f, h, w, h );
 
 		displayVectorProgram.end();
 
 		ofDrawBitmapString( "divergence", grid.size.x, 0.f + 10.f );
-		solver.getDivergence()->draw( grid.size.x, 0.f );
+		solver.getDivergence()->draw( w, 0.f, w, h );
 
 		ofDrawBitmapString( "vorticity", grid.size.x, grid.size.y + 10.f );
-		solver.getVorticity()->draw( grid.size.x, grid.size.y );
+		solver.getVorticity()->draw( w, h, w, h );
 
 		ofDrawBitmapString( "pressure", 0.f, grid.size.y * 2.f + 10.f );
-		solver.getPressure()->draw( 0.f, grid.size.y * 2.f );
+		solver.getPressure()->draw( 0.f, h * 2.f, w, h );
 
 	}
 	else {
