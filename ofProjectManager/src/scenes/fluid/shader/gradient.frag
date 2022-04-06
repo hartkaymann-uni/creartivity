@@ -1,4 +1,4 @@
-	#version 150
+#version 150
 
 uniform sampler2DRect p; // pressure
 uniform sampler2DRect w; // velocity

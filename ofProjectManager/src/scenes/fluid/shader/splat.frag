@@ -23,7 +23,8 @@ void main() {
 	vec3 base = texture(read, coords).xyz;
 
 	vec2 coord = point.xy - gl_FragCoord.xy;
-	vec3 splat = color * gauss(coord, gridSize.x * radius);
-
+	float g = gauss(coord, gridSize.x * radius);
+	vec3 splat = color * g;
+	
 	vFragColor = vec4(base + splat, 1.0);
 }

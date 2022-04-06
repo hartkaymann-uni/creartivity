@@ -16,7 +16,7 @@ namespace fluid {
 		plane.setResolution( 2, 2 );
 
 		// Create render targets
-		velocity.allocate(grid.size, GL_RGB16_SNORM );
+		velocity.allocate( grid.size, GL_RGB16_SNORM );
 		density.allocate( grid.size, GL_RGB16_SNORM );
 		divergence.allocate( grid.size, GL_RGB16_SNORM );
 		vorticity.allocate( grid.size, GL_RGB16_SNORM );
@@ -29,8 +29,8 @@ namespace fluid {
 				for (size_t y = 0; y < grid.size.x; y++) {
 					size_t i = x * grid.size.x + y;
 
-					cells[i * 3 + 0] = ofMap( ofNoise( 2.f * x / grid.size.y, 2.f * y / grid.size.x ), 0.0, 1.0, -1.0, 1.0 );
-					cells[i * 3 + 1] = ofMap( ofNoise( x / grid.size.x, y / grid.size.y ), 0.0, 1.0, -1.0, 1.0 );
+					cells[i * 3 + 0] = ofMap( ofNoise( 2.f * x / grid.size.y, 2.f * y / grid.size.x ), 0.0, 1.0, SHRT_MIN, SHRT_MAX );
+					cells[i * 3 + 1] = ofMap( ofNoise( x / grid.size.x, y / grid.size.y ), 0.0, 1.0, SHRT_MIN, SHRT_MAX );
 					cells[i * 3 + 2] = 0.0;
 				}
 			}
@@ -43,7 +43,7 @@ namespace fluid {
 			for (size_t x = 0; x < grid.size.y; x++) {
 				for (size_t y = 0; y < grid.size.x; y++) {
 					size_t i = x * grid.size.x + y;
-					short initialValue = ofNoise( 2.f * x / grid.size.y, 2.f * y / grid.size.x );
+					short initialValue = ofMap( ofNoise( 2.f * x / grid.size.y, 2.f * y / grid.size.x ), 0.0, 1.0, SHRT_MIN, SHRT_MAX );
 
 					cells[i * 3 + 0] = initialValue;
 					cells[i * 3 + 1] = initialValue;
@@ -65,6 +65,7 @@ namespace fluid {
 		bool err_jacv = jacobivectorProgram.load( shaderPath / "passthru.vert", shaderPath / "jacobivector.frag" );
 		bool err_jacs = jacobiscalarProgram.load( shaderPath / "passthru.vert", shaderPath / "jacobiscalar.frag" );
 		bool err_vorf = vorticityforceProgram.load( shaderPath / "passthru.vert", shaderPath / "vorticityforce.frag" );
+		bool err_grav = gravityProgram.load( shaderPath / "passthru.vert", shaderPath / "gravity.frag" );
 	}
 
 	ofFbo ccSolver::createFbo( int format ) {
@@ -76,7 +77,12 @@ namespace fluid {
 	}
 
 	void ccSolver::step( ccUser& user )
-	{	// Dissipation only affects density carried by the velocity field
+	{
+		if (s.applyGravity) {
+			gravitate( velocity );
+		}
+
+		// Dissipation only affects density carried by the velocity field
 		advect( velocity, velocity, 1 );
 		boundary( velocity, velocity, -1.f );
 
@@ -90,7 +96,6 @@ namespace fluid {
 			vortexConfine( vorticity, velocity );
 			boundary( velocity, velocity, -1.f );
 		}
-
 		if (s.applyViscosity && s.viscosity > 0.f) {
 			float scale = grid.scale;
 
@@ -127,10 +132,12 @@ namespace fluid {
 
 			glm::vec2 point = { xMapped , yMapped };
 
-			splat( velocity, color, point );
-			splat( density, { 1.0, 1.0, 1.0 }, point );
-		}
+			ofFloatColor c = s.splatColor;
 
+			splat( velocity, glm::normalize(color), point );
+			splat( density, { c.r, c.g, c.b }, point );
+			boundary( velocity, velocity, -1.f );
+		}
 	}
 
 	void ccSolver::advect( Field& advected, Field& output, float d ) {
@@ -153,44 +160,47 @@ namespace fluid {
 		advectProgram.end();
 	}
 
+	// Computes the boundaries of the simulation domain
 	void ccSolver::boundary( Field& input, Field& output, float scale ) {
 		if (!grid.applyBounds)
 			return;
 
-		float xL = 0.f;
-		float xR = grid.size.x - 0.f;
-		float yT = 0.f;
-		float yB = grid.size.y - 0.f;
+		// default offset: 1
+		float offset = 1.f; 
+		float xL = 2 * offset;
+		float xR = grid.size.x - offset;
+		float yB = 2 * offset;
+		float yT = grid.size.y - offset;
 
 		ofPolyline lineR, lineL, lineT, lineB;
 		lineR.addVertex( xR, yB );
 		lineR.addVertex( xR, yT );
-		lineL.addVertex( xL, yB );
 		lineL.addVertex( xL, yT );
-		lineT.addVertex( xL, yT );
+		lineL.addVertex( xL, yB );
 		lineT.addVertex( xR, yT );
-		lineB.addVertex( xL, yB );
+		lineT.addVertex( xL, yT );
 		lineB.addVertex( xR, yB );
+		lineB.addVertex( xL, yB );
 
 		boundarySide( input, output, lineR, { -1.f, 0.f }, scale );
 		boundarySide( input, output, lineL, { 1.f, 0.f }, scale );
 		boundarySide( input, output, lineT, { 0.f, -1.f }, scale );
 		boundarySide( input, output, lineB, { 0.f, 1.f }, scale );
+		// no swapping here, will be done by the next slabob
 	}
 
 	void ccSolver::boundarySide( Field& input, Field& output, ofPolyline& line, glm::vec2 offset, float scale ) {
 		boundariesProgram.begin();
 
-		boundariesProgram.setUniformTexture( "read", input.read->getTexture(), 0 );
+		boundariesProgram.setUniformTexture( "read", input.read->getTexture(), 1 );
 		boundariesProgram.setUniform2f( "gridSize", grid.size );
 		boundariesProgram.setUniform2f( "gridOffset", offset );
 		boundariesProgram.setUniform1f( "scale", scale );
 
-		output.write->begin();
+		output.read->begin();
 		// Draw one line to apply bounds to one side
 		line.draw();
-		output.write->end();
-		output.swap();
+		output.read->end();
 
 		boundariesProgram.end();
 	}
@@ -297,7 +307,7 @@ namespace fluid {
 	void ccSolver::splat( Field& read, glm::vec3 color, glm::vec2 point ) {
 		splatProgram.begin();
 
-		splatProgram.setUniformTexture( "read", read.read->getTexture(), 2);
+		splatProgram.setUniformTexture( "read", read.read->getTexture(), 2 );
 		splatProgram.setUniform2f( "gridSize", grid.size );
 		splatProgram.setUniform3f( "color", color );
 		splatProgram.setUniform2f( "point", point );
@@ -312,4 +322,22 @@ namespace fluid {
 
 		splatProgram.end();
 	}
+
+	void ccSolver::gravitate( Field& output ) {
+		gravityProgram.begin();
+
+		gravityProgram.setUniformTexture( "velocity", velocity.read->getTexture(), 2 );
+		gravityProgram.setUniform2f( "dir", s.gravityDir );
+		gravityProgram.setUniform1f( "str", s.gravityStr );
+
+		output.write->begin();
+		ofClear( 0 );
+		ofFill();
+		plane.draw();
+		output.write->end();
+		output.swap();
+
+		gravityProgram.end();
+	}
+
 }
