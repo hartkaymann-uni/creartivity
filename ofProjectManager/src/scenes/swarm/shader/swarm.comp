@@ -117,20 +117,20 @@ float map(float value, float min1, float max1, float min2, float max2) {
 vec4 applyBlink(vec4 my_color, float depth) {
 	float blinkDuration = 1f;
 
-	if(mod(elapsedTime, blinkDuration * 7) > blinkDuration){
+	if(mod(elapsedTime, blinkDuration * 4) > blinkDuration){
 		return my_color;
 	}
 
 	float val = mod(elapsedTime, blinkDuration);
 	float percentage = val / blinkDuration;
 
-	uint blinkRange = 1000;
+	uint blinkRange = 5000;
 	float maxBlinkIntensity = (1-percentage) * (max_particle_depth + blinkRange * 2)  - blinkRange;
 	if(use_attraction == 1) {
 		float diff = 1-(abs(depth - maxBlinkIntensity) / blinkRange);
 		if(diff >= 0) {
-			my_color.a += diff * 0.3f;
-			my_color.rgb += vec3(diff) * 0.3f;
+			my_color.a += diff * diff * diff * 0.3f;
+			my_color.rgb += vec3(diff * diff * diff) * 0.3f;
 			//my_color.rgb += vec3(10);
 		}
 	}
@@ -152,7 +152,7 @@ vec4 calculateColor(vec3 my_pos) {
 	newColor.a =  0.05 + (1 - depthPercentage) * 0.95 * 0.05;
 
 	// Add Red and Brightness depending on distance to attractor
-	float dist = distance(hands[0].xy,my_pos.xy);
+	float dist = distance(attractor.xy,my_pos.xy);
 	float distPercentage = clamp(1 - (dist / 250), 0, 1);
 	newColor.r += 1 * distPercentage * (1-depthPercentage);
 
@@ -165,7 +165,7 @@ layout(local_size_x = 1024, local_size_y = 1, local_size_z = 1) in;
 void main(){
 	vec3 particle = p2[gl_GlobalInvocationID.x].pos.xyz;
 
-	vec3 modAttractor = vec3(hands[0], 0.0) + vec3(0, 0, 1000);
+	vec3 modAttractor = attractor + vec3(0, 0, -5000);
 	//vec3 modAttractor = attractor;
 	//vec3 modAttractor = attractor + vec3(0, 0, -5000);
 
@@ -232,6 +232,7 @@ void main(){
 
 	int index = int(p[gl_GlobalInvocationID.x].unique.y);
 	p3[index].pos.xy = p[gl_GlobalInvocationID.x].pos.xy;
+	//p3[index].pos.xyz = p[gl_GlobalInvocationID.x].pos.xyz;
 	p3[index].color = p[gl_GlobalInvocationID.x].color;
 }
 
