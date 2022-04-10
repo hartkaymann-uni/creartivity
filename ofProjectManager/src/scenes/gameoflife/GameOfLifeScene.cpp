@@ -147,7 +147,7 @@ void GameOfLifeScene::updateSequence() {
 		lastSequene = currentSequence;
 		currentSequence = static_cast<Sequence>(rand() % NUM_SEQ);
 
-		cout << "Chaning Sequence! Current Sequence: " << currentSequence << endl;
+		cout << "Changing Sequence! Current Sequence: " << currentSequence << endl;
 
 		lastSequenceTime = time;
 	}

@@ -355,5 +355,6 @@
     <None Include="src\scenes\cuboid\shader\cuboids.frag" />
     <None Include="src\scenes\swarm\shader\swarmUserEnter.comp" />
     <None Include="addons.make" />
+    <None Include="src\scenes\swarm\shader\intro.comp" />
   </ItemGroup>
 </Project>

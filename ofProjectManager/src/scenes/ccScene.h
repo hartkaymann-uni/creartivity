@@ -27,6 +27,10 @@ public:
 	inline void setReceiver( ccReceiver* r ) { receiver = r; }
 	inline ofxPanel& getGui() { return gui; };
 
+	//Scene Handling
+	virtual void SceneIntro();
+	virtual void SceneOutro();
+
 protected:
 	filesystem::path scenesPath;
 

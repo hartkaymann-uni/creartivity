@@ -15,7 +15,7 @@ void ofApp::setup() {
 
 	// Load scenes
 	// scenes.push_back( (ParticleScene*)sceneManager.add( new ParticleScene() ) );
-	// scenes.push_back( (CuboidScene*)sceneManager.add( new CuboidScene() ) );
+	//scenes.push_back( (CuboidScene*)sceneManager.add( new CuboidScene() ) );
 	//scenes.push_back( (SpiralScene*)sceneManager.add( new SpiralScene() ) );
 	scenes.push_back( (GameOfLifeScene*)sceneManager.add( new GameOfLifeScene() ) );
 	scenes.push_back( (SwarmScene*)sceneManager.add( new SwarmScene() ) );
@@ -26,6 +26,7 @@ void ofApp::setup() {
 	sceneManager.gotoScene( "GameOfLife", true );
 	lastScene = sceneManager.getCurrentSceneIndex();
 	sceneManager.setOverlap( false );
+	nextAction = NULL;
 
 	setSceneManager( &sceneManager );
 
@@ -43,6 +44,9 @@ void ofApp::update() {
 	std::stringstream strm;
 	strm << "fps: " << ofGetFrameRate();
 	ofSetWindowTitle( strm.str() );
+
+	//
+	CheckSceneTransitions();
 }
 
 //--------------------------------------------------------------
@@ -82,7 +86,7 @@ void ofApp::keyPressed( int key ) {
 		break;
 
 	case 'c':
-		ofShowCursor;
+		ofShowCursor();
 		break;
 
 	case 'f':
@@ -94,7 +98,7 @@ void ofApp::keyPressed( int key ) {
 		break;
 
 	case OF_KEY_RIGHT:
-		sceneManager.nextScene();
+		ChangeScene(ChangeMode::Next, 0.5f);
 		break;
 
 	case OF_KEY_DOWN:
@@ -112,6 +116,62 @@ void ofApp::keyPressed( int key ) {
 		sceneManager.setOverlap( !sceneManager.getOverlap() );
 		break;
 	}
+}
+
+//--------------------------------------------------------------
+void ofApp::CheckSceneTransitions() {
+	if (ofGetElapsedTimef() > nextActionTime && nextAction != NULL) {
+		(this->*nextAction)();
+		nextAction = NULL;
+	}
+}
+
+
+//--------------------------------------------------------------
+void ofApp::ChangeScene(ChangeMode mode, float delay) {
+
+
+	unsigned int currentSceneIndex = sceneManager.getCurrentSceneIndex();
+	// 'scenes' is not in the same order as the array that 'sceneManager' uses. Therefore we can't use the 'currentSceneIndex'
+	// from 'sceneManager' for the 'scenes' array.
+	if (sceneManager.getCurrentScene() != NULL) {
+		static_cast<ccScene*>(sceneManager.getCurrentScene())->SceneOutro();
+	}
+
+	switch (mode)
+	{
+	case ChangeMode::Next:
+		nextAction = &ofApp::NextScene;
+		break;
+	default:
+		break;
+	}
+
+	delay = max(0.f, delay);
+	nextActionTime = ofGetElapsedTimef() + delay;
+}
+
+//--------------------------------------------------------------
+void ofApp::NextScene() {
+	sceneManager.nextScene();
+	if (sceneManager.getSceneAt(GetNextSceneIndex()) != NULL) {
+		static_cast<ccScene*>(sceneManager.getSceneAt(GetNextSceneIndex()))->SceneIntro();
+	}
+}
+
+//--------------------------------------------------------------
+unsigned int  ofApp::GetNextSceneIndex() {
+	unsigned int currentSceneIndex = sceneManager.getCurrentSceneIndex();
+	if (currentSceneIndex >= sceneManager.getNumScenes() - 1) {
+		return 0;
+	}
+	else {
+		return currentSceneIndex + 1;
+	}
+}
+
+//--------------------------------------------------------------
+void ofApp::PreviousScene() {
 }
 
 //--------------------------------------------------------------

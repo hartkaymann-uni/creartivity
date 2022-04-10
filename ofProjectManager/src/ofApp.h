@@ -38,10 +38,30 @@ public:
 	void dragEvent( ofDragInfo dragInfo );
 	void gotMessage( ofMessage msg );
 
+	//Scene Handling
+	enum class ChangeMode {
+		Next,
+		Previous,
+		Last
+	};
+
+	void ChangeScene(ChangeMode mode, float delay = 0);
+	void CheckSceneTransitions();
+	unsigned int GetNextSceneIndex();
+	//-----
+
+	float nextActionTime;
+	void (ofApp::* nextAction)();
+
 	ofxTransformer transformer;
 	ofxSceneManager sceneManager;
 	int lastScene;
 
 	ccReceiver receiver;
 	vector<ccScene*> scenes;
+
+private:
+	void NextScene();
+	void PreviousScene();
+
 };
