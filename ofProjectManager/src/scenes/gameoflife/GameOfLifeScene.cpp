@@ -225,7 +225,6 @@ void GameOfLifeScene::draw()
 	{
 		cellPingPong.dst->draw( 0, 0, width / (10 - dataSrcSize), height / (10 - dataSrcSize) );
 	}
-	//ofDrawBitmapString( receiver->getConnectionStatus(), 10, ofGetHeight() - 20 );
 }
 
 // Draw outlines with stencil testing
