@@ -93,8 +93,8 @@ public:
 	ofParameter<bool> dirAsColor;
 
 	//Scene Handling
-	void SceneIntro() override;
-	void SceneOutro() override;
+	float SceneIntro() override;
+	float SceneOutro() override;
 private:
 	//--------------------------------------------------------------
 	// Controls

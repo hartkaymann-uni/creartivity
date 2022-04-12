@@ -94,11 +94,11 @@ void ofApp::keyPressed( int key ) {
 		break;
 
 	case OF_KEY_LEFT:
-		sceneManager.prevScene();
+		ChangeScene(SceneChangeType::Previous);
 		break;
 
 	case OF_KEY_RIGHT:
-		ChangeScene(ChangeMode::Next, 0.5f);
+		ChangeScene(SceneChangeType::Next);
 		break;
 
 	case OF_KEY_DOWN:
@@ -128,20 +128,22 @@ void ofApp::CheckSceneTransitions() {
 
 
 //--------------------------------------------------------------
-void ofApp::ChangeScene(ChangeMode mode, float delay) {
-
-
+void ofApp::ChangeScene(SceneChangeType type) {
 	unsigned int currentSceneIndex = sceneManager.getCurrentSceneIndex();
+	float delay = 0.f;
 	// 'scenes' is not in the same order as the array that 'sceneManager' uses. Therefore we can't use the 'currentSceneIndex'
 	// from 'sceneManager' for the 'scenes' array.
 	if (sceneManager.getCurrentScene() != NULL) {
-		static_cast<ccScene*>(sceneManager.getCurrentScene())->SceneOutro();
+		delay = static_cast<ccScene*>(sceneManager.getCurrentScene())->SceneOutro();
 	}
 
-	switch (mode)
+	switch (type)
 	{
-	case ChangeMode::Next:
+	case SceneChangeType::Next:
 		nextAction = &ofApp::NextScene;
+		break;
+	case SceneChangeType::Previous:
+		nextAction = &ofApp::PreviousScene;
 		break;
 	default:
 		break;
@@ -153,25 +155,49 @@ void ofApp::ChangeScene(ChangeMode mode, float delay) {
 
 //--------------------------------------------------------------
 void ofApp::NextScene() {
+	int nextSceneIndex = GetSceneIndex(SceneChangeType::Next);
 	sceneManager.nextScene();
-	if (sceneManager.getSceneAt(GetNextSceneIndex()) != NULL) {
-		static_cast<ccScene*>(sceneManager.getSceneAt(GetNextSceneIndex()))->SceneIntro();
+	if (sceneManager.getSceneAt(nextSceneIndex) != NULL) {
+		static_cast<ccScene*>(sceneManager.getSceneAt(nextSceneIndex))->SceneIntro();
 	}
 }
 
 //--------------------------------------------------------------
-unsigned int  ofApp::GetNextSceneIndex() {
+unsigned int  ofApp::GetSceneIndex(SceneChangeType type) {
 	unsigned int currentSceneIndex = sceneManager.getCurrentSceneIndex();
-	if (currentSceneIndex >= sceneManager.getNumScenes() - 1) {
-		return 0;
-	}
-	else {
-		return currentSceneIndex + 1;
+	
+
+	switch (type)
+	{
+	case SceneChangeType::Next:
+		if (currentSceneIndex >= sceneManager.getNumScenes() - 1) {
+			return 0;
+		}
+		else {
+			return currentSceneIndex + 1;
+		}
+		break;
+	case SceneChangeType::Previous:
+		if (currentSceneIndex <= 0) {
+			return sceneManager.getNumScenes() - 1;
+		}
+		else {
+			return currentSceneIndex - 1;
+		}
+		break;
+	default:
+		return -1;
+		break;
 	}
 }
 
 //--------------------------------------------------------------
 void ofApp::PreviousScene() {
+	int previousIndex = GetSceneIndex(SceneChangeType::Previous);
+	sceneManager.prevScene();
+	if (sceneManager.getSceneAt(previousIndex) != NULL) {
+		static_cast<ccScene*>(sceneManager.getSceneAt(previousIndex))->SceneIntro();
+	}
 }
 
 //--------------------------------------------------------------

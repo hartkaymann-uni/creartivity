@@ -28,8 +28,8 @@ public:
 	inline ofxPanel& getGui() { return gui; };
 
 	//Scene Handling
-	virtual void SceneIntro();
-	virtual void SceneOutro();
+	virtual float SceneIntro();
+	virtual float SceneOutro();
 
 protected:
 	filesystem::path scenesPath;

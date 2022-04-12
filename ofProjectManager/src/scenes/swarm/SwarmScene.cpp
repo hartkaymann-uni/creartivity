@@ -77,7 +77,7 @@ void SwarmScene::setup() {
 	shaderUniforms.add(attractorForce.set("attr_force", 2000, 0, 5000));
 	shaderUniforms.add(ruleIterationMod.set("rule_iteration_mod", particleGroups, 0, particleGroups));
 	shaderUniforms.add(particleColorStart.set("particle_color_start", glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1)));
-	shaderUniforms.add(particleColorEnd.set("particle_color_end", glm::vec3(0.75, 0.75, 0.75), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1)));
+	shaderUniforms.add(particleColorEnd.set("particle_color_end", glm::vec3(0.9, 0.9, 0.9), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1)));
 	shaderUniforms.add(freezeParticles.set("freeze_particles", false));
 	gui.add(shaderUniforms);
 	gui.add(fps.set("fps", 60, 0, 60));
@@ -485,7 +485,7 @@ void SwarmScene::UpdateParameters() {
 		float percentage = min(diff / currentSequence.duration, 1.f);
 
 		particleColorStart.set(glm::vec3(0, 0, 0) * percentage);
-		particleColorEnd.set(glm::vec3(0.75, 0.75, 0.75) * percentage);
+		particleColorEnd.set(glm::vec3(0.9, 0.9, 0.9) * percentage);
 		break;
 	}
 	default:
@@ -494,7 +494,7 @@ void SwarmScene::UpdateParameters() {
 }
 
 //--------------------------------------------------------------
-void SwarmScene::SceneIntro() {
+float SwarmScene::SceneIntro() {
 	cout << "Swarm Intro Triggered" << endl;
 
 	introShader.begin();
@@ -505,10 +505,13 @@ void SwarmScene::SceneIntro() {
 
 	particlesBuffer.copyTo(particlesBuffer2);
 
-	SetSequence(ParameterSequence(3, SequenceType::Intro));
+	SetSequence(ParameterSequence(4, SequenceType::Intro));
+
+	return 4.f;
 }
 
 //--------------------------------------------------------------
-void SwarmScene::SceneOutro() {
+float SwarmScene::SceneOutro() {
 	cout << "Swarm Outro Triggered" << endl;
+	return 0.5f;
 }

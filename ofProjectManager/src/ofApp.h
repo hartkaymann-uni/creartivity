@@ -39,15 +39,15 @@ public:
 	void gotMessage( ofMessage msg );
 
 	//Scene Handling
-	enum class ChangeMode {
+	enum class SceneChangeType {
 		Next,
 		Previous,
 		Last
 	};
 
-	void ChangeScene(ChangeMode mode, float delay = 0);
+	void ChangeScene(SceneChangeType type);
 	void CheckSceneTransitions();
-	unsigned int GetNextSceneIndex();
+	unsigned int GetSceneIndex(SceneChangeType type);
 	//-----
 
 	float nextActionTime;
