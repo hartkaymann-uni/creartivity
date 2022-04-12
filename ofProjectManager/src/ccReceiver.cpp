@@ -25,11 +25,12 @@ void ccReceiver::receiveMessages() {
 				string idUs = address.substr( 11 );
 				int id = ofToInt( idUs );
 
-
 				float xl = m.getArgAsFloat( 0 );
 				float yl = m.getArgAsFloat( 1 );
 				float xr = m.getArgAsFloat( 2 );
 				float yr = m.getArgAsFloat( 3 );
+
+				ccUser user( id, glm::vec3( xl, yl, 0.f ), glm::vec3( xr, yr, 0.f ) );
 
 				users[id].positionLeft.x = xl != xl ? 0.f : xl;
 				users[id].positionLeft.y = yl != yl ? 0.f : yl;

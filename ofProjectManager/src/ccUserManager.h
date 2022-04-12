@@ -1,12 +1,14 @@
 #pragma once
 
 #include "ccUser.h"
+#include "ccReceiver.h"
 
 class ccUserManager
 {
 public:
 
 	ccUserManager();
+	ccUserManager(ccReceiver& receiver);
 
 	void registerUser( ccUser& user );
 	void removeUser( int id );
@@ -18,6 +20,7 @@ public:
 private:
 
 	// Vector containing all users, first user is always the mouse
-	vector<ccUser> users;
+	map<int, ccUser> users;
+	ccReceiver receiver;
 };
 

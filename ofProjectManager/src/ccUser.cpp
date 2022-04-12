@@ -1,14 +1,16 @@
 #include "ccUser.h"
 
-ccUser::ccUser() :
-	id( 0 ),
-	position( { 0.f, 0.f, 0.f } ),
-	motion( { 0.f, 0.f, 0.f } )
-{}
-
-void ccUser::move( glm::vec3 dir )
+ccUser::ccUser() 
 {
-	setPosition( position + dir);
+};
+
+ccUser::ccUser( int id, glm::vec3 l, glm::vec3 r )
+{
+	positions = pair<glm::vec3, glm::vec3>( l, r);
+	motions = pair<glm::vec3, glm::vec3>( l, r);
+
+	left = &positions.first;
+	right = &positions.second;
 }
 
 bool ccUser::setId( int id ) {
@@ -21,24 +23,28 @@ bool ccUser::setId( int id ) {
 
 }
 
-void ccUser::setPosition( glm::vec3 pos )
-{
-	motion = pos - position;
-	position = pos;
-
-	//cout << "User:" << id << " Position:" << position << " Motion: " << motion << endl;
-}
-
 void ccUser::setPosition( glm::vec2 pos ) {
-	setPosition( { pos.x, pos.y, position.z } );
+	setPosition( { pos.x, pos.y, 0.f } );
 }
 
-glm::vec3 ccUser::getPositon()
-{
-	return position;
+void ccUser::setPosition(glm::vec3 pos) {
+	setPositions( pos, pos );
 }
 
-glm::vec3 ccUser::getMotion()
+void ccUser::setPositions( glm::vec3 left, glm::vec3 right)
 {
-	return motion;
+	motions.first = left - positions.first;
+	motions.second = right - positions.second;
+	positions.first = left;
+	positions.second = right;
+}
+
+pair<glm::vec3, glm::vec3> ccUser::getPositons()
+{
+	return positions;
+}
+
+pair<glm::vec3, glm::vec3> ccUser::getMotions()
+{
+	return motions;
 }

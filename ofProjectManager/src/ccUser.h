@@ -12,23 +12,27 @@ class ccUser
 {
 public:
 	ccUser();
+	ccUser( int id, glm::vec3 left, glm::vec3 right );
 	
 	void move(glm::vec3 dir);
 	
 	bool setId( int id );
-	void setPosition( glm::vec3 p );
-	void setPosition( glm::vec2 p );
+	void setPosition( glm::vec2 pos );
+	void setPosition( glm::vec3 pos );
+	void setPositions( glm::vec3 left, glm::vec3 right );
+	
+	pair<glm::vec3, glm::vec3> getPositons();
+	pair<glm::vec3, glm::vec3> getMotions();
 
-	glm::vec3 getPositon();
-	glm::vec3 getMotion();
+	glm::vec3* left;
+	glm::vec3* right;
 
 
 private:
 	// Doesn't do anything yet, but important for future
 	int id;
 
-	glm::vec3 position;
-	glm::vec3 motion;
-
+	pair<glm::vec3, glm::vec3> positions;
+	pair<glm::vec3, glm::vec3> motions;
 };
 
