@@ -107,7 +107,7 @@ void FluidScene::draw()
 		ofDrawBitmapString( "density", 0.f, 0.f + 10.f );
 		solver.getDensity()->draw( 0.f, 0.f, w, h );
 
-		ofDrawBitmapString( "velocity", 0.f, grid.size.y + 10.f );
+		ofDrawBitmapString( "velocity", 0.f, h + 10.f );
 		displayVectorProgram.begin();
 		displayVectorProgram.setUniformTexture( "read", solver.getVelocity()->getTexture(), 1 );
 		displayVectorProgram.setUniform3f( "bias", glm::vec3( 0.5, 0.5, 0.5 ) );
@@ -117,18 +117,20 @@ void FluidScene::draw()
 
 		displayVectorProgram.end();
 
-		ofDrawBitmapString( "divergence", grid.size.x, 0.f + 10.f );
+		ofDrawBitmapString( "divergence", w, 0.f + 10.f );
 		solver.getDivergence()->draw( w, 0.f, w, h );
 
-		ofDrawBitmapString( "vorticity", grid.size.x, grid.size.y + 10.f );
+		ofDrawBitmapString( "vorticity",w, h + 10.f );
 		solver.getVorticity()->draw( w, h, w, h );
 
-		ofDrawBitmapString( "pressure", 0.f, grid.size.y * 2.f + 10.f );
+		ofDrawBitmapString( "pressure", 0.f, h * 2.f + 10.f );
 		solver.getPressure()->draw( 0.f, h * 2.f, w, h );
 
 	}
 	else {
+		camera.begin();
 		solver.getDensity()->draw( 0.f, 0.f, width, height );
+		camera.end();
 	}
 }
 
