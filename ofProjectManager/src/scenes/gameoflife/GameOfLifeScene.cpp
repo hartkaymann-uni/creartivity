@@ -218,13 +218,13 @@ void GameOfLifeScene::draw()
 	ofSetColor( 255 );
 	ofDrawBox( ofVec3f( width / 2, height / 2, 0.0 ), width, height, sphereRadius );
 
-	camera.end();
 
 	// Draw overlay
 	if (dataSrcSize > 0)
 	{
 		cellPingPong.dst->draw( 0, 0, width / (10 - dataSrcSize), height / (10 - dataSrcSize) );
 	}
+	camera.end();
 }
 
 // Draw outlines with stencil testing
