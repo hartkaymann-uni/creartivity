@@ -6,6 +6,7 @@
 #include "ofxOsc.h"
 
 #include "ccReceiver.h"
+#include "ccUserManager.h"
 
 #define HAVE_OFX_GUI
 
@@ -64,4 +65,7 @@ private:
 	void NextScene();
 	void PreviousScene();
 
+	bool showGui = true;
+
+	ccUserManager userManager;
 };

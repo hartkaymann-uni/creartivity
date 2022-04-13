@@ -111,12 +111,13 @@
     </ClCompile>
     <ClCompile Include="src\ccReceiver.cpp" />
     <ClCompile Include="src\scenes\contourlines\ContourLinesScene.cpp" />
-    <ClCompile Include="src\scenes\cuboid\CuboidScene.cpp" />
     <ClCompile Include="src\scenes\gameoflife\GameOfLifeScene.cpp" />
     <ClCompile Include="src\scenes\swarm\SwarmScene.cpp" />
-    <ClCompile Include="src\scenes\particles\ParticleScene.cpp" />
     <ClCompile Include="src\scenes\spiral\SpiralScene.cpp" />
+    <ClCompile Include="src\scenes\fluid\FluidScene.cpp" />
     <ClCompile Include="src\ccUser.cpp" />
+    <ClCompile Include="src\ccUserManager.cpp" />
+    <ClCompile Include="src\scenes\fluid\ccFluid.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -324,22 +325,20 @@
     </ClInclude>
     <ClInclude Include="src\ccReceiver.h" />
     <ClInclude Include="src\scenes\contourlines\ContourLinesScene.h" />
-    <ClInclude Include="src\scenes\cuboid\CuboidScene.h" />
     <ClInclude Include="src\scenes\gameoflife\GameOfLifeScene.h" />
     <ClInclude Include="src\scenes\swarm\SwarmScene.h" />
-    <ClInclude Include="src\scenes\particles\ParticleScene.h" />
     <ClInclude Include="src\scenes\spiral\SpiralScene.h" />
+    <ClInclude Include="src\scenes\fluid\FluidScene.h" />
     <ClInclude Include="src\ccUser.h" />
+    <ClInclude Include="src\ccUserManager.h" />
+    <ClInclude Include="src\scenes\fluid\ccFluid.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="icon.rc" />
   </ItemGroup>
   <ItemGroup>
     <None Include="src\scenes\gameoflife\shader\gol.frag" />
-    <None Include="src\scenes\particles\shader\instancedParticles.frag" />
-    <None Include="src\scenes\particles\shader\instancedParticles.vert" />
     <None Include="src\scenes\gameoflife\shader\outline.frag" />
-    <None Include="src\scenes\particles\shader\particle.comp" />
     <None Include="src\scenes\gameoflife\shader\passthru.vert" />
     <None Include="src\scenes\gameoflife\shader\renderInstanced.frag" />
     <None Include="src\scenes\gameoflife\shader\renderInstanced.vert" />
@@ -351,10 +350,20 @@
     <None Include="src\scenes\swarm\shader\swarm.vert" />
     <None Include="src\scenes\contourlines\shader\contourLines.frag" />
     <None Include="src\scenes\contourlines\shader\contourLines.vert" />
-    <None Include="src\scenes\cuboid\shader\cuboids.vert" />
-    <None Include="src\scenes\cuboid\shader\cuboids.frag" />
     <None Include="src\scenes\swarm\shader\swarmUserEnter.comp" />
     <None Include="addons.make" />
+    <None Include="src\scenes\fluid\shader\advect.frag" />
+    <None Include="src\scenes\fluid\shader\jacobiscalar.frag" />
+    <None Include="src\scenes\fluid\shader\boundaries.frag" />
+    <None Include="src\scenes\fluid\shader\divergence.frag" />
+    <None Include="src\scenes\fluid\shader\gradient.frag" />
+    <None Include="src\scenes\fluid\shader\passthru.vert" />
+    <None Include="src\scenes\fluid\shader\splat.frag" />
+    <None Include="src\scenes\fluid\shader\jacobivector.frag" />
+    <None Include="src\scenes\fluid\shader\vorticity.frag" />
+    <None Include="src\scenes\fluid\shader\vorticityforce.frag" />
+    <None Include="src\scenes\fluid\shader\displayvector.frag" />
+    <None Include="src\scenes\fluid\shader\gravity.frag" />
     <None Include="src\scenes\swarm\shader\intro.comp" />
   </ItemGroup>
 </Project>

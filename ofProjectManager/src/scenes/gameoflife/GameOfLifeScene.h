@@ -2,9 +2,9 @@
 
 #include "ccScene.h"
 
-#include "ofxUbo.h"
-
 #include <map>
+
+#include "ofxUbo.h"
 
 struct pingPongBuffer {
 public:
@@ -53,13 +53,8 @@ public:
 	void draw();
 	void reset();
 
-	void keyPressed( int key );
-	void keyReleased( int key );
-	void mousePressed( int x, int y, int button );
-	void mouseReleased( int x, int y, int button );
-	void mouseDragged( int x, int y, int button );
 	void windowResized( int w, int h );
-	
+
 	void handleSphereResolutionChanged( int& sphereRes );
 	void handleDimensionsChanged( ofVec2f& value );
 
@@ -70,9 +65,9 @@ private:
 
 	float time;
 
-	ofShader    updateCells;
-	ofShader    instancedShader;
-	ofShader    outlineShader;
+	ofShader logicShader;
+	ofShader instancedShader;
+	ofShader outlineShader;
 
 	pingPongBuffer cellPingPong;
 
@@ -89,9 +84,6 @@ private:
 	ofParameter<float> jiggleFactor;
 	ofParameter<bool> runSequences;
 
-	bool mouseIsDown;
-	ofVec3f mousePosition;
-
 	float calculateSphereRadius( ofVec2f dim );
 	void allocateCellBuffer( int rows, int cols );
 
@@ -99,21 +91,29 @@ private:
 	void updateSequence();
 	void updateParameters();
 
-	enum Sequence {
+		void drawOutlined( ofVboMesh& mesh, ofShader& instance, ofShader& outline);
+
+	// Members for sequences
+	enum class Sequence {
 		Default,
 		NoJiggle,
 		BigCells,
 		SmallCells,
 		FastEvolution,
-		SlowEvolution,
-		NUM_SEQ
+		SlowEvolution
+	};
+	const int NUM_SEQ = 5;
+
+	struct SequenceParameters {
+		float evolution;
+		float radius;
+		float jiggle;
 	};
 
-	// Variables for sequences
 	Sequence lastSequene;
 	Sequence currentSequence;
 	float lastSequenceTime;
-	float sequenceDuration = 10.0;
-	float sequenceTransitionDuration = 3.0;
-	map<Sequence, vector<float>> sequenceMap;
+	float sequenceDuration;
+	float sequenceTransitionDuration;
+	map<Sequence, SequenceParameters> sequenceMap;
 };
