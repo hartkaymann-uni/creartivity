@@ -2,6 +2,8 @@
 
 #include "scenes/scenes.h"
 
+using namespace gol;
+
 //--------------------------------------------------------------
 void ofApp::setup() {
 	ofBackground( 255, 255, 0 );
@@ -222,7 +224,6 @@ void ofApp::mouseMoved( int x, int y ) {
 //--------------------------------------------------------------
 void ofApp::mouseDragged( int x, int y, int button ) {
 	userManager.getMouseUser()->setPosition( { x, y } );
-	cout << x << " " << y << endl;
 }
 
 //--------------------------------------------------------------

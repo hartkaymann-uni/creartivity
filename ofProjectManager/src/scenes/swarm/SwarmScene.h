@@ -28,7 +28,7 @@ public:
 	void dragEvent(ofDragInfo dragInfo);
 	void gotMessage(ofMessage msg);
 
-	enum class SequenceType {
+	enum class SequenceName {
 		BlackHole,
 		Explosion,
 		NormalAttraction,
@@ -42,15 +42,15 @@ public:
 	{
 		float duration;
 		float modifier;
-		SequenceType sequenceType;
+		SequenceName sequenceType;
 
 		ParameterSequence() {
 			duration = -1;
 			modifier = -1;
-			sequenceType = SequenceType::BlackHole;
+			sequenceType = SequenceName::BlackHole;
 		}
 
-		ParameterSequence(float newDuration, SequenceType newType, float newModifier = 1) {
+		ParameterSequence(float newDuration, SequenceName newType, float newModifier = 1) {
 			duration = newDuration;
 			modifier = std::max(0.0f, std::min(newModifier, 5.0f));
 			sequenceType = newType;

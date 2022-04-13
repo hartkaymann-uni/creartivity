@@ -94,15 +94,15 @@ void SwarmScene::setup() {
 void SwarmScene::InitSequences() {
 	currentSequenceIndex = 100;
 	nextSequenceTime = ofGetElapsedTimef() + 2;
-	SetSequence(ParameterSequence(1, SequenceType::NormalAttraction));
-	sequences.push_back(ParameterSequence(16, SequenceType::BrainNeurons));
-	sequences.push_back(ParameterSequence(7, SequenceType::BlackHole, 5));
-	sequences.push_back(ParameterSequence(4, SequenceType::Explosion));
-	sequences.push_back(ParameterSequence(0.1f, SequenceType::NormalAttraction));
-	sequences.push_back(ParameterSequence(16, SequenceType::BrainNeurons));
-	sequences.push_back(ParameterSequence(10, SequenceType::Swarm));
-	sequences.push_back(ParameterSequence(5, SequenceType::RepulsionStutter));
-	sequences.push_back(ParameterSequence(7, SequenceType::BlackHole, 3));
+	SetSequence(ParameterSequence(1, SequenceName::NormalAttraction));
+	sequences.push_back(ParameterSequence(16, SequenceName::BrainNeurons));
+	sequences.push_back(ParameterSequence(7, SequenceName::BlackHole, 5));
+	sequences.push_back(ParameterSequence(4, SequenceName::Explosion));
+	sequences.push_back(ParameterSequence(0.1f, SequenceName::NormalAttraction));
+	sequences.push_back(ParameterSequence(16, SequenceName::BrainNeurons));
+	sequences.push_back(ParameterSequence(10, SequenceName::Swarm));
+	sequences.push_back(ParameterSequence(5, SequenceName::RepulsionStutter));
+	sequences.push_back(ParameterSequence(7, SequenceName::BlackHole, 3));
 }
 
 //--------------------------------------------------------------
@@ -286,7 +286,7 @@ void SwarmScene::keyReleased(int key) {
 
 	if (key == 't') {
 		cout << "Retrigger Scene Intro" << endl;
-		SetSequence(ParameterSequence(3, SequenceType::Intro));
+		SetSequence(ParameterSequence(3, SequenceName::Intro));
 	}
 
 	if (key == 's') {
@@ -387,37 +387,37 @@ void SwarmScene::StartSequence() {
 
 	switch (currentSequence.sequenceType)
 	{
-	case SequenceType::BlackHole:
+	case SequenceName::BlackHole:
 		attractionCoeff.set(attractionCoeff.getMin());
 		attractorForce.set(1250 * currentSequence.modifier);
 		repulsionCoeff.set(repulsionCoeff.getMin());
 		maxSpeed.set(2500 * currentSequence.modifier);
 		break;
-	case SequenceType::Explosion:
+	case SequenceName::Explosion:
 		attractionCoeff.set(attractionCoeff.getMin());
 		attractorForce.set(attractorForce.getMin());
 		repulsionCoeff.set(repulsionCoeff.getMax());
 		maxSpeed.set(maxSpeed.getMax());
 		break;
-	case SequenceType::NormalAttraction:
+	case SequenceName::NormalAttraction:
 		attractionCoeff.set(attractionCoeff.getMin());
 		attractorForce.set(3500);
 		repulsionCoeff.set(0.1f);
 		maxSpeed.set(500);
 		break;
-	case SequenceType::BrainNeurons:
+	case SequenceName::BrainNeurons:
 		attractionCoeff.set(attractionCoeff.getMin());
 		attractorForce.set(5000);
 		repulsionCoeff.set(repulsionCoeff.getMax());
 		maxSpeed.set(5000);
 		break;
-	case SequenceType::Swarm:
+	case SequenceName::Swarm:
 		attractionCoeff.set(attractionCoeff.getMax());
 		attractorForce.set(5000);
 		repulsionCoeff.set(repulsionCoeff.getMax());
 		maxSpeed.set(5000);
 		break;
-	case SequenceType::Intro:
+	case SequenceName::Intro:
 	{
 		particleColorStart.set(particleColorStart.getMin());
 		particleColorEnd.set(particleColorEnd.getMin());
@@ -443,19 +443,19 @@ void SwarmScene::UpdateParameters() {
 
 	switch (currentSequence.sequenceType)
 	{
-	case SequenceType::BlackHole: {
+	case SequenceName::BlackHole: {
 
 		break;
 	}
-	case SequenceType::Explosion: {
+	case SequenceName::Explosion: {
 
 		break;
 	}
-	case SequenceType::NormalAttraction: {
+	case SequenceName::NormalAttraction: {
 
 		break;
 	}
-	case SequenceType::BrainNeurons:
+	case SequenceName::BrainNeurons:
 	{
 		float diff = currentTime - lastSequenceTime;
 		float newSpeed = maxSpeed.getMax() - 200 * diff;
@@ -463,7 +463,7 @@ void SwarmScene::UpdateParameters() {
 		maxSpeed.set(newSpeed);
 		break;
 	}
-	case SequenceType::Swarm:
+	case SequenceName::Swarm:
 	{
 		float diff = currentTime - lastSequenceTime;
 		float newSpeed = maxSpeed.getMax() - 400 * diff;
@@ -471,14 +471,14 @@ void SwarmScene::UpdateParameters() {
 		maxSpeed.set(newSpeed);
 		break;
 	}
-	case SequenceType::RepulsionStutter:
+	case SequenceName::RepulsionStutter:
 	{
 		float diff = currentTime - (int)currentTime;
 		if (diff < 0.1f) UseRepulsion.set(true);
 		else UseRepulsion.set(false);
 		break;
 	}
-	case SequenceType::Intro:
+	case SequenceName::Intro:
 	{
 		float diff = currentTime - lastSequenceTime;
 
@@ -505,7 +505,7 @@ float SwarmScene::SceneIntro() {
 
 	particlesBuffer.copyTo(particlesBuffer2);
 
-	SetSequence(ParameterSequence(4, SequenceType::Intro));
+	SetSequence(ParameterSequence(4, SequenceName::Intro));
 
 	return 4.f;
 }
