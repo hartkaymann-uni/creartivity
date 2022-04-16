@@ -19,7 +19,7 @@ void ofApp::setup()
 	gui.add( p_remove.set( "Remove user", false ) );
 	gui.setPosition( width - gui.getWidth() - 1, height - gui.getHeight() - 10 );
 	p_add.addListener( this, &ofApp::handleRegisterUser );
-	p_add.addListener( this, &ofApp::handleRegisterUser );
+	p_remove.addListener( this, &ofApp::handleRemoveUser );
 
 	// Register first user
 	registerUser( 0 );
@@ -52,24 +52,6 @@ void ofApp::draw() {
 	}
 	ofPopStyle();
 	gui.draw();
-}
-
-// Return normalized coordinates from screen coordinates
-glm::vec2 ofApp::mapped( glm::vec2 v )
-{
-	glm::vec2 mapped;
-	mapped.x = ofMap( v.x, 0.f, width, 0.f, 1.f, true );
-	mapped.y = ofMap( v.y, 0.f, height, 0.f, 1.f, true );
-	return mapped;
-}
-
-// Return screen coordinates from normalized coordinates
-glm::vec2 ofApp::unmapped( glm::vec2 v )
-{
-	glm::vec2 unmapped;
-	unmapped.x = ofMap( v.x, 0.f, 1.f, 0.f, width, true );
-	unmapped.y = ofMap( v.y, 0.f, 1.f, 0.f, height, true );
-	return unmapped;
 }
 
 // Send user information
@@ -106,11 +88,12 @@ void ofApp::registerUser( int id )
 void ofApp::removeUser( int id )
 {
 	map<int, user>::iterator it = users.find( id );
-	users.erase( it );
+	if (it != users.end())
+		users.erase( it );
 
 	ofxOscMessage m;
 	m.setAddress( "/user/lost/" );
-	m.addInt32Arg( it->second.id );
+	m.addInt32Arg( id );
 	sender.sendMessage( m );
 }
 
@@ -134,10 +117,11 @@ void ofApp::handleRegisterUser( bool& b )
 
 void ofApp::handleRemoveUser( bool& b )
 {
-	int id = users.size();
-	removeUser( id );
+	int id = users.size() - 1;
+	if (id > 0)
+		removeUser( id );
 
-	p_add.set( false );
+	p_remove.set( false );
 }
 
 void ofApp::mouseDragged( int x, int y, int button ) {
@@ -148,21 +132,31 @@ void ofApp::mouseDragged( int x, int y, int button ) {
 	float radius = glm::length( center - glm::vec2( x, y ) );
 	int n = users.size();
 	for (size_t i = 0; i < n; i++) {
-		users[i].left = coords + glm::vec2{0.1f * i};
+		users[i].left = coords + glm::vec2{ 0.1f * i };
 		users[i].right = glm::vec2( 1.f ) - coords + glm::vec2{ 0.1f * i };
 	}
-
-}
-
-void ofApp::mousePressed( int x, int y, int button ) {
-
-}
-
-void ofApp::mouseReleased( int x, int y, int button ) {
 
 }
 
 void ofApp::windowResized( int w, int h ) {
 	width = w;
 	height = h;
+}
+
+// Return normalized coordinates from screen coordinates
+glm::vec2 ofApp::mapped( glm::vec2 v )
+{
+	glm::vec2 mapped;
+	mapped.x = ofMap( v.x, 0.f, width, 0.f, 1.f, true );
+	mapped.y = ofMap( v.y, 0.f, height, 0.f, 1.f, true );
+	return mapped;
+}
+
+// Return screen coordinates from normalized coordinates
+glm::vec2 ofApp::unmapped( glm::vec2 v )
+{
+	glm::vec2 unmapped;
+	unmapped.x = ofMap( v.x, 0.f, 1.f, 0.f, width, true );
+	unmapped.y = ofMap( v.y, 0.f, 1.f, 0.f, height, true );
+	return unmapped;
 }

@@ -9,23 +9,22 @@
 
 class ofApp : public ofBaseApp {
 
+public:
 	struct user {
 		int id;
 		glm::vec2 left;
 		glm::vec2 right;
 	};
 
-public:
 	void setup();
 	void update();
 	void draw();
 
 	void mouseDragged( int x, int y, int button );
-	void mousePressed( int x, int y, int button );
-	void mouseReleased( int x, int y, int button );
-
 	void windowResized( int w, int h );
 
+
+private:
 	int width, height;
 	ofxPanel gui;
 	ofParameter<bool> p_add;
@@ -35,8 +34,8 @@ public:
 
 	ofxOscSender sender;
 
-	glm::vec2 mapped(glm::vec2 v);
-	glm::vec2 unmapped(glm::vec2 v);
+	glm::vec2 mapped( glm::vec2 v );
+	glm::vec2 unmapped( glm::vec2 v );
 
 	void sendUser( int id, user& user );
 	void registerUser( int id );
