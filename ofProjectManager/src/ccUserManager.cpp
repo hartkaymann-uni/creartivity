@@ -18,12 +18,22 @@ void ccUserManager::registerUser( ccUser& user )
 
 void ccUserManager::removeUser( int id )
 {
-	users.erase( id );
+	map<int, ccUser>::iterator it = users.find( id );
+	users.erase( it );
 }
 
 map<int, ccUser>* const ccUserManager::getUsers()
 {
 	return &users;
+}
+
+vector<ccUser> const ccUserManager::getUserVec()
+{
+	vector<ccUser> v;
+	for (const auto& u : users)
+		v.push_back( u.second );
+
+	return v;
 }
 
 ccUser* const ccUserManager::getUser( int id )

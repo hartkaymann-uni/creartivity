@@ -12,6 +12,7 @@ public:
 	void removeUser( int id );
 
 	map<int, ccUser>* const getUsers();
+	vector<ccUser> const getUserVec();
 	ccUser* const getUser( int id );
 	ccUser* const getMouseUser();
 

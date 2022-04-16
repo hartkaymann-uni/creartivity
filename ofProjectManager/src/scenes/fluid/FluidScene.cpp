@@ -23,7 +23,7 @@ void FluidScene::setup()
 	solver = ccSolver( solverSettings );
 
 	ccSolver::Grid solverGrid;
-	solverGrid.size = glm::vec2( 1024, 768 );
+	solverGrid.size = glm::vec2( 2560, 1440);
 	solverGrid.scale = 1.0f;
 	solverGrid.applyBounds = true;
 	solver.setup( solverGrid );
@@ -85,10 +85,10 @@ void FluidScene::update()
 	if (debug && !step)
 		return;
 
-	ccUser* u = userManager->getMouseUser();
+	vector<ccUser> u = userManager->getUserVec();
 
 	// Add user force here
-	solver.step( *u );
+	solver.step( u );
 
 	if (debug) step = false;
 }
