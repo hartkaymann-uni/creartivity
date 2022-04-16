@@ -47,14 +47,14 @@ namespace gol {
 		initSequences();
 
 		// Set all Parameters once
-		dimensions.set( "dimensions", ofVec2f( n_cells_x, n_cells_y ), ofVec2f( 1.0, 1.0 ), ofVec2f( n_cells_x * 10.0, n_cells_y * 10.0 ) );
-		evolutionFactor.set( "evolutionFac", 0.05, 0.0, 0.25 );
+		dimensions.set( "dimensions", ofVec2f( n_cells_x, n_cells_y ), ofVec2f( 1.f, 1.f ), ofVec2f( n_cells_x * 10.f, n_cells_y * 10.f ) );
+		evolutionFactor.set( "evolutionFac", 0.05f, 0.f, 0.25f );
 		sphereResolution.set( "circleRes", 20, 1, 100 );
-		sphereRadius.set( "radius", cellOffset, 0.0, cellOffset * 5.0 );
-		dataSrcSize.set( "srcSize", 0, 0, 9 );
-		mouseRadius.set( "mouseRad", 7.5, 0, 10 );
-		mouseStrength.set( "mouseStr", 0.5, 0.0, 1.0 );
-		jiggleFactor.set( "jiggle", 1.0, 0.0, 10.0 );
+		sphereRadius.set( "radius", cellOffset, 0.f, cellOffset * 5.f );
+		dataSrcSize.set( "srcSize", 0.f, 0.f, 9.f );
+		mouseRadius.set( "mouseRad", 5.f, 0.f, 10.f );
+		mouseStrength.set( "mouseStr", 0.5f, 0.f, 1.f );
+		jiggleFactor.set( "jiggle", 1.f, 0.f, 10.f );
 		runSequences.set( "Run sequences", true );
 
 		sphereResolution.addListener( this, &GameOfLifeScene::handleSphereResolutionChanged );
@@ -72,7 +72,7 @@ namespace gol {
 		gui.add( sphereResolution );
 		gui.add( runSequences );
 		gui.add( dimensions );
-		gui.setPosition( width - gui.getWidth() - 10, height - gui.getHeight() - 10 );
+		gui.setPosition( width - gui.getWidth() - 10.f, height - gui.getHeight() - 10.f );
 
 		ofSpherePrimitive sphere;
 		sphere.set( 1.0, sphereResolution );
@@ -171,7 +171,7 @@ namespace gol {
 	{
 		lastSequene = currentSequence;
 		currentSequence = name;
-		lastSequenceTime = time;
+		lastSequenceTime = ofGetElapsedTimef();
 	}
 
 	GameOfLifeScene::SequenceName GameOfLifeScene::randSequence()
@@ -304,6 +304,8 @@ namespace gol {
 	float GameOfLifeScene::SceneIntro() {
 		lastSequene = SequenceName::Empty;
 		setSequence( randSequence() );
+
+		allocateCellBuffer( n_cells_x, n_cells_y );
 
 		return sequenceTransitionDuration;
 	}
