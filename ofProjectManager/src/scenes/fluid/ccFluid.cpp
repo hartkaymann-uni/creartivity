@@ -123,10 +123,10 @@ namespace fluid {
 
 	void ccSolver::addForces( ccUser& user ) {
 		// Mouse Unteraction, can be extended for actual interaction with a simple for loop
-		glm::vec3 color = user.getMotion();
+		glm::vec3 color = user.getMotions().first;
 
 		if (color.x != 0.f || color.y != 0) {
-			glm::vec3 pos = user.getPositon();
+			glm::vec3 pos = user.left;
 			float xMapped = ofMap( pos.x, 0, ofGetWidth(), 0, grid.size.x );
 			float yMapped = ofMap( pos.y, 0, ofGetHeight(), 0, grid.size.y );
 

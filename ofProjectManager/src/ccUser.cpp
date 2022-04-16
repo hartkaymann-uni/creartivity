@@ -1,16 +1,16 @@
 #include "ccUser.h"
 
-ccUser::ccUser() 
-{
-};
+ccUser::ccUser() {};
 
 ccUser::ccUser( int id, glm::vec3 l, glm::vec3 r )
 {
 	positions = pair<glm::vec3, glm::vec3>( l, r);
 	motions = pair<glm::vec3, glm::vec3>( l, r);
+}
 
-	left = &positions.first;
-	right = &positions.second;
+void ccUser::move( glm::vec3 dir )
+{
+	setPosition( left + dir );
 }
 
 bool ccUser::setId( int id ) {

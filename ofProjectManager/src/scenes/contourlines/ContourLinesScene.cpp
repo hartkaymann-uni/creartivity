@@ -63,13 +63,13 @@ void ContourLinesScene::update()
 	updateUserPositions();
 
 	// TODO: somehow combine mouse and user interaction so this function isn't as long and ugly anymore
-	std::unique_ptr<std::map<int, user>> users = receiver->getUsers();
-	std::map<int, user>::iterator it = users->begin();
-	std::map<int, user>::iterator itEnd = users->end();
+	map<int, ccUser>* users = userManager->getUsers();
+	std::map<int, ccUser>::iterator it = users->begin();
+	std::map<int, ccUser>::iterator itEnd = users->end();
 	while (it != itEnd) {
 
-		ofVec2f left = it->second.positionLeft;
-		ofVec2f right = it->second.positionRight;
+		ofVec2f left = it->second.left;
+		ofVec2f right = it->second.right;
 
 		left.x *= width;
 		right.x *= width;

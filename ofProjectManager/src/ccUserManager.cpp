@@ -5,14 +5,7 @@ ccUserManager::ccUserManager()
 	// Set mouse as first user
 	ccUser mouse;
 	registerUser( mouse );
-	
-}
 
-ccUserManager::ccUserManager( ccReceiver& receiver_ )
-{
-	ccUser mouse;
-	registerUser( mouse );
-	receiver = receiver;
 }
 
 void ccUserManager::registerUser( ccUser& user )
@@ -30,10 +23,10 @@ void ccUserManager::registerUser( ccUser& user )
 
 void ccUserManager::removeUser( int id )
 {
-	users.erase( users.begin() + id );
+	users.erase( id );
 }
 
-vector<ccUser>* const ccUserManager::getUsers()
+map<int, ccUser>* const ccUserManager::getUsers()
 {
 	return &users;
 }
@@ -45,5 +38,5 @@ ccUser* const ccUserManager::getUser( int id )
 
 ccUser* const ccUserManager::getMouseUser()
 {
-	return &users.front();
+	return &users[0];
 }

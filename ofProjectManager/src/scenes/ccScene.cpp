@@ -59,16 +59,16 @@ ofVec3f ccScene::getProjectedPosition( ofVec3f p ) {
 
 void ccScene::updateUserPositions()
 {
-	unique_ptr<map<int, user>> users = receiver->getUsers();
-	std::map<int, user>::iterator it = users->begin();
-	std::map<int, user>::iterator itEnd = users->end();
+	map<int, ccUser>* users = userManager->getUsers();
+	std::map<int, ccUser>::iterator it = users->begin();
+	std::map<int, ccUser>::iterator itEnd = users->end();
 	user_positions.fill( ofVec2f( .0f ) ); // refilling array every call might take a while, maybe just handle the lostUser event smarter
 	auto i = 0;
 	while (it != itEnd) {
-		float xl = it->second.positionLeft.x * width;
-		float yl = it->second.positionLeft.y * height;
-		float xr = it->second.positionRight.x * width;
-		float yr = it->second.positionRight.y * height;
+		float xl = it->second.left.x * width;
+		float yl = it->second.left.y * height;
+		float xr = it->second.right.x * width;
+		float yr = it->second.right.y * height;
 
 		ofVec2f left = getProjectedPosition( ofVec3f( xl, yl, 0.f ) );
 		ofVec2f right = getProjectedPosition( ofVec3f( xr, yr, 0.f ) );

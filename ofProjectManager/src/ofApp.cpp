@@ -13,6 +13,8 @@ void ofApp::setup() {
 	transformer.setTransforms( true, true, false, true, true );
 	setTransformer( &transformer );
 
+	receiver.setUserManager( &userManager );
+
 	// Load scenes
 	//scenes.push_back( (SpiralScene*)sceneManager.add( new SpiralScene() ) );
 	scenes.push_back( (FluidScene*)sceneManager.add( new FluidScene() ) );
@@ -70,7 +72,7 @@ void ofApp::draw() {
 		for (ccScene* s : scenes) {
 			if (s->getName() == sceneManager.getCurrentSceneName()) {
 				ofxPanel& gui = s->getGui();
-				gui.setPosition( ofGetWidth() - gui.getWidth() - 10, ofGetHeight() - gui.getHeight() - 10);
+				gui.setPosition( ofGetWidth() - gui.getWidth() - 10, ofGetHeight() - gui.getHeight() - 10 );
 				s->getGui().draw();
 			}
 		}

@@ -2,12 +2,9 @@
 
 ccReceiver::ccReceiver( string host, int port )
 {
-
 	receiver.setup( PORT );
 	ofLog() << "Listening on port " << PORT;
-
 }
-
 
 // Receive and handle user data sent by our ofInput
 // TODO: create smaller functions to handle different adresses
@@ -30,29 +27,23 @@ void ccReceiver::receiveMessages() {
 				float xr = m.getArgAsFloat( 2 );
 				float yr = m.getArgAsFloat( 3 );
 
-				ccUser user( id, glm::vec3( xl, yl, 0.f ), glm::vec3( xr, yr, 0.f ) );
+				userManager->getUser( id )->setPositions( glm::vec3( xl, yl, 0.f ), glm::vec3( xr, yr, 0.f ) );
 
-				users[id].positionLeft.x = xl != xl ? 0.f : xl;
-				users[id].positionLeft.y = yl != yl ? 0.f : yl;
-				users[id].positionRight.x = xr != xr ? 0.f : xr;
-				users[id].positionRight.y = yr != yr ? 0.f : yr;
-
-				user* u = &users[id];
 				//printf( "user %i: Left:[ %.3f, %.3f] Right:[ %.3f, %.3f ] \n", id, u->positionLeft.x, u->positionLeft.y, u->positionRight.x, u->positionRight.y );
 			}
 			else if (address.find( "new/" ) != string::npos) {
 				int id = m.getArgAsInt32( 0 );
-				user newUser{ id, {0.0, 0.0},{0.0, 0.0} };
-				users[id] = newUser;
+				ccUser newUser{ id, glm::vec3( 0.f, 0.f, 0.f ), glm::vec3( 0.f, 0.f, 0.f ) };
+				userManager->registerUser( newUser );
+
 				ofLog( ofLogLevel::OF_LOG_NOTICE, "New User: %i", ofToString( id ) );
 			}
 			else if (address.find( "lost/" ) != string::npos) {
 				int id = m.getArgAsInt32( 0 );
-				users.erase( id );
+				userManager->removeUser( id );
+
 				ofLog( ofLogLevel::OF_LOG_NOTICE, "Lost User: %i", ofToString( id ) );
 			}
-
-
 		}
 		else if (address.find( connectionAdr ) != string::npos) {
 			string status = m.getArgAsString( 0 );

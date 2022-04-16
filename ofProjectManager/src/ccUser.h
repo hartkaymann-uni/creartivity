@@ -24,8 +24,8 @@ public:
 	pair<glm::vec3, glm::vec3> getPositons();
 	pair<glm::vec3, glm::vec3> getMotions();
 
-	glm::vec3* left;
-	glm::vec3* right;
+	glm::vec3& left = positions.first;
+	glm::vec3& right = positions.second;
 
 
 private:
