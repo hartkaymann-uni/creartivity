@@ -68,8 +68,8 @@ void ContourLinesScene::update()
 	std::map<int, ccUser>::iterator itEnd = users->end();
 	while (it != itEnd) {
 
-		ofVec2f left = it->second.left;
-		ofVec2f right = it->second.right;
+		ofVec2f left = it->second.left();
+		ofVec2f right = it->second.right();
 
 		left.x *= width;
 		right.x *= width;

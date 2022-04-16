@@ -126,7 +126,7 @@ namespace fluid {
 		glm::vec3 color = user.getMotions().first;
 
 		if (color.x != 0.f || color.y != 0) {
-			glm::vec3 pos = user.left;
+			glm::vec3 pos = user.left();
 			float xMapped = ofMap( pos.x, 0, ofGetWidth(), 0, grid.size.x );
 			float yMapped = ofMap( pos.y, 0, ofGetHeight(), 0, grid.size.y );
 

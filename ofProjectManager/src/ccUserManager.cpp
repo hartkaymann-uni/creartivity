@@ -4,21 +4,16 @@ ccUserManager::ccUserManager()
 {
 	// Set mouse as first user
 	ccUser mouse;
+	mouse.setId( 0 );
 	registerUser( mouse );
 
 }
 
 void ccUserManager::registerUser( ccUser& user )
 {
-	int id = users.size() + 1;
+	int id = user.getId();
+	users.insert( pair<int, ccUser>( id, user ) );
 
-	if (user.setId( id )) {
-		users.insert( pair<int, ccUser>( id, user ) );
-	}
-	else {
-		string msg = "Could not set id of user! User already has an id.";
-		ofLog( OF_LOG_WARNING, msg );
-	}
 }
 
 void ccUserManager::removeUser( int id )

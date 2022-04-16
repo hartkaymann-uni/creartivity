@@ -65,10 +65,10 @@ void ccScene::updateUserPositions()
 	user_positions.fill( ofVec2f( .0f ) ); // refilling array every call might take a while, maybe just handle the lostUser event smarter
 	auto i = 0;
 	while (it != itEnd) {
-		float xl = it->second.left.x * width;
-		float yl = it->second.left.y * height;
-		float xr = it->second.right.x * width;
-		float yr = it->second.right.y * height;
+		float xl = it->second.left().x * width;
+		float yl = it->second.left().y * height;
+		float xr = it->second.right().x * width;
+		float yr = it->second.right().y * height;
 
 		ofVec2f left = getProjectedPosition( ofVec3f( xl, yl, 0.f ) );
 		ofVec2f right = getProjectedPosition( ofVec3f( xr, yr, 0.f ) );

@@ -129,7 +129,6 @@ void ofApp::mouseMoved( int x, int y ) {
 //--------------------------------------------------------------
 void ofApp::mouseDragged( int x, int y, int button ) {
 	userManager.getMouseUser()->setPosition( { x, y } );
-	cout << x << " " << y << endl;
 }
 
 //--------------------------------------------------------------
