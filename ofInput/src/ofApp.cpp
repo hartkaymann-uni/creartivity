@@ -127,13 +127,14 @@ void ofApp::handleRemoveUser( bool& b )
 void ofApp::mouseDragged( int x, int y, int button ) {
 	glm::vec2 coords = mapped( { x, y } );
 
-	// Arrange users in circle pattern
+	// Arrange users in pattern
 	glm::vec2 center = { width * 0.5f, height * 0.5f };
 	float radius = glm::length( center - glm::vec2( x, y ) );
 	int n = users.size();
 	for (size_t i = 0; i < n; i++) {
-		users[i].left = coords + glm::vec2{ 0.1f * i };
-		users[i].right = glm::vec2( 1.f ) - coords + glm::vec2{ 0.1f * i };
+		float offset = 0.1f * ceil( i / 2.0 ) * (i % 2 ? 1.f : -1.f);
+		users[i].left = coords + glm::vec2{ offset };
+		users[i].right = glm::vec2( 1.f ) - coords + glm::vec2{ offset };
 	}
 
 }
