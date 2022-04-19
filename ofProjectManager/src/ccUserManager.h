@@ -11,13 +11,14 @@ public:
 	void registerUser( ccUser& user );
 	void removeUser( int id );
 
-	vector<ccUser>* const getUsers();
+	map<int, ccUser>* const getUsers();
+	vector<ccUser> const getUserVec();
 	ccUser* const getUser( int id );
 	ccUser* const getMouseUser();
 
 private:
 
 	// Vector containing all users, first user is always the mouse
-	vector<ccUser> users;
+	map<int, ccUser> users;
 };
 

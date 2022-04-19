@@ -11,7 +11,7 @@ void ofApp::setup() {
 	width = ofGetWidth();
 	height = ofGetHeight();
 	device.setLogLevel( OF_LOG_VERBOSE );
-	bool steup = device.setup( 0 );
+	bool setup = device.setup( 0 );
 	tracker.setup( device );
 	tracker.enableTrackingOutOfFrame( true );
 
