@@ -6,7 +6,6 @@ ccScene::ccScene( std::string name )
 	height( ofGetHeight() ),
 	mouseIsDown( false ),
 	mousePosition( 0.f, 0.f, 0.f ),
-	receiver( nullptr ),
 	scenesPath( "../../src/scenes" )
 {
 	setSingleSetup( true );
@@ -19,27 +18,6 @@ ccScene::ccScene( std::string name )
 	gui.setup();
 }
 
-void ccScene::setup()
-{
-	stringstream ss;
-	ss << "Called setup of" << this->getName() << std::endl;
-	ofLog( ofLogLevel::OF_LOG_WARNING, ss.str() );
-}
-
-void ccScene::update()
-{
-	stringstream ss;
-	ss << "Called update of" << this->getName() << std::endl;
-	ofLog( ofLogLevel::OF_LOG_WARNING, ss.str() );
-}
-
-void ccScene::draw()
-{
-	stringstream ss;
-	ss << "Called draw of" << this->getName() << std::endl;
-	ofLog( ofLogLevel::OF_LOG_WARNING, ss.str() );
-}
-
 void ccScene::resetCamera()
 {
 	camera.reset();
@@ -47,13 +25,8 @@ void ccScene::resetCamera()
 }
 
 ofVec3f ccScene::getProjectedPosition( ofVec3f p ) {
-
 	glm::vec3 pos = camera.screenToWorld( p );
-
 	pos.z = 0.0;
-
-	//std::cout << "Projected: X=[ " << pos.x << " ] Y=[ " << pos.y << " ] Z=[ " << pos.z << " ]" << std::endl;
-
 	return ofVec3f( pos );
 }
 

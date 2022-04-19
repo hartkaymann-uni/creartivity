@@ -33,7 +33,6 @@ void ofApp::setup() {
 	// Give all scenes a pointer to the receiver
 	// TODO: Scenen dont need this anymore, as user array does the work here
 	for (ccScene* scene : scenes) {
-		scene->setReceiver( &receiver );
 		scene->setUserManager( &userManager );
 	}
 }
