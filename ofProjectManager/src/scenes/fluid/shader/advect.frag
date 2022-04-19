@@ -1,7 +1,7 @@
 #version 150
 
-uniform sampler2DRect velocity; 
-uniform sampler2DRect advected; 
+uniform sampler2D velocity; 
+uniform sampler2D advected; 
 
 uniform vec2 gridSize;
 uniform float gridScale;
@@ -13,7 +13,7 @@ out vec4 vFragColor;
 
 // Biliear Interpolation
 // Source: https://github.com/mharrys/fluids-2d/blob/feb725984d2fe3f3830930e669afaea47d65d9a1/shaders/advect.fs
-vec2 bilerp(sampler2DRect tex, vec2 p) {
+vec2 bilerp(sampler2D tex, vec2 p) {
 	vec4 ij; // i0, j0, i1, j1
     ij.xy = floor(p - 0.5) + 0.5;
     ij.zw = ij.xy + 1.0;
@@ -53,12 +53,12 @@ void main() {
     float scale = 1.0 / gridScale;
 
     // trace points back in time
-    vec2 p = gl_FragCoord.xy - timestep * scale * texture(velocity, gl_FragCoord.xy).xy;
+    vec2 p = uv - timestep * scale * texture(velocity, uv).xy;
 
-    vFragColor = vec4(dissipation * f4texRECTbilerp(advected, p));
+    vFragColor = vec4((dissipation * bilerp(advected, p)), 0.0, 1.0);
 
     // Debug outs:
     //vFragColor = vec4(dissipation * bilerp(advected, p), 0.0, 1.0);
     //vFragColor = vec4(p, 0.0, 1.0);
-    //vFragColor = vec4(uv, 0.0, 1.0);
+    //vFragColor = texture(velocity, uv);
 }
