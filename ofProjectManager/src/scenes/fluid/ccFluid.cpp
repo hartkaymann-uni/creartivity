@@ -174,14 +174,13 @@ namespace fluid {
 		if (!grid.applyBounds)
 			return;
 
-		
 		// default offset: 1
 		float offset = 1.f;
-		float xL = 2 * offset;
-		float xR = grid.size.x - offset;
-		float yB = 2 * offset;
-		float yT = grid.size.y - offset;
-		
+		float xL = offset;
+		float xR = grid.size.x;
+		float yB = offset;
+		float yT = grid.size.y;
+
 		float ax = (grid.size.x - 2) / grid.size.x;
 		float ay = (grid.size.y - 2) / grid.size.y;
 		float bx = (grid.size.x - 1) / grid.size.x;
@@ -204,6 +203,7 @@ namespace fluid {
 		// no swapping here, will be done by the next slabob
 	}
 
+	// Apply boundary logic to one side
 	void ccSolver::boundarySide( Field& input, Field& output, ofPolyline& line, glm::vec2 offset, float scale ) {
 		boundariesProgram.begin();
 

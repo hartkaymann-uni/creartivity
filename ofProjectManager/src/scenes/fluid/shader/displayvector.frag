@@ -17,5 +17,5 @@ void main()
 
     vFragColor = vec4(bias + scale * texture(read, vTexCoord).xyz, 1.0);
 
-	vFragColor = vec4(bias + scale * texture(read,  vTexCoord + vec2(.1, .1)).xyz, 1.0);
+	vFragColor = vec4(bias + scale * texture(read,  (vTexCoord * 1.2f) - vec2(.1, .1)).xyz, 1.0);
 }
