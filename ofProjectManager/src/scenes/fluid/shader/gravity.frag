@@ -1,6 +1,8 @@
 #version 150
 
-uniform sampler2DRect velocity;
+in vec2 vTexCoord;
+
+uniform sampler2D velocity;
 
 uniform vec2 dir;
 uniform float str;

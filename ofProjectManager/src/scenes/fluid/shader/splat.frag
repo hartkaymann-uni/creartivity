@@ -2,7 +2,7 @@
 
 in vec2 vTexCoord;
 
-uniform sampler2DRect read;
+uniform sampler2D read;
 
 uniform vec2 gridSize;
 
@@ -18,13 +18,10 @@ float gauss(vec2 p, float r) {
 
 void main() {
 
-	vec2 coords = gl_FragCoord.xy;
-
-	vec3 base = texture(read, coords).xyz;
-
+    vec2 uv = gl_FragCoord.xy / gridSize.xy;
+	vec3 base = texture(read, uv).xyz;
 	vec2 coord = point.xy - gl_FragCoord.xy;
-	float g = gauss(coord, gridSize.x * radius);
-	vec3 splat = color * g;
+    vec3 splat = color * gauss(coord, gridSize.x * radius);
 	
 	vFragColor = vec4(base + splat, 1.0);
 }

@@ -16,6 +16,7 @@ namespace fluid {
 		plane.setResolution( 2, 2 );
 
 		// Create render targets
+		ofDisableArbTex();
 		velocity.allocate( grid.size, GL_RGB16_SNORM );
 		density.allocate( grid.size, GL_RGB16_SNORM );
 		divergence.allocate( grid.size, GL_RGB16_SNORM );
@@ -173,27 +174,33 @@ namespace fluid {
 		if (!grid.applyBounds)
 			return;
 
+		
 		// default offset: 1
 		float offset = 1.f;
 		float xL = 2 * offset;
 		float xR = grid.size.x - offset;
 		float yB = 2 * offset;
 		float yT = grid.size.y - offset;
+		
+		float ax = (grid.size.x - 2) / grid.size.x;
+		float ay = (grid.size.y - 2) / grid.size.y;
+		float bx = (grid.size.x - 1) / grid.size.x;
+		float by = (grid.size.y - 1) / grid.size.y;
 
 		ofPolyline lineR, lineL, lineT, lineB;
-		lineR.addVertex( xR, yB );
-		lineR.addVertex( xR, yT );
 		lineL.addVertex( xL, yT );
 		lineL.addVertex( xL, yB );
-		lineT.addVertex( xR, yT );
-		lineT.addVertex( xL, yT );
+		lineR.addVertex( xR, yB );
+		lineR.addVertex( xR, yT );
 		lineB.addVertex( xR, yB );
 		lineB.addVertex( xL, yB );
+		lineT.addVertex( xR, yT );
+		lineT.addVertex( xL, yT );
 
-		boundarySide( input, output, lineR, { -1.f, 0.f }, scale );
 		boundarySide( input, output, lineL, { 1.f, 0.f }, scale );
-		boundarySide( input, output, lineT, { 0.f, -1.f }, scale );
+		boundarySide( input, output, lineR, { -1.f, 0.f }, scale );
 		boundarySide( input, output, lineB, { 0.f, 1.f }, scale );
+		boundarySide( input, output, lineT, { 0.f, -1.f }, scale );
 		// no swapping here, will be done by the next slabob
 	}
 

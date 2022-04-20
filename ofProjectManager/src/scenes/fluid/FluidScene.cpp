@@ -10,7 +10,7 @@ void FluidScene::setup()
 	solverSettings.timestep = 1.0f;
 	solverSettings.splatRadius = 0.25f;
 	solverSettings.splatColor = ofFloatColor( 1.f );
-	solverSettings.applyVorticity = true;
+	solverSettings.applyVorticity = false;
 	solverSettings.applyViscosity = false;
 	solverSettings.viscosity = 0.3f;
 	solverSettings.epsilon = 0.00024414f;
@@ -23,7 +23,7 @@ void FluidScene::setup()
 	solver = ccSolver( solverSettings );
 
 	ccSolver::Grid solverGrid;
-	solverGrid.size = glm::vec2( 2560, 1440);
+	solverGrid.size = glm::vec2( 2560/4, 1440/4);
 	solverGrid.scale = 1.0f;
 	solverGrid.applyBounds = true;
 	solver.setup( solverGrid );
@@ -41,7 +41,7 @@ void FluidScene::setup()
 	groupGeneral.add( p_SplatRadius.set( "Splat", solverSettings.splatRadius, 0.f, 1.f ) );
 	groupGeneral.add( p_SplatColor.set( "Color", solverSettings.splatColor ) );
 	groupGeneral.add( p_Dissipation.set( "Dissipation", solverSettings.dissipation, 0.9f, 1.f ) );
-	groupSolver.add( p_JacobiIterations.set( "Iterations", solverSettings.jacobiIterations, 0, 50 ) );
+	groupSolver.add( p_JacobiIterations.set( "Iterations", solverSettings.jacobiIterations, 0, 100 ) );
 	groupBounds.add( p_Bounds.set( "Bounds", solverGrid.applyBounds ) );
 	groupVorticity.add( p_ApplyVorticity.set( "Apply Vorticity", solverSettings.applyVorticity ) );
 	groupVorticity.add( p_Epsilon.set( "Epsilon", solverSettings.epsilon, 0.f, .1f ) );
@@ -51,7 +51,7 @@ void FluidScene::setup()
 	groupGravity.add( p_ApplyGravity.set( solverSettings.applyGravity ) );
 	groupGravity.add( p_GravityDirection.set( "Direction", solverSettings.gravityDir, { -1.f, -1.f }, { 1.f, 1.f } ) );
 	groupGravity.add( p_GravityStrength.set( "Strength", solverSettings.gravityStr, 0.f, 20.f ) );
-	groupView.add( p_DebugView.set( "Debug", false ) );
+	groupView.add( p_DebugView.set( "Debug", true ) );
 
 	p_Curl.addListener( this, &FluidScene::handleCurlChanged );
 	p_Bounds.addListener( this, &FluidScene::handleBoundsChanged );

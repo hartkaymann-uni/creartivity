@@ -2,7 +2,7 @@
 
 in vec2 vTexCoord;
 
-uniform sampler2DRect read;
+uniform sampler2D read;
 
 uniform vec3 bias;
 uniform vec3 scale;
@@ -17,5 +17,5 @@ void main()
 
     vFragColor = vec4(bias + scale * texture(read, vTexCoord).xyz, 1.0);
 
-	// vFragColor = vec4(bias + scale * texture(read,  vTexCoord + vec2(10, 10)).xyz, 1.0);
+	vFragColor = vec4(bias + scale * texture(read,  vTexCoord + vec2(.1, .1)).xyz, 1.0);
 }
