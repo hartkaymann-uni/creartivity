@@ -6,7 +6,7 @@ FluidScene::FluidScene() : ccScene( "Fluid" ) {}
 
 void FluidScene::setup()
 {
-	// Set and initialize all values necessary for the solver
+	// Initialize all values necessary for the solver
 	ccSolver::Settings solverSettings;
 	solverSettings.timestep = 1.0f;
 	solverSettings.splatRadius = 0.002f;
@@ -24,7 +24,7 @@ void FluidScene::setup()
 	solver = ccSolver( solverSettings );
 
 	ccSolver::Grid solverGrid;
-	solverGrid.size = glm::vec2( width, height);
+	solverGrid.size = glm::vec2( 512, 256 );
 	solverGrid.scale = 1.0f;
 	solverGrid.applyBounds = true;
 	solver.setup( solverGrid );
@@ -32,7 +32,7 @@ void FluidScene::setup()
 	// Initialize GUI parameters
 	groupGeneral.setName( "General" );
 	groupSolver.setName( "Solver" );
-	groupBounds.setName( "Bounds" );
+	groupGrid.setName( "Grid" );
 	groupVorticity.setName( "Vorticity" );
 	groupViscosity.setName( "Viscosity" );
 	groupGravity.setName( "Gravity" );
@@ -43,7 +43,8 @@ void FluidScene::setup()
 	groupGeneral.add( p_SplatColor.set( "Color", solverSettings.splatColor ) );
 	groupGeneral.add( p_Dissipation.set( "Dissipation", solverSettings.dissipation, 0.9f, 1.f ) );
 	groupSolver.add( p_JacobiIterations.set( "Iterations", solverSettings.jacobiIterations, 0, 100 ) );
-	groupBounds.add( p_Bounds.set( "Bounds", solverGrid.applyBounds ) );
+	groupGrid.add( p_Bounds.set( "Bounds", solverGrid.applyBounds ) );
+	groupGrid.add( p_Scale.set( "Scale", 1.f, 0.f, 1.f ) );
 	groupVorticity.add( p_ApplyVorticity.set( "Apply Vorticity", solverSettings.applyVorticity ) );
 	groupVorticity.add( p_Epsilon.set( "Epsilon", solverSettings.epsilon, 0.f, .1f ) );
 	groupVorticity.add( p_Curl.set( "Curl", solverSettings.curl, 0.f, 1.f ) );
@@ -55,6 +56,7 @@ void FluidScene::setup()
 	groupView.add( p_DebugView.set( "Debug", false ) );
 
 	p_Curl.addListener( this, &FluidScene::handleCurlChanged );
+	p_Scale.addListener( this, &FluidScene::handleScaleChanged );
 	p_Bounds.addListener( this, &FluidScene::handleBoundsChanged );
 	p_Epsilon.addListener( this, &FluidScene::handleEpsilonChanged );
 	p_Timestep.addListener( this, &FluidScene::handleTimestepChanged );
@@ -72,10 +74,10 @@ void FluidScene::setup()
 	// Add all gui parameter groups
 	gui.add( groupGeneral );
 	gui.add( groupSolver );
-	gui.add( groupBounds );
+	gui.add( groupGrid );
 	gui.add( groupVorticity );
 	gui.add( groupViscosity );
-	gui.add( groupGravity );
+	//gui.add( groupGravity );
 	gui.add( groupView );
 
 	// Load display shaders
@@ -125,7 +127,7 @@ void FluidScene::draw()
 		ofDrawBitmapString( "divergence", w, 0.f + 10.f );
 		solver.getDivergence()->draw( w, 0.f, w, h );
 
-		ofDrawBitmapString( "vorticity",w, h + 10.f );
+		ofDrawBitmapString( "vorticity", w, h + 10.f );
 		solver.getVorticity()->draw( w, h, w, h );
 
 		ofDrawBitmapString( "pressure", 0.f, h * 2.f + 10.f );

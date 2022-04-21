@@ -13,8 +13,8 @@ out vec4 vFragColor;
 
 void main()
 {
-    vec3 c = texture(read, vTexCoord).xyz + bias * scale;
-    c = floor(c + vec3(0.5));
+    vec3 c = texture(read, vTexCoord).xyz;
+    //c = floor(c + vec3(0.7));
 
     vFragColor = vec4(c, 1.0);
 }
