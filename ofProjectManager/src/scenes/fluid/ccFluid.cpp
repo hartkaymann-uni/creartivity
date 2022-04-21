@@ -16,6 +16,7 @@ namespace fluid {
 		plane.setResolution( 2, 2 );
 
 		// Create render targets
+		ofDisableArbTex();
 		velocity.allocate( grid.size, GL_RGB16_SNORM );
 		density.allocate( grid.size, GL_RGB16_SNORM );
 		divergence.allocate( grid.size, GL_RGB16_SNORM );
@@ -76,7 +77,7 @@ namespace fluid {
 		return temp;
 	}
 
-	void ccSolver::step( ccUser& user )
+	void ccSolver::step( vector<ccUser> users )
 	{
 		if (s.applyGravity) {
 			gravitate( velocity );
@@ -89,7 +90,9 @@ namespace fluid {
 		advect( density, density, s.dissipation );
 
 		// Add external forces
-		addForces( user );
+		for (vector<ccUser>::iterator it = users.begin(); it != users.end(); it++) {
+			addForces( *it );
+		}
 
 		if (s.applyVorticity) {
 			vortex( vorticity );
@@ -122,22 +125,28 @@ namespace fluid {
 	}
 
 	void ccSolver::addForces( ccUser& user ) {
-		// Mouse Unteraction, can be extended for actual interaction with a simple for loop
-		glm::vec3 color = user.getMotion();
+		glm::vec3 colorL = user.getMotions().first;
+		glm::vec3 colorR = user.getMotions().second;
 
-		if (color.x != 0.f || color.y != 0) {
-			glm::vec3 pos = user.getPositon();
-			float xMapped = ofMap( pos.x, 0, ofGetWidth(), 0, grid.size.x );
-			float yMapped = ofMap( pos.y, 0, ofGetHeight(), 0, grid.size.y );
-
-			glm::vec2 point = { xMapped , yMapped };
-
+		// Left
+		if (colorL.x != 0.f || colorL.y != 0) {
+			glm::vec3 pos = user.left();
+			// Map positions to grid
+			glm::vec2 point = { ofMap( pos.x, 0.f, 1.f, 0, grid.size.x ) ,  ofMap( pos.y, 0.f, 1.f, 0, grid.size.y ) };
 			ofFloatColor c = s.splatColor;
-
-			splat( velocity, glm::normalize(color), point );
+			splat( velocity, glm::normalize( colorL ), point );
 			splat( density, { c.r, c.g, c.b }, point );
-			boundary( velocity, velocity, -1.f );
 		}
+		// Right
+		if (colorR.x != 0.f || colorR.y != 0) {
+			glm::vec3 pos = user.right();
+			// Map positions to grid
+			glm::vec2 point = { ofMap( pos.x, 0.f, 1.f, 0, grid.size.x ) ,  ofMap( pos.y, 0.f, 1.f, 0, grid.size.y ) };
+			ofFloatColor c = s.splatColor;
+			splat( velocity, glm::normalize( colorR ), point );
+			splat( density, { c.r, c.g, c.b }, point );
+		}
+		boundary( velocity, velocity, -1.f );
 	}
 
 	void ccSolver::advect( Field& advected, Field& output, float d ) {
@@ -166,29 +175,30 @@ namespace fluid {
 			return;
 
 		// default offset: 1
-		float offset = 1.f; 
-		float xL = 2 * offset;
-		float xR = grid.size.x - offset;
-		float yB = 2 * offset;
-		float yT = grid.size.y - offset;
+		float offset = 1.f;
+		float xL = offset;
+		float xR = grid.size.x;
+		float yB = offset;
+		float yT = grid.size.y;
 
 		ofPolyline lineR, lineL, lineT, lineB;
-		lineR.addVertex( xR, yB );
-		lineR.addVertex( xR, yT );
 		lineL.addVertex( xL, yT );
 		lineL.addVertex( xL, yB );
-		lineT.addVertex( xR, yT );
-		lineT.addVertex( xL, yT );
+		lineR.addVertex( xR, yB );
+		lineR.addVertex( xR, yT );
 		lineB.addVertex( xR, yB );
 		lineB.addVertex( xL, yB );
+		lineT.addVertex( xR, yT );
+		lineT.addVertex( xL, yT );
 
-		boundarySide( input, output, lineR, { -1.f, 0.f }, scale );
 		boundarySide( input, output, lineL, { 1.f, 0.f }, scale );
-		boundarySide( input, output, lineT, { 0.f, -1.f }, scale );
+		boundarySide( input, output, lineR, { -1.f, 0.f }, scale );
 		boundarySide( input, output, lineB, { 0.f, 1.f }, scale );
+		boundarySide( input, output, lineT, { 0.f, -1.f }, scale );
 		// no swapping here, will be done by the next slabob
 	}
 
+	// Apply boundary logic to one side
 	void ccSolver::boundarySide( Field& input, Field& output, ofPolyline& line, glm::vec2 offset, float scale ) {
 		boundariesProgram.begin();
 

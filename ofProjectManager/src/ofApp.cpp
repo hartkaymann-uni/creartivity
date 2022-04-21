@@ -13,6 +13,8 @@ void ofApp::setup() {
 	transformer.setTransforms( true, true, false, true, true );
 	setTransformer( &transformer );
 
+	receiver.setUserManager( &userManager );
+
 	// Load scenes
 	//scenes.push_back( (SpiralScene*)sceneManager.add( new SpiralScene() ) );
 	scenes.push_back( (FluidScene*)sceneManager.add( new FluidScene() ) );
@@ -31,7 +33,6 @@ void ofApp::setup() {
 	// Give all scenes a pointer to the receiver
 	// TODO: Scenen dont need this anymore, as user array does the work here
 	for (ccScene* scene : scenes) {
-		scene->setReceiver( &receiver );
 		scene->setUserManager( &userManager );
 	}
 }
@@ -70,7 +71,7 @@ void ofApp::draw() {
 		for (ccScene* s : scenes) {
 			if (s->getName() == sceneManager.getCurrentSceneName()) {
 				ofxPanel& gui = s->getGui();
-				gui.setPosition( ofGetWidth() - gui.getWidth() - 10, ofGetHeight() - gui.getHeight() - 10);
+				gui.setPosition( ofGetWidth() - gui.getWidth() - 10, ofGetHeight() - gui.getHeight() - 10 );
 				s->getGui().draw();
 			}
 		}
@@ -126,12 +127,12 @@ void ofApp::mouseMoved( int x, int y ) {
 
 //--------------------------------------------------------------
 void ofApp::mouseDragged( int x, int y, int button ) {
-	userManager.getMouseUser()->setPosition( { x, y } );
+	userManager.getMouseUser()->setPosition( { (x * 1.f) / ofGetWidth(), (y * 1.f) / ofGetHeight()});
 }
 
 //--------------------------------------------------------------
 void ofApp::mousePressed( int x, int y, int button ) {
-	userManager.getMouseUser()->setPosition( { x, y } );
+	userManager.getMouseUser()->setPosition( { (x * 1.f) / ofGetWidth(), (y * 1.f) / ofGetHeight() } );
 }
 
 //--------------------------------------------------------------

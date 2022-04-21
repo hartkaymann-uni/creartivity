@@ -19,9 +19,9 @@ public:
 
 	ccScene( std::string name = "Unnamed Scene" );
 
-	virtual void setup();
-	virtual void update();
-	virtual void draw();
+	virtual void setup() {};
+	virtual void update() {};
+	virtual void draw() {};
 
 	void keyPressed( int key );
 	void keyReleased( int key );
@@ -30,7 +30,6 @@ public:
 	void mouseDragged( int x, int y, int button );
 	void windowResized( int w, int h );
 
-	inline void setReceiver( ccReceiver* r ) { receiver = r; }
 	inline void setUserManager( ccUserManager* um ) { userManager = um; }
 	inline ofxPanel& getGui() { return gui; };
 
@@ -47,7 +46,6 @@ protected:
 	ofEasyCam camera;
 	ofxPanel gui;
 
-	ccReceiver* receiver;
 	ccUserManager* userManager;
 
 	void resetCamera();

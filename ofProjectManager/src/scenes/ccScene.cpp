@@ -6,7 +6,6 @@ ccScene::ccScene( std::string name )
 	height( ofGetHeight() ),
 	mouseIsDown( false ),
 	mousePosition( 0.f, 0.f, 0.f ),
-	receiver( nullptr ),
 	scenesPath( "../../src/scenes" )
 {
 	setSingleSetup( true );
@@ -19,27 +18,6 @@ ccScene::ccScene( std::string name )
 	gui.setup();
 }
 
-void ccScene::setup()
-{
-	stringstream ss;
-	ss << "Called setup of" << this->getName() << std::endl;
-	ofLog( ofLogLevel::OF_LOG_WARNING, ss.str() );
-}
-
-void ccScene::update()
-{
-	stringstream ss;
-	ss << "Called update of" << this->getName() << std::endl;
-	ofLog( ofLogLevel::OF_LOG_WARNING, ss.str() );
-}
-
-void ccScene::draw()
-{
-	stringstream ss;
-	ss << "Called draw of" << this->getName() << std::endl;
-	ofLog( ofLogLevel::OF_LOG_WARNING, ss.str() );
-}
-
 void ccScene::resetCamera()
 {
 	camera.reset();
@@ -47,28 +25,23 @@ void ccScene::resetCamera()
 }
 
 ofVec3f ccScene::getProjectedPosition( ofVec3f p ) {
-
 	glm::vec3 pos = camera.screenToWorld( p );
-
 	pos.z = 0.0;
-
-	//std::cout << "Projected: X=[ " << pos.x << " ] Y=[ " << pos.y << " ] Z=[ " << pos.z << " ]" << std::endl;
-
 	return ofVec3f( pos );
 }
 
 void ccScene::updateUserPositions()
 {
-	unique_ptr<map<int, user>> users = receiver->getUsers();
-	std::map<int, user>::iterator it = users->begin();
-	std::map<int, user>::iterator itEnd = users->end();
+	map<int, ccUser>* users = userManager->getUsers();
+	std::map<int, ccUser>::iterator it = users->begin();
+	std::map<int, ccUser>::iterator itEnd = users->end();
 	user_positions.fill( ofVec2f( .0f ) ); // refilling array every call might take a while, maybe just handle the lostUser event smarter
 	auto i = 0;
 	while (it != itEnd) {
-		float xl = it->second.positionLeft.x * width;
-		float yl = it->second.positionLeft.y * height;
-		float xr = it->second.positionRight.x * width;
-		float yr = it->second.positionRight.y * height;
+		float xl = it->second.left().x * width;
+		float yl = it->second.left().y * height;
+		float xr = it->second.right().x * width;
+		float yr = it->second.right().y * height;
 
 		ofVec2f left = getProjectedPosition( ofVec3f( xl, yl, 0.f ) );
 		ofVec2f right = getProjectedPosition( ofVec3f( xr, yr, 0.f ) );
@@ -138,4 +111,5 @@ void ccScene::mouseDragged( int x, int y, int button )
 void ccScene::windowResized( int w, int h ) {
 	width = w;
 	height = h;
+	resetCamera();
 }

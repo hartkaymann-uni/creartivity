@@ -73,7 +73,7 @@ namespace fluid {
 		ccSolver( Settings& settings );
 
 		void setup( Grid& grid );
-		void step( ccUser& user );
+		void step( vector<ccUser> users );
 
 		inline Grid* const getGrid() { return &grid; }
 		inline ofFbo* const getDensity() { return density.read; }
