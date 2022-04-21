@@ -23,7 +23,7 @@ void FluidScene::setup()
 	solver = ccSolver( solverSettings );
 
 	ccSolver::Grid solverGrid;
-	solverGrid.size = glm::vec2( 2560/4, 1440/4);
+	solverGrid.size = glm::vec2( 2560, 1440);
 	solverGrid.scale = 1.0f;
 	solverGrid.applyBounds = true;
 	solver.setup( solverGrid );
@@ -51,7 +51,7 @@ void FluidScene::setup()
 	groupGravity.add( p_ApplyGravity.set( solverSettings.applyGravity ) );
 	groupGravity.add( p_GravityDirection.set( "Direction", solverSettings.gravityDir, { -1.f, -1.f }, { 1.f, 1.f } ) );
 	groupGravity.add( p_GravityStrength.set( "Strength", solverSettings.gravityStr, 0.f, 20.f ) );
-	groupView.add( p_DebugView.set( "Debug", true ) );
+	groupView.add( p_DebugView.set( "Debug", false ) );
 
 	p_Curl.addListener( this, &FluidScene::handleCurlChanged );
 	p_Bounds.addListener( this, &FluidScene::handleBoundsChanged );

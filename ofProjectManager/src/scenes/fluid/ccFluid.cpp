@@ -181,11 +181,6 @@ namespace fluid {
 		float yB = offset;
 		float yT = grid.size.y;
 
-		float ax = (grid.size.x - 2) / grid.size.x;
-		float ay = (grid.size.y - 2) / grid.size.y;
-		float bx = (grid.size.x - 1) / grid.size.x;
-		float by = (grid.size.y - 1) / grid.size.y;
-
 		ofPolyline lineR, lineL, lineT, lineB;
 		lineL.addVertex( xL, yT );
 		lineL.addVertex( xL, yB );
