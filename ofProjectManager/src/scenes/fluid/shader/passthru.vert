@@ -7,7 +7,8 @@ in vec2 texcoord;
 
 out vec2 vTexCoord;
 
-void main() {
+void main() 
+{
     vTexCoord = texcoord;
 
     gl_Position = modelViewProjectionMatrix * position;

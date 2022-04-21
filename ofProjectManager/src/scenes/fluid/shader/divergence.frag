@@ -9,7 +9,8 @@ uniform float gridScale;
 
 out vec4 vFragColor; 
 
-void main() {
+void main() 
+{
 	vec2 uv = gl_FragCoord.xy / gridSize.xy;
 
 	vec2 xOffset = vec2(1.0 / gridSize.x, 0.0);

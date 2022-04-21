@@ -49,7 +49,8 @@ vec3 f4texRECTbilerp(sampler2D tex, vec2 p)
     return mix(mix(tex11, tex21, a.x), mix(tex12, tex22, a.x), a.y);
 }
 
-void main() {
+void main() 
+{
     vec2 uv = gl_FragCoord.xy / gridSize.xy;
     float scale = 1.0 / gridScale;
 
