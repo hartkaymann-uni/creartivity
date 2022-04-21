@@ -364,5 +364,6 @@
     <None Include="src\scenes\fluid\shader\vorticityforce.frag" />
     <None Include="src\scenes\fluid\shader\displayvector.frag" />
     <None Include="src\scenes\fluid\shader\gravity.frag" />
+    <None Include="src\scenes\fluid\shader\displayscalar.frag" />
   </ItemGroup>
 </Project>

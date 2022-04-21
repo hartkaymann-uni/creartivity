@@ -1,7 +1,5 @@
 #version 150
 
-in vec2 vTexCoord;
-
 uniform sampler2D velocity; 
 uniform sampler2D advected; 
 
@@ -34,21 +32,21 @@ vec2 bilerp(sampler2D d, vec2 p)
 
 // Biliear Interpolation
 // Source: https://github.com/dushyantbehl/2D-fluid-simulation/blob/master/pShader.cg
-vec4 f4texRECTbilerp(sampler2D tex, vec2 s)
+vec3 f4texRECTbilerp(sampler2D tex, vec2 p)
 {
-  vec4 st;
-  st.xy = floor(s - 0.5) + 0.5;
-  st.zw = st.xy + 1;
- 
-  vec2 t = s - st.xy; //interpolating factors
-   
-  vec4 tex11 = texture(tex, st.xy);
-  vec4 tex21 = texture(tex, st.zy);
-  vec4 tex12 = texture(tex, st.xw);
-  vec4 tex22 = texture(tex, st.zw);
+  vec4 ij; // i0, j0, i1, j1
+    ij.xy = floor(p - 0.5) + 0.5;
+    ij.zw = ij.xy + 1.0;
 
-  // bilinear interpolation
-  return mix(mix(tex11, tex21, t.x), mix(tex12, tex22, t.x), t.y);
+    vec4 uv = ij / gridSize.xyxy;
+    vec3 tex11 = texture(tex, uv.xy).xyz;
+    vec3 tex21 = texture(tex, uv.zy).xyz;
+    vec3 tex12 = texture(tex, uv.xw).xyz;
+    vec3 tex22 = texture(tex, uv.zw).xyz;
+
+    vec2 a = p - ij.xy;
+
+    return mix(mix(tex11, tex21, a.x), mix(tex12, tex22, a.x), a.y);
 }
 
 void main() {
@@ -58,10 +56,10 @@ void main() {
     // trace points back in time
     vec2 p = gl_FragCoord.xy - timestep * scale * texture(velocity, uv).xy;
 
-    vFragColor = vec4(dissipation * bilerp(advected, p), 0.0, 1.0);
+    vFragColor = vec4(dissipation * f4texRECTbilerp(advected, p), 1.0);
+    //vFragColor = vec4(dissipation * bilerp(advected, p), 0.0, 1.0);
 
     // Debug outs:
-    //vFragColor = vec4(dissipation * bilerp(advected, p), 0.0, 1.0);
     //vFragColor = vec4(uv, 0.0, 1.0);
     //vFragColor = texture(velocity, uv);
 }

@@ -1,7 +1,5 @@
 #version 150
 
-in vec2 vTexCoord;
-
 uniform sampler2D b;
 uniform sampler2D x;
 

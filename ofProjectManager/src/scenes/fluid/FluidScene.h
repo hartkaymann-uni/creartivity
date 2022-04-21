@@ -51,6 +51,7 @@ private:
 
 	fluid::ccSolver solver;
 
+	ofShader displayScalarProgram;
 	ofShader displayVectorProgram;
 
 	inline void handleCurlChanged( float& c ) { solver.setCurl( c ); }

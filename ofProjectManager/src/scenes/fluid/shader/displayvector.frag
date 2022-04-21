@@ -15,7 +15,7 @@ void main()
 {
 	vec2 uv = vTexCoord / gridSize;
 
-    vFragColor = vec4(bias + scale * texture(read, vTexCoord).xyz, 1.0);
+    //vFragColor = vec4(bias + scale * texture(read, vTexCoord).xyz, 1.0);
 
-	vFragColor = vec4(bias + scale * texture(read,  (vTexCoord * 1.2f) - vec2(.1, .1)).xyz, 1.0);
+	vFragColor = vec4(bias + scale * texture(read,  (vTexCoord * 1.1f) - vec2(.05f, .05f)).xyz, 1.0);
 }

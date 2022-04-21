@@ -6,9 +6,10 @@ FluidScene::FluidScene() : ccScene( "Fluid" ) {}
 
 void FluidScene::setup()
 {
+	// Set and initialize all values necessary for the solver
 	ccSolver::Settings solverSettings;
 	solverSettings.timestep = 1.0f;
-	solverSettings.splatRadius = 0.25f;
+	solverSettings.splatRadius = 0.002f;
 	solverSettings.splatColor = ofFloatColor( 1.f );
 	solverSettings.applyVorticity = false;
 	solverSettings.applyViscosity = false;
@@ -23,7 +24,7 @@ void FluidScene::setup()
 	solver = ccSolver( solverSettings );
 
 	ccSolver::Grid solverGrid;
-	solverGrid.size = glm::vec2( 2560, 1440);
+	solverGrid.size = glm::vec2( width, height);
 	solverGrid.scale = 1.0f;
 	solverGrid.applyBounds = true;
 	solver.setup( solverGrid );
@@ -38,7 +39,7 @@ void FluidScene::setup()
 	groupGeneral.setName( "View" );
 
 	groupGeneral.add( p_Timestep.set( "Timestep", solverSettings.timestep, 0.f, 2.f ) );
-	groupGeneral.add( p_SplatRadius.set( "Splat", solverSettings.splatRadius, 0.f, 1.f ) );
+	groupGeneral.add( p_SplatRadius.set( "Splat", solverSettings.splatRadius, 0.f, .005f ) );
 	groupGeneral.add( p_SplatColor.set( "Color", solverSettings.splatColor ) );
 	groupGeneral.add( p_Dissipation.set( "Dissipation", solverSettings.dissipation, 0.9f, 1.f ) );
 	groupSolver.add( p_JacobiIterations.set( "Iterations", solverSettings.jacobiIterations, 0, 100 ) );
@@ -68,6 +69,7 @@ void FluidScene::setup()
 	p_JacobiIterations.addListener( this, &FluidScene::handleJacobiIterationsChanged );
 	p_GravityDirection.addListener( this, &FluidScene::handleGravityDirectionChanged );
 
+	// Add all gui parameter groups
 	gui.add( groupGeneral );
 	gui.add( groupSolver );
 	gui.add( groupBounds );
@@ -76,8 +78,10 @@ void FluidScene::setup()
 	gui.add( groupGravity );
 	gui.add( groupView );
 
+	// Load display shaders
 	filesystem::path shaderPath = getShaderPath();
-	bool err_disp = displayVectorProgram.load( shaderPath / "passthru.vert", shaderPath / "displayvector.frag" );
+	bool err_dispvector = displayScalarProgram.load( shaderPath / "passthru.vert", shaderPath / "displayscalar.frag" );
+	bool err_dispscalar = displayVectorProgram.load( shaderPath / "passthru.vert", shaderPath / "displayvector.frag" );
 }
 
 void FluidScene::update()
@@ -87,7 +91,7 @@ void FluidScene::update()
 
 	vector<ccUser> u = userManager->getUserVec();
 
-	// Add user force here
+	// Do one solver step
 	solver.step( u );
 
 	if (debug) step = false;
@@ -98,7 +102,7 @@ void FluidScene::draw()
 	ofBackground( 0 );
 
 	if (p_DebugView.get()) {
-		//Debug view showing all fields
+		// Debug view showing all fields in a grid pattern and with a caption
 		ccSolver::Grid grid = *(solver.getGrid());
 
 		float w = width / 2;
@@ -107,6 +111,8 @@ void FluidScene::draw()
 		ofDrawBitmapString( "density", 0.f, 0.f + 10.f );
 		solver.getDensity()->draw( 0.f, 0.f, w, h );
 
+		// Velocity field needs special shader to be displayed, as its values range from -1.0 to 1.0 so they have to be normalized using a bias
+		// For details see displayvector shader
 		ofDrawBitmapString( "velocity", 0.f, h + 10.f );
 		displayVectorProgram.begin();
 		displayVectorProgram.setUniformTexture( "read", solver.getVelocity()->getTexture(), 1 );
@@ -114,7 +120,6 @@ void FluidScene::draw()
 		displayVectorProgram.setUniform3f( "scale", glm::vec3( 0.5, 0.5, 0.5 ) );
 		displayVectorProgram.setUniform2f( "gridSize", solver.getGrid()->size );
 		solver.getVelocity()->draw( 0.f, h, w, h );
-
 		displayVectorProgram.end();
 
 		ofDrawBitmapString( "divergence", w, 0.f + 10.f );
@@ -128,8 +133,16 @@ void FluidScene::draw()
 
 	}
 	else {
+		// Only draw density texture
+		// displayscalar shader is/can be used to stylize
 		camera.begin();
+		displayScalarProgram.begin();
+		displayScalarProgram.setUniformTexture( "read", solver.getDensity()->getTexture(), 1 );
+		displayScalarProgram.setUniform3f( "bias", glm::vec3( 0.5, 0.5, 0.5 ) );
+		displayScalarProgram.setUniform3f( "scale", glm::vec3( 0.5, 0.5, 0.5 ) );
+		displayScalarProgram.setUniform2f( "gridSize", solver.getGrid()->size );
 		solver.getDensity()->draw( 0.f, 0.f, width, height );
+		displayScalarProgram.end();
 		camera.end();
 	}
 }

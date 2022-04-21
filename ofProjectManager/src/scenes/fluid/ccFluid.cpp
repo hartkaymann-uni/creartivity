@@ -130,18 +130,16 @@ namespace fluid {
 
 		// Left
 		if (colorL.x != 0.f || colorL.y != 0) {
-			glm::vec3 pos = user.left();
+			glm::vec2 point = user.left();
 			// Map positions to grid
-			glm::vec2 point = { ofMap( pos.x, 0.f, 1.f, 0, grid.size.x ) ,  ofMap( pos.y, 0.f, 1.f, 0, grid.size.y ) };
 			ofFloatColor c = s.splatColor;
 			splat( velocity, glm::normalize( colorL ), point );
 			splat( density, { c.r, c.g, c.b }, point );
 		}
 		// Right
 		if (colorR.x != 0.f || colorR.y != 0) {
-			glm::vec3 pos = user.right();
+			glm::vec2 point = user.right();
 			// Map positions to grid
-			glm::vec2 point = { ofMap( pos.x, 0.f, 1.f, 0, grid.size.x ) ,  ofMap( pos.y, 0.f, 1.f, 0, grid.size.y ) };
 			ofFloatColor c = s.splatColor;
 			splat( velocity, glm::normalize( colorR ), point );
 			splat( density, { c.r, c.g, c.b }, point );
