@@ -2,6 +2,8 @@
 
 #include "scenes/scenes.h"
 
+using namespace gol;
+
 //--------------------------------------------------------------
 void ofApp::setup() {
 	ofBackground( 255, 255, 0 );
@@ -28,6 +30,8 @@ void ofApp::setup() {
 	sceneManager.gotoScene( "Fluid", true );
 	lastScene = sceneManager.getCurrentSceneIndex();
 	sceneManager.setOverlap( false );
+	nextAction = NULL;
+
 	setSceneManager( &sceneManager );
 
 	// Give all scenes a pointer to the receiver
@@ -46,6 +50,9 @@ void ofApp::update() {
 	std::stringstream strm;
 	strm << "fps: " << ofGetFrameRate();
 	ofSetWindowTitle( strm.str() );
+
+	//
+	CheckSceneTransitions();
 }
 
 //--------------------------------------------------------------
@@ -99,11 +106,11 @@ void ofApp::keyPressed( int key ) {
 		break;
 
 	case OF_KEY_LEFT:
-		sceneManager.prevScene();
+		ChangeScene(SceneChangeType::Previous);
 		break;
 
 	case OF_KEY_RIGHT:
-		sceneManager.nextScene();
+		ChangeScene(SceneChangeType::Next);
 		break;
 
 	case OF_KEY_DOWN:
@@ -112,6 +119,96 @@ void ofApp::keyPressed( int key ) {
 		}
 		sceneManager.noScene();
 		break;
+
+	case OF_KEY_UP:
+		sceneManager.gotoScene( lastScene );
+		break;
+
+	case 'o':
+		sceneManager.setOverlap( !sceneManager.getOverlap() );
+		break;
+	}
+}
+
+//--------------------------------------------------------------
+void ofApp::CheckSceneTransitions() {
+	if (ofGetElapsedTimef() > nextActionTime && nextAction != NULL) {
+		(this->*nextAction)();
+		nextAction = NULL;
+	}
+}
+
+
+//--------------------------------------------------------------
+void ofApp::ChangeScene(SceneChangeType type) {
+	unsigned int currentSceneIndex = sceneManager.getCurrentSceneIndex();
+	float delay = 0.f;
+	// 'scenes' is not in the same order as the array that 'sceneManager' uses. Therefore we can't use the 'currentSceneIndex'
+	// from 'sceneManager' for the 'scenes' array.
+	if (sceneManager.getCurrentScene() != NULL) {
+		delay = static_cast<ccScene*>(sceneManager.getCurrentScene())->SceneOutro();
+	}
+
+	switch (type)
+	{
+	case SceneChangeType::Next:
+		nextAction = &ofApp::NextScene;
+		break;
+	case SceneChangeType::Previous:
+		nextAction = &ofApp::PreviousScene;
+		break;
+	default:
+		break;
+	}
+
+	delay = max(0.f, delay);
+	nextActionTime = ofGetElapsedTimef() + delay;
+}
+
+//--------------------------------------------------------------
+void ofApp::NextScene() {
+	int nextSceneIndex = GetSceneIndex(SceneChangeType::Next);
+	sceneManager.nextScene();
+	if (sceneManager.getSceneAt(nextSceneIndex) != NULL) {
+		static_cast<ccScene*>(sceneManager.getSceneAt(nextSceneIndex))->SceneIntro();
+	}
+}
+
+//--------------------------------------------------------------
+unsigned int  ofApp::GetSceneIndex(SceneChangeType type) {
+	unsigned int currentSceneIndex = sceneManager.getCurrentSceneIndex();
+	
+
+	switch (type)
+	{
+	case SceneChangeType::Next:
+		if (currentSceneIndex >= sceneManager.getNumScenes() - 1) {
+			return 0;
+		}
+		else {
+			return currentSceneIndex + 1;
+		}
+		break;
+	case SceneChangeType::Previous:
+		if (currentSceneIndex <= 0) {
+			return sceneManager.getNumScenes() - 1;
+		}
+		else {
+			return currentSceneIndex - 1;
+		}
+		break;
+	default:
+		return -1;
+		break;
+	}
+}
+
+//--------------------------------------------------------------
+void ofApp::PreviousScene() {
+	int previousIndex = GetSceneIndex(SceneChangeType::Previous);
+	sceneManager.prevScene();
+	if (sceneManager.getSceneAt(previousIndex) != NULL) {
+		static_cast<ccScene*>(sceneManager.getSceneAt(previousIndex))->SceneIntro();
 	}
 }
 

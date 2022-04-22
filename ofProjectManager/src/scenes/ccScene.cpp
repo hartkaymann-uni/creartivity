@@ -111,5 +111,16 @@ void ccScene::mouseDragged( int x, int y, int button )
 void ccScene::windowResized( int w, int h ) {
 	width = w;
 	height = h;
-	resetCamera();
+}
+
+//--------------------------------------------------------------
+float ccScene::SceneIntro() {
+	cout << "Default Scene Intro Triggered" << endl;
+	return 1.f;
+}
+
+//--------------------------------------------------------------
+float ccScene::SceneOutro() {
+	cout << "Default Scene Outro Triggered" << endl;
+	return 1.f;
 }
