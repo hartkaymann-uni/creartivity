@@ -188,14 +188,6 @@
     <ClCompile Include="src\ccUserManager.cpp" />
     <ClCompile Include="src\scenes\contourlines\ContourLinesScene.cpp" />
     <None Include="src\scenes\fluid\shader\displayscalar.frag" />
-    <None Include="src\scenes\fluid\shader\displayvector.frag" />
-    <None Include="src\scenes\fluid\shader\gravity.frag" />
-    <None Include="src\scenes\fluid\shader\splat.frag">
-      <FileType>Document</FileType>
-    </None>
-    <None Include="src\scenes\fluid\shader\vorticityforce.frag">
-      <FileType>Document</FileType>
-    </None>
     <ClCompile Include="src\scenes\fluid\ccFluid.cpp" />
     <ClCompile Include="src\scenes\fluid\FluidScene.cpp" />
     <ClCompile Include="src\scenes\gameoflife\GameOfLifeScene.cpp" />
@@ -334,6 +326,7 @@
     <None Include="src\scenes\gameoflife\shader\passthru.vert" />
     <None Include="src\scenes\gameoflife\shader\renderInstanced.frag" />
     <None Include="src\scenes\gameoflife\shader\renderInstanced.vert" />
+    <None Include="src\scenes\swarm\shader\intro.comp" />
     <None Include="src\scenes\swarm\shader\swarm.comp" />
     <None Include="src\scenes\swarm\shader\swarm.frag" />
     <None Include="src\scenes\swarm\shader\swarm.vert" />

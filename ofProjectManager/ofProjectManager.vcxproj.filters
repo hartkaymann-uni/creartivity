@@ -369,5 +369,6 @@
     <None Include="src\scenes\fluid\shader\displayvector.frag" />
     <None Include="src\scenes\fluid\shader\gravity.frag" />
     <None Include="src\scenes\fluid\shader\displayscalar.frag" />
+    <None Include="src\scenes\swarm\shader\intro.comp" />
   </ItemGroup>
 </Project>
