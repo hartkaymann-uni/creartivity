@@ -132,7 +132,7 @@ void ofApp::mouseDragged( int x, int y, int button ) {
 
 //--------------------------------------------------------------
 void ofApp::mousePressed( int x, int y, int button ) {
-	userManager.getMouseUser()->setPosition( { (x * 1.f) / ofGetWidth(), (y * 1.f) / ofGetHeight() } );
+	//userManager.getMouseUser()->setPosition( { (x * 1.f) / ofGetWidth(), (y * 1.f) / ofGetHeight() } );
 }
 
 //--------------------------------------------------------------

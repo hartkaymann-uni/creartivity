@@ -26,7 +26,7 @@ private:
 	bool step = false;
 
 	ofParameterGroup groupGeneral;
-	ofParameterGroup groupBounds;
+	ofParameterGroup groupGrid;
 	ofParameterGroup groupViscosity;
 	ofParameterGroup groupVorticity;
 	ofParameterGroup groupSolver;
@@ -40,6 +40,7 @@ private:
 	ofParameter<bool> p_ApplyGravity;
 	ofParameter<int> p_JacobiIterations;
 	ofParameter<float> p_Curl;
+	ofParameter<float> p_Scale;
 	ofParameter<float> p_Epsilon;
 	ofParameter<float> p_Timestep;
 	ofParameter<float> p_Viscosity;
@@ -56,6 +57,7 @@ private:
 
 	inline void handleCurlChanged( float& c ) { solver.setCurl( c ); }
 	inline void handleBoundsChanged( bool& b ) { solver.setBounds( b ); }
+	inline void handleScaleChanged( float& s ) { solver.setScale( s ); }
 	inline void handleEpsilonChanged( float& e ) { solver.setEpsilon( e ); }
 	inline void handleTimestepChanged( float& t ) { solver.setTimestep( t ); }
 	inline void handleViscosityChanged( float& v ) { solver.setViscosity( v ); }
