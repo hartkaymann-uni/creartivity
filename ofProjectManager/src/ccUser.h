@@ -14,12 +14,13 @@ public:
 	ccUser();
 	ccUser( int id, glm::vec3 left, glm::vec3 right );
 
-	void move( glm::vec3 dir );
+	void move( glm::vec3 vl, glm::vec3 vr );
 
 	void setId( int id );
 	void setPosition( glm::vec2 pos );
 	void setPosition( glm::vec3 pos );
 	void setPositions( glm::vec3 left, glm::vec3 right );
+	void setMotions( glm::vec3 ml, glm::vec3 mr);
 
 	inline int getId() { return id; };
 	pair<glm::vec3, glm::vec3> getPositons();

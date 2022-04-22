@@ -9,9 +9,9 @@ ccUser::ccUser( int id_, glm::vec3 l, glm::vec3 r )
 	motions = pair<glm::vec3, glm::vec3>( l, r);
 }
 
-void ccUser::move( glm::vec3 dir )
+void ccUser::move( glm::vec3 vl, glm::vec3 vr )
 {
-	setPosition( positions.first + dir);
+	setPositions( positions.first + vl, positions.second + vr );
 }
 
 void ccUser::setId( int id_ ) {
@@ -32,6 +32,12 @@ void ccUser::setPositions( glm::vec3 left, glm::vec3 right)
 	motions.second = right - positions.second;
 	positions.first = left;
 	positions.second = right;
+}
+
+void ccUser::setMotions( glm::vec3 ml, glm::vec3 mr )
+{
+	motions.first = ml;
+	motions.second = mr;
 }
 
 pair<glm::vec3, glm::vec3> ccUser::getPositons()

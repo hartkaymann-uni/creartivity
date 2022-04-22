@@ -106,11 +106,11 @@ void ofApp::keyPressed( int key ) {
 		break;
 
 	case OF_KEY_LEFT:
-		ChangeScene(SceneChangeType::Previous);
+		ChangeScene( SceneChangeType::Previous );
 		break;
 
 	case OF_KEY_RIGHT:
-		ChangeScene(SceneChangeType::Next);
+		ChangeScene( SceneChangeType::Next );
 		break;
 
 	case OF_KEY_DOWN:
@@ -140,7 +140,7 @@ void ofApp::CheckSceneTransitions() {
 
 
 //--------------------------------------------------------------
-void ofApp::ChangeScene(SceneChangeType type) {
+void ofApp::ChangeScene( SceneChangeType type ) {
 	unsigned int currentSceneIndex = sceneManager.getCurrentSceneIndex();
 	float delay = 0.f;
 	// 'scenes' is not in the same order as the array that 'sceneManager' uses. Therefore we can't use the 'currentSceneIndex'
@@ -161,23 +161,23 @@ void ofApp::ChangeScene(SceneChangeType type) {
 		break;
 	}
 
-	delay = max(0.f, delay);
+	delay = max( 0.f, delay );
 	nextActionTime = ofGetElapsedTimef() + delay;
 }
 
 //--------------------------------------------------------------
 void ofApp::NextScene() {
-	int nextSceneIndex = GetSceneIndex(SceneChangeType::Next);
+	int nextSceneIndex = GetSceneIndex( SceneChangeType::Next );
 	sceneManager.nextScene();
-	if (sceneManager.getSceneAt(nextSceneIndex) != NULL) {
-		static_cast<ccScene*>(sceneManager.getSceneAt(nextSceneIndex))->SceneIntro();
+	if (sceneManager.getSceneAt( nextSceneIndex ) != NULL) {
+		static_cast<ccScene*>(sceneManager.getSceneAt( nextSceneIndex ))->SceneIntro();
 	}
 }
 
 //--------------------------------------------------------------
-unsigned int  ofApp::GetSceneIndex(SceneChangeType type) {
+unsigned int  ofApp::GetSceneIndex( SceneChangeType type ) {
 	unsigned int currentSceneIndex = sceneManager.getCurrentSceneIndex();
-	
+
 
 	switch (type)
 	{
@@ -205,10 +205,10 @@ unsigned int  ofApp::GetSceneIndex(SceneChangeType type) {
 
 //--------------------------------------------------------------
 void ofApp::PreviousScene() {
-	int previousIndex = GetSceneIndex(SceneChangeType::Previous);
+	int previousIndex = GetSceneIndex( SceneChangeType::Previous );
 	sceneManager.prevScene();
-	if (sceneManager.getSceneAt(previousIndex) != NULL) {
-		static_cast<ccScene*>(sceneManager.getSceneAt(previousIndex))->SceneIntro();
+	if (sceneManager.getSceneAt( previousIndex ) != NULL) {
+		static_cast<ccScene*>(sceneManager.getSceneAt( previousIndex ))->SceneIntro();
 	}
 }
 
@@ -224,18 +224,26 @@ void ofApp::mouseMoved( int x, int y ) {
 
 //--------------------------------------------------------------
 void ofApp::mouseDragged( int x, int y, int button ) {
-	userManager.getMouseUser()->setPosition( { (x * 1.f) / ofGetWidth(), (y * 1.f) / ofGetHeight()});
+	// Left click is left mouse position, right click right mouse position
+	ccUser* mouse = userManager.getMouseUser();
+	if (button == OF_MOUSE_BUTTON_LEFT)
+		mouse->setPositions( { (x * 1.f) / ofGetWidth(), (y * 1.f) / ofGetHeight(), 0.f }, mouse->right() );
+	else
+		mouse->setPositions( mouse->left(), { (x * 1.f) / ofGetWidth(), (y * 1.f) / ofGetHeight(), 0.f } );
 }
 
 //--------------------------------------------------------------
 void ofApp::mousePressed( int x, int y, int button ) {
-	//userManager.getMouseUser()->setPosition( { (x * 1.f) / ofGetWidth(), (y * 1.f) / ofGetHeight() } );
 }
 
 //--------------------------------------------------------------
 void ofApp::mouseReleased( int x, int y, int button ) {
 	// Reset user motion by moving by zero 
-	userManager.getMouseUser()->move( { 0.f, 0.f, 0.f } );
+	ccUser* mouse = userManager.getMouseUser();
+	if (button == OF_MOUSE_BUTTON_LEFT)
+		mouse->setMotions( { 0.f, 0.f, 0.f }, mouse->getMotions().second );
+	else
+		mouse->setMotions( mouse->getMotions().first, { 0.f, 0.f, 0.f } );
 }
 
 //--------------------------------------------------------------
