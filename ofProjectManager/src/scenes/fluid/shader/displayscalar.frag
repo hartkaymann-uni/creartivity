@@ -15,6 +15,6 @@ void main()
 {
     vec3 c = texture(read, vTexCoord).xyz;
     //c = floor(c + vec3(0.7));
-
+    //c = vec3(1.f) - c;
     vFragColor = vec4(c, 1.0);
 }

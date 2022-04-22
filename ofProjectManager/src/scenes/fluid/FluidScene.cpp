@@ -16,7 +16,7 @@ void FluidScene::setup()
 	solverSettings.viscosity = 0.3f;
 	solverSettings.epsilon = 0.00024414f;
 	solverSettings.curl = 0.1f;
-	solverSettings.jacobiIterations = 20;
+	solverSettings.jacobiIterations = 40;
 	solverSettings.dissipation = 0.998f;
 	solverSettings.applyGravity = false;
 	solverSettings.gravityDir = { 0.0, 1.0 };
@@ -42,7 +42,7 @@ void FluidScene::setup()
 	groupGeneral.add( p_SplatRadius.set( "Splat", solverSettings.splatRadius, 0.f, .005f ) );
 	groupGeneral.add( p_SplatColor.set( "Color", solverSettings.splatColor ) );
 	groupGeneral.add( p_Dissipation.set( "Dissipation", solverSettings.dissipation, 0.9f, 1.f ) );
-	groupSolver.add( p_JacobiIterations.set( "Iterations", solverSettings.jacobiIterations, 0, 100 ) );
+	groupSolver.add( p_JacobiIterations.set( "Iterations", solverSettings.jacobiIterations, 0, 120) );
 	groupGrid.add( p_Bounds.set( "Bounds", solverGrid.applyBounds ) );
 	groupGrid.add( p_Scale.set( "Scale", 1.f, 0.f, 1.f ) );
 	groupVorticity.add( p_ApplyVorticity.set( "Apply Vorticity", solverSettings.applyVorticity ) );

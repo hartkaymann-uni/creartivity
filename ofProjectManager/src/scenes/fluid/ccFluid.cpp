@@ -121,6 +121,7 @@ namespace fluid {
 		diffuse( jacobiscalarProgram, pressure, divergence, pressure, alpha, 4.f, 1.f );
 		gradiate( velocity );
 
+		boundary( pressure, pressure, 1.f );
 		boundary( velocity, velocity, -1.f );
 	}
 

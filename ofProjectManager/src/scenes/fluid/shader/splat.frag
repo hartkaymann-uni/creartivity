@@ -22,5 +22,5 @@ void main()
 	vec2 coord = point.xy - uv;
     vec3 splat = color * gauss(coord, radius);
 	
-	vFragColor = vec4(base + vec3(gauss(coord, radius) - .1), 1.0);
+	vFragColor = vec4(base + splat, 1.0);
 }
