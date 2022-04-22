@@ -55,6 +55,31 @@ private:
 	ofShader displayScalarProgram;
 	ofShader displayVectorProgram;
 
+	// Members for sequences
+	enum class Sequence {
+		Default,
+		Start,
+		Stop
+	};
+	const int NUM_SEQ = 5;
+
+	struct SequenceParameters {
+		float evolution;
+		float radius;
+		float jiggle;
+	};
+
+	Sequence lastSequene;
+	Sequence currentSequence;
+	float lastSequenceTime;
+	float sequenceDuration;
+	float sequenceTransitionDuration;
+	map<Sequence, SequenceParameters> sequenceMap;
+
+	void initSequences();
+	void updateSequence();
+	void updateParameters();
+
 	inline void handleCurlChanged( float& c ) { solver.setCurl( c ); }
 	inline void handleBoundsChanged( bool& b ) { solver.setBounds( b ); }
 	inline void handleScaleChanged( float& s ) { solver.setScale( s ); }

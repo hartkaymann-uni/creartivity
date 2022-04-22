@@ -87,11 +87,11 @@ private:
 	float calculateSphereRadius( ofVec2f dim );
 	void allocateCellBuffer( int rows, int cols );
 
+	void drawOutlined( ofVboMesh& mesh, ofShader& instance, ofShader& outline );
+	
 	void initSequences();
 	void updateSequence();
 	void updateParameters();
-
-		void drawOutlined( ofVboMesh& mesh, ofShader& instance, ofShader& outline);
 
 	// Members for sequences
 	enum class Sequence {
