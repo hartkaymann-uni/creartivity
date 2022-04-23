@@ -1,0 +1,2783 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DEFECTS>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\libs\utf8\include\utf8\</FILEPATH>
+      <FILENAME>core.h</FILENAME>
+      <LINE>53</LINE>
+      <COLUMN>50</COLUMN>
+    </SFA>
+    <DEFECTCODE>26454</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: '-' operation produces a negative unsigned result at compile time (io.5).</DESCRIPTION>
+    <FUNCTION>utf8::internal::SURROGATE_OFFSET</FUNCTION>
+    <DECORATED>?SURROGATE_OFFSET@internal@utf8@@3IB</DECORATED>
+    <FUNCLINE>53</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\libs\openFrameworks\events\</FILEPATH>
+      <FILENAME>ofEvents.h</FILENAME>
+      <LINE>129</LINE>
+      <COLUMN>8</COLUMN>
+    </SFA>
+    <DEFECTCODE>26812</DEFECTCODE>
+    <DESCRIPTION>The enum type 'ofKeyEventArgs::Type' is unscoped. Prefer 'enum class' over 'enum' (Enum.3).</DESCRIPTION>
+    <FUNCTION>ofKeyEventArgs::{ctor}</FUNCTION>
+    <DECORATED>??0ofKeyEventArgs@@QEAA@XZ</DECORATED>
+    <FUNCLINE>128</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\libs\openFrameworks\events\</FILEPATH>
+      <FILENAME>ofEvents.h</FILENAME>
+      <LINE>189</LINE>
+      <COLUMN>6</COLUMN>
+    </SFA>
+    <DEFECTCODE>26812</DEFECTCODE>
+    <DESCRIPTION>The enum type 'ofMouseEventArgs::Type' is unscoped. Prefer 'enum class' over 'enum' (Enum.3).</DESCRIPTION>
+    <FUNCTION>ofMouseEventArgs::{ctor}</FUNCTION>
+    <DECORATED>??0ofMouseEventArgs@@QEAA@XZ</DECORATED>
+    <FUNCLINE>188</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\libs\openFrameworks\events\</FILEPATH>
+      <FILENAME>ofEvents.h</FILENAME>
+      <LINE>243</LINE>
+      <COLUMN>6</COLUMN>
+    </SFA>
+    <DEFECTCODE>26812</DEFECTCODE>
+    <DESCRIPTION>The enum type 'ofTouchEventArgs::Type' is unscoped. Prefer 'enum class' over 'enum' (Enum.3).</DESCRIPTION>
+    <FUNCTION>ofTouchEventArgs::{ctor}</FUNCTION>
+    <DECORATED>??0ofTouchEventArgs@@QEAA@XZ</DECORATED>
+    <FUNCLINE>242</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\libs\boost\include\boost\system\</FILEPATH>
+      <FILENAME>error_code.hpp</FILENAME>
+      <LINE>631</LINE>
+      <COLUMN>24</COLUMN>
+    </SFA>
+    <DEFECTCODE>26812</DEFECTCODE>
+    <DESCRIPTION>The enum type 'boost::system::errc::errc_t' is unscoped. Prefer 'enum class' over 'enum' (Enum.3).</DESCRIPTION>
+    <FUNCTION>boost::system::errc::make_error_code</FUNCTION>
+    <DECORATED>?make_error_code@errc@system@boost@@YA?AVerror_code@23@W4errc_t@123@@Z</DECORATED>
+    <FUNCLINE>631</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\libs\boost\include\boost\exception\</FILEPATH>
+      <FILENAME>exception.hpp</FILENAME>
+      <LINE>173</LINE>
+      <COLUMN>13</COLUMN>
+    </SFA>
+    <DEFECTCODE>26439</DEFECTCODE>
+    <DESCRIPTION>This kind of function should not throw. Declare it 'noexcept' (f.6).</DESCRIPTION>
+    <FUNCTION>boost::exception_detail::error_info_container::{dtor}</FUNCTION>
+    <DECORATED>??1error_info_container@exception_detail@boost@@IEAA@XZ</DECORATED>
+    <FUNCLINE>173</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\libs\boost\include\boost\exception\</FILEPATH>
+      <FILENAME>exception.hpp</FILENAME>
+      <LINE>304</LINE>
+      <COLUMN>5</COLUMN>
+    </SFA>
+    <DEFECTCODE>26439</DEFECTCODE>
+    <DESCRIPTION>This kind of function should not throw. Declare it 'noexcept' (f.6).</DESCRIPTION>
+    <FUNCTION>boost::exception::{dtor}</FUNCTION>
+    <DECORATED>??1exception@boost@@MEAA@XZ</DECORATED>
+    <FUNCLINE>304</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\libs\boost\include\boost\exception\</FILEPATH>
+      <FILENAME>exception.hpp</FILENAME>
+      <LINE>428</LINE>
+      <COLUMN>13</COLUMN>
+    </SFA>
+    <DEFECTCODE>26439</DEFECTCODE>
+    <DESCRIPTION>This kind of function should not throw. Declare it 'noexcept' (f.6).</DESCRIPTION>
+    <FUNCTION>boost::exception_detail::clone_base::{dtor}</FUNCTION>
+    <DECORATED>??1clone_base@exception_detail@boost@@UEAA@XZ</DECORATED>
+    <FUNCLINE>428</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\libs\boost\include\boost\smart_ptr\detail\</FILEPATH>
+      <FILENAME>shared_count.hpp</FILENAME>
+      <LINE>442</LINE>
+      <COLUMN>4</COLUMN>
+    </SFA>
+    <DEFECTCODE>26439</DEFECTCODE>
+    <DESCRIPTION>This kind of function should not throw. Declare it 'noexcept' (f.6).</DESCRIPTION>
+    <FUNCTION>boost::detail::shared_count::{ctor}</FUNCTION>
+    <DECORATED>??0shared_count@detail@boost@@QEAA@$$QEAV012@@Z</DECORATED>
+    <FUNCLINE>442</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\libs\boost\include\boost\smart_ptr\detail\</FILEPATH>
+      <FILENAME>shared_count.hpp</FILENAME>
+      <LINE>559</LINE>
+      <COLUMN>4</COLUMN>
+    </SFA>
+    <DEFECTCODE>26439</DEFECTCODE>
+    <DESCRIPTION>This kind of function should not throw. Declare it 'noexcept' (f.6).</DESCRIPTION>
+    <FUNCTION>boost::detail::weak_count::{ctor}</FUNCTION>
+    <DECORATED>??0weak_count@detail@boost@@QEAA@$$QEAV012@@Z</DECORATED>
+    <FUNCLINE>559</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\libs\boost\include\boost\smart_ptr\detail\</FILEPATH>
+      <FILENAME>local_counted_base.hpp</FILENAME>
+      <LINE>45</LINE>
+      <COLUMN>76</COLUMN>
+    </SFA>
+    <DEFECTCODE>26812</DEFECTCODE>
+    <DESCRIPTION>The enum type 'boost::detail::local_counted_base::count_type' is unscoped. Prefer 'enum class' over 'enum' (Enum.3).</DESCRIPTION>
+    <FUNCTION>boost::detail::local_counted_base::{ctor}</FUNCTION>
+    <DECORATED>??0local_counted_base@detail@boost@@QEAA@XZ</DECORATED>
+    <FUNCLINE>45</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\libs\boost\include\boost\filesystem\</FILEPATH>
+      <FILENAME>operations.hpp</FILENAME>
+      <LINE>249</LINE>
+      <COLUMN>2</COLUMN>
+    </SFA>
+    <DEFECTCODE>26812</DEFECTCODE>
+    <DESCRIPTION>The enum type 'boost::filesystem::perms' is unscoped. Prefer 'enum class' over 'enum' (Enum.3).</DESCRIPTION>
+    <FUNCTION>boost::filesystem::|</FUNCTION>
+    <DECORATED>??Ufilesystem@boost@@YA?AW4perms@01@W4201@0@Z</DECORATED>
+    <FUNCLINE>249</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\libs\boost\include\boost\filesystem\</FILEPATH>
+      <FILENAME>operations.hpp</FILENAME>
+      <LINE>259</LINE>
+      <COLUMN>24</COLUMN>
+    </SFA>
+    <DEFECTCODE>26812</DEFECTCODE>
+    <DESCRIPTION>The enum type 'boost::filesystem::file_type' is unscoped. Prefer 'enum class' over 'enum' (Enum.3).</DESCRIPTION>
+    <FUNCTION>boost::filesystem::file_status::{ctor}</FUNCTION>
+    <DECORATED>??0file_status@filesystem@boost@@QEAA@XZ</DECORATED>
+    <FUNCLINE>258</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\libs\openFrameworks\utils\</FILEPATH>
+      <FILENAME>ofLog.h</FILENAME>
+      <LINE>529</LINE>
+      <COLUMN>2</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'ofLog::level' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>ofLog::{ctor}</FUNCTION>
+    <DECORATED>??0ofLog@@AEAA@AEBV0@@Z</DECORATED>
+    <FUNCLINE>529</FUNCLINE>
+    <ADDITIONALINFO>
+      <targetSymbol>ofLog::level</targetSymbol>
+    </ADDITIONALINFO>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\libs\openFrameworks\utils\</FILEPATH>
+      <FILENAME>ofLog.h</FILENAME>
+      <LINE>529</LINE>
+      <COLUMN>2</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'ofLog::bPrinted' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>ofLog::{ctor}</FUNCTION>
+    <DECORATED>??0ofLog@@AEAA@AEBV0@@Z</DECORATED>
+    <FUNCLINE>529</FUNCLINE>
+    <ADDITIONALINFO>
+      <targetSymbol>ofLog::bPrinted</targetSymbol>
+    </ADDITIONALINFO>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\libs\openFrameworks\graphics\</FILEPATH>
+      <FILENAME>ofGraphicsBaseTypes.h</FILENAME>
+      <LINE>59</LINE>
+      <COLUMN>17</COLUMN>
+    </SFA>
+    <DEFECTCODE>26812</DEFECTCODE>
+    <DESCRIPTION>The enum type 'ofBlendMode' is unscoped. Prefer 'enum class' over 'enum' (Enum.3).</DESCRIPTION>
+    <FUNCTION>ofStyle::{ctor}</FUNCTION>
+    <DECORATED>??0ofStyle@@QEAA@XZ</DECORATED>
+    <FUNCLINE>57</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\libs\openFrameworks\graphics\</FILEPATH>
+      <FILENAME>ofGraphicsBaseTypes.h</FILENAME>
+      <LINE>65</LINE>
+      <COLUMN>14</COLUMN>
+    </SFA>
+    <DEFECTCODE>26812</DEFECTCODE>
+    <DESCRIPTION>The enum type 'ofPolyWindingMode' is unscoped. Prefer 'enum class' over 'enum' (Enum.3).</DESCRIPTION>
+    <FUNCTION>ofStyle::{ctor}</FUNCTION>
+    <DECORATED>??0ofStyle@@QEAA@XZ</DECORATED>
+    <FUNCLINE>57</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\libs\openFrameworks\graphics\</FILEPATH>
+      <FILENAME>ofGraphicsBaseTypes.h</FILENAME>
+      <LINE>66</LINE>
+      <COLUMN>14</COLUMN>
+    </SFA>
+    <DEFECTCODE>26812</DEFECTCODE>
+    <DESCRIPTION>The enum type 'ofRectMode' is unscoped. Prefer 'enum class' over 'enum' (Enum.3).</DESCRIPTION>
+    <FUNCTION>ofStyle::{ctor}</FUNCTION>
+    <DECORATED>??0ofStyle@@QEAA@XZ</DECORATED>
+    <FUNCLINE>57</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\libs\openFrameworks\graphics\</FILEPATH>
+      <FILENAME>ofGraphicsBaseTypes.h</FILENAME>
+      <LINE>70</LINE>
+      <COLUMN>20</COLUMN>
+    </SFA>
+    <DEFECTCODE>26812</DEFECTCODE>
+    <DESCRIPTION>The enum type 'ofDrawBitmapMode' is unscoped. Prefer 'enum class' over 'enum' (Enum.3).</DESCRIPTION>
+    <FUNCTION>ofStyle::{ctor}</FUNCTION>
+    <DECORATED>??0ofStyle@@QEAA@XZ</DECORATED>
+    <FUNCLINE>57</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\libs\openFrameworks\app\</FILEPATH>
+      <FILENAME>ofWindowSettings.h</FILENAME>
+      <LINE>40</LINE>
+      <COLUMN>12</COLUMN>
+    </SFA>
+    <DEFECTCODE>26812</DEFECTCODE>
+    <DESCRIPTION>The enum type 'ofWindowMode' is unscoped. Prefer 'enum class' over 'enum' (Enum.3).</DESCRIPTION>
+    <FUNCTION>ofWindowSettings::{ctor}</FUNCTION>
+    <DECORATED>??0ofWindowSettings@@QEAA@XZ</DECORATED>
+    <FUNCLINE>39</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\libs\openFrameworks\gl\</FILEPATH>
+      <FILENAME>ofTexture.h</FILENAME>
+      <LINE>182</LINE>
+      <COLUMN>18</COLUMN>
+    </SFA>
+    <DEFECTCODE>26812</DEFECTCODE>
+    <DESCRIPTION>The enum type 'ofTexCompression' is unscoped. Prefer 'enum class' over 'enum' (Enum.3).</DESCRIPTION>
+    <FUNCTION>ofTextureData::{ctor}</FUNCTION>
+    <DECORATED>??0ofTextureData@@QEAA@XZ</DECORATED>
+    <FUNCLINE>164</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\libs\openFrameworks\graphics\</FILEPATH>
+      <FILENAME>ofTrueTypeFont.h</FILENAME>
+      <LINE>134</LINE>
+      <COLUMN>40</COLUMN>
+    </SFA>
+    <DEFECTCODE>26812</DEFECTCODE>
+    <DESCRIPTION>The enum type 'ofTrueTypeFontDirection' is unscoped. Prefer 'enum class' over 'enum' (Enum.3).</DESCRIPTION>
+    <FUNCTION>ofTrueTypeFontSettings::{ctor}</FUNCTION>
+    <DECORATED>??0ofTrueTypeFontSettings@@QEAA@AEBVpath@filesystem@boost@@H@Z</DECORATED>
+    <FUNCLINE>137</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.h</FILENAME>
+      <LINE>63</LINE>
+      <COLUMN>6</COLUMN>
+    </SFA>
+    <DEFECTCODE>26812</DEFECTCODE>
+    <DESCRIPTION>The enum type 'ofxInputField&lt;double&gt;::Inside' is unscoped. Prefer 'enum class' over 'enum' (Enum.3).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;double&gt;::ofxSlider</FUNCTION>
+    <DECORATED>?ofxSlider@?$ofxInputField@N@@IEAAXW4Inside@1@@Z</DECORATED>
+    <FUNCLINE>63</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.h</FILENAME>
+      <LINE>63</LINE>
+      <COLUMN>6</COLUMN>
+    </SFA>
+    <DEFECTCODE>26812</DEFECTCODE>
+    <DESCRIPTION>The enum type 'ofxInputField&lt;float&gt;::Inside' is unscoped. Prefer 'enum class' over 'enum' (Enum.3).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;float&gt;::ofxSlider</FUNCTION>
+    <DECORATED>?ofxSlider@?$ofxInputField@M@@IEAAXW4Inside@1@@Z</DECORATED>
+    <FUNCLINE>63</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.h</FILENAME>
+      <LINE>63</LINE>
+      <COLUMN>6</COLUMN>
+    </SFA>
+    <DEFECTCODE>26812</DEFECTCODE>
+    <DESCRIPTION>The enum type 'ofxInputField&lt;unsigned __int64&gt;::Inside' is unscoped. Prefer 'enum class' over 'enum' (Enum.3).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;unsigned __int64&gt;::ofxSlider</FUNCTION>
+    <DECORATED>?ofxSlider@?$ofxInputField@_K@@IEAAXW4Inside@1@@Z</DECORATED>
+    <FUNCLINE>63</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.h</FILENAME>
+      <LINE>63</LINE>
+      <COLUMN>6</COLUMN>
+    </SFA>
+    <DEFECTCODE>26812</DEFECTCODE>
+    <DESCRIPTION>The enum type 'ofxInputField&lt;__int64&gt;::Inside' is unscoped. Prefer 'enum class' over 'enum' (Enum.3).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;__int64&gt;::ofxSlider</FUNCTION>
+    <DECORATED>?ofxSlider@?$ofxInputField@_J@@IEAAXW4Inside@1@@Z</DECORATED>
+    <FUNCLINE>63</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.h</FILENAME>
+      <LINE>63</LINE>
+      <COLUMN>6</COLUMN>
+    </SFA>
+    <DEFECTCODE>26812</DEFECTCODE>
+    <DESCRIPTION>The enum type 'ofxInputField&lt;unsigned int&gt;::Inside' is unscoped. Prefer 'enum class' over 'enum' (Enum.3).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;unsigned int&gt;::ofxSlider</FUNCTION>
+    <DECORATED>?ofxSlider@?$ofxInputField@I@@IEAAXW4Inside@1@@Z</DECORATED>
+    <FUNCLINE>63</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.h</FILENAME>
+      <LINE>63</LINE>
+      <COLUMN>6</COLUMN>
+    </SFA>
+    <DEFECTCODE>26812</DEFECTCODE>
+    <DESCRIPTION>The enum type 'ofxInputField&lt;int&gt;::Inside' is unscoped. Prefer 'enum class' over 'enum' (Enum.3).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;int&gt;::ofxSlider</FUNCTION>
+    <DECORATED>?ofxSlider@?$ofxInputField@H@@IEAAXW4Inside@1@@Z</DECORATED>
+    <FUNCLINE>63</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.h</FILENAME>
+      <LINE>63</LINE>
+      <COLUMN>6</COLUMN>
+    </SFA>
+    <DEFECTCODE>26812</DEFECTCODE>
+    <DESCRIPTION>The enum type 'ofxInputField&lt;unsigned short&gt;::Inside' is unscoped. Prefer 'enum class' over 'enum' (Enum.3).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;unsigned short&gt;::ofxSlider</FUNCTION>
+    <DECORATED>?ofxSlider@?$ofxInputField@G@@IEAAXW4Inside@1@@Z</DECORATED>
+    <FUNCLINE>63</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.h</FILENAME>
+      <LINE>63</LINE>
+      <COLUMN>6</COLUMN>
+    </SFA>
+    <DEFECTCODE>26812</DEFECTCODE>
+    <DESCRIPTION>The enum type 'ofxInputField&lt;short&gt;::Inside' is unscoped. Prefer 'enum class' over 'enum' (Enum.3).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;short&gt;::ofxSlider</FUNCTION>
+    <DECORATED>?ofxSlider@?$ofxInputField@F@@IEAAXW4Inside@1@@Z</DECORATED>
+    <FUNCLINE>63</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.h</FILENAME>
+      <LINE>63</LINE>
+      <COLUMN>6</COLUMN>
+    </SFA>
+    <DEFECTCODE>26812</DEFECTCODE>
+    <DESCRIPTION>The enum type 'ofxInputField&lt;unsigned char&gt;::Inside' is unscoped. Prefer 'enum class' over 'enum' (Enum.3).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;unsigned char&gt;::ofxSlider</FUNCTION>
+    <DECORATED>?ofxSlider@?$ofxInputField@E@@IEAAXW4Inside@1@@Z</DECORATED>
+    <FUNCLINE>63</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.h</FILENAME>
+      <LINE>63</LINE>
+      <COLUMN>6</COLUMN>
+    </SFA>
+    <DEFECTCODE>26812</DEFECTCODE>
+    <DESCRIPTION>The enum type 'ofxInputField&lt;signed char&gt;::Inside' is unscoped. Prefer 'enum class' over 'enum' (Enum.3).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;signed char&gt;::ofxSlider</FUNCTION>
+    <DECORATED>?ofxSlider@?$ofxInputField@C@@IEAAXW4Inside@1@@Z</DECORATED>
+    <FUNCLINE>63</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.h</FILENAME>
+      <LINE>63</LINE>
+      <COLUMN>6</COLUMN>
+    </SFA>
+    <DEFECTCODE>26812</DEFECTCODE>
+    <DESCRIPTION>The enum type 'ofxInputField&lt;std::basic_string&lt;char,std::char_traits&lt;char&gt;,std::allocator&lt;char&gt; &gt; &gt;::Inside' is unscoped. Prefer 'enum class' over 'enum' (Enum.3).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;std::basic_string&lt;char,std::char_traits&lt;char&gt;,std::allocator&lt;char&gt; &gt; &gt;::ofxSlider</FUNCTION>
+    <DECORATED>?ofxSlider@?$ofxInputField@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@@IEAAXW4Inside@1@@Z</DECORATED>
+    <FUNCLINE>63</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\libs\openFrameworks\3d\</FILEPATH>
+      <FILENAME>ofMesh.inl</FILENAME>
+      <LINE>15</LINE>
+      <COLUMN>6</COLUMN>
+    </SFA>
+    <DEFECTCODE>26812</DEFECTCODE>
+    <DESCRIPTION>The enum type 'ofPrimitiveMode' is unscoped. Prefer 'enum class' over 'enum' (Enum.3).</DESCRIPTION>
+    <FUNCTION>ofMesh_&lt;glm::vec&lt;3,float,0&gt;,glm::vec&lt;3,float,0&gt;,ofColor_&lt;float&gt;,glm::vec&lt;2,float,0&gt; &gt;::{ctor}</FUNCTION>
+    <DECORATED>??0?$ofMesh_@U?$vec@$02M$0A@@glm@@U12@V?$ofColor_@M@@U?$vec@$01M$0A@@2@@@QEAA@XZ</DECORATED>
+    <FUNCLINE>14</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\libs\openFrameworks\3d\</FILEPATH>
+      <FILENAME>ofMesh.inl</FILENAME>
+      <LINE>900</LINE>
+      <COLUMN>23</COLUMN>
+    </SFA>
+    <DEFECTCODE>26812</DEFECTCODE>
+    <DESCRIPTION>The enum type 'ofPolyRenderMode' is unscoped. Prefer 'enum class' over 'enum' (Enum.3).</DESCRIPTION>
+    <FUNCTION>ofMesh_&lt;glm::vec&lt;3,float,0&gt;,glm::vec&lt;3,float,0&gt;,ofColor_&lt;float&gt;,glm::vec&lt;2,float,0&gt; &gt;::draw</FUNCTION>
+    <DECORATED>?draw@?$ofMesh_@U?$vec@$02M$0A@@glm@@U12@V?$ofColor_@M@@U?$vec@$01M$0A@@2@@@UEBAXW4ofPolyRenderMode@@@Z</DECORATED>
+    <FUNCLINE>900</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>204</LINE>
+      <COLUMN>74</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;float&gt;::calculateSelectionArea</FUNCTION>
+    <DECORATED>?calculateSelectionArea@?$ofxInputField@M@@IEAAXHH@Z</DECORATED>
+    <FUNCLINE>194</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>229</LINE>
+      <COLUMN>77</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;float&gt;::calculateSelectionArea</FUNCTION>
+    <DECORATED>?calculateSelectionArea@?$ofxInputField@M@@IEAAXHH@Z</DECORATED>
+    <FUNCLINE>194</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>230</LINE>
+      <COLUMN>95</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;float&gt;::calculateSelectionArea</FUNCTION>
+    <DECORATED>?calculateSelectionArea@?$ofxInputField@M@@IEAAXHH@Z</DECORATED>
+    <FUNCLINE>194</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>233</LINE>
+      <COLUMN>76</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;float&gt;::calculateSelectionArea</FUNCTION>
+    <DECORATED>?calculateSelectionArea@?$ofxInputField@M@@IEAAXHH@Z</DECORATED>
+    <FUNCLINE>194</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>234</LINE>
+      <COLUMN>94</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;float&gt;::calculateSelectionArea</FUNCTION>
+    <DECORATED>?calculateSelectionArea@?$ofxInputField@M@@IEAAXHH@Z</DECORATED>
+    <FUNCLINE>194</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>256</LINE>
+      <COLUMN>80</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;float&gt;::calculateSelectionArea</FUNCTION>
+    <DECORATED>?calculateSelectionArea@?$ofxInputField@M@@IEAAXHH@Z</DECORATED>
+    <FUNCLINE>194</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>289</LINE>
+      <COLUMN>74</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;float&gt;::moveCursor</FUNCTION>
+    <DECORATED>?moveCursor@?$ofxInputField@M@@IEAAXH@Z</DECORATED>
+    <FUNCLINE>265</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>314</LINE>
+      <COLUMN>77</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;float&gt;::moveCursor</FUNCTION>
+    <DECORATED>?moveCursor@?$ofxInputField@M@@IEAAXH@Z</DECORATED>
+    <FUNCLINE>265</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>315</LINE>
+      <COLUMN>95</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;float&gt;::moveCursor</FUNCTION>
+    <DECORATED>?moveCursor@?$ofxInputField@M@@IEAAXH@Z</DECORATED>
+    <FUNCLINE>265</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>318</LINE>
+      <COLUMN>76</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;float&gt;::moveCursor</FUNCTION>
+    <DECORATED>?moveCursor@?$ofxInputField@M@@IEAAXH@Z</DECORATED>
+    <FUNCLINE>265</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>319</LINE>
+      <COLUMN>94</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;float&gt;::moveCursor</FUNCTION>
+    <DECORATED>?moveCursor@?$ofxInputField@M@@IEAAXH@Z</DECORATED>
+    <FUNCLINE>265</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>326</LINE>
+      <COLUMN>73</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;float&gt;::moveCursor</FUNCTION>
+    <DECORATED>?moveCursor@?$ofxInputField@M@@IEAAXH@Z</DECORATED>
+    <FUNCLINE>265</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>204</LINE>
+      <COLUMN>74</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;int&gt;::calculateSelectionArea</FUNCTION>
+    <DECORATED>?calculateSelectionArea@?$ofxInputField@H@@IEAAXHH@Z</DECORATED>
+    <FUNCLINE>194</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>229</LINE>
+      <COLUMN>77</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;int&gt;::calculateSelectionArea</FUNCTION>
+    <DECORATED>?calculateSelectionArea@?$ofxInputField@H@@IEAAXHH@Z</DECORATED>
+    <FUNCLINE>194</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>230</LINE>
+      <COLUMN>95</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;int&gt;::calculateSelectionArea</FUNCTION>
+    <DECORATED>?calculateSelectionArea@?$ofxInputField@H@@IEAAXHH@Z</DECORATED>
+    <FUNCLINE>194</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>233</LINE>
+      <COLUMN>76</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;int&gt;::calculateSelectionArea</FUNCTION>
+    <DECORATED>?calculateSelectionArea@?$ofxInputField@H@@IEAAXHH@Z</DECORATED>
+    <FUNCLINE>194</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>234</LINE>
+      <COLUMN>94</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;int&gt;::calculateSelectionArea</FUNCTION>
+    <DECORATED>?calculateSelectionArea@?$ofxInputField@H@@IEAAXHH@Z</DECORATED>
+    <FUNCLINE>194</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>256</LINE>
+      <COLUMN>80</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;int&gt;::calculateSelectionArea</FUNCTION>
+    <DECORATED>?calculateSelectionArea@?$ofxInputField@H@@IEAAXHH@Z</DECORATED>
+    <FUNCLINE>194</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>289</LINE>
+      <COLUMN>74</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;int&gt;::moveCursor</FUNCTION>
+    <DECORATED>?moveCursor@?$ofxInputField@H@@IEAAXH@Z</DECORATED>
+    <FUNCLINE>265</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>314</LINE>
+      <COLUMN>77</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;int&gt;::moveCursor</FUNCTION>
+    <DECORATED>?moveCursor@?$ofxInputField@H@@IEAAXH@Z</DECORATED>
+    <FUNCLINE>265</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>315</LINE>
+      <COLUMN>95</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;int&gt;::moveCursor</FUNCTION>
+    <DECORATED>?moveCursor@?$ofxInputField@H@@IEAAXH@Z</DECORATED>
+    <FUNCLINE>265</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>318</LINE>
+      <COLUMN>76</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;int&gt;::moveCursor</FUNCTION>
+    <DECORATED>?moveCursor@?$ofxInputField@H@@IEAAXH@Z</DECORATED>
+    <FUNCLINE>265</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>319</LINE>
+      <COLUMN>94</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;int&gt;::moveCursor</FUNCTION>
+    <DECORATED>?moveCursor@?$ofxInputField@H@@IEAAXH@Z</DECORATED>
+    <FUNCLINE>265</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>326</LINE>
+      <COLUMN>73</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;int&gt;::moveCursor</FUNCTION>
+    <DECORATED>?moveCursor@?$ofxInputField@H@@IEAAXH@Z</DECORATED>
+    <FUNCLINE>265</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>204</LINE>
+      <COLUMN>74</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;std::basic_string&lt;char,std::char_traits&lt;char&gt;,std::allocator&lt;char&gt; &gt; &gt;::calculateSelectionArea</FUNCTION>
+    <DECORATED>?calculateSelectionArea@?$ofxInputField@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@@IEAAXHH@Z</DECORATED>
+    <FUNCLINE>194</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>229</LINE>
+      <COLUMN>77</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;std::basic_string&lt;char,std::char_traits&lt;char&gt;,std::allocator&lt;char&gt; &gt; &gt;::calculateSelectionArea</FUNCTION>
+    <DECORATED>?calculateSelectionArea@?$ofxInputField@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@@IEAAXHH@Z</DECORATED>
+    <FUNCLINE>194</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>230</LINE>
+      <COLUMN>95</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;std::basic_string&lt;char,std::char_traits&lt;char&gt;,std::allocator&lt;char&gt; &gt; &gt;::calculateSelectionArea</FUNCTION>
+    <DECORATED>?calculateSelectionArea@?$ofxInputField@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@@IEAAXHH@Z</DECORATED>
+    <FUNCLINE>194</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>233</LINE>
+      <COLUMN>76</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;std::basic_string&lt;char,std::char_traits&lt;char&gt;,std::allocator&lt;char&gt; &gt; &gt;::calculateSelectionArea</FUNCTION>
+    <DECORATED>?calculateSelectionArea@?$ofxInputField@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@@IEAAXHH@Z</DECORATED>
+    <FUNCLINE>194</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>234</LINE>
+      <COLUMN>94</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;std::basic_string&lt;char,std::char_traits&lt;char&gt;,std::allocator&lt;char&gt; &gt; &gt;::calculateSelectionArea</FUNCTION>
+    <DECORATED>?calculateSelectionArea@?$ofxInputField@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@@IEAAXHH@Z</DECORATED>
+    <FUNCLINE>194</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>256</LINE>
+      <COLUMN>80</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;std::basic_string&lt;char,std::char_traits&lt;char&gt;,std::allocator&lt;char&gt; &gt; &gt;::calculateSelectionArea</FUNCTION>
+    <DECORATED>?calculateSelectionArea@?$ofxInputField@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@@IEAAXHH@Z</DECORATED>
+    <FUNCLINE>194</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>289</LINE>
+      <COLUMN>74</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;std::basic_string&lt;char,std::char_traits&lt;char&gt;,std::allocator&lt;char&gt; &gt; &gt;::moveCursor</FUNCTION>
+    <DECORATED>?moveCursor@?$ofxInputField@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@@IEAAXH@Z</DECORATED>
+    <FUNCLINE>265</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>314</LINE>
+      <COLUMN>77</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;std::basic_string&lt;char,std::char_traits&lt;char&gt;,std::allocator&lt;char&gt; &gt; &gt;::moveCursor</FUNCTION>
+    <DECORATED>?moveCursor@?$ofxInputField@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@@IEAAXH@Z</DECORATED>
+    <FUNCLINE>265</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>315</LINE>
+      <COLUMN>95</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;std::basic_string&lt;char,std::char_traits&lt;char&gt;,std::allocator&lt;char&gt; &gt; &gt;::moveCursor</FUNCTION>
+    <DECORATED>?moveCursor@?$ofxInputField@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@@IEAAXH@Z</DECORATED>
+    <FUNCLINE>265</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>318</LINE>
+      <COLUMN>76</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;std::basic_string&lt;char,std::char_traits&lt;char&gt;,std::allocator&lt;char&gt; &gt; &gt;::moveCursor</FUNCTION>
+    <DECORATED>?moveCursor@?$ofxInputField@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@@IEAAXH@Z</DECORATED>
+    <FUNCLINE>265</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>319</LINE>
+      <COLUMN>94</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;std::basic_string&lt;char,std::char_traits&lt;char&gt;,std::allocator&lt;char&gt; &gt; &gt;::moveCursor</FUNCTION>
+    <DECORATED>?moveCursor@?$ofxInputField@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@@IEAAXH@Z</DECORATED>
+    <FUNCLINE>265</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>326</LINE>
+      <COLUMN>73</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;std::basic_string&lt;char,std::char_traits&lt;char&gt;,std::allocator&lt;char&gt; &gt; &gt;::moveCursor</FUNCTION>
+    <DECORATED>?moveCursor@?$ofxInputField@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@@IEAAXH@Z</DECORATED>
+    <FUNCLINE>265</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>204</LINE>
+      <COLUMN>74</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;signed char&gt;::calculateSelectionArea</FUNCTION>
+    <DECORATED>?calculateSelectionArea@?$ofxInputField@C@@IEAAXHH@Z</DECORATED>
+    <FUNCLINE>194</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>229</LINE>
+      <COLUMN>77</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;signed char&gt;::calculateSelectionArea</FUNCTION>
+    <DECORATED>?calculateSelectionArea@?$ofxInputField@C@@IEAAXHH@Z</DECORATED>
+    <FUNCLINE>194</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>230</LINE>
+      <COLUMN>95</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;signed char&gt;::calculateSelectionArea</FUNCTION>
+    <DECORATED>?calculateSelectionArea@?$ofxInputField@C@@IEAAXHH@Z</DECORATED>
+    <FUNCLINE>194</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>233</LINE>
+      <COLUMN>76</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;signed char&gt;::calculateSelectionArea</FUNCTION>
+    <DECORATED>?calculateSelectionArea@?$ofxInputField@C@@IEAAXHH@Z</DECORATED>
+    <FUNCLINE>194</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>234</LINE>
+      <COLUMN>94</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;signed char&gt;::calculateSelectionArea</FUNCTION>
+    <DECORATED>?calculateSelectionArea@?$ofxInputField@C@@IEAAXHH@Z</DECORATED>
+    <FUNCLINE>194</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>256</LINE>
+      <COLUMN>80</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;signed char&gt;::calculateSelectionArea</FUNCTION>
+    <DECORATED>?calculateSelectionArea@?$ofxInputField@C@@IEAAXHH@Z</DECORATED>
+    <FUNCLINE>194</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>289</LINE>
+      <COLUMN>74</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;signed char&gt;::moveCursor</FUNCTION>
+    <DECORATED>?moveCursor@?$ofxInputField@C@@IEAAXH@Z</DECORATED>
+    <FUNCLINE>265</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>314</LINE>
+      <COLUMN>77</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;signed char&gt;::moveCursor</FUNCTION>
+    <DECORATED>?moveCursor@?$ofxInputField@C@@IEAAXH@Z</DECORATED>
+    <FUNCLINE>265</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>315</LINE>
+      <COLUMN>95</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;signed char&gt;::moveCursor</FUNCTION>
+    <DECORATED>?moveCursor@?$ofxInputField@C@@IEAAXH@Z</DECORATED>
+    <FUNCLINE>265</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>318</LINE>
+      <COLUMN>76</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;signed char&gt;::moveCursor</FUNCTION>
+    <DECORATED>?moveCursor@?$ofxInputField@C@@IEAAXH@Z</DECORATED>
+    <FUNCLINE>265</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>319</LINE>
+      <COLUMN>94</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;signed char&gt;::moveCursor</FUNCTION>
+    <DECORATED>?moveCursor@?$ofxInputField@C@@IEAAXH@Z</DECORATED>
+    <FUNCLINE>265</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>326</LINE>
+      <COLUMN>73</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;signed char&gt;::moveCursor</FUNCTION>
+    <DECORATED>?moveCursor@?$ofxInputField@C@@IEAAXH@Z</DECORATED>
+    <FUNCLINE>265</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>204</LINE>
+      <COLUMN>74</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;unsigned char&gt;::calculateSelectionArea</FUNCTION>
+    <DECORATED>?calculateSelectionArea@?$ofxInputField@E@@IEAAXHH@Z</DECORATED>
+    <FUNCLINE>194</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>229</LINE>
+      <COLUMN>77</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;unsigned char&gt;::calculateSelectionArea</FUNCTION>
+    <DECORATED>?calculateSelectionArea@?$ofxInputField@E@@IEAAXHH@Z</DECORATED>
+    <FUNCLINE>194</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>230</LINE>
+      <COLUMN>95</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;unsigned char&gt;::calculateSelectionArea</FUNCTION>
+    <DECORATED>?calculateSelectionArea@?$ofxInputField@E@@IEAAXHH@Z</DECORATED>
+    <FUNCLINE>194</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>233</LINE>
+      <COLUMN>76</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;unsigned char&gt;::calculateSelectionArea</FUNCTION>
+    <DECORATED>?calculateSelectionArea@?$ofxInputField@E@@IEAAXHH@Z</DECORATED>
+    <FUNCLINE>194</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>234</LINE>
+      <COLUMN>94</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;unsigned char&gt;::calculateSelectionArea</FUNCTION>
+    <DECORATED>?calculateSelectionArea@?$ofxInputField@E@@IEAAXHH@Z</DECORATED>
+    <FUNCLINE>194</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>256</LINE>
+      <COLUMN>80</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;unsigned char&gt;::calculateSelectionArea</FUNCTION>
+    <DECORATED>?calculateSelectionArea@?$ofxInputField@E@@IEAAXHH@Z</DECORATED>
+    <FUNCLINE>194</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>289</LINE>
+      <COLUMN>74</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;unsigned char&gt;::moveCursor</FUNCTION>
+    <DECORATED>?moveCursor@?$ofxInputField@E@@IEAAXH@Z</DECORATED>
+    <FUNCLINE>265</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>314</LINE>
+      <COLUMN>77</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;unsigned char&gt;::moveCursor</FUNCTION>
+    <DECORATED>?moveCursor@?$ofxInputField@E@@IEAAXH@Z</DECORATED>
+    <FUNCLINE>265</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>315</LINE>
+      <COLUMN>95</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;unsigned char&gt;::moveCursor</FUNCTION>
+    <DECORATED>?moveCursor@?$ofxInputField@E@@IEAAXH@Z</DECORATED>
+    <FUNCLINE>265</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>318</LINE>
+      <COLUMN>76</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;unsigned char&gt;::moveCursor</FUNCTION>
+    <DECORATED>?moveCursor@?$ofxInputField@E@@IEAAXH@Z</DECORATED>
+    <FUNCLINE>265</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>319</LINE>
+      <COLUMN>94</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;unsigned char&gt;::moveCursor</FUNCTION>
+    <DECORATED>?moveCursor@?$ofxInputField@E@@IEAAXH@Z</DECORATED>
+    <FUNCLINE>265</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>326</LINE>
+      <COLUMN>73</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;unsigned char&gt;::moveCursor</FUNCTION>
+    <DECORATED>?moveCursor@?$ofxInputField@E@@IEAAXH@Z</DECORATED>
+    <FUNCLINE>265</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>204</LINE>
+      <COLUMN>74</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;short&gt;::calculateSelectionArea</FUNCTION>
+    <DECORATED>?calculateSelectionArea@?$ofxInputField@F@@IEAAXHH@Z</DECORATED>
+    <FUNCLINE>194</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>229</LINE>
+      <COLUMN>77</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;short&gt;::calculateSelectionArea</FUNCTION>
+    <DECORATED>?calculateSelectionArea@?$ofxInputField@F@@IEAAXHH@Z</DECORATED>
+    <FUNCLINE>194</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>230</LINE>
+      <COLUMN>95</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;short&gt;::calculateSelectionArea</FUNCTION>
+    <DECORATED>?calculateSelectionArea@?$ofxInputField@F@@IEAAXHH@Z</DECORATED>
+    <FUNCLINE>194</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>233</LINE>
+      <COLUMN>76</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;short&gt;::calculateSelectionArea</FUNCTION>
+    <DECORATED>?calculateSelectionArea@?$ofxInputField@F@@IEAAXHH@Z</DECORATED>
+    <FUNCLINE>194</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>234</LINE>
+      <COLUMN>94</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;short&gt;::calculateSelectionArea</FUNCTION>
+    <DECORATED>?calculateSelectionArea@?$ofxInputField@F@@IEAAXHH@Z</DECORATED>
+    <FUNCLINE>194</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>256</LINE>
+      <COLUMN>80</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;short&gt;::calculateSelectionArea</FUNCTION>
+    <DECORATED>?calculateSelectionArea@?$ofxInputField@F@@IEAAXHH@Z</DECORATED>
+    <FUNCLINE>194</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>289</LINE>
+      <COLUMN>74</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;short&gt;::moveCursor</FUNCTION>
+    <DECORATED>?moveCursor@?$ofxInputField@F@@IEAAXH@Z</DECORATED>
+    <FUNCLINE>265</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>314</LINE>
+      <COLUMN>77</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;short&gt;::moveCursor</FUNCTION>
+    <DECORATED>?moveCursor@?$ofxInputField@F@@IEAAXH@Z</DECORATED>
+    <FUNCLINE>265</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>315</LINE>
+      <COLUMN>95</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;short&gt;::moveCursor</FUNCTION>
+    <DECORATED>?moveCursor@?$ofxInputField@F@@IEAAXH@Z</DECORATED>
+    <FUNCLINE>265</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>318</LINE>
+      <COLUMN>76</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;short&gt;::moveCursor</FUNCTION>
+    <DECORATED>?moveCursor@?$ofxInputField@F@@IEAAXH@Z</DECORATED>
+    <FUNCLINE>265</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>319</LINE>
+      <COLUMN>94</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;short&gt;::moveCursor</FUNCTION>
+    <DECORATED>?moveCursor@?$ofxInputField@F@@IEAAXH@Z</DECORATED>
+    <FUNCLINE>265</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>326</LINE>
+      <COLUMN>73</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;short&gt;::moveCursor</FUNCTION>
+    <DECORATED>?moveCursor@?$ofxInputField@F@@IEAAXH@Z</DECORATED>
+    <FUNCLINE>265</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>204</LINE>
+      <COLUMN>74</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;unsigned short&gt;::calculateSelectionArea</FUNCTION>
+    <DECORATED>?calculateSelectionArea@?$ofxInputField@G@@IEAAXHH@Z</DECORATED>
+    <FUNCLINE>194</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>229</LINE>
+      <COLUMN>77</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;unsigned short&gt;::calculateSelectionArea</FUNCTION>
+    <DECORATED>?calculateSelectionArea@?$ofxInputField@G@@IEAAXHH@Z</DECORATED>
+    <FUNCLINE>194</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>230</LINE>
+      <COLUMN>95</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;unsigned short&gt;::calculateSelectionArea</FUNCTION>
+    <DECORATED>?calculateSelectionArea@?$ofxInputField@G@@IEAAXHH@Z</DECORATED>
+    <FUNCLINE>194</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>233</LINE>
+      <COLUMN>76</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;unsigned short&gt;::calculateSelectionArea</FUNCTION>
+    <DECORATED>?calculateSelectionArea@?$ofxInputField@G@@IEAAXHH@Z</DECORATED>
+    <FUNCLINE>194</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>234</LINE>
+      <COLUMN>94</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;unsigned short&gt;::calculateSelectionArea</FUNCTION>
+    <DECORATED>?calculateSelectionArea@?$ofxInputField@G@@IEAAXHH@Z</DECORATED>
+    <FUNCLINE>194</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>256</LINE>
+      <COLUMN>80</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;unsigned short&gt;::calculateSelectionArea</FUNCTION>
+    <DECORATED>?calculateSelectionArea@?$ofxInputField@G@@IEAAXHH@Z</DECORATED>
+    <FUNCLINE>194</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>289</LINE>
+      <COLUMN>74</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;unsigned short&gt;::moveCursor</FUNCTION>
+    <DECORATED>?moveCursor@?$ofxInputField@G@@IEAAXH@Z</DECORATED>
+    <FUNCLINE>265</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>314</LINE>
+      <COLUMN>77</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;unsigned short&gt;::moveCursor</FUNCTION>
+    <DECORATED>?moveCursor@?$ofxInputField@G@@IEAAXH@Z</DECORATED>
+    <FUNCLINE>265</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>315</LINE>
+      <COLUMN>95</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;unsigned short&gt;::moveCursor</FUNCTION>
+    <DECORATED>?moveCursor@?$ofxInputField@G@@IEAAXH@Z</DECORATED>
+    <FUNCLINE>265</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>318</LINE>
+      <COLUMN>76</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;unsigned short&gt;::moveCursor</FUNCTION>
+    <DECORATED>?moveCursor@?$ofxInputField@G@@IEAAXH@Z</DECORATED>
+    <FUNCLINE>265</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>319</LINE>
+      <COLUMN>94</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;unsigned short&gt;::moveCursor</FUNCTION>
+    <DECORATED>?moveCursor@?$ofxInputField@G@@IEAAXH@Z</DECORATED>
+    <FUNCLINE>265</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>326</LINE>
+      <COLUMN>73</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;unsigned short&gt;::moveCursor</FUNCTION>
+    <DECORATED>?moveCursor@?$ofxInputField@G@@IEAAXH@Z</DECORATED>
+    <FUNCLINE>265</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>204</LINE>
+      <COLUMN>74</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;unsigned int&gt;::calculateSelectionArea</FUNCTION>
+    <DECORATED>?calculateSelectionArea@?$ofxInputField@I@@IEAAXHH@Z</DECORATED>
+    <FUNCLINE>194</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>229</LINE>
+      <COLUMN>77</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;unsigned int&gt;::calculateSelectionArea</FUNCTION>
+    <DECORATED>?calculateSelectionArea@?$ofxInputField@I@@IEAAXHH@Z</DECORATED>
+    <FUNCLINE>194</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>230</LINE>
+      <COLUMN>95</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;unsigned int&gt;::calculateSelectionArea</FUNCTION>
+    <DECORATED>?calculateSelectionArea@?$ofxInputField@I@@IEAAXHH@Z</DECORATED>
+    <FUNCLINE>194</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>233</LINE>
+      <COLUMN>76</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;unsigned int&gt;::calculateSelectionArea</FUNCTION>
+    <DECORATED>?calculateSelectionArea@?$ofxInputField@I@@IEAAXHH@Z</DECORATED>
+    <FUNCLINE>194</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>234</LINE>
+      <COLUMN>94</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;unsigned int&gt;::calculateSelectionArea</FUNCTION>
+    <DECORATED>?calculateSelectionArea@?$ofxInputField@I@@IEAAXHH@Z</DECORATED>
+    <FUNCLINE>194</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>256</LINE>
+      <COLUMN>80</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;unsigned int&gt;::calculateSelectionArea</FUNCTION>
+    <DECORATED>?calculateSelectionArea@?$ofxInputField@I@@IEAAXHH@Z</DECORATED>
+    <FUNCLINE>194</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>289</LINE>
+      <COLUMN>74</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;unsigned int&gt;::moveCursor</FUNCTION>
+    <DECORATED>?moveCursor@?$ofxInputField@I@@IEAAXH@Z</DECORATED>
+    <FUNCLINE>265</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>314</LINE>
+      <COLUMN>77</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;unsigned int&gt;::moveCursor</FUNCTION>
+    <DECORATED>?moveCursor@?$ofxInputField@I@@IEAAXH@Z</DECORATED>
+    <FUNCLINE>265</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>315</LINE>
+      <COLUMN>95</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;unsigned int&gt;::moveCursor</FUNCTION>
+    <DECORATED>?moveCursor@?$ofxInputField@I@@IEAAXH@Z</DECORATED>
+    <FUNCLINE>265</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>318</LINE>
+      <COLUMN>76</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;unsigned int&gt;::moveCursor</FUNCTION>
+    <DECORATED>?moveCursor@?$ofxInputField@I@@IEAAXH@Z</DECORATED>
+    <FUNCLINE>265</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>319</LINE>
+      <COLUMN>94</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;unsigned int&gt;::moveCursor</FUNCTION>
+    <DECORATED>?moveCursor@?$ofxInputField@I@@IEAAXH@Z</DECORATED>
+    <FUNCLINE>265</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>326</LINE>
+      <COLUMN>73</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;unsigned int&gt;::moveCursor</FUNCTION>
+    <DECORATED>?moveCursor@?$ofxInputField@I@@IEAAXH@Z</DECORATED>
+    <FUNCLINE>265</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>430</LINE>
+      <COLUMN>26</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '+' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '+' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;__int64&gt;::mouseScrolled</FUNCTION>
+    <DECORATED>?mouseScrolled@?$ofxInputField@_J@@UEAA_NAEAVofMouseEventArgs@@@Z</DECORATED>
+    <FUNCLINE>421</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>204</LINE>
+      <COLUMN>74</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;__int64&gt;::calculateSelectionArea</FUNCTION>
+    <DECORATED>?calculateSelectionArea@?$ofxInputField@_J@@IEAAXHH@Z</DECORATED>
+    <FUNCLINE>194</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>229</LINE>
+      <COLUMN>77</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;__int64&gt;::calculateSelectionArea</FUNCTION>
+    <DECORATED>?calculateSelectionArea@?$ofxInputField@_J@@IEAAXHH@Z</DECORATED>
+    <FUNCLINE>194</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>230</LINE>
+      <COLUMN>95</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;__int64&gt;::calculateSelectionArea</FUNCTION>
+    <DECORATED>?calculateSelectionArea@?$ofxInputField@_J@@IEAAXHH@Z</DECORATED>
+    <FUNCLINE>194</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>233</LINE>
+      <COLUMN>76</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;__int64&gt;::calculateSelectionArea</FUNCTION>
+    <DECORATED>?calculateSelectionArea@?$ofxInputField@_J@@IEAAXHH@Z</DECORATED>
+    <FUNCLINE>194</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>234</LINE>
+      <COLUMN>94</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;__int64&gt;::calculateSelectionArea</FUNCTION>
+    <DECORATED>?calculateSelectionArea@?$ofxInputField@_J@@IEAAXHH@Z</DECORATED>
+    <FUNCLINE>194</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>256</LINE>
+      <COLUMN>80</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;__int64&gt;::calculateSelectionArea</FUNCTION>
+    <DECORATED>?calculateSelectionArea@?$ofxInputField@_J@@IEAAXHH@Z</DECORATED>
+    <FUNCLINE>194</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>289</LINE>
+      <COLUMN>74</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;__int64&gt;::moveCursor</FUNCTION>
+    <DECORATED>?moveCursor@?$ofxInputField@_J@@IEAAXH@Z</DECORATED>
+    <FUNCLINE>265</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>314</LINE>
+      <COLUMN>77</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;__int64&gt;::moveCursor</FUNCTION>
+    <DECORATED>?moveCursor@?$ofxInputField@_J@@IEAAXH@Z</DECORATED>
+    <FUNCLINE>265</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>315</LINE>
+      <COLUMN>95</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;__int64&gt;::moveCursor</FUNCTION>
+    <DECORATED>?moveCursor@?$ofxInputField@_J@@IEAAXH@Z</DECORATED>
+    <FUNCLINE>265</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>318</LINE>
+      <COLUMN>76</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;__int64&gt;::moveCursor</FUNCTION>
+    <DECORATED>?moveCursor@?$ofxInputField@_J@@IEAAXH@Z</DECORATED>
+    <FUNCLINE>265</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>319</LINE>
+      <COLUMN>94</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;__int64&gt;::moveCursor</FUNCTION>
+    <DECORATED>?moveCursor@?$ofxInputField@_J@@IEAAXH@Z</DECORATED>
+    <FUNCLINE>265</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>326</LINE>
+      <COLUMN>73</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;__int64&gt;::moveCursor</FUNCTION>
+    <DECORATED>?moveCursor@?$ofxInputField@_J@@IEAAXH@Z</DECORATED>
+    <FUNCLINE>265</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>430</LINE>
+      <COLUMN>26</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '+' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '+' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;unsigned __int64&gt;::mouseScrolled</FUNCTION>
+    <DECORATED>?mouseScrolled@?$ofxInputField@_K@@UEAA_NAEAVofMouseEventArgs@@@Z</DECORATED>
+    <FUNCLINE>421</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>204</LINE>
+      <COLUMN>74</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;unsigned __int64&gt;::calculateSelectionArea</FUNCTION>
+    <DECORATED>?calculateSelectionArea@?$ofxInputField@_K@@IEAAXHH@Z</DECORATED>
+    <FUNCLINE>194</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>229</LINE>
+      <COLUMN>77</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;unsigned __int64&gt;::calculateSelectionArea</FUNCTION>
+    <DECORATED>?calculateSelectionArea@?$ofxInputField@_K@@IEAAXHH@Z</DECORATED>
+    <FUNCLINE>194</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>230</LINE>
+      <COLUMN>95</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;unsigned __int64&gt;::calculateSelectionArea</FUNCTION>
+    <DECORATED>?calculateSelectionArea@?$ofxInputField@_K@@IEAAXHH@Z</DECORATED>
+    <FUNCLINE>194</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>233</LINE>
+      <COLUMN>76</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;unsigned __int64&gt;::calculateSelectionArea</FUNCTION>
+    <DECORATED>?calculateSelectionArea@?$ofxInputField@_K@@IEAAXHH@Z</DECORATED>
+    <FUNCLINE>194</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>234</LINE>
+      <COLUMN>94</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;unsigned __int64&gt;::calculateSelectionArea</FUNCTION>
+    <DECORATED>?calculateSelectionArea@?$ofxInputField@_K@@IEAAXHH@Z</DECORATED>
+    <FUNCLINE>194</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>256</LINE>
+      <COLUMN>80</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;unsigned __int64&gt;::calculateSelectionArea</FUNCTION>
+    <DECORATED>?calculateSelectionArea@?$ofxInputField@_K@@IEAAXHH@Z</DECORATED>
+    <FUNCLINE>194</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>289</LINE>
+      <COLUMN>74</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;unsigned __int64&gt;::moveCursor</FUNCTION>
+    <DECORATED>?moveCursor@?$ofxInputField@_K@@IEAAXH@Z</DECORATED>
+    <FUNCLINE>265</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>314</LINE>
+      <COLUMN>77</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;unsigned __int64&gt;::moveCursor</FUNCTION>
+    <DECORATED>?moveCursor@?$ofxInputField@_K@@IEAAXH@Z</DECORATED>
+    <FUNCLINE>265</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>315</LINE>
+      <COLUMN>95</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;unsigned __int64&gt;::moveCursor</FUNCTION>
+    <DECORATED>?moveCursor@?$ofxInputField@_K@@IEAAXH@Z</DECORATED>
+    <FUNCLINE>265</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>318</LINE>
+      <COLUMN>76</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;unsigned __int64&gt;::moveCursor</FUNCTION>
+    <DECORATED>?moveCursor@?$ofxInputField@_K@@IEAAXH@Z</DECORATED>
+    <FUNCLINE>265</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>319</LINE>
+      <COLUMN>94</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;unsigned __int64&gt;::moveCursor</FUNCTION>
+    <DECORATED>?moveCursor@?$ofxInputField@_K@@IEAAXH@Z</DECORATED>
+    <FUNCLINE>265</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>326</LINE>
+      <COLUMN>73</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;unsigned __int64&gt;::moveCursor</FUNCTION>
+    <DECORATED>?moveCursor@?$ofxInputField@_K@@IEAAXH@Z</DECORATED>
+    <FUNCLINE>265</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>204</LINE>
+      <COLUMN>74</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;double&gt;::calculateSelectionArea</FUNCTION>
+    <DECORATED>?calculateSelectionArea@?$ofxInputField@N@@IEAAXHH@Z</DECORATED>
+    <FUNCLINE>194</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>229</LINE>
+      <COLUMN>77</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;double&gt;::calculateSelectionArea</FUNCTION>
+    <DECORATED>?calculateSelectionArea@?$ofxInputField@N@@IEAAXHH@Z</DECORATED>
+    <FUNCLINE>194</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>230</LINE>
+      <COLUMN>95</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;double&gt;::calculateSelectionArea</FUNCTION>
+    <DECORATED>?calculateSelectionArea@?$ofxInputField@N@@IEAAXHH@Z</DECORATED>
+    <FUNCLINE>194</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>233</LINE>
+      <COLUMN>76</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;double&gt;::calculateSelectionArea</FUNCTION>
+    <DECORATED>?calculateSelectionArea@?$ofxInputField@N@@IEAAXHH@Z</DECORATED>
+    <FUNCLINE>194</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>234</LINE>
+      <COLUMN>94</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;double&gt;::calculateSelectionArea</FUNCTION>
+    <DECORATED>?calculateSelectionArea@?$ofxInputField@N@@IEAAXHH@Z</DECORATED>
+    <FUNCLINE>194</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>256</LINE>
+      <COLUMN>80</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;double&gt;::calculateSelectionArea</FUNCTION>
+    <DECORATED>?calculateSelectionArea@?$ofxInputField@N@@IEAAXHH@Z</DECORATED>
+    <FUNCLINE>194</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>289</LINE>
+      <COLUMN>74</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;double&gt;::moveCursor</FUNCTION>
+    <DECORATED>?moveCursor@?$ofxInputField@N@@IEAAXH@Z</DECORATED>
+    <FUNCLINE>265</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>314</LINE>
+      <COLUMN>77</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;double&gt;::moveCursor</FUNCTION>
+    <DECORATED>?moveCursor@?$ofxInputField@N@@IEAAXH@Z</DECORATED>
+    <FUNCLINE>265</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>315</LINE>
+      <COLUMN>95</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;double&gt;::moveCursor</FUNCTION>
+    <DECORATED>?moveCursor@?$ofxInputField@N@@IEAAXH@Z</DECORATED>
+    <FUNCLINE>265</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>318</LINE>
+      <COLUMN>76</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;double&gt;::moveCursor</FUNCTION>
+    <DECORATED>?moveCursor@?$ofxInputField@N@@IEAAXH@Z</DECORATED>
+    <FUNCLINE>265</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>319</LINE>
+      <COLUMN>94</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;double&gt;::moveCursor</FUNCTION>
+    <DECORATED>?moveCursor@?$ofxInputField@N@@IEAAXH@Z</DECORATED>
+    <FUNCLINE>265</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>326</LINE>
+      <COLUMN>73</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>ofxInputField&lt;double&gt;::moveCursor</FUNCTION>
+    <DECORATED>?moveCursor@?$ofxInputField@N@@IEAAXH@Z</DECORATED>
+    <FUNCLINE>265</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\libs\boost\include\boost\exception\</FILEPATH>
+      <FILENAME>exception.hpp</FILENAME>
+      <LINE>484</LINE>
+      <COLUMN>13</COLUMN>
+    </SFA>
+    <DEFECTCODE>26439</DEFECTCODE>
+    <DESCRIPTION>This kind of function should not throw. Declare it 'noexcept' (f.6).</DESCRIPTION>
+    <FUNCTION>boost::exception_detail::clone_impl&lt;boost::exception_detail::error_info_injector&lt;boost::bad_weak_ptr&gt; &gt;::{dtor}</FUNCTION>
+    <DECORATED>??1?$clone_impl@U?$error_info_injector@Vbad_weak_ptr@boost@@@exception_detail@boost@@@exception_detail@boost@@UEAA@XZ</DECORATED>
+    <FUNCLINE>484</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\libs\boost\include\boost\exception\</FILEPATH>
+      <FILENAME>exception.hpp</FILENAME>
+      <LINE>358</LINE>
+      <COLUMN>13</COLUMN>
+    </SFA>
+    <DEFECTCODE>26439</DEFECTCODE>
+    <DESCRIPTION>This kind of function should not throw. Declare it 'noexcept' (f.6).</DESCRIPTION>
+    <FUNCTION>boost::exception_detail::error_info_injector&lt;boost::bad_weak_ptr&gt;::{dtor}</FUNCTION>
+    <DECORATED>??1?$error_info_injector@Vbad_weak_ptr@boost@@@exception_detail@boost@@UEAA@XZ</DECORATED>
+    <FUNCLINE>358</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>27</LINE>
+      <COLUMN>21</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>`anonymous-namespace'::getRange</FUNCTION>
+    <DECORATED>??$getRange@M@?A0xce6a8756@@YAMMMM@Z</DECORATED>
+    <FUNCLINE>25</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>28</LINE>
+      <COLUMN>16</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>`anonymous-namespace'::getRange</FUNCTION>
+    <DECORATED>??$getRange@M@?A0xce6a8756@@YAMMMM@Z</DECORATED>
+    <FUNCLINE>25</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>19</LINE>
+      <COLUMN>21</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>`anonymous-namespace'::getRange</FUNCTION>
+    <DECORATED>??$getRange@H@?A0xce6a8756@@YAHHHM@Z</DECORATED>
+    <FUNCLINE>17</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>20</LINE>
+      <COLUMN>16</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>`anonymous-namespace'::getRange</FUNCTION>
+    <DECORATED>??$getRange@H@?A0xce6a8756@@YAHHHM@Z</DECORATED>
+    <FUNCLINE>17</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>19</LINE>
+      <COLUMN>21</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>`anonymous-namespace'::getRange</FUNCTION>
+    <DECORATED>??$getRange@C@?A0xce6a8756@@YACCCM@Z</DECORATED>
+    <FUNCLINE>17</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>20</LINE>
+      <COLUMN>16</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>`anonymous-namespace'::getRange</FUNCTION>
+    <DECORATED>??$getRange@C@?A0xce6a8756@@YACCCM@Z</DECORATED>
+    <FUNCLINE>17</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>20</LINE>
+      <COLUMN>16</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>`anonymous-namespace'::getRange</FUNCTION>
+    <DECORATED>??$getRange@E@?A0xce6a8756@@YAEEEM@Z</DECORATED>
+    <FUNCLINE>17</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>19</LINE>
+      <COLUMN>21</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>`anonymous-namespace'::getRange</FUNCTION>
+    <DECORATED>??$getRange@F@?A0xce6a8756@@YAFFFM@Z</DECORATED>
+    <FUNCLINE>17</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>20</LINE>
+      <COLUMN>16</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>`anonymous-namespace'::getRange</FUNCTION>
+    <DECORATED>??$getRange@F@?A0xce6a8756@@YAFFFM@Z</DECORATED>
+    <FUNCLINE>17</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>20</LINE>
+      <COLUMN>16</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>`anonymous-namespace'::getRange</FUNCTION>
+    <DECORATED>??$getRange@G@?A0xce6a8756@@YAGGGM@Z</DECORATED>
+    <FUNCLINE>17</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>20</LINE>
+      <COLUMN>16</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>`anonymous-namespace'::getRange</FUNCTION>
+    <DECORATED>??$getRange@I@?A0xce6a8756@@YAIIIM@Z</DECORATED>
+    <FUNCLINE>17</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>20</LINE>
+      <COLUMN>16</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>`anonymous-namespace'::getRange</FUNCTION>
+    <DECORATED>??$getRange@_J@?A0xce6a8756@@YA_J_J0M@Z</DECORATED>
+    <FUNCLINE>17</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>20</LINE>
+      <COLUMN>16</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>`anonymous-namespace'::getRange</FUNCTION>
+    <DECORATED>??$getRange@_K@?A0xce6a8756@@YA_K_K0M@Z</DECORATED>
+    <FUNCLINE>17</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxGui\src\</FILEPATH>
+      <FILENAME>ofxInputField.cpp</FILENAME>
+      <LINE>28</LINE>
+      <COLUMN>16</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>`anonymous-namespace'::getRange</FUNCTION>
+    <DECORATED>??$getRange@N@?A0xce6a8756@@YANNNM@Z</DECORATED>
+    <FUNCLINE>25</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\libs\utf8\include\utf8\</FILEPATH>
+      <FILENAME>checked.h</FILENAME>
+      <LINE>140</LINE>
+      <COLUMN>28</COLUMN>
+    </SFA>
+    <DEFECTCODE>26812</DEFECTCODE>
+    <DESCRIPTION>The enum type 'utf8::internal::utf_error' is unscoped. Prefer 'enum class' over 'enum' (Enum.3).</DESCRIPTION>
+    <FUNCTION>utf8::next</FUNCTION>
+    <DECORATED>??$next@V?$_String_const_iterator@V?$_String_val@U?$_Simple_types@D@std@@@std@@@std@@@utf8@@YAIAEAV?$_String_const_iterator@V?$_String_val@U?$_Simple_types@D@std@@@std@@@std@@V12@@Z</DECORATED>
+    <FUNCLINE>137</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\libs\openFrameworks\types\</FILEPATH>
+      <FILENAME>ofParameter.h</FILENAME>
+      <LINE>601</LINE>
+      <COLUMN>2</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'ofParameter&lt;signed char&gt;::Value::value' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>ofParameter&lt;signed char&gt;::Value::{ctor}</FUNCTION>
+    <DECORATED>??0Value@?$ofParameter@C@@QEAA@XZ</DECORATED>
+    <FUNCLINE>601</FUNCLINE>
+    <ADDITIONALINFO>
+      <targetSymbol>ofParameter&lt;signed char&gt;::Value::value</targetSymbol>
+    </ADDITIONALINFO>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\libs\openFrameworks\types\</FILEPATH>
+      <FILENAME>ofParameter.h</FILENAME>
+      <LINE>601</LINE>
+      <COLUMN>2</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'ofParameter&lt;unsigned char&gt;::Value::value' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>ofParameter&lt;unsigned char&gt;::Value::{ctor}</FUNCTION>
+    <DECORATED>??0Value@?$ofParameter@E@@QEAA@XZ</DECORATED>
+    <FUNCLINE>601</FUNCLINE>
+    <ADDITIONALINFO>
+      <targetSymbol>ofParameter&lt;unsigned char&gt;::Value::value</targetSymbol>
+    </ADDITIONALINFO>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\libs\openFrameworks\types\</FILEPATH>
+      <FILENAME>ofParameter.h</FILENAME>
+      <LINE>601</LINE>
+      <COLUMN>2</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'ofParameter&lt;short&gt;::Value::value' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>ofParameter&lt;short&gt;::Value::{ctor}</FUNCTION>
+    <DECORATED>??0Value@?$ofParameter@F@@QEAA@XZ</DECORATED>
+    <FUNCLINE>601</FUNCLINE>
+    <ADDITIONALINFO>
+      <targetSymbol>ofParameter&lt;short&gt;::Value::value</targetSymbol>
+    </ADDITIONALINFO>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\libs\openFrameworks\types\</FILEPATH>
+      <FILENAME>ofParameter.h</FILENAME>
+      <LINE>601</LINE>
+      <COLUMN>2</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'ofParameter&lt;unsigned short&gt;::Value::value' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>ofParameter&lt;unsigned short&gt;::Value::{ctor}</FUNCTION>
+    <DECORATED>??0Value@?$ofParameter@G@@QEAA@XZ</DECORATED>
+    <FUNCLINE>601</FUNCLINE>
+    <ADDITIONALINFO>
+      <targetSymbol>ofParameter&lt;unsigned short&gt;::Value::value</targetSymbol>
+    </ADDITIONALINFO>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\libs\openFrameworks\types\</FILEPATH>
+      <FILENAME>ofParameter.h</FILENAME>
+      <LINE>601</LINE>
+      <COLUMN>2</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'ofParameter&lt;int&gt;::Value::value' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>ofParameter&lt;int&gt;::Value::{ctor}</FUNCTION>
+    <DECORATED>??0Value@?$ofParameter@H@@QEAA@XZ</DECORATED>
+    <FUNCLINE>601</FUNCLINE>
+    <ADDITIONALINFO>
+      <targetSymbol>ofParameter&lt;int&gt;::Value::value</targetSymbol>
+    </ADDITIONALINFO>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\libs\openFrameworks\types\</FILEPATH>
+      <FILENAME>ofParameter.h</FILENAME>
+      <LINE>601</LINE>
+      <COLUMN>2</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'ofParameter&lt;unsigned int&gt;::Value::value' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>ofParameter&lt;unsigned int&gt;::Value::{ctor}</FUNCTION>
+    <DECORATED>??0Value@?$ofParameter@I@@QEAA@XZ</DECORATED>
+    <FUNCLINE>601</FUNCLINE>
+    <ADDITIONALINFO>
+      <targetSymbol>ofParameter&lt;unsigned int&gt;::Value::value</targetSymbol>
+    </ADDITIONALINFO>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\libs\openFrameworks\types\</FILEPATH>
+      <FILENAME>ofParameter.h</FILENAME>
+      <LINE>601</LINE>
+      <COLUMN>2</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'ofParameter&lt;__int64&gt;::Value::value' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>ofParameter&lt;__int64&gt;::Value::{ctor}</FUNCTION>
+    <DECORATED>??0Value@?$ofParameter@_J@@QEAA@XZ</DECORATED>
+    <FUNCLINE>601</FUNCLINE>
+    <ADDITIONALINFO>
+      <targetSymbol>ofParameter&lt;__int64&gt;::Value::value</targetSymbol>
+    </ADDITIONALINFO>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\libs\openFrameworks\types\</FILEPATH>
+      <FILENAME>ofParameter.h</FILENAME>
+      <LINE>601</LINE>
+      <COLUMN>2</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'ofParameter&lt;unsigned __int64&gt;::Value::value' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>ofParameter&lt;unsigned __int64&gt;::Value::{ctor}</FUNCTION>
+    <DECORATED>??0Value@?$ofParameter@_K@@QEAA@XZ</DECORATED>
+    <FUNCLINE>601</FUNCLINE>
+    <ADDITIONALINFO>
+      <targetSymbol>ofParameter&lt;unsigned __int64&gt;::Value::value</targetSymbol>
+    </ADDITIONALINFO>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\libs\openFrameworks\types\</FILEPATH>
+      <FILENAME>ofParameter.h</FILENAME>
+      <LINE>601</LINE>
+      <COLUMN>2</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'ofParameter&lt;float&gt;::Value::value' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>ofParameter&lt;float&gt;::Value::{ctor}</FUNCTION>
+    <DECORATED>??0Value@?$ofParameter@M@@QEAA@XZ</DECORATED>
+    <FUNCLINE>601</FUNCLINE>
+    <ADDITIONALINFO>
+      <targetSymbol>ofParameter&lt;float&gt;::Value::value</targetSymbol>
+    </ADDITIONALINFO>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\libs\openFrameworks\types\</FILEPATH>
+      <FILENAME>ofParameter.h</FILENAME>
+      <LINE>601</LINE>
+      <COLUMN>2</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'ofParameter&lt;double&gt;::Value::value' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>ofParameter&lt;double&gt;::Value::{ctor}</FUNCTION>
+    <DECORATED>??0Value@?$ofParameter@N@@QEAA@XZ</DECORATED>
+    <FUNCLINE>601</FUNCLINE>
+    <ADDITIONALINFO>
+      <targetSymbol>ofParameter&lt;double&gt;::Value::value</targetSymbol>
+    </ADDITIONALINFO>
+    <PATH></PATH>
+  </DEFECT>
+</DEFECTS>

@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DEFECTS>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\libs\boost\include\boost\system\</FILEPATH>
+      <FILENAME>error_code.hpp</FILENAME>
+      <LINE>631</LINE>
+      <COLUMN>24</COLUMN>
+    </SFA>
+    <DEFECTCODE>26812</DEFECTCODE>
+    <DESCRIPTION>The enum type 'boost::system::errc::errc_t' is unscoped. Prefer 'enum class' over 'enum' (Enum.3).</DESCRIPTION>
+    <FUNCTION>boost::system::errc::make_error_code</FUNCTION>
+    <DECORATED>?make_error_code@errc@system@boost@@YA?AVerror_code@23@W4errc_t@123@@Z</DECORATED>
+    <FUNCLINE>631</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\libs\boost\include\boost\exception\</FILEPATH>
+      <FILENAME>exception.hpp</FILENAME>
+      <LINE>173</LINE>
+      <COLUMN>13</COLUMN>
+    </SFA>
+    <DEFECTCODE>26439</DEFECTCODE>
+    <DESCRIPTION>This kind of function should not throw. Declare it 'noexcept' (f.6).</DESCRIPTION>
+    <FUNCTION>boost::exception_detail::error_info_container::{dtor}</FUNCTION>
+    <DECORATED>??1error_info_container@exception_detail@boost@@IEAA@XZ</DECORATED>
+    <FUNCLINE>173</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\libs\boost\include\boost\exception\</FILEPATH>
+      <FILENAME>exception.hpp</FILENAME>
+      <LINE>304</LINE>
+      <COLUMN>5</COLUMN>
+    </SFA>
+    <DEFECTCODE>26439</DEFECTCODE>
+    <DESCRIPTION>This kind of function should not throw. Declare it 'noexcept' (f.6).</DESCRIPTION>
+    <FUNCTION>boost::exception::{dtor}</FUNCTION>
+    <DECORATED>??1exception@boost@@MEAA@XZ</DECORATED>
+    <FUNCLINE>304</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\libs\boost\include\boost\exception\</FILEPATH>
+      <FILENAME>exception.hpp</FILENAME>
+      <LINE>428</LINE>
+      <COLUMN>13</COLUMN>
+    </SFA>
+    <DEFECTCODE>26439</DEFECTCODE>
+    <DESCRIPTION>This kind of function should not throw. Declare it 'noexcept' (f.6).</DESCRIPTION>
+    <FUNCTION>boost::exception_detail::clone_base::{dtor}</FUNCTION>
+    <DECORATED>??1clone_base@exception_detail@boost@@UEAA@XZ</DECORATED>
+    <FUNCLINE>428</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\libs\boost\include\boost\smart_ptr\detail\</FILEPATH>
+      <FILENAME>shared_count.hpp</FILENAME>
+      <LINE>442</LINE>
+      <COLUMN>4</COLUMN>
+    </SFA>
+    <DEFECTCODE>26439</DEFECTCODE>
+    <DESCRIPTION>This kind of function should not throw. Declare it 'noexcept' (f.6).</DESCRIPTION>
+    <FUNCTION>boost::detail::shared_count::{ctor}</FUNCTION>
+    <DECORATED>??0shared_count@detail@boost@@QEAA@$$QEAV012@@Z</DECORATED>
+    <FUNCLINE>442</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\libs\boost\include\boost\smart_ptr\detail\</FILEPATH>
+      <FILENAME>shared_count.hpp</FILENAME>
+      <LINE>559</LINE>
+      <COLUMN>4</COLUMN>
+    </SFA>
+    <DEFECTCODE>26439</DEFECTCODE>
+    <DESCRIPTION>This kind of function should not throw. Declare it 'noexcept' (f.6).</DESCRIPTION>
+    <FUNCTION>boost::detail::weak_count::{ctor}</FUNCTION>
+    <DECORATED>??0weak_count@detail@boost@@QEAA@$$QEAV012@@Z</DECORATED>
+    <FUNCLINE>559</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\libs\boost\include\boost\smart_ptr\detail\</FILEPATH>
+      <FILENAME>local_counted_base.hpp</FILENAME>
+      <LINE>45</LINE>
+      <COLUMN>76</COLUMN>
+    </SFA>
+    <DEFECTCODE>26812</DEFECTCODE>
+    <DESCRIPTION>The enum type 'boost::detail::local_counted_base::count_type' is unscoped. Prefer 'enum class' over 'enum' (Enum.3).</DESCRIPTION>
+    <FUNCTION>boost::detail::local_counted_base::{ctor}</FUNCTION>
+    <DECORATED>??0local_counted_base@detail@boost@@QEAA@XZ</DECORATED>
+    <FUNCLINE>45</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\libs\boost\include\boost\filesystem\</FILEPATH>
+      <FILENAME>operations.hpp</FILENAME>
+      <LINE>249</LINE>
+      <COLUMN>2</COLUMN>
+    </SFA>
+    <DEFECTCODE>26812</DEFECTCODE>
+    <DESCRIPTION>The enum type 'boost::filesystem::perms' is unscoped. Prefer 'enum class' over 'enum' (Enum.3).</DESCRIPTION>
+    <FUNCTION>boost::filesystem::|</FUNCTION>
+    <DECORATED>??Ufilesystem@boost@@YA?AW4perms@01@W4201@0@Z</DECORATED>
+    <FUNCLINE>249</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\libs\boost\include\boost\filesystem\</FILEPATH>
+      <FILENAME>operations.hpp</FILENAME>
+      <LINE>259</LINE>
+      <COLUMN>24</COLUMN>
+    </SFA>
+    <DEFECTCODE>26812</DEFECTCODE>
+    <DESCRIPTION>The enum type 'boost::filesystem::file_type' is unscoped. Prefer 'enum class' over 'enum' (Enum.3).</DESCRIPTION>
+    <FUNCTION>boost::filesystem::file_status::{ctor}</FUNCTION>
+    <DECORATED>??0file_status@filesystem@boost@@QEAA@XZ</DECORATED>
+    <FUNCLINE>258</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxOsc\src\</FILEPATH>
+      <FILENAME>ofxOscArg.h</FILENAME>
+      <LINE>57</LINE>
+      <COLUMN>40</COLUMN>
+    </SFA>
+    <DEFECTCODE>26812</DEFECTCODE>
+    <DESCRIPTION>The enum type '_ofxOscArgType' is unscoped. Prefer 'enum class' over 'enum' (Enum.3).</DESCRIPTION>
+    <FUNCTION>ofxOscArg::getType</FUNCTION>
+    <DECORATED>?getType@ofxOscArg@@UEBA?AW4_ofxOscArgType@@XZ</DECORATED>
+    <FUNCLINE>57</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\libs\boost\include\boost\exception\</FILEPATH>
+      <FILENAME>exception.hpp</FILENAME>
+      <LINE>484</LINE>
+      <COLUMN>13</COLUMN>
+    </SFA>
+    <DEFECTCODE>26439</DEFECTCODE>
+    <DESCRIPTION>This kind of function should not throw. Declare it 'noexcept' (f.6).</DESCRIPTION>
+    <FUNCTION>boost::exception_detail::clone_impl&lt;boost::exception_detail::error_info_injector&lt;boost::bad_weak_ptr&gt; &gt;::{dtor}</FUNCTION>
+    <DECORATED>??1?$clone_impl@U?$error_info_injector@Vbad_weak_ptr@boost@@@exception_detail@boost@@@exception_detail@boost@@UEAA@XZ</DECORATED>
+    <FUNCLINE>484</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\libs\boost\include\boost\exception\</FILEPATH>
+      <FILENAME>exception.hpp</FILENAME>
+      <LINE>358</LINE>
+      <COLUMN>13</COLUMN>
+    </SFA>
+    <DEFECTCODE>26439</DEFECTCODE>
+    <DESCRIPTION>This kind of function should not throw. Declare it 'noexcept' (f.6).</DESCRIPTION>
+    <FUNCTION>boost::exception_detail::error_info_injector&lt;boost::bad_weak_ptr&gt;::{dtor}</FUNCTION>
+    <DECORATED>??1?$error_info_injector@Vbad_weak_ptr@boost@@@exception_detail@boost@@UEAA@XZ</DECORATED>
+    <FUNCLINE>358</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+</DEFECTS>
