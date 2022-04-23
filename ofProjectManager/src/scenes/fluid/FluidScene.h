@@ -22,17 +22,19 @@ public:
 
 private:
 
-	bool debug = false;
-	bool step = false;
+	float time;
+	bool debug;
+	bool step;
 
 	ofParameterGroup groupGeneral;
-	ofParameterGroup groupBounds;
+	ofParameterGroup groupGrid;
 	ofParameterGroup groupViscosity;
 	ofParameterGroup groupVorticity;
 	ofParameterGroup groupSolver;
 	ofParameterGroup groupGravity;
 	ofParameterGroup groupView;
 
+	ofParameter<bool> p_Sequences;
 	ofParameter<bool> p_DebugView;
 	ofParameter<bool> p_Bounds;
 	ofParameter<bool> p_ApplyViscosity;
@@ -40,6 +42,7 @@ private:
 	ofParameter<bool> p_ApplyGravity;
 	ofParameter<int> p_JacobiIterations;
 	ofParameter<float> p_Curl;
+	ofParameter<float> p_Scale;
 	ofParameter<float> p_Epsilon;
 	ofParameter<float> p_Timestep;
 	ofParameter<float> p_Viscosity;
@@ -51,10 +54,48 @@ private:
 
 	fluid::ccSolver solver;
 
+	ofShader displayScalarProgram;
 	ofShader displayVectorProgram;
+
+	// Members for sequences
+	enum class SequenceName {
+		Default,
+		Smoke,
+		Fast,
+		Empty
+	};
+	const int NUM_SEQ = 3;
+
+	struct SequenceParameters {
+		float scale;
+		float splat;
+		float dissipation;
+		bool applyVorticity;
+		float curl;
+		bool applyViscosity;
+		float viscosity;
+		glm::vec3 color;
+	};
+
+	SequenceName lastSequene;
+	SequenceName currentSequence;
+	float lastSequenceTime;
+	float sequenceDuration;
+	float sequenceTransitionDuration;
+	map<SequenceName, SequenceParameters> sequenceMap;
+
+	void setupSequences();
+	void updateSequence();
+	void setSequence( SequenceName name );
+	void updateParameters();
+	SequenceName randSequence();
+
+	float SceneIntro();
+	float SceneOutro();
 
 	inline void handleCurlChanged( float& c ) { solver.setCurl( c ); }
 	inline void handleBoundsChanged( bool& b ) { solver.setBounds( b ); }
+	inline void handleScaleChanged( float& s ) { solver.setScale( s ); }
 	inline void handleEpsilonChanged( float& e ) { solver.setEpsilon( e ); }
 	inline void handleTimestepChanged( float& t ) { solver.setTimestep( t ); }
 	inline void handleViscosityChanged( float& v ) { solver.setViscosity( v ); }

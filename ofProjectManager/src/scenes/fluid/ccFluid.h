@@ -3,8 +3,19 @@
 #include "ofMain.h"
 #include "ccUser.h"
 
+/*
+	Fluid Solver
+	Simulates two-dimensional fluid based on an eulerian (grid-based) approach to solving the Navier-Stokes Equations
+	Logic is done in fragment shaders and applied to vector or scalar fields represented by textures (Field struct)
+	Vorticity and viscosity can be applied as well
+*/
+
 namespace fluid {
 
+	/*
+		Field structure used by solver
+		Ping pong buffer for representing vector / scalar fields
+	*/
 	struct Field {
 	public:
 		void allocate( glm::vec2 dim, int internalFormat = GL_RGBA ) {
@@ -28,11 +39,10 @@ namespace fluid {
 		}
 
 		void clear() {
-			for (int i = 0; i < 2; i++) {
-				FBOs[i].begin();
+				FBOs[0].begin();
 				ofClear( 0 );
-				FBOs[i].end();
-			}
+				FBOs[0].end();
+				swap();
 		}
 
 		ofFbo& operator[]( int n ) { return FBOs[n]; }
@@ -84,16 +94,17 @@ namespace fluid {
 
 		inline void setTimestep( float t ) { s.timestep = t; }
 		inline void setSplatRadius( float r ) { s.splatRadius = r; }
-		inline void setSplatColor( ofFloatColor c) { s.splatColor = c; }
+		inline void setSplatColor( ofFloatColor c ) { s.splatColor = c; }
 		inline void setDissipation( float d ) { s.dissipation = d; }
 		inline void setBounds( bool b ) { grid.applyBounds = b; }
+		inline void setScale( float s ) { grid.scale = s; }
 		inline void setJacobiIterations( int i ) { s.jacobiIterations = i; }
 		inline void setApplyVorticity( bool v ) { s.applyVorticity = v; }
 		inline void setEpsilon( float e ) { s.epsilon = e; }
 		inline void setCurl( float c ) { s.curl = c; }
 		inline void setApplyViscosity( bool v ) { s.applyViscosity = v; }
 		inline void setViscosity( float v ) { s.viscosity = v; }
-		inline void setApplyGravity( bool g) { s.applyGravity = g; }
+		inline void setApplyGravity( bool g ) { s.applyGravity = g; }
 		inline void setGravityDirection( glm::vec2 d ) { s.gravityDir = d; }
 		inline void setGravityStrength( float g ) { s.gravityStr = g; }
 
@@ -114,7 +125,7 @@ namespace fluid {
 		void diverge( Field& divergence );
 		void gradiate( Field& output );
 		void splat( Field& read, glm::vec3 color, glm::vec2 point );
-		void gravitate( Field& output);
+		void gravitate( Field& output );
 
 		Settings s;
 		Grid grid;

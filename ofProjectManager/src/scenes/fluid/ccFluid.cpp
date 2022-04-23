@@ -16,11 +16,13 @@ namespace fluid {
 		plane.setResolution( 2, 2 );
 
 		// Create render targets
+		ofDisableArbTex();
 		velocity.allocate( grid.size, GL_RGB16_SNORM );
 		density.allocate( grid.size, GL_RGB16_SNORM );
 		divergence.allocate( grid.size, GL_RGB16_SNORM );
 		vorticity.allocate( grid.size, GL_RGB16_SNORM );
 		pressure.allocate( grid.size, GL_RGB16_SNORM );
+		ofEnableArbTex();
 
 		{
 			int no_pixels = grid.size.x * grid.size.y * 3;
@@ -120,6 +122,7 @@ namespace fluid {
 		diffuse( jacobiscalarProgram, pressure, divergence, pressure, alpha, 4.f, 1.f );
 		gradiate( velocity );
 
+		boundary( pressure, pressure, 1.f );
 		boundary( velocity, velocity, -1.f );
 	}
 
@@ -129,18 +132,16 @@ namespace fluid {
 
 		// Left
 		if (colorL.x != 0.f || colorL.y != 0) {
-			glm::vec3 pos = user.left();
+			glm::vec2 point = user.left();
 			// Map positions to grid
-			glm::vec2 point = { ofMap( pos.x, 0.f, 1.f, 0, grid.size.x ) ,  ofMap( pos.y, 0.f, 1.f, 0, grid.size.y ) };
 			ofFloatColor c = s.splatColor;
 			splat( velocity, glm::normalize( colorL ), point );
 			splat( density, { c.r, c.g, c.b }, point );
 		}
 		// Right
 		if (colorR.x != 0.f || colorR.y != 0) {
-			glm::vec3 pos = user.right();
+			glm::vec2 point = user.right();
 			// Map positions to grid
-			glm::vec2 point = { ofMap( pos.x, 0.f, 1.f, 0, grid.size.x ) ,  ofMap( pos.y, 0.f, 1.f, 0, grid.size.y ) };
 			ofFloatColor c = s.splatColor;
 			splat( velocity, glm::normalize( colorR ), point );
 			splat( density, { c.r, c.g, c.b }, point );
@@ -175,28 +176,29 @@ namespace fluid {
 
 		// default offset: 1
 		float offset = 1.f;
-		float xL = 2 * offset;
-		float xR = grid.size.x - offset;
-		float yB = 2 * offset;
-		float yT = grid.size.y - offset;
+		float xL = offset;
+		float xR = grid.size.x;
+		float yB = offset + 1;
+		float yT = grid.size.y + 1;
 
 		ofPolyline lineR, lineL, lineT, lineB;
-		lineR.addVertex( xR, yB );
-		lineR.addVertex( xR, yT );
 		lineL.addVertex( xL, yT );
 		lineL.addVertex( xL, yB );
-		lineT.addVertex( xR, yT );
-		lineT.addVertex( xL, yT );
+		lineR.addVertex( xR, yB );
+		lineR.addVertex( xR, yT );
 		lineB.addVertex( xR, yB );
 		lineB.addVertex( xL, yB );
+		lineT.addVertex( xR, yT );
+		lineT.addVertex( xL, yT );
 
-		boundarySide( input, output, lineR, { -1.f, 0.f }, scale );
 		boundarySide( input, output, lineL, { 1.f, 0.f }, scale );
-		boundarySide( input, output, lineT, { 0.f, -1.f }, scale );
+		boundarySide( input, output, lineR, { -1.f, 0.f }, scale );
 		boundarySide( input, output, lineB, { 0.f, 1.f }, scale );
+		boundarySide( input, output, lineT, { 0.f, -1.f }, scale );
 		// no swapping here, will be done by the next slabob
 	}
 
+	// Apply boundary logic to one side
 	void ccSolver::boundarySide( Field& input, Field& output, ofPolyline& line, glm::vec2 offset, float scale ) {
 		boundariesProgram.begin();
 

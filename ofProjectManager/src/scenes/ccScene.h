@@ -33,6 +33,10 @@ public:
 	inline void setUserManager( ccUserManager* um ) { userManager = um; }
 	inline ofxPanel& getGui() { return gui; };
 
+	//Scene Handling
+	virtual float SceneIntro();
+	virtual float SceneOutro();
+
 protected:
 
 	bool mouseIsDown;
