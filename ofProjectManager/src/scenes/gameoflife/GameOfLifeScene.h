@@ -119,7 +119,7 @@ namespace gol {
 		void updateSequence();
 		void setSequence( SequenceName name );
 		void updateParameters();
-		GameOfLifeScene::SequenceName randSequence();
+		SequenceName randSequence();
 
 		float SceneIntro();
 		float SceneOutro();

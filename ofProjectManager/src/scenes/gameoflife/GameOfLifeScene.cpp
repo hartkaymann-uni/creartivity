@@ -223,11 +223,6 @@ namespace gol {
 		ofPopStyle();
 #endif
 
-		ofNoFill();
-		ofSetColor( 255 );
-		ofDrawBox( ofVec3f( width / 2, height / 2, 0.0 ), width, height, sphereRadius );
-
-
 		// Draw overlay
 		if (dataSrcSize > 0)
 		{
@@ -280,7 +275,7 @@ namespace gol {
 		mesh.drawInstanced( OF_MESH_FILL, n_cells_x * n_cells_y );
 
 		glStencilMask( 0xFF );
-		glStencilFunc( GL_ALWAYS, 0, 0xFF );
+		glStencilFunc( GL_ALWAYS, 0, 0xFF ); 
 
 		outline.end();
 

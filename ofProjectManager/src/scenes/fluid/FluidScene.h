@@ -22,8 +22,9 @@ public:
 
 private:
 
-	bool debug = false;
-	bool step = false;
+	float time;
+	bool debug;
+	bool step;
 
 	ofParameterGroup groupGeneral;
 	ofParameterGroup groupGrid;
@@ -33,6 +34,7 @@ private:
 	ofParameterGroup groupGravity;
 	ofParameterGroup groupView;
 
+	ofParameter<bool> p_Sequences;
 	ofParameter<bool> p_DebugView;
 	ofParameter<bool> p_Bounds;
 	ofParameter<bool> p_ApplyViscosity;
@@ -56,29 +58,40 @@ private:
 	ofShader displayVectorProgram;
 
 	// Members for sequences
-	enum class Sequence {
+	enum class SequenceName {
 		Default,
-		Start,
-		Stop
+		Smoke,
+		Fast,
+		Empty
 	};
-	const int NUM_SEQ = 5;
+	const int NUM_SEQ = 3;
 
 	struct SequenceParameters {
-		float evolution;
-		float radius;
-		float jiggle;
+		float scale;
+		float splat;
+		float dissipation;
+		bool applyVorticity;
+		float curl;
+		bool applyViscosity;
+		float viscosity;
+		glm::vec3 color;
 	};
 
-	Sequence lastSequene;
-	Sequence currentSequence;
+	SequenceName lastSequene;
+	SequenceName currentSequence;
 	float lastSequenceTime;
 	float sequenceDuration;
 	float sequenceTransitionDuration;
-	map<Sequence, SequenceParameters> sequenceMap;
+	map<SequenceName, SequenceParameters> sequenceMap;
 
-	void initSequences();
+	void setupSequences();
 	void updateSequence();
+	void setSequence( SequenceName name );
 	void updateParameters();
+	SequenceName randSequence();
+
+	float SceneIntro();
+	float SceneOutro();
 
 	inline void handleCurlChanged( float& c ) { solver.setCurl( c ); }
 	inline void handleBoundsChanged( bool& b ) { solver.setBounds( b ); }
