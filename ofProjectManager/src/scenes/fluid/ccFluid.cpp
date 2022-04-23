@@ -22,6 +22,7 @@ namespace fluid {
 		divergence.allocate( grid.size, GL_RGB16_SNORM );
 		vorticity.allocate( grid.size, GL_RGB16_SNORM );
 		pressure.allocate( grid.size, GL_RGB16_SNORM );
+		ofEnableArbTex();
 
 		{
 			int no_pixels = grid.size.x * grid.size.y * 3;

@@ -140,7 +140,7 @@
     <ClCompile>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);src;src\scenes;..\..\..\addons\ofxAppUtils\src;..\..\..\addons\ofxGui\src;..\..\..\addons\ofxOsc\libs;..\..\..\addons\ofxOsc\libs\oscpack;..\..\..\addons\ofxOsc\libs\oscpack\src;..\..\..\addons\ofxOsc\libs\oscpack\src\ip;..\..\..\addons\ofxOsc\libs\oscpack\src\ip\posix;..\..\..\addons\ofxOsc\libs\oscpack\src\ip\win32;..\..\..\addons\ofxOsc\libs\oscpack\src\osc;..\..\..\addons\ofxOsc\src;..\..\..\addons\ofxUbo\src</AdditionalIncludeDirectories>
       <CompileAs>CompileAsCpp</CompileAs>
@@ -164,7 +164,7 @@
     <ClCompile>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);src;src\scenes;..\..\..\addons\ofxAppUtils\src;..\..\..\addons\ofxGui\src;..\..\..\addons\ofxOsc\libs;..\..\..\addons\ofxOsc\libs\oscpack;..\..\..\addons\ofxOsc\libs\oscpack\src;..\..\..\addons\ofxOsc\libs\oscpack\src\ip;..\..\..\addons\ofxOsc\libs\oscpack\src\ip\posix;..\..\..\addons\ofxOsc\libs\oscpack\src\ip\win32;..\..\..\addons\ofxOsc\libs\oscpack\src\osc;..\..\..\addons\ofxOsc\src;..\..\..\addons\ofxUbo\src</AdditionalIncludeDirectories>
       <CompileAs>CompileAsCpp</CompileAs>
@@ -184,20 +184,12 @@
     <PostBuildEvent />
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\scenes\fluid\ccFluid.cpp" />
-    <ClCompile Include="src\ccUserManager.cpp" />
     <ClCompile Include="src\ccUser.cpp" />
-    <ClCompile Include="src\scenes\fluid\FluidScene.cpp" />
+    <ClCompile Include="src\ccUserManager.cpp" />
     <ClCompile Include="src\scenes\contourlines\ContourLinesScene.cpp" />
     <None Include="src\scenes\fluid\shader\displayscalar.frag" />
-    <None Include="src\scenes\fluid\shader\displayvector.frag" />
-    <None Include="src\scenes\fluid\shader\gravity.frag" />
-    <None Include="src\scenes\fluid\shader\splat.frag">
-      <FileType>Document</FileType>
-    </None>
-    <None Include="src\scenes\fluid\shader\vorticityforce.frag">
-      <FileType>Document</FileType>
-    </None>
+    <ClCompile Include="src\scenes\fluid\ccFluid.cpp" />
+    <ClCompile Include="src\scenes\fluid\FluidScene.cpp" />
     <ClCompile Include="src\scenes\gameoflife\GameOfLifeScene.cpp" />
     <ClCompile Include="src\ccReceiver.cpp" />
     <ClCompile Include="src\scenes\ccScene.cpp" />
@@ -234,15 +226,14 @@
     <ClCompile Include="..\..\..\addons\ofxOsc\libs\oscpack\src\osc\OscReceivedElements.cpp" />
     <ClCompile Include="..\..\..\addons\ofxOsc\libs\oscpack\src\osc\OscTypes.cpp" />
     <ClCompile Include="..\..\..\addons\ofxUbo\src\ofxUbo.cpp" />
-    <ClCompile Include="src\scenes\spiral\SpiralScene.cpp" />
     <ClCompile Include="src\scenes\swarm\SwarmScene.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\scenes\fluid\ccFluid.h" />
-    <ClInclude Include="src\ccUserManager.h" />
     <ClInclude Include="src\ccUser.h" />
-    <ClInclude Include="src\scenes\fluid\FluidScene.h" />
+    <ClInclude Include="src\ccUserManager.h" />
     <ClInclude Include="src\scenes\contourlines\ContourLinesScene.h" />
+    <ClInclude Include="src\scenes\fluid\ccFluid.h" />
+    <ClInclude Include="src\scenes\fluid\FluidScene.h" />
     <ClInclude Include="src\scenes\gameoflife\GameOfLifeScene.h" />
     <ClInclude Include="src\ccReceiver.h" />
     <ClInclude Include="src\scenes\ccScene.h" />
@@ -294,7 +285,6 @@
     <ClInclude Include="..\..\..\addons\ofxOsc\libs\oscpack\src\osc\OscReceivedElements.h" />
     <ClInclude Include="..\..\..\addons\ofxOsc\libs\oscpack\src\osc\OscTypes.h" />
     <ClInclude Include="..\..\..\addons\ofxUbo\src\ofxUbo.h" />
-    <ClInclude Include="src\scenes\spiral\SpiralScene.h" />
     <ClInclude Include="src\scenes\swarm\SwarmScene.h" />
   </ItemGroup>
   <ItemGroup>
@@ -313,22 +303,30 @@
     <None Include="addons.make" />
     <None Include="src\scenes\fluid\shader\advect.frag" />
     <None Include="src\scenes\fluid\shader\boundaries.frag" />
+    <None Include="src\scenes\fluid\shader\displayvector.frag" />
     <None Include="src\scenes\fluid\shader\divergence.frag" />
     <None Include="src\scenes\fluid\shader\gradient.frag" />
+    <None Include="src\scenes\fluid\shader\gravity.frag" />
     <None Include="src\scenes\fluid\shader\jacobiscalar.frag" />
     <None Include="src\scenes\fluid\shader\jacobivector.frag" />
     <None Include="src\scenes\fluid\shader\passthru.vert" />
+    <None Include="src\scenes\fluid\shader\splat.frag" />
     <None Include="src\scenes\fluid\shader\vorticity.frag" />
+    <None Include="src\scenes\fluid\shader\vorticityforce.frag" />
     <None Include="src\scenes\swarm\shader\colorSplash.comp" />
     <None Include="src\scenes\contourlines\shader\contour.frag" />
     <None Include="src\scenes\contourlines\shader\contour.vert" />
     <None Include="src\scenes\contourlines\shader\contourLines.frag" />
     <None Include="src\scenes\contourlines\shader\contourLines.vert" />
     <None Include="src\scenes\gameoflife\shader\gol.frag" />
+    <None Include="src\scenes\particles\shader\instancedParticles.frag" />
+    <None Include="src\scenes\particles\shader\instancedParticles.vert" />
     <None Include="src\scenes\gameoflife\shader\outline.frag" />
+    <None Include="src\scenes\particles\shader\particle.comp" />
     <None Include="src\scenes\gameoflife\shader\passthru.vert" />
     <None Include="src\scenes\gameoflife\shader\renderInstanced.frag" />
     <None Include="src\scenes\gameoflife\shader\renderInstanced.vert" />
+    <None Include="src\scenes\swarm\shader\intro.comp" />
     <None Include="src\scenes\swarm\shader\swarm.comp" />
     <None Include="src\scenes\swarm\shader\swarm.frag" />
     <None Include="src\scenes\swarm\shader\swarm.vert" />

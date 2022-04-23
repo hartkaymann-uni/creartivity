@@ -39,12 +39,32 @@ public:
 	void dragEvent( ofDragInfo dragInfo );
 	void gotMessage( ofMessage msg );
 
+	//Scene Handling
+	enum class SceneChangeType {
+		Next,
+		Previous,
+		Last
+	};
+
+	void ChangeScene(SceneChangeType type);
+	void CheckSceneTransitions();
+	unsigned int GetSceneIndex(SceneChangeType type);
+	//-----
+
+	float nextActionTime;
+	void (ofApp::* nextAction)();
+
 	ofxTransformer transformer;
 	ofxSceneManager sceneManager;
 	int lastScene;
 
 	ccReceiver receiver;
 	vector<ccScene*> scenes;
+
+private:
+	void NextScene();
+	void PreviousScene();
+
 	bool showGui = true;
 
 	ccUserManager userManager;

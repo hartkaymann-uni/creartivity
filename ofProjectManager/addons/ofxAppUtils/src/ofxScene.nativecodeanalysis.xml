@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DEFECTS>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\libs\utf8\include\utf8\</FILEPATH>
+      <FILENAME>core.h</FILENAME>
+      <LINE>53</LINE>
+      <COLUMN>50</COLUMN>
+    </SFA>
+    <DEFECTCODE>26454</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: '-' operation produces a negative unsigned result at compile time (io.5).</DESCRIPTION>
+    <FUNCTION>utf8::internal::SURROGATE_OFFSET</FUNCTION>
+    <DECORATED>?SURROGATE_OFFSET@internal@utf8@@3IB</DECORATED>
+    <FUNCLINE>53</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\libs\openFrameworks\app\</FILEPATH>
+      <FILENAME>ofWindowSettings.h</FILENAME>
+      <LINE>40</LINE>
+      <COLUMN>12</COLUMN>
+    </SFA>
+    <DEFECTCODE>26812</DEFECTCODE>
+    <DESCRIPTION>The enum type 'ofWindowMode' is unscoped. Prefer 'enum class' over 'enum' (Enum.3).</DESCRIPTION>
+    <FUNCTION>ofWindowSettings::{ctor}</FUNCTION>
+    <DECORATED>??0ofWindowSettings@@QEAA@XZ</DECORATED>
+    <FUNCLINE>39</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\libs\openFrameworks\events\</FILEPATH>
+      <FILENAME>ofEvents.h</FILENAME>
+      <LINE>129</LINE>
+      <COLUMN>8</COLUMN>
+    </SFA>
+    <DEFECTCODE>26812</DEFECTCODE>
+    <DESCRIPTION>The enum type 'ofKeyEventArgs::Type' is unscoped. Prefer 'enum class' over 'enum' (Enum.3).</DESCRIPTION>
+    <FUNCTION>ofKeyEventArgs::{ctor}</FUNCTION>
+    <DECORATED>??0ofKeyEventArgs@@QEAA@XZ</DECORATED>
+    <FUNCLINE>128</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\libs\openFrameworks\events\</FILEPATH>
+      <FILENAME>ofEvents.h</FILENAME>
+      <LINE>189</LINE>
+      <COLUMN>6</COLUMN>
+    </SFA>
+    <DEFECTCODE>26812</DEFECTCODE>
+    <DESCRIPTION>The enum type 'ofMouseEventArgs::Type' is unscoped. Prefer 'enum class' over 'enum' (Enum.3).</DESCRIPTION>
+    <FUNCTION>ofMouseEventArgs::{ctor}</FUNCTION>
+    <DECORATED>??0ofMouseEventArgs@@QEAA@XZ</DECORATED>
+    <FUNCLINE>188</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\libs\openFrameworks\events\</FILEPATH>
+      <FILENAME>ofEvents.h</FILENAME>
+      <LINE>243</LINE>
+      <COLUMN>6</COLUMN>
+    </SFA>
+    <DEFECTCODE>26812</DEFECTCODE>
+    <DESCRIPTION>The enum type 'ofTouchEventArgs::Type' is unscoped. Prefer 'enum class' over 'enum' (Enum.3).</DESCRIPTION>
+    <FUNCTION>ofTouchEventArgs::{ctor}</FUNCTION>
+    <DECORATED>??0ofTouchEventArgs@@QEAA@XZ</DECORATED>
+    <FUNCLINE>242</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+</DEFECTS>

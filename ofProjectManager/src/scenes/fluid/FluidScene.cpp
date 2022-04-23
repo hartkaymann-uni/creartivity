@@ -2,7 +2,16 @@
 
 using namespace fluid;
 
-FluidScene::FluidScene() : ccScene( "Fluid" ) {}
+FluidScene::FluidScene()
+	: ccScene( "Fluid" ),
+	time( 0.f ),
+	debug( false ),
+	step( false ),
+	sequenceDuration( 10.f ),
+	sequenceTransitionDuration( 5.f ),
+	lastSequene( SequenceName::Empty ),
+	currentSequence( SequenceName::Empty ),
+	lastSequenceTime( 0.f ) {}
 
 void FluidScene::setup()
 {
@@ -41,8 +50,8 @@ void FluidScene::setup()
 	groupGeneral.add( p_Timestep.set( "Timestep", solverSettings.timestep, 0.f, 2.f ) );
 	groupGeneral.add( p_SplatRadius.set( "Splat", solverSettings.splatRadius, 0.f, .005f ) );
 	groupGeneral.add( p_SplatColor.set( "Color", solverSettings.splatColor ) );
-	groupGeneral.add( p_Dissipation.set( "Dissipation", solverSettings.dissipation, 0.9f, 1.f ) );
-	groupSolver.add( p_JacobiIterations.set( "Iterations", solverSettings.jacobiIterations, 0, 120) );
+	groupGeneral.add( p_Dissipation.set( "Dissipation", solverSettings.dissipation, 0.f, 1.f ) );
+	groupSolver.add( p_JacobiIterations.set( "Iterations", solverSettings.jacobiIterations, 0, 120 ) );
 	groupGrid.add( p_Bounds.set( "Bounds", solverGrid.applyBounds ) );
 	groupGrid.add( p_Scale.set( "Scale", 1.f, 0.f, 1.f ) );
 	groupVorticity.add( p_ApplyVorticity.set( "Apply Vorticity", solverSettings.applyVorticity ) );
@@ -53,6 +62,7 @@ void FluidScene::setup()
 	groupGravity.add( p_ApplyGravity.set( solverSettings.applyGravity ) );
 	groupGravity.add( p_GravityDirection.set( "Direction", solverSettings.gravityDir, { -1.f, -1.f }, { 1.f, 1.f } ) );
 	groupGravity.add( p_GravityStrength.set( "Strength", solverSettings.gravityStr, 0.f, 20.f ) );
+	groupView.add( p_Sequences.set( "RunSequences", true ) );
 	groupView.add( p_DebugView.set( "Debug", false ) );
 
 	p_Curl.addListener( this, &FluidScene::handleCurlChanged );
@@ -84,12 +94,20 @@ void FluidScene::setup()
 	filesystem::path shaderPath = getShaderPath();
 	bool err_dispvector = displayScalarProgram.load( shaderPath / "passthru.vert", shaderPath / "displayscalar.frag" );
 	bool err_dispscalar = displayVectorProgram.load( shaderPath / "passthru.vert", shaderPath / "displayvector.frag" );
+
+	// Initialize Sequences
+	setupSequences();
 }
 
 void FluidScene::update()
 {
+	time = ofGetElapsedTimef();
+
 	if (debug && !step)
 		return;
+
+	updateSequence();
+	updateParameters();
 
 	vector<ccUser> u = userManager->getUserVec();
 
@@ -175,4 +193,83 @@ void FluidScene::keyReleased( int key ) {
 	{
 		camera.disableMouseInput();
 	}
+}
+
+///////////////
+// Sequences //
+///////////////
+void FluidScene::setupSequences() {
+	lastSequenceTime = time;
+	// Standart
+	sequenceMap.insert( pair<FluidScene::SequenceName, SequenceParameters>( SequenceName::Default, { 1.f,  0.002f, 0.998f, false, 0.f, false, 0.f, {1.f, 1.f, 1.f } } ) );
+	// Fast
+	sequenceMap.insert( pair<FluidScene::SequenceName, SequenceParameters>( SequenceName::Fast, { 0.2f,  0.001f, 0.992f, false, 0.f, false, 0.f,{1.f, 1.f, 1.f } } ) );
+	// Smoke
+	sequenceMap.insert( pair<FluidScene::SequenceName, SequenceParameters>( SequenceName::Smoke, { 0.5f,  0.002f, 0.998f, true, .15f, false, 0.f, {1.f, 1.f, 1.f } } ) );
+	// Empty
+	sequenceMap.insert( pair<FluidScene::SequenceName, SequenceParameters>( SequenceName::Empty, { 1.f,  0.002f, 0.f, false, 0.f, false, 0.f, {0.f, 0.f, 0.f } } ) );
+}
+
+void FluidScene::updateSequence() {
+	if (!p_Sequences)
+		return;
+
+	// Change sequences periodically
+	if (time - lastSequenceTime > sequenceDuration) {
+		//Set to a random sequence
+		setSequence( randSequence() );
+		cout << "Changing Sequence! Current Sequence: " << static_cast<int>(currentSequence) << endl;
+	}
+}
+
+void FluidScene::setSequence( SequenceName name ) {
+	lastSequene = currentSequence;
+	currentSequence = name;
+	lastSequenceTime = ofGetElapsedTimef();
+
+	// Set boolean parameters at the start of the sequence
+	p_ApplyVorticity.set( sequenceMap.at( currentSequence ).applyVorticity );
+	p_ApplyViscosity.set( sequenceMap.at( currentSequence ).applyViscosity );
+}
+
+// Changes happening graduallyduring sequence change
+void FluidScene::updateParameters() {
+	if (p_Sequences.get() && time - lastSequenceTime <= sequenceTransitionDuration)
+	{
+		float timeSinceSequenceChange = time - lastSequenceTime;
+		p_Scale.set( ofMap( timeSinceSequenceChange, 0.0, sequenceTransitionDuration, sequenceMap.at( lastSequene ).scale, sequenceMap.at( currentSequence ).scale ) );
+		p_SplatRadius.set( ofMap( timeSinceSequenceChange, 0.0, sequenceTransitionDuration, sequenceMap.at( lastSequene ).splat, sequenceMap.at( currentSequence ).splat ) );
+		p_Dissipation.set( ofMap( timeSinceSequenceChange, 0.0, sequenceTransitionDuration, sequenceMap.at( lastSequene ).dissipation, sequenceMap.at( currentSequence ).dissipation ) );
+		p_Curl.set( ofMap( timeSinceSequenceChange, 0.0, sequenceTransitionDuration, sequenceMap.at( lastSequene ).curl, sequenceMap.at( currentSequence ).curl ) );
+		p_Viscosity.set( ofMap( timeSinceSequenceChange, 0.0, sequenceTransitionDuration, sequenceMap.at( lastSequene ).viscosity, sequenceMap.at( currentSequence ).viscosity ) );
+
+		// Changing color is a bit more complex
+		glm::vec3 currCol = sequenceMap.at( lastSequene ).color;
+		glm::vec3 targetCol = sequenceMap.at( currentSequence ).color;
+		float r = ofMap( timeSinceSequenceChange, 0.0, sequenceTransitionDuration, currCol.r, targetCol.r );
+		float g = ofMap( timeSinceSequenceChange, 0.0, sequenceTransitionDuration, currCol.g, targetCol.g );
+		float b = ofMap( timeSinceSequenceChange, 0.0, sequenceTransitionDuration, currCol.b, targetCol.b );
+		p_SplatColor.set( ofFloatColor( r, g, b )
+		);
+	}
+}
+
+FluidScene::SequenceName FluidScene::randSequence()
+{
+	return static_cast<SequenceName>(rand() % NUM_SEQ);
+}
+
+float FluidScene::SceneIntro()
+{
+	lastSequene = SequenceName::Empty;
+	setSequence( randSequence() );
+
+	return sequenceTransitionDuration;
+}
+
+float FluidScene::SceneOutro()
+{
+	setSequence( SequenceName::Empty );
+
+	return sequenceTransitionDuration;
 }

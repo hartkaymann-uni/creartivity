@@ -1,0 +1,35 @@
+#version 440
+#define N_USERS 10
+
+struct Particle{
+	vec4 pos;
+	vec4 vel;
+	vec4 color;
+	vec4 unique;
+	vec4 initialPos;
+	vec4 bufferPos;
+};
+
+layout(std140, binding=0) buffer particle{
+    Particle p[];
+};
+
+layout(std140, binding=1) buffer particleBack{
+    Particle p2[];
+};
+
+layout(std140, binding=3) buffer particleDraw{
+    Particle p3[];
+};
+
+layout(std140, binding=2) buffer indices{
+	uint idx[];
+};
+
+layout(local_size_x = 1024, local_size_y = 1, local_size_z = 1) in;
+void main(){
+	int index = int(p[gl_GlobalInvocationID.x].unique.y);
+	// Put the particles back to their original position
+	p[gl_GlobalInvocationID.x].pos.xy = p[gl_GlobalInvocationID.x].initialPos.xy ;
+	p3[index].pos.xy = p[gl_GlobalInvocationID.x].pos.xy;
+}
