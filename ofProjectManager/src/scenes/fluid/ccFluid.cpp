@@ -58,16 +58,16 @@ namespace fluid {
 		// Create shader programs
 		filesystem::path shaderPath = "../../src/scenes/fluid/shader";
 
-		bool err_adv = advectProgram.load( shaderPath / "passthru.vert", shaderPath / "advect.frag" );
-		bool err_for = splatProgram.load( shaderPath / "passthru.vert", shaderPath / "splat.frag" );
-		bool err_grad = gradientProgram.load( shaderPath / "passthru.vert", shaderPath / "gradient.frag" );
-		bool err_vor = vorticityProgram.load( shaderPath / "passthru.vert", shaderPath / "vorticity.frag" );
-		bool err_div = divergenceProgram.load( shaderPath / "passthru.vert", shaderPath / "divergence.frag" );
-		bool err_bounds = boundariesProgram.load( shaderPath / "passthru.vert", shaderPath / "boundaries.frag" );
-		bool err_jacv = jacobivectorProgram.load( shaderPath / "passthru.vert", shaderPath / "jacobivector.frag" );
-		bool err_jacs = jacobiscalarProgram.load( shaderPath / "passthru.vert", shaderPath / "jacobiscalar.frag" );
-		bool err_vorf = vorticityforceProgram.load( shaderPath / "passthru.vert", shaderPath / "vorticityforce.frag" );
-		bool err_grav = gravityProgram.load( shaderPath / "passthru.vert", shaderPath / "gravity.frag" );
+		bool err_adv = advectProgram.load( shaderPath / "passthru.vert", shaderPath / "fluid/advect.frag" );
+		bool err_for = splatProgram.load( shaderPath / "passthru.vert", shaderPath / "fluid/splat.frag" );
+		bool err_grad = gradientProgram.load( shaderPath / "passthru.vert", shaderPath / "fluid/gradient.frag" );
+		bool err_vor = vorticityProgram.load( shaderPath / "passthru.vert", shaderPath / "fluid/vorticity.frag" );
+		bool err_div = divergenceProgram.load( shaderPath / "passthru.vert", shaderPath / "fluid/divergence.frag" );
+		bool err_bounds = boundariesProgram.load( shaderPath / "passthru.vert", shaderPath / "fluid/boundaries.frag" );
+		bool err_jacv = jacobivectorProgram.load( shaderPath / "passthru.vert", shaderPath / "fluid/jacobivector.frag" );
+		bool err_jacs = jacobiscalarProgram.load( shaderPath / "passthru.vert", shaderPath / "fluid/jacobiscalar.frag" );
+		bool err_vorf = vorticityforceProgram.load( shaderPath / "passthru.vert", shaderPath / "fluid/vorticityforce.frag" );
+		bool err_grav = gravityProgram.load( shaderPath / "passthru.vert", shaderPath / "fluid/gravity.frag" );
 	}
 
 	ofFbo ccSolver::createFbo( int format ) {
@@ -178,8 +178,8 @@ namespace fluid {
 		float offset = 1.f;
 		float xL = offset;
 		float xR = grid.size.x;
-		float yB = offset + 1;
-		float yT = grid.size.y + 1;
+		float yB = offset;
+		float yT = grid.size.y;
 
 		ofPolyline lineR, lineL, lineT, lineB;
 		lineL.addVertex( xL, yT );

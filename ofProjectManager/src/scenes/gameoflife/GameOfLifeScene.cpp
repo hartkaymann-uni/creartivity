@@ -9,8 +9,8 @@ namespace gol {
 		n_cells_y( cells_y ),
 		time( 0.f ),
 		cellOffset( 0.f ),
-		sequenceDuration( 30.f ),
-		sequenceTransitionDuration( 10.f ),
+		sequenceDuration( 10.f ),
+		sequenceTransitionDuration( 1.f ),
 		lastSequene( SequenceName::Empty ),
 		currentSequence( SequenceName::Empty ),
 		lastSequenceTime( 0.f )

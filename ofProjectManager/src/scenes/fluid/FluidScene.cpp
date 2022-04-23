@@ -8,7 +8,7 @@ FluidScene::FluidScene()
 	debug( false ),
 	step( false ),
 	sequenceDuration( 10.f ),
-	sequenceTransitionDuration( 5.f ),
+	sequenceTransitionDuration( 1.f ),
 	lastSequene( SequenceName::Empty ),
 	currentSequence( SequenceName::Empty ),
 	lastSequenceTime( 0.f ) {}
@@ -92,7 +92,7 @@ void FluidScene::setup()
 
 	// Load display shaders
 	filesystem::path shaderPath = getShaderPath();
-	bool err_dispvector = displayScalarProgram.load( shaderPath / "passthru.vert", shaderPath / "displayscalar.frag" );
+	bool err_dispvector = displayScalarProgram.load( shaderPath / "passthru.vert", shaderPath / "lines.frag" );
 	bool err_dispscalar = displayVectorProgram.load( shaderPath / "passthru.vert", shaderPath / "displayvector.frag" );
 
 	// Initialize Sequences
