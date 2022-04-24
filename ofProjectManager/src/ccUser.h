@@ -2,22 +2,38 @@
 
 #include "ofMain.h"
 
+/*
+	User Class
+	Stores information on position and movements of a user.
+	Can be used for mouse movement and for actual information.
+*/
+
 class ccUser
 {
 public:
+	ccUser();
+	ccUser( int id, glm::vec3 left, glm::vec3 right );
 
-	ccUser( ofVec3f pos = { 0, 0, 0 } );
+	void move( glm::vec3 vl, glm::vec3 vr );
 
-	void move();
-	void setTarget( ofVec3f target );
+	void setId( int id );
+	void setPosition( glm::vec2 pos );
+	void setPosition( glm::vec3 pos );
+	void setPositions( glm::vec3 left, glm::vec3 right );
+	void setMotions( glm::vec3 ml, glm::vec3 mr);
 
-	ofVec3f pos;
-	ofVec3f vel;
+	inline int getId() { return id; };
+	pair<glm::vec3, glm::vec3> getPositons();
+	pair<glm::vec3, glm::vec3> getMotions();
 
-	ofVec3f targetPos;
+	inline glm::vec3 left() { return positions.first; };
+	inline glm::vec3 right() { return positions.second; };
 
-	float speed;
+private:
+	// Doesn't do anything yet, but important for future
+	int id;
 
-
+	pair<glm::vec3, glm::vec3> positions;
+	pair<glm::vec3, glm::vec3> motions;
 };
 

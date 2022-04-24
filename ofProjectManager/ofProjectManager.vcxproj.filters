@@ -111,12 +111,12 @@
     </ClCompile>
     <ClCompile Include="src\ccReceiver.cpp" />
     <ClCompile Include="src\scenes\contourlines\ContourLinesScene.cpp" />
-    <ClCompile Include="src\scenes\cuboid\CuboidScene.cpp" />
     <ClCompile Include="src\scenes\gameoflife\GameOfLifeScene.cpp" />
     <ClCompile Include="src\scenes\swarm\SwarmScene.cpp" />
-    <ClCompile Include="src\scenes\particles\ParticleScene.cpp" />
-    <ClCompile Include="src\scenes\spiral\SpiralScene.cpp" />
     <ClCompile Include="src\ccUser.cpp" />
+    <ClCompile Include="src\ccUserManager.cpp" />
+    <ClCompile Include="src\scenes\fluid\ccFluid.cpp" />
+    <ClCompile Include="src\scenes\fluid\FluidScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -324,12 +324,12 @@
     </ClInclude>
     <ClInclude Include="src\ccReceiver.h" />
     <ClInclude Include="src\scenes\contourlines\ContourLinesScene.h" />
-    <ClInclude Include="src\scenes\cuboid\CuboidScene.h" />
     <ClInclude Include="src\scenes\gameoflife\GameOfLifeScene.h" />
     <ClInclude Include="src\scenes\swarm\SwarmScene.h" />
-    <ClInclude Include="src\scenes\particles\ParticleScene.h" />
-    <ClInclude Include="src\scenes\spiral\SpiralScene.h" />
     <ClInclude Include="src\ccUser.h" />
+    <ClInclude Include="src\ccUserManager.h" />
+    <ClInclude Include="src\scenes\fluid\ccFluid.h" />
+    <ClInclude Include="src\scenes\fluid\FluidScene.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="icon.rc" />
@@ -351,9 +351,25 @@
     <None Include="src\scenes\swarm\shader\swarm.vert" />
     <None Include="src\scenes\contourlines\shader\contourLines.frag" />
     <None Include="src\scenes\contourlines\shader\contourLines.vert" />
-    <None Include="src\scenes\cuboid\shader\cuboids.vert" />
-    <None Include="src\scenes\cuboid\shader\cuboids.frag" />
     <None Include="src\scenes\swarm\shader\swarmUserEnter.comp" />
     <None Include="addons.make" />
+    <None Include="src\scenes\fluid\shader\fluid\vorticityforce.frag" />
+    <None Include="src\scenes\fluid\shader\fluid\advect.frag" />
+    <None Include="src\scenes\fluid\shader\fluid\boundaries.frag" />
+    <None Include="src\scenes\fluid\shader\displayvector.frag" />
+    <None Include="src\scenes\fluid\shader\fluid\divergence.frag" />
+    <None Include="src\scenes\fluid\shader\fluid\gradient.frag" />
+    <None Include="src\scenes\fluid\shader\fluid\gravity.frag" />
+    <None Include="src\scenes\fluid\shader\fluid\jacobiscalar.frag" />
+    <None Include="src\scenes\fluid\shader\fluid\jacobivector.frag" />
+    <None Include="src\scenes\fluid\shader\passthru.vert" />
+    <None Include="src\scenes\fluid\shader\fluid\splat.frag" />
+    <None Include="src\scenes\fluid\shader\fluid\vorticity.frag" />
+    <None Include="src\scenes\fluid\shader\vorticityforce.frag" />
+    <None Include="src\scenes\fluid\shader\displayvector.frag" />
+    <None Include="src\scenes\fluid\shader\gravity.frag" />
+    <None Include="src\scenes\fluid\shader\displayscalar.frag" />
+    <None Include="src\scenes\swarm\shader\intro.comp" />
+    <None Include="src\scenes\fluid\shader\lines.frag" />
   </ItemGroup>
 </Project>

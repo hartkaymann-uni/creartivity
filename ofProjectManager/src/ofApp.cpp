@@ -2,9 +2,11 @@
 
 #include "scenes/scenes.h"
 
+using namespace gol;
+
 //--------------------------------------------------------------
 void ofApp::setup() {
-	ofBackground( 0 );
+	ofBackground( 255, 255, 0 );
 
 	ofSetFrameRate( 60 );
 	ofSetVerticalSync( false );
@@ -13,24 +15,29 @@ void ofApp::setup() {
 	transformer.setTransforms( true, true, false, true, true );
 	setTransformer( &transformer );
 
+	receiver.setUserManager( &userManager );
+
 	// Load scenes
-	// scenes.push_back( (ParticleScene*)sceneManager.add( new ParticleScene() ) );
-	// scenes.push_back( (CuboidScene*)sceneManager.add( new CuboidScene() ) );
 	//scenes.push_back( (SpiralScene*)sceneManager.add( new SpiralScene() ) );
+	scenes.push_back( (FluidScene*)sceneManager.add( new FluidScene() ) );
 	scenes.push_back( (GameOfLifeScene*)sceneManager.add( new GameOfLifeScene() ) );
 	scenes.push_back( (SwarmScene*)sceneManager.add( new SwarmScene() ) );
 	scenes.push_back( (ContourLinesScene*)sceneManager.add( new ContourLinesScene() ) );
+
+	// Initialize scene manager
 	sceneManager.setup( true ); // Setup all scenes now
 	ofSetLogLevel( "ofxScenemanager", OF_LOG_VERBOSE );
-
-	sceneManager.gotoScene( "GameOfLife", true );
+	sceneManager.gotoScene( "Fluid", true );
 	lastScene = sceneManager.getCurrentSceneIndex();
 	sceneManager.setOverlap( false );
+	nextAction = NULL;
 
 	setSceneManager( &sceneManager );
 
+	// Give all scenes a pointer to the receiver
+	// TODO: Scenen dont need this anymore, as user array does the work here
 	for (ccScene* scene : scenes) {
-		scene->setReceiver( &receiver );
+		scene->setUserManager( &userManager );
 	}
 }
 
@@ -43,6 +50,9 @@ void ofApp::update() {
 	std::stringstream strm;
 	strm << "fps: " << ofGetFrameRate();
 	ofSetWindowTitle( strm.str() );
+
+	//
+	CheckSceneTransitions();
 }
 
 //--------------------------------------------------------------
@@ -63,10 +73,14 @@ void ofApp::draw() {
 	ofxBitmapString( 12, ofGetHeight() - 8 )
 		<< "Current Scene: " << sceneManager.getCurrentSceneIndex()
 		<< " " << sceneManager.getCurrentSceneName() << endl;
-	
-	for (ccScene* s : scenes) {
-		if (s->getName() == sceneManager.getCurrentSceneName()) {
-			s->getGui().draw();
+
+	if (showGui) {
+		for (ccScene* s : scenes) {
+			if (s->getName() == sceneManager.getCurrentSceneName()) {
+				ofxPanel& gui = s->getGui();
+				gui.setPosition( ofGetWidth() - gui.getWidth() - 10, ofGetHeight() - gui.getHeight() - 10 );
+				s->getGui().draw();
+			}
 		}
 	}
 
@@ -78,11 +92,13 @@ void ofApp::keyPressed( int key ) {
 	switch (key) {
 
 	case 'd':
-		bDebug = !bDebug;
+		//bDebug = !bDebug;
 		break;
-
+	case 'h':
+		showGui = !showGui;
+		break;
 	case 'c':
-		ofShowCursor;
+		ofShowCursor();
 		break;
 
 	case 'f':
@@ -90,11 +106,11 @@ void ofApp::keyPressed( int key ) {
 		break;
 
 	case OF_KEY_LEFT:
-		sceneManager.prevScene();
+		ChangeScene( SceneChangeType::Previous );
 		break;
 
 	case OF_KEY_RIGHT:
-		sceneManager.nextScene();
+		ChangeScene( SceneChangeType::Next );
 		break;
 
 	case OF_KEY_DOWN:
@@ -111,6 +127,94 @@ void ofApp::keyPressed( int key ) {
 	case 'o':
 		sceneManager.setOverlap( !sceneManager.getOverlap() );
 		break;
+	case 'x':
+		// Take a screenshot
+		img.grabScreen( 0, 0, ofGetWidth(), ofGetHeight() );
+		string filename = "screenshots/" + ofGetTimestampString( "%Y-%m-%d-%H-%M-%S-%i" ) + ".png";
+		img.save( filename );
+		break;
+	}
+}
+
+//--------------------------------------------------------------
+void ofApp::CheckSceneTransitions() {
+	if (ofGetElapsedTimef() > nextActionTime && nextAction != NULL) {
+		(this->*nextAction)();
+		nextAction = NULL;
+	}
+}
+
+
+//--------------------------------------------------------------
+void ofApp::ChangeScene( SceneChangeType type ) {
+	unsigned int currentSceneIndex = sceneManager.getCurrentSceneIndex();
+	float delay = 0.f;
+	// 'scenes' is not in the same order as the array that 'sceneManager' uses. Therefore we can't use the 'currentSceneIndex'
+	// from 'sceneManager' for the 'scenes' array.
+	if (sceneManager.getCurrentScene() != NULL) {
+		delay = static_cast<ccScene*>(sceneManager.getCurrentScene())->SceneOutro();
+	}
+
+	switch (type)
+	{
+	case SceneChangeType::Next:
+		nextAction = &ofApp::NextScene;
+		break;
+	case SceneChangeType::Previous:
+		nextAction = &ofApp::PreviousScene;
+		break;
+	default:
+		break;
+	}
+
+	delay = max( 0.f, delay );
+	nextActionTime = ofGetElapsedTimef() + delay;
+}
+
+//--------------------------------------------------------------
+void ofApp::NextScene() {
+	int nextSceneIndex = GetSceneIndex( SceneChangeType::Next );
+	sceneManager.nextScene();
+	if (sceneManager.getSceneAt( nextSceneIndex ) != NULL) {
+		static_cast<ccScene*>(sceneManager.getSceneAt( nextSceneIndex ))->SceneIntro();
+	}
+}
+
+//--------------------------------------------------------------
+unsigned int  ofApp::GetSceneIndex( SceneChangeType type ) {
+	unsigned int currentSceneIndex = sceneManager.getCurrentSceneIndex();
+
+
+	switch (type)
+	{
+	case SceneChangeType::Next:
+		if (currentSceneIndex >= sceneManager.getNumScenes() - 1) {
+			return 0;
+		}
+		else {
+			return currentSceneIndex + 1;
+		}
+		break;
+	case SceneChangeType::Previous:
+		if (currentSceneIndex <= 0) {
+			return sceneManager.getNumScenes() - 1;
+		}
+		else {
+			return currentSceneIndex - 1;
+		}
+		break;
+	default:
+		return -1;
+		break;
+	}
+}
+
+//--------------------------------------------------------------
+void ofApp::PreviousScene() {
+	int previousIndex = GetSceneIndex( SceneChangeType::Previous );
+	sceneManager.prevScene();
+	if (sceneManager.getSceneAt( previousIndex ) != NULL) {
+		static_cast<ccScene*>(sceneManager.getSceneAt( previousIndex ))->SceneIntro();
 	}
 }
 
@@ -126,17 +230,26 @@ void ofApp::mouseMoved( int x, int y ) {
 
 //--------------------------------------------------------------
 void ofApp::mouseDragged( int x, int y, int button ) {
-
+	// Left click is left mouse position, right click right mouse position
+	ccUser* mouse = userManager.getMouseUser();
+	if (button == OF_MOUSE_BUTTON_LEFT)
+		mouse->setPositions( { (x * 1.f) / ofGetWidth(), (y * 1.f) / ofGetHeight(), 0.f }, mouse->right() );
+	else
+		mouse->setPositions( mouse->left(), { (x * 1.f) / ofGetWidth(), (y * 1.f) / ofGetHeight(), 0.f } );
 }
 
 //--------------------------------------------------------------
 void ofApp::mousePressed( int x, int y, int button ) {
-
 }
 
 //--------------------------------------------------------------
 void ofApp::mouseReleased( int x, int y, int button ) {
-
+	// Reset user motion by moving by zero 
+	ccUser* mouse = userManager.getMouseUser();
+	if (button == OF_MOUSE_BUTTON_LEFT)
+		mouse->setMotions( { 0.f, 0.f, 0.f }, mouse->getMotions().second );
+	else
+		mouse->setMotions( mouse->getMotions().first, { 0.f, 0.f, 0.f } );
 }
 
 //--------------------------------------------------------------

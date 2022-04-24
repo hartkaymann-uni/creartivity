@@ -28,31 +28,38 @@ public:
 	void dragEvent(ofDragInfo dragInfo);
 	void gotMessage(ofMessage msg);
 
-	enum class SequenceType {
+	enum class SequenceName {
 		BlackHole,
 		Explosion,
 		NormalAttraction,
 		BrainNeurons,
 		Swarm,
-		RepulsionStutter
+		RepulsionStutter,
+		Intro
 	};
 
 	struct ParameterSequence
 	{
 		float duration;
 		float modifier;
-		SequenceType sequence;
+		SequenceName sequenceType;
 
-		ParameterSequence(float newDuration, SequenceType newType, float newModifier = 1) {
+		ParameterSequence() {
+			duration = -1;
+			modifier = -1;
+			sequenceType = SequenceName::BlackHole;
+		}
+
+		ParameterSequence(float newDuration, SequenceName newType, float newModifier = 1) {
 			duration = newDuration;
 			modifier = std::max(0.0f, std::min(newModifier, 5.0f));
-			sequence = newType;
+			sequenceType = newType;
 		}
 	};
 
 	struct Particle {
 		glm::vec4 pos;
-		glm::vec4 vel;
+		glm::vec4 u;
 		ofFloatColor color;
 		glm::vec4 unique;
 		glm::vec4 initialPos;
@@ -67,7 +74,7 @@ public:
 	int particleGroups;
 	int particleAmount;
 	int maxParticleDepth;
-	ofShader compute, colorSplash, particleShader, userEnter;
+	ofShader compute, colorSplash, particleShader, userEnter, introShader;
 	vector<Particle> particles;
 	ofBufferObject particlesBuffer, particlesBuffer2, particlesBuffer3;
 	GLuint vaoID;
@@ -85,7 +92,9 @@ public:
 	ofParameter<float> fps;
 	ofParameter<bool> dirAsColor;
 
-
+	//Scene Handling
+	float SceneIntro() override;
+	float SceneOutro() override;
 private:
 	//--------------------------------------------------------------
 	// Controls
@@ -103,6 +112,7 @@ private:
 	// Sequence Stuff
 	void InitSequences();
 	void UpdateSequences();
+	void SetSequence(ParameterSequence sequence);
 	void StartSequence();
 	void UpdateParameters();
 	void ActivateRules();
@@ -112,6 +122,7 @@ private:
 	float lastSequenceTime;
 	float nextSequenceTime;
 	int currentSequenceIndex;
-	float currentSequenceMod;
-	SequenceType currentSequenceType;
+	ParameterSequence currentSequence;
+
+	bool DoUpdateSequence;
 };
