@@ -69,6 +69,7 @@ namespace gol {
 		ofShader logicShader;
 		ofShader instancedShader;
 		ofShader outlineShader;
+		ofShader metaballShader;
 
 		pingPongBuffer cellPingPong;
 
@@ -89,6 +90,7 @@ namespace gol {
 		void allocateCellBuffer( int rows, int cols );
 
 		void drawOutlined( ofVboMesh& mesh, ofShader& instance, ofShader& outline );
+		void drawMetaballs( ofShader& metaballs );
 
 		// Members for sequences
 		enum class SequenceName {

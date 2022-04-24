@@ -33,6 +33,12 @@ namespace gol {
 		if (!err_outline) {
 			(void)ofLogError( module, "Failed to load outline shader!" );
 		}
+
+
+		bool err_metaballs = metaballShader.load( shader_path / "passthru.vert", shader_path / "metaballs.frag" );
+		if (!err_metaballs) {
+			(void)ofLogError( module, "Failed to load metaball shader!" );
+		}
 	}
 
 	///////////
@@ -50,7 +56,7 @@ namespace gol {
 		dimensions.set( "dimensions", ofVec2f( n_cells_x, n_cells_y ), ofVec2f( 1.f, 1.f ), ofVec2f( n_cells_x * 10.f, n_cells_y * 10.f ) );
 		evolutionFactor.set( "evolutionFac", 0.05f, 0.f, 0.25f );
 		sphereResolution.set( "circleRes", 20, 1, 100 );
-		sphereRadius.set( "radius", cellOffset, 0.f, cellOffset * 5.f );
+		sphereRadius.set( "radius", 0.1f, 0.f, .5f );
 		dataSrcSize.set( "srcSize", 0.f, 0.f, 9.f );
 		mouseRadius.set( "mouseRad", 5.f, 0.f, 10.f );
 		mouseStrength.set( "mouseStr", 0.5f, 0.f, 1.f );
@@ -199,9 +205,10 @@ namespace gol {
 
 		camera.begin();
 
-		drawOutlined( vboSphere, instancedShader, outlineShader );
+		//drawOutlined( vboSphere, instancedShader, outlineShader );
+		drawMetaballs( metaballShader );
 
-		// Draw secondary objects
+		// Draw some additional objects for debugging
 #if 0
 		ofPushStyle();
 		ofFill();
@@ -282,6 +289,30 @@ namespace gol {
 		ofEnableAlphaBlending();
 
 		ofPopStyle();
+
+	}
+
+	// Draw metaballs iin fragment shader
+	void GameOfLifeScene::drawMetaballs( ofShader& metaballs )
+	{
+		// Create geometry, put this into setup later
+		ofPlanePrimitive plane;
+		plane.set( width, height);
+		plane.setPosition( width * .5f, height * .5f, 0.f );
+		plane.setResolution( 2, 2 );
+
+		metaballs.begin();
+		metaballs.setUniforms( shaderUniforms );
+		metaballs.setUniformTexture( "cells", cellPingPong.src->getTexture(), 0 );
+		metaballs.setUniform2f( "resolution", (float)n_cells_x, (float)n_cells_y );
+		metaballs.setUniform2f( "screen", (float)width, (float)height );
+		metaballs.setUniform1f( "radius", sphereRadius.get() );
+
+
+		ofFill();
+		plane.draw();
+
+		metaballs.end();
 
 	}
 

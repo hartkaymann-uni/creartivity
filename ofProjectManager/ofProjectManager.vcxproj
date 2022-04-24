@@ -314,6 +314,7 @@
     <None Include="src\scenes\fluid\shader\fluid\splat.frag" />
     <None Include="src\scenes\fluid\shader\fluid\vorticity.frag" />
     <None Include="src\scenes\fluid\shader\fluid\vorticityforce.frag" />
+    <None Include="src\scenes\gameoflife\shader\metaballs.frag" />
     <None Include="src\scenes\swarm\shader\colorSplash.comp" />
     <None Include="src\scenes\contourlines\shader\contour.frag" />
     <None Include="src\scenes\contourlines\shader\contour.vert" />
