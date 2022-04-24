@@ -353,22 +353,23 @@
     <None Include="src\scenes\contourlines\shader\contourLines.vert" />
     <None Include="src\scenes\swarm\shader\swarmUserEnter.comp" />
     <None Include="addons.make" />
-    <None Include="src\scenes\fluid\shader\vorticityforce.frag" />
-    <None Include="src\scenes\fluid\shader\advect.frag" />
-    <None Include="src\scenes\fluid\shader\boundaries.frag" />
+    <None Include="src\scenes\fluid\shader\fluid\vorticityforce.frag" />
+    <None Include="src\scenes\fluid\shader\fluid\advect.frag" />
+    <None Include="src\scenes\fluid\shader\fluid\boundaries.frag" />
     <None Include="src\scenes\fluid\shader\displayvector.frag" />
-    <None Include="src\scenes\fluid\shader\divergence.frag" />
-    <None Include="src\scenes\fluid\shader\gradient.frag" />
-    <None Include="src\scenes\fluid\shader\gravity.frag" />
-    <None Include="src\scenes\fluid\shader\jacobiscalar.frag" />
-    <None Include="src\scenes\fluid\shader\jacobivector.frag" />
+    <None Include="src\scenes\fluid\shader\fluid\divergence.frag" />
+    <None Include="src\scenes\fluid\shader\fluid\gradient.frag" />
+    <None Include="src\scenes\fluid\shader\fluid\gravity.frag" />
+    <None Include="src\scenes\fluid\shader\fluid\jacobiscalar.frag" />
+    <None Include="src\scenes\fluid\shader\fluid\jacobivector.frag" />
     <None Include="src\scenes\fluid\shader\passthru.vert" />
-    <None Include="src\scenes\fluid\shader\splat.frag" />
-    <None Include="src\scenes\fluid\shader\vorticity.frag" />
+    <None Include="src\scenes\fluid\shader\fluid\splat.frag" />
+    <None Include="src\scenes\fluid\shader\fluid\vorticity.frag" />
     <None Include="src\scenes\fluid\shader\vorticityforce.frag" />
     <None Include="src\scenes\fluid\shader\displayvector.frag" />
     <None Include="src\scenes\fluid\shader\gravity.frag" />
     <None Include="src\scenes\fluid\shader\displayscalar.frag" />
     <None Include="src\scenes\swarm\shader\intro.comp" />
+    <None Include="src\scenes\fluid\shader\lines.frag" />
   </ItemGroup>
 </Project>

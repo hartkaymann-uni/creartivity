@@ -8,7 +8,7 @@ FluidScene::FluidScene()
 	debug( false ),
 	step( false ),
 	sequenceDuration( 10.f ),
-	sequenceTransitionDuration( 5.f ),
+	sequenceTransitionDuration( 1.f ),
 	lastSequene( SequenceName::Empty ),
 	currentSequence( SequenceName::Empty ),
 	lastSequenceTime( 0.f ) {}
@@ -33,7 +33,7 @@ void FluidScene::setup()
 	solver = ccSolver( solverSettings );
 
 	ccSolver::Grid solverGrid;
-	solverGrid.size = glm::vec2( 512, 256 );
+	solverGrid.size = glm::vec2( 512, 256 ); // WQHD : 2.560 x 1.440
 	solverGrid.scale = 1.0f;
 	solverGrid.applyBounds = true;
 	solver.setup( solverGrid );
@@ -50,7 +50,7 @@ void FluidScene::setup()
 	groupGeneral.add( p_Timestep.set( "Timestep", solverSettings.timestep, 0.f, 2.f ) );
 	groupGeneral.add( p_SplatRadius.set( "Splat", solverSettings.splatRadius, 0.f, .005f ) );
 	groupGeneral.add( p_SplatColor.set( "Color", solverSettings.splatColor ) );
-	groupGeneral.add( p_Dissipation.set( "Dissipation", solverSettings.dissipation, 0.f, 1.f ) );
+	groupGeneral.add( p_Dissipation.set( "Dissipation", solverSettings.dissipation, 0.9f, 1.f ) );
 	groupSolver.add( p_JacobiIterations.set( "Iterations", solverSettings.jacobiIterations, 0, 120 ) );
 	groupGrid.add( p_Bounds.set( "Bounds", solverGrid.applyBounds ) );
 	groupGrid.add( p_Scale.set( "Scale", 1.f, 0.f, 1.f ) );
@@ -92,7 +92,7 @@ void FluidScene::setup()
 
 	// Load display shaders
 	filesystem::path shaderPath = getShaderPath();
-	bool err_dispvector = displayScalarProgram.load( shaderPath / "passthru.vert", shaderPath / "displayscalar.frag" );
+	bool err_dispvector = displayScalarProgram.load( shaderPath / "passthru.vert", shaderPath / "lines.frag" );
 	bool err_dispscalar = displayVectorProgram.load( shaderPath / "passthru.vert", shaderPath / "displayvector.frag" );
 
 	// Initialize Sequences
@@ -207,7 +207,7 @@ void FluidScene::setupSequences() {
 	// Smoke
 	sequenceMap.insert( pair<FluidScene::SequenceName, SequenceParameters>( SequenceName::Smoke, { 0.5f,  0.002f, 0.998f, true, .15f, false, 0.f, {1.f, 1.f, 1.f } } ) );
 	// Empty
-	sequenceMap.insert( pair<FluidScene::SequenceName, SequenceParameters>( SequenceName::Empty, { 1.f,  0.002f, 0.f, false, 0.f, false, 0.f, {0.f, 0.f, 0.f } } ) );
+	sequenceMap.insert( pair<FluidScene::SequenceName, SequenceParameters>( SequenceName::Empty, { 1.f,  0.002f, 0.9f, false, 0.f, false, 0.f, {0.f, 0.f, 0.f } } ) );
 }
 
 void FluidScene::updateSequence() {

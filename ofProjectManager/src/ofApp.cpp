@@ -27,7 +27,7 @@ void ofApp::setup() {
 	// Initialize scene manager
 	sceneManager.setup( true ); // Setup all scenes now
 	ofSetLogLevel( "ofxScenemanager", OF_LOG_VERBOSE );
-	sceneManager.gotoScene( "ContourLines", true );
+	sceneManager.gotoScene( "Fluid", true );
 	lastScene = sceneManager.getCurrentSceneIndex();
 	sceneManager.setOverlap( false );
 	nextAction = NULL;
@@ -126,6 +126,12 @@ void ofApp::keyPressed( int key ) {
 
 	case 'o':
 		sceneManager.setOverlap( !sceneManager.getOverlap() );
+		break;
+	case 'x':
+		// Take a screenshot
+		img.grabScreen( 0, 0, ofGetWidth(), ofGetHeight() );
+		string filename = "screenshots/" + ofGetTimestampString( "%Y-%m-%d-%H-%M-%S-%i" ) + ".png";
+		img.save( filename );
 		break;
 	}
 }
