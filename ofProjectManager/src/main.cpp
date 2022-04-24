@@ -10,6 +10,7 @@ int main() {
 	
 	//settings.windowMode = OF_FULLSCREEN;
 	settings.setSize( 1024, 768 );
+	//settings.setSize( 2560, 1440 ); // WQHD
 	
 	//settings.decorated = false;
 	settings.stencilBits = 8;

@@ -68,4 +68,6 @@ private:
 	bool showGui = true;
 
 	ccUserManager userManager;
+
+	ofImage img;
 };

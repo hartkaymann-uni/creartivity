@@ -127,6 +127,12 @@ void ofApp::keyPressed( int key ) {
 	case 'o':
 		sceneManager.setOverlap( !sceneManager.getOverlap() );
 		break;
+	case 'x':
+		// Take a screenshot
+		img.grabScreen( 0, 0, ofGetWidth(), ofGetHeight() );
+		string filename = "screenshots/" + ofGetTimestampString( "%Y-%m-%d-%H-%M-%S-%i" ) + ".png";
+		img.save( filename );
+		break;
 	}
 }
 

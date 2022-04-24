@@ -14,7 +14,7 @@ out vec4 vFragColor;
 void main()
 {
     vec3 c = vec3(0.f);
-    float height = gridSize.y * 2;
+    float height = 1000;
     int y = int(vTexCoord.y * height);
     
     // Make lines every few texels
