@@ -18,7 +18,7 @@ void main()
 	vec2 uv = gl_FragCoord.xy / screen.xy;
 	vec2 st = uv * resolution.xy;
 	vec4 cell =  texture(cells, st);
-    vec3 color = vec3(0.f);
+    vec3 color = vec3(1.f);
 
 	vec2 i_st = floor(st) + vec2(0.5);
 	vec2 f_st = fract(st);
@@ -39,7 +39,8 @@ void main()
     }
     // Draw cells
 	//m_dist = length(i_st - st);
-    color += step(radius * .01, m_dist);
+    color -= step(radius * .01, m_dist);
+    color -= 1.f - step(radius * .0025, m_dist);
 
 
 	vFragColor = vec4(color, 1.f);
