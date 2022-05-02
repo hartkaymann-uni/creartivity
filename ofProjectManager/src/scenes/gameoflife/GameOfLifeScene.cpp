@@ -13,7 +13,8 @@ namespace gol {
 		sequenceTransitionDuration( 1.f ),
 		lastSequene( SequenceName::Empty ),
 		currentSequence( SequenceName::Empty ),
-		lastSequenceTime( 0.f )
+		lastSequenceTime( 0.f ),
+		shading( ShadingType::OUTLINE )
 	{
 		// Load Shaders
 		filesystem::path shader_path = getShaderPath();
@@ -56,7 +57,7 @@ namespace gol {
 		dimensions.set( "dimensions", ofVec2f( n_cells_x, n_cells_y ), ofVec2f( 1.f, 1.f ), ofVec2f( n_cells_x * 10.f, n_cells_y * 10.f ) );
 		evolutionFactor.set( "evolutionFac", 0.05f, 0.f, 0.25f );
 		sphereResolution.set( "circleRes", 20, 1, 100 );
-		sphereRadius.set( "radius", 0.1f, 0.f, .5f );
+		sphereRadius.set( "radius", 10.f, 0.f, 50.f );
 		dataSrcSize.set( "srcSize", 0.f, 0.f, 9.f );
 		mouseRadius.set( "mouseRad", 5.f, 0.f, 10.f );
 		mouseStrength.set( "mouseStr", 0.5f, 0.f, 1.f );
@@ -205,8 +206,16 @@ namespace gol {
 
 		camera.begin();
 
-		//drawOutlined( vboSphere, instancedShader, outlineShader );
-		drawMetaballs( metaballShader );
+		switch (shading) {
+		case ShadingType::OUTLINE:
+			drawOutlined( vboSphere, instancedShader, outlineShader );
+			break;
+		case ShadingType::METABALL:
+			drawMetaballs( metaballShader );
+			break;
+		default:
+			break;
+		}
 
 		// Draw some additional objects for debugging
 #if 0
@@ -282,7 +291,7 @@ namespace gol {
 		mesh.drawInstanced( OF_MESH_FILL, n_cells_x * n_cells_y );
 
 		glStencilMask( 0xFF );
-		glStencilFunc( GL_ALWAYS, 0, 0xFF ); 
+		glStencilFunc( GL_ALWAYS, 0, 0xFF );
 
 		outline.end();
 
@@ -297,7 +306,7 @@ namespace gol {
 	{
 		// Create geometry, put this into setup later
 		ofPlanePrimitive plane;
-		plane.set( width, height);
+		plane.set( width, height );
 		plane.setPosition( width * .5f, height * .5f, 0.f );
 		plane.setResolution( 2, 2 );
 
@@ -333,6 +342,8 @@ namespace gol {
 
 		allocateCellBuffer( n_cells_x, n_cells_y );
 
+		changeShading();
+
 		return sequenceTransitionDuration;
 	}
 
@@ -340,6 +351,11 @@ namespace gol {
 		setSequence( SequenceName::Empty );
 
 		return sequenceTransitionDuration;
+	}
+
+	// Change shading type, right now just switches between outlined and metaball shading
+	void GameOfLifeScene::changeShading() {
+		shading = shading == ShadingType::METABALL ? ShadingType::OUTLINE : ShadingType::METABALL;
 	}
 
 
@@ -374,6 +390,15 @@ namespace gol {
 	//////////////////
 	// Input Events //
 	//////////////////
+
+	void GameOfLifeScene::keyPressed( int key ) {
+		switch (key) {
+		case 's':
+			changeShading();
+			break;
+		}
+	}
+
 
 	void GameOfLifeScene::windowResized( int w, int h ) {
 		width = ofGetWidth();

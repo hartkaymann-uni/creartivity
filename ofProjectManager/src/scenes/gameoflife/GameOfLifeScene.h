@@ -54,6 +54,7 @@ namespace gol {
 		void draw();
 		void reset();
 
+		void keyPressed( int key );
 		void windowResized( int w, int h );
 
 		void handleSphereResolutionChanged( int& sphereRes );
@@ -65,6 +66,13 @@ namespace gol {
 		float cellOffset;
 
 		float time;
+
+		enum ShadingType {
+			OUTLINE,
+			METABALL
+		};
+		ShadingType shading;
+		void changeShading();
 
 		ofShader logicShader;
 		ofShader instancedShader;
@@ -125,6 +133,7 @@ namespace gol {
 
 		float SceneIntro();
 		float SceneOutro();
+
 
 	};
 }
