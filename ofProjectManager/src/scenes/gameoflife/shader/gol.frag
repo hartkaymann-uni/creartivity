@@ -12,8 +12,6 @@ uniform float evolutionFac;
 uniform vec2 screen;
 uniform float offset;
 
-uniform bool mouseDown;
-uniform vec3 mousePos;
 uniform float mouseRad;
 uniform float mouseStr;
 uniform vec2 hands[N_USERS];
@@ -29,16 +27,16 @@ void main(void){
     vec3 evolVec = vec3 ( evolutionFac );
    
     // Get all neighbouring cells' information
-    vec3 left_top  = texture(cellData, vTexCoord.xy + vec2(-1.0, -1.0)).xyz;
-    vec3 mid_top   = texture(cellData, vTexCoord.xy + vec2( 0.0, -1.0)).xyz;
-    vec3 right_top = texture(cellData, vTexCoord.xy + vec2( 1.0, -1.0)).xyz;
-    vec3 left_mid  = texture(cellData, vTexCoord.xy + vec2(-1.0,  0.0)).xyz;
-    vec3 right_mid = texture(cellData, vTexCoord.xy + vec2( 1.0,  0.0)).xyz;
-    vec3 left_bot  = texture(cellData, vTexCoord.xy + vec2(-1.0,  1.0)).xyz;
-    vec3 mid_bot   = texture(cellData, vTexCoord.xy + vec2( 0.0,  1.0)).xyz;
-    vec3 right_bot = texture(cellData, vTexCoord.xy + vec2( 1.0,  1.0)).xyz;
+    vec3 tl = texture(cellData, vTexCoord.xy + vec2(-1.0, -1.0)).xyz;
+    vec3 tc = texture(cellData, vTexCoord.xy + vec2( 0.0, -1.0)).xyz;
+    vec3 tr = texture(cellData, vTexCoord.xy + vec2( 1.0, -1.0)).xyz;
+    vec3 cl = texture(cellData, vTexCoord.xy + vec2(-1.0,  0.0)).xyz;
+    vec3 cr = texture(cellData, vTexCoord.xy + vec2( 1.0,  0.0)).xyz;
+    vec3 bl = texture(cellData, vTexCoord.xy + vec2(-1.0,  1.0)).xyz;
+    vec3 bc = texture(cellData, vTexCoord.xy + vec2( 0.0,  1.0)).xyz;
+    vec3 br = texture(cellData, vTexCoord.xy + vec2( 1.0,  1.0)).xyz;
 
-    float n_neighbours = left_top.x + mid_top.x + right_top.x + left_mid.x + right_mid.x + left_bot.x + mid_bot.x + right_bot.x;   
+    float n_neighbours = tl.x + tc.x + tr.x + cl.x + cr.x + bl.x + bc.x + br.x;   
     next_state.y = n_neighbours / 8.0;
 
     if ( state.x <= 0.0) {
@@ -60,14 +58,8 @@ void main(void){
             next_state.x -= evolutionFac;
         }
     }
-
-    // Mouse interaction
-    if(mouseDown && distance(vTexCoord, mousePos.xy / offset) <= mouseRad) {
-        next_state.x += mouseStr;
-        next_state.z = 1.0;
-    }
-
-    // Hand interaction    
+   
+    // Interaction    
     for(int i = 0; i < N_USERS; i++) {
         if(hands[i].xy != vec2(0.0)){
             if(distance(vTexCoord, hands[i].xy/offset) <= mouseRad) {
@@ -76,19 +68,17 @@ void main(void){
             }
         } 
      }
-    float influence = max(left_top.z, max(mid_top.z, max( right_top.z, max( left_mid.z, max( right_mid.z, max( left_bot.z, max( mid_bot.z, max( right_bot.z, state.z ))))))));
 
-    if(state.x > 0) {
-        next_state.z = influence * (1.0 - evolutionFac);
+     // Find the highest interaction factor in all neighbouring cells
+    float influence = max(tl.z, max(tc.z, max( tr.z, max( cl.z, max( cr.z, max( bl.z, max( bc.z, max( br.z, state.z ))))))));
 
-        if(next_state.z > 0.0) {
-        influence -= evolutionFac;    
+    // Set interaction factor of a cell by indirect interaction only once
+    if(next_state.x > 0 && next_state.z <= 0) {
+        next_state.z = influence * (0.9 - evolutionFac);
+    } else if (state.z > 0.0) {
+        next_state.z = state.z - evolutionFac;    
     }
-}
-    
-
-    // average influence of neighbouring cells        
-    
+        
 
      // Clamp values between 0.0 and 1.0
     next_state.x = clamp(next_state.x, 0.0, 1.0);

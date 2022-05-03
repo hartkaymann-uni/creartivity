@@ -147,8 +147,6 @@ namespace gol {
 		logicShader.setUniform2f( "resolution", (float)n_cells_x, (float)n_cells_y );
 		logicShader.setUniform2f( "screen", (float)width, (float)height );
 		logicShader.setUniform1f( "offset", cellOffset );
-		logicShader.setUniform1i( "mouseDown", mouseIsDown );
-		logicShader.setUniform3f( "mousePos", mousePosition );
 		logicShader.setUniform2fv( "hands", &user_positions[0].x, sizeof( ofVec2f ) * 10 );
 
 		// Draw cell texture to call shaders, logic happens in shaders
