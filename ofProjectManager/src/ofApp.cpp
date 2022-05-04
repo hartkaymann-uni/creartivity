@@ -4,6 +4,9 @@
 
 using namespace gol;
 
+extern int SCREEN_WIDTH;
+extern int SCREEN_HEIGHT;
+
 //--------------------------------------------------------------
 void ofApp::setup() {
 	ofBackground( 255, 255, 0 );
@@ -11,7 +14,7 @@ void ofApp::setup() {
 	ofSetFrameRate( 60 );
 	ofSetVerticalSync( false );
 
-	transformer.setRenderSize( 1024, 768 );
+	transformer.setRenderSize( SCREEN_WIDTH, SCREEN_HEIGHT);
 	transformer.setTransforms( true, true, false, true, true );
 	setTransformer( &transformer );
 

@@ -340,7 +340,7 @@ namespace gol {
 
 		allocateCellBuffer( n_cells_x, n_cells_y );
 
-		changeShading();
+		//changeShading();
 
 		return sequenceTransitionDuration;
 	}

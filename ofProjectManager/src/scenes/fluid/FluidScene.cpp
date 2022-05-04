@@ -34,7 +34,7 @@ void FluidScene::setup()
 	solver = ccSolver( solverSettings );
 
 	ccSolver::Grid solverGrid;
-	solverGrid.size = glm::vec2( 512, 256 ); // WQHD : 2.560 x 1.440
+	solverGrid.size = glm::vec2( 3840, 1080); // WQHD : 2.560 x 1.440
 	solverGrid.scale = 1.0f;
 	solverGrid.applyBounds = true;
 	solver.setup( solverGrid );
@@ -271,7 +271,7 @@ float FluidScene::SceneIntro()
 	lastSequene = SequenceName::Empty;
 	setSequence( randSequence() );
 
-	changeShading();
+	//changeShading();
 
 	return sequenceTransitionDuration;
 }
