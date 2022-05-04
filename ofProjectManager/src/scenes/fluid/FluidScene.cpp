@@ -2,6 +2,9 @@
 
 using namespace fluid;
 
+extern int SCREEN_WIDTH;
+extern int SCREEN_HEIGHT;
+
 FluidScene::FluidScene()
 	: ccScene( "Fluid" ),
 	time( 0.f ),
@@ -34,7 +37,7 @@ void FluidScene::setup()
 	solver = ccSolver( solverSettings );
 
 	ccSolver::Grid solverGrid;
-	solverGrid.size = glm::vec2( 3840, 1080); // WQHD : 2.560 x 1.440
+	solverGrid.size = glm::vec2( SCREEN_WIDTH, SCREEN_HEIGHT);
 	solverGrid.scale = 1.0f;
 	solverGrid.applyBounds = true;
 	solver.setup( solverGrid );
