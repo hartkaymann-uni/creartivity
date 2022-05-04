@@ -1,8 +1,19 @@
+/*
+*  @author: Irene Santana Martin, Christine Schuller, Kay Hartmann, Cosmo Strattner, Marvin Esche, Franziska Streifert
+* 
+*  May 2022
+*
+*  This class contains basic app functionalities.
+*/
+
 #pragma once
 
 #include "ofApp.h"
 
 //--------------------------------------------------------------
+/// <summary>
+/// Initializing all the variables and methods
+/// </summary>
 void ofApp::setup() {
 	ofSetFrameRate( 60 );
 	ofSetVerticalSync( true );
@@ -33,6 +44,9 @@ void ofApp::setup() {
 }
 
 //--------------------------------------------------------------
+/// <summary>
+///  
+/// </summary>
 void ofApp::update() {
 	device.update();
 	// How many users
@@ -49,7 +63,7 @@ void ofApp::update() {
 		float xr = RHD.getGlobalPosition().x;
 		float yr = RHD.getGlobalPosition().y;
 
-		// Calibration
+		// Calibration 
 		if (xl < left)left = xl;
 		if (xl > right)right = xl;
 		if (yl < top)top = yl;
@@ -61,11 +75,11 @@ void ofApp::update() {
 		if (yr > bottom)bottom = yr;
 
 		int id = user->getId();
-		// Position left hand
+		// Position of left hand
 		users[id].positionLeft.x = ofMap( xl,left, right, 0.f, 1.f, true );
 		users[id].positionLeft.y = 1.f - ofMap( yl, top, bottom, 0.f, 1.f, true );
 
-		// Position right hand
+		// Position of right hand
 		users[id].positionRight.x = ofMap( xr, left, right, 0.f, 1.f, true );
 		users[id].positionRight.y = 1.f - ofMap( yr, top, bottom, 0.f, 1.f, true );
 
@@ -82,6 +96,9 @@ void ofApp::update() {
 }
 
 //--------------------------------------------------------------
+/// <summary>
+/// Captured Userdata is sent to ofProjectManager 
+/// </summary>
 void ofApp::sendUser( int id, user& user ) {
 	ofxOscMessage m;
 	std::string addr = "/user/data/";
@@ -100,6 +117,9 @@ void ofApp::sendUser( int id, user& user ) {
 }
 
 //--------------------------------------------------------------
+/// <summary>
+/// This method draws the skeleton and ??
+/// </summary>
 void ofApp::draw() {
 	depthPixels = tracker.getPixelsRef( 1000, 4000 );
 	depthTexture.loadData( depthPixels );
@@ -131,7 +151,11 @@ void ofApp::exit() {
 	device.exit();
 }
 
-
+//--------------------------------------------------------------
+/// <summary>
+/// This method distributes an ID to an user
+/// The first user is assigned to ID 1
+/// </summary>
 void ofApp::registerUser( ofxNiTE2::User::Ref u )
 {
 	user newUser;
@@ -146,6 +170,10 @@ void ofApp::registerUser( ofxNiTE2::User::Ref u )
 
 }
 
+//--------------------------------------------------------------
+/// <summary>
+/// 
+/// </summary>
 void ofApp::removeUser( ofxNiTE2::User::Ref user )
 {
 	int id = user->getId();
@@ -157,6 +185,10 @@ void ofApp::removeUser( ofxNiTE2::User::Ref user )
 	sender.sendMessage( m );
 }
 
+//--------------------------------------------------------------
+/// <summary>
+/// 
+/// </summary>
 void ofApp::printUsers() {
 	std::cout << "Users: [ ";
 	std::map<int, user>::iterator it = users.begin();
@@ -168,6 +200,7 @@ void ofApp::printUsers() {
 	std::cout << " ]" << std::endl;
 }
 
+//--------------------------------------------------------------
 void ofApp::sendConnectionStarted() {
 	
 	ofxOscMessage m;
