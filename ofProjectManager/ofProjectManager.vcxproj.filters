@@ -368,7 +368,7 @@
     <None Include="src\scenes\fluid\shader\displayvector.frag" />
     <None Include="src\scenes\fluid\shader\displayscalar.frag" />
     <None Include="src\scenes\swarm\shader\intro.comp" />
-    <None Include="src\scenes\fluid\shader\lines.frag" />
+    <None Include="src\scenes\fluid\shader\pixels.frag" />
     <None Include="src\scenes\gameoflife\shader\metaballs.frag" />
   </ItemGroup>
 </Project>

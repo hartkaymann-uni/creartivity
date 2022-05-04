@@ -309,7 +309,7 @@
     <None Include="src\scenes\fluid\shader\fluid\gravity.frag" />
     <None Include="src\scenes\fluid\shader\fluid\jacobiscalar.frag" />
     <None Include="src\scenes\fluid\shader\fluid\jacobivector.frag" />
-    <None Include="src\scenes\fluid\shader\lines.frag" />
+    <None Include="src\scenes\fluid\shader\pixels.frag" />
     <None Include="src\scenes\fluid\shader\passthru.vert" />
     <None Include="src\scenes\fluid\shader\fluid\splat.frag" />
     <None Include="src\scenes\fluid\shader\fluid\vorticity.frag" />
