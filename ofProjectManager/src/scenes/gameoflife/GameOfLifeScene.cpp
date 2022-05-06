@@ -320,7 +320,6 @@ namespace gol {
 		plane.draw();
 
 		metaballs.end();
-
 	}
 
 	void GameOfLifeScene::reset()
@@ -328,7 +327,6 @@ namespace gol {
 		time = 0.f;
 		ofResetElapsedTimeCounter();
 	}
-
 
 	//////////////////////
 	// Scene Transition //
@@ -397,11 +395,7 @@ namespace gol {
 		}
 	}
 
-
 	void GameOfLifeScene::windowResized( int w, int h ) {
-		width = ofGetWidth();
-		height = ofGetHeight();
-
 		ofVec2f dim = dimensions.get();
 		handleDimensionsChanged( dim );
 	}

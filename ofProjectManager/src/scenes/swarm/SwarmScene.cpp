@@ -40,8 +40,8 @@ void SwarmScene::setup() {
 	compute.setupShaderFromFile(GL_COMPUTE_SHADER, shader_path / "swarm.comp");
 	compute.linkProgram();
 
-	colorSplash.setupShaderFromFile(GL_COMPUTE_SHADER, shader_path / "colorSplash.comp");
-	colorSplash.linkProgram();
+	//colorSplash.setupShaderFromFile(GL_COMPUTE_SHADER, shader_path / "colorSplash.comp");
+	//colorSplash.linkProgram();
 
 	introShader.setupShaderFromFile(GL_COMPUTE_SHADER, shader_path / "intro.comp");
 	introShader.linkProgram();

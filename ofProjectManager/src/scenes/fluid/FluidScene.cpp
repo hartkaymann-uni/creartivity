@@ -97,7 +97,7 @@ void FluidScene::setup()
 	// Load display shaders
 	filesystem::path shaderPath = getShaderPath();
 	bool err_loadscalar = displayScalar.load( shaderPath / "passthru.vert", shaderPath / "displayscalar.frag" );
-	bool err_loadvector = displayVector.load( shaderPath / "passthru.vert", shaderPath / "displaysvector.frag" );
+	bool err_loadvector = displayVector.load( shaderPath / "passthru.vert", shaderPath / "displayvector.frag" );
 	bool err_loadpixel = displayLines.load( shaderPath / "passthru.vert", shaderPath / "pixels.frag" );
 
 	// Initialize Sequences
