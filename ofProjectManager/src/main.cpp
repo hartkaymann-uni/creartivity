@@ -15,6 +15,7 @@ int SCREEN_HEIGHT = 800;
 int main() {
 
 	ofGLFWWindowSettings settings;
+	settings.setPosition( ofVec2f( 660.0, 100.0 ) );
 	settings.setGLVersion( 3, 2 );
 	settings.setSize( SCREEN_WIDTH, SCREEN_HEIGHT );
 #ifdef PRESENTATION_MODE
@@ -27,7 +28,7 @@ int main() {
 	//settings.decorated = false;
 	settings.stencilBits = 8;
 	ofCreateWindow( settings );
-
+	
 
 	ofRunAppWithAppUtils( new ofApp() );
 }

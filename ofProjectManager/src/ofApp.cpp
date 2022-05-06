@@ -30,6 +30,7 @@ void ofApp::setup() {
 	sceneManager.setup( true ); // Setup all scenes now
 	ofSetLogLevel( "ofxScenemanager", OF_LOG_VERBOSE );
 	sceneManager.gotoScene( "GameOfLife", true );
+
 	lastScene = sceneManager.getCurrentSceneIndex();
 	sceneManager.setOverlap( false );
 	nextAction = NULL;

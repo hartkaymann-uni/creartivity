@@ -46,6 +46,9 @@ void SwarmScene::setup() {
 	introShader.setupShaderFromFile(GL_COMPUTE_SHADER, shader_path / "intro.comp");
 	introShader.linkProgram();
 
+	introShader.setupShaderFromFile(GL_COMPUTE_SHADER, shader_path / "intro.comp");
+	introShader.linkProgram();
+
 	userEnter.setupShaderFromFile(GL_COMPUTE_SHADER, shader_path / "swarmUserEnter.comp");
 	userEnter.linkProgram();
 

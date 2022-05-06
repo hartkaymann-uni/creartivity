@@ -2,6 +2,7 @@
 
 using namespace fluid;
 
+ 
 extern int SCREEN_WIDTH;
 extern int SCREEN_HEIGHT;
 
@@ -38,6 +39,7 @@ void FluidScene::setup()
 
 	ccSolver::Grid solverGrid;
 	solverGrid.size = glm::vec2( SCREEN_WIDTH, SCREEN_HEIGHT);
+
 	solverGrid.scale = 1.0f;
 	solverGrid.applyBounds = true;
 	solver.setup( solverGrid );
@@ -99,6 +101,7 @@ void FluidScene::setup()
 	bool err_loadscalar = displayScalar.load( shaderPath / "passthru.vert", shaderPath / "displayscalar.frag" );
 	bool err_loadvector = displayVector.load( shaderPath / "passthru.vert", shaderPath / "displayvector.frag" );
 	bool err_loadpixel = displayLines.load( shaderPath / "passthru.vert", shaderPath / "pixels.frag" );
+
 
 	// Initialize Sequences
 	setupSequences();
@@ -199,6 +202,33 @@ void FluidScene::drawPixelated() {
 	camera.end();
 }
 
+void FluidScene::keyPressed( int key ) {
+
+	//std::cout << key << std::endl;
+	if (key == ofKey::OF_KEY_SHIFT)
+	{
+		camera.enableMouseInput();
+		//std::cout << camera.getPosition() << std::endl;
+	}
+	else if (key == 'r' || key == 'R') {
+		resetCamera();
+	}
+	else if (key == 'd' || key == 'D') {
+		debug = !debug;
+		cout << "Debug: " << (debug ? "On" : "Off") << endl;
+	}
+	else if (key == 32) {
+		if (debug) step = true;
+	}
+}
+
+void FluidScene::keyReleased( int key ) {
+
+	if (key == ofKey::OF_KEY_SHIFT)
+	{
+		camera.disableMouseInput();
+	}
+}
 
 ///////////////
 // Sequences //
@@ -275,7 +305,6 @@ float FluidScene::SceneIntro()
 	setSequence( randSequence() );
 
 	//changeShading();
-
 	return sequenceTransitionDuration;
 }
 
@@ -326,3 +355,4 @@ void FluidScene::keyReleased( int key ) {
 		camera.disableMouseInput();
 	}
 }
+

@@ -29,7 +29,6 @@ namespace gol {
 		if (!err_splat) {
 			(void)ofLogError(module, "Failed to load splat shader!");
 		}
-
 		bool err_instanced = instancedShader.load( shader_path / "renderInstanced.vert", shader_path / "renderInstanced.frag" );
 		if (!err_instanced) {
 			(void)ofLogError( module, "Failed to load logic shader!" );
@@ -64,6 +63,7 @@ namespace gol {
 		sphereRadius.set( "radius", 10.f, 0.f, 50.f );
 		dataSrcSize.set( "srcSize", 0.f, 0.f, 9.f );
 		mouseRadius.set( "mouseRad", 0.1f, 0.f, 1.f );
+
 		mouseStrength.set( "mouseStr", 0.5f, 0.f, 1.f );
 		jiggleFactor.set( "jiggle", 1.f, 0.f, 10.f );
 		runSequences.set( "Run sequences", true );
@@ -123,6 +123,7 @@ namespace gol {
 		sequenceMap.insert( pair<GameOfLifeScene::SequenceName, SequenceParameters>( SequenceName::BigCells, { 0.03,  cellOffset * 4.f, 3.0 } ) );
 		// Small cell
 		sequenceMap.insert( pair<GameOfLifeScene::SequenceName, SequenceParameters>( SequenceName::SmallCells, { 0.085,  cellOffset * .75f, 0.5 } ) );
+
 		// Fast evolution
 		sequenceMap.insert( pair<GameOfLifeScene::SequenceName, SequenceParameters>( SequenceName::FastEvolution, { 0.15, cellOffset, 2.0 } ) );
 		// Slow evolution
@@ -251,6 +252,7 @@ namespace gol {
 		}
 
 		// Draw some additional objects for debugging
+
 #if 0
 		ofPushStyle();
 		ofFill();
@@ -279,6 +281,7 @@ namespace gol {
 		}
 		camera.end();
 	}
+
 
 	// Draw outlines with stencil testing
 	void GameOfLifeScene::drawOutlined( ofVboMesh& mesh, ofShader& instance, ofShader& outline ) {
@@ -363,6 +366,7 @@ namespace gol {
 		ofResetElapsedTimeCounter();
 	}
 
+
 	//////////////////////
 	// Scene Transition //
 	//////////////////////
@@ -380,7 +384,6 @@ namespace gol {
 
 	float GameOfLifeScene::SceneOutro() {
 		setSequence( SequenceName::Empty );
-
 		return sequenceTransitionDuration;
 	}
 
