@@ -9,11 +9,11 @@
 namespace gol {
 	struct pingPongBuffer {
 	public:
-		void allocate( int _width, int _height, int _internalformat = GL_RGBA ) {
+		void allocate(int _width, int _height, int _internalformat = GL_RGBA) {
 			// Allocate
 			for (int i = 0; i < 2; i++) {
-				FBOs[i].allocate( _width, _height, _internalformat );
-				FBOs[i].getTexture().setTextureMinMagFilter( GL_NEAREST, GL_NEAREST );
+				FBOs[i].allocate(_width, _height, _internalformat);
+				FBOs[i].getTexture().setTextureMinMagFilter(GL_NEAREST, GL_NEAREST);
 			}
 
 			//Assign
@@ -25,18 +25,18 @@ namespace gol {
 		}
 
 		void swap() {
-			std::swap( src, dst );
+			std::swap(src, dst);
 		}
 
 		void clear() {
 			for (int i = 0; i < 2; i++) {
 				FBOs[i].begin();
-				ofClear( 0, 255 );
+				ofClear(0, 255);
 				FBOs[i].end();
 			}
 		}
 
-		ofFbo& operator[]( int n ) { return FBOs[n]; }
+		ofFbo& operator[](int n) { return FBOs[n]; }
 		ofFbo* src;       // Source       ->  Ping
 		ofFbo* dst;       // Destination  ->  Pong
 
@@ -48,17 +48,17 @@ namespace gol {
 
 	public:
 
-		GameOfLifeScene( int cells_x = 102, int cells_y = 77 );
+		GameOfLifeScene(int cells_x = 102, int cells_y = 77);
 		void setup();
 		void update();
 		void draw();
 		void reset();
 
-		void keyPressed( int key );
-		void windowResized( int w, int h );
+		void keyPressed(int key);
+		void windowResized(int w, int h);
 
-		void handleSphereResolutionChanged( int& sphereRes );
-		void handleDimensionsChanged( ofVec2f& value );
+		void handleSphereResolutionChanged(int& sphereRes);
+		void handleDimensionsChanged(ofVec2f& value);
 
 	private:
 		int n_cells_x;
@@ -99,12 +99,12 @@ namespace gol {
 		ofParameter<float> jiggleFactor;
 		ofParameter<bool> runSequences;
 
-		float calculateSphereRadius( ofVec2f dim );
-		void allocateCellBuffer( int rows, int cols );
+		float calculateSphereRadius(ofVec2f dim);
+		void allocateCellBuffer(int rows, int cols);
 
-		void drawOutlined( ofVboMesh& mesh, ofShader& instance, ofShader& outline );
+		void drawOutlined(ofVboMesh& mesh, ofShader& instance, ofShader& outline);
 
-    void drawMetaballs( ofShader& metaballs );
+		void drawMetaballs(ofShader& metaballs);
 
 
 		// Members for sequences
@@ -134,7 +134,7 @@ namespace gol {
 
 		void initSequences();
 		void updateSequence();
-		void setSequence( SequenceName name );
+		void setSequence(SequenceName name);
 		void updateParameters();
 		SequenceName randSequence();
 

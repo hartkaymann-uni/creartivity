@@ -202,34 +202,6 @@ void FluidScene::drawPixelated() {
 	camera.end();
 }
 
-void FluidScene::keyPressed( int key ) {
-
-	//std::cout << key << std::endl;
-	if (key == ofKey::OF_KEY_SHIFT)
-	{
-		camera.enableMouseInput();
-		//std::cout << camera.getPosition() << std::endl;
-	}
-	else if (key == 'r' || key == 'R') {
-		resetCamera();
-	}
-	else if (key == 'd' || key == 'D') {
-		debug = !debug;
-		cout << "Debug: " << (debug ? "On" : "Off") << endl;
-	}
-	else if (key == 32) {
-		if (debug) step = true;
-	}
-}
-
-void FluidScene::keyReleased( int key ) {
-
-	if (key == ofKey::OF_KEY_SHIFT)
-	{
-		camera.disableMouseInput();
-	}
-}
-
 ///////////////
 // Sequences //
 ///////////////
