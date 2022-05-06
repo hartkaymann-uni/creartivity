@@ -41,7 +41,7 @@ namespace gol {
 		ofFbo* dst;       // Destination  ->  Pong
 
 	private:
-		ofFbo   FBOs[2];    // Real addresses of ping/pong FBO«s
+		ofFbo   FBOs[2];    // Real addresses of ping/pong FBOÂ«s
 	};
 
 	class GameOfLifeScene : public ccScene {
@@ -54,6 +54,7 @@ namespace gol {
 		void draw();
 		void reset();
 
+		void keyPressed( int key );
 		void windowResized( int w, int h );
 
 		void handleSphereResolutionChanged( int& sphereRes );
@@ -66,9 +67,22 @@ namespace gol {
 
 		float time;
 
+		void step();
+		void addInteraction(glm::vec2 point);
+
+		enum ShadingType {
+			OUTLINE,
+			METABALL
+		};
+		ShadingType shading;
+		void changeShading();
+
 		ofShader logicShader;
+		ofShader splatShader;
 		ofShader instancedShader;
 		ofShader outlineShader;
+		ofShader metaballShader;
+
 
 		pingPongBuffer cellPingPong;
 
@@ -89,6 +103,9 @@ namespace gol {
 		void allocateCellBuffer( int rows, int cols );
 
 		void drawOutlined( ofVboMesh& mesh, ofShader& instance, ofShader& outline );
+
+    void drawMetaballs( ofShader& metaballs );
+
 
 		// Members for sequences
 		enum class SequenceName {
@@ -123,6 +140,5 @@ namespace gol {
 
 		float SceneIntro();
 		float SceneOutro();
-
 	};
 }

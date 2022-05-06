@@ -4,6 +4,9 @@
 
 using namespace gol;
 
+extern int SCREEN_WIDTH;
+extern int SCREEN_HEIGHT;
+
 //--------------------------------------------------------------
 void ofApp::setup() {
 	ofBackground( 255, 255, 0 );
@@ -11,23 +14,23 @@ void ofApp::setup() {
 	ofSetFrameRate( 60 );
 	ofSetVerticalSync( false );
 
-	transformer.setRenderSize( 1024, 768 );
+	transformer.setRenderSize( SCREEN_WIDTH, SCREEN_HEIGHT);
 	transformer.setTransforms( true, true, false, true, true );
 	setTransformer( &transformer );
 
 	receiver.setUserManager( &userManager );
 
 	// Load scenes
-	//scenes.push_back( (SpiralScene*)sceneManager.add( new SpiralScene() ) );
 	scenes.push_back( (FluidScene*)sceneManager.add( new FluidScene() ) );
-	scenes.push_back( (GameOfLifeScene*)sceneManager.add( new GameOfLifeScene() ) );
+	scenes.push_back( (GameOfLifeScene*)sceneManager.add( new GameOfLifeScene(SCREEN_WIDTH / 10, SCREEN_HEIGHT / 10) ) );
 	scenes.push_back( (SwarmScene*)sceneManager.add( new SwarmScene() ) );
 	scenes.push_back( (ContourLinesScene*)sceneManager.add( new ContourLinesScene() ) );
 
 	// Initialize scene manager
 	sceneManager.setup( true ); // Setup all scenes now
 	ofSetLogLevel( "ofxScenemanager", OF_LOG_VERBOSE );
-	sceneManager.gotoScene( "Fluid", true );
+	sceneManager.gotoScene( "GameOfLife", true );
+
 	lastScene = sceneManager.getCurrentSceneIndex();
 	sceneManager.setOverlap( false );
 	nextAction = NULL;

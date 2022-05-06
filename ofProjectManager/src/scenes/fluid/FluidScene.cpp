@@ -2,6 +2,10 @@
 
 using namespace fluid;
 
+ 
+extern int SCREEN_WIDTH;
+extern int SCREEN_HEIGHT;
+
 FluidScene::FluidScene()
 	: ccScene( "Fluid" ),
 	time( 0.f ),
@@ -11,7 +15,8 @@ FluidScene::FluidScene()
 	sequenceTransitionDuration( 1.f ),
 	lastSequene( SequenceName::Empty ),
 	currentSequence( SequenceName::Empty ),
-	lastSequenceTime( 0.f ) {}
+	lastSequenceTime( 0.f ),
+	shading( DEFAULT ) {}
 
 void FluidScene::setup()
 {
@@ -33,7 +38,8 @@ void FluidScene::setup()
 	solver = ccSolver( solverSettings );
 
 	ccSolver::Grid solverGrid;
-	solverGrid.size = glm::vec2( 512, 256 ); // WQHD : 2.560 x 1.440
+	solverGrid.size = glm::vec2( SCREEN_WIDTH, SCREEN_HEIGHT);
+
 	solverGrid.scale = 1.0f;
 	solverGrid.applyBounds = true;
 	solver.setup( solverGrid );
@@ -92,8 +98,10 @@ void FluidScene::setup()
 
 	// Load display shaders
 	filesystem::path shaderPath = getShaderPath();
-	bool err_dispvector = displayScalarProgram.load( shaderPath / "passthru.vert", shaderPath / "lines.frag" );
-	bool err_dispscalar = displayVectorProgram.load( shaderPath / "passthru.vert", shaderPath / "displayvector.frag" );
+	bool err_loadscalar = displayScalar.load( shaderPath / "passthru.vert", shaderPath / "displayscalar.frag" );
+	bool err_loadvector = displayVector.load( shaderPath / "passthru.vert", shaderPath / "displayvector.frag" );
+	bool err_loadpixel = displayLines.load( shaderPath / "passthru.vert", shaderPath / "pixels.frag" );
+
 
 	// Initialize Sequences
 	setupSequences();
@@ -134,13 +142,13 @@ void FluidScene::draw()
 		// Velocity field needs special shader to be displayed, as its values range from -1.0 to 1.0 so they have to be normalized using a bias
 		// For details see displayvector shader
 		ofDrawBitmapString( "velocity", 0.f, h + 10.f );
-		displayVectorProgram.begin();
-		displayVectorProgram.setUniformTexture( "read", solver.getVelocity()->getTexture(), 1 );
-		displayVectorProgram.setUniform3f( "bias", glm::vec3( 0.5, 0.5, 0.5 ) );
-		displayVectorProgram.setUniform3f( "scale", glm::vec3( 0.5, 0.5, 0.5 ) );
-		displayVectorProgram.setUniform2f( "gridSize", solver.getGrid()->size );
+		displayVector.begin();
+		displayVector.setUniformTexture( "read", solver.getVelocity()->getTexture(), 1 );
+		displayVector.setUniform3f( "bias", glm::vec3( 0.5, 0.5, 0.5 ) );
+		displayVector.setUniform3f( "scale", glm::vec3( 0.5, 0.5, 0.5 ) );
+		displayVector.setUniform2f( "gridSize", solver.getGrid()->size );
 		solver.getVelocity()->draw( 0.f, h, w, h );
-		displayVectorProgram.end();
+		displayVector.end();
 
 		ofDrawBitmapString( "divergence", w, 0.f + 10.f );
 		solver.getDivergence()->draw( w, 0.f, w, h );
@@ -154,17 +162,44 @@ void FluidScene::draw()
 	}
 	else {
 		// Only draw density texture
-		// displayscalar shader is/can be used to stylize
-		camera.begin();
-		displayScalarProgram.begin();
-		displayScalarProgram.setUniformTexture( "read", solver.getDensity()->getTexture(), 1 );
-		displayScalarProgram.setUniform3f( "bias", glm::vec3( 0.5, 0.5, 0.5 ) );
-		displayScalarProgram.setUniform3f( "scale", glm::vec3( 0.5, 0.5, 0.5 ) );
-		displayScalarProgram.setUniform2f( "gridSize", solver.getGrid()->size );
-		solver.getDensity()->draw( 0.f, 0.f, width, height );
-		displayScalarProgram.end();
-		camera.end();
+		switch (shading)
+		{
+		case ShadingType::DEFAULT:
+			drawDefault();
+			break;
+		case ShadingType::PIXELS:
+			drawPixelated();
+			break;
+		default:
+			break;
+		}
 	}
+}
+
+// Draw using the default shader
+void FluidScene::drawDefault() {
+	camera.begin();
+	displayScalar.begin();
+	displayScalar.setUniformTexture( "read", solver.getDensity()->getTexture(), 1 );
+	displayScalar.setUniform3f( "bias", glm::vec3( 0.5, 0.5, 0.5 ) );
+	displayScalar.setUniform3f( "scale", glm::vec3( 0.5, 0.5, 0.5 ) );
+	displayScalar.setUniform2f( "gridSize", solver.getGrid()->size );
+	solver.getDensity()->draw( 0.f, 0.f, width, height );
+	displayScalar.end();
+	camera.end();
+}
+
+// Draw using the pixelated shader
+void FluidScene::drawPixelated() {
+	camera.begin();
+	displayLines.begin();
+	displayLines.setUniformTexture( "read", solver.getDensity()->getTexture(), 1 );
+	displayLines.setUniform2f( "gridSize", solver.getGrid()->size );
+	displayLines.setUniform3f( "bias", glm::vec3( 0.5, 0.5, 0.5 ) );
+	displayLines.setUniform3f( "scale", glm::vec3( 0.5, 0.5, 0.5 ) );
+	solver.getDensity()->draw( 0.f, 0.f, width, height );
+	displayLines.end();
+	camera.end();
 }
 
 void FluidScene::keyPressed( int key ) {
@@ -259,11 +294,17 @@ FluidScene::SequenceName FluidScene::randSequence()
 	return static_cast<SequenceName>(rand() % NUM_SEQ);
 }
 
+
+//////////////////////
+// Scene Transition //
+//////////////////////
+
 float FluidScene::SceneIntro()
 {
 	lastSequene = SequenceName::Empty;
 	setSequence( randSequence() );
 
+	//changeShading();
 	return sequenceTransitionDuration;
 }
 
@@ -273,3 +314,45 @@ float FluidScene::SceneOutro()
 
 	return sequenceTransitionDuration;
 }
+
+// Change shading type, right now just switches between outlined and metaball shading
+void FluidScene::changeShading() {
+	shading = shading ? ShadingType::DEFAULT : ShadingType::PIXELS;
+}
+
+
+//////////////////
+// Input Events //
+//////////////////
+
+void FluidScene::keyPressed( int key ) {
+
+	//std::cout << key << std::endl;
+	switch (key) {
+	case ofKey::OF_KEY_SHIFT:
+		camera.enableMouseInput();
+		break;
+	case 'r':
+		resetCamera();
+		break;
+	case 'd':
+		debug = !debug;
+		cout << "Debug: " << (debug ? "On" : "Off") << endl;
+		break;
+	case 32:
+		if (debug) step = true;
+		break;
+	case's':
+		changeShading();
+		break;
+	}
+}
+
+void FluidScene::keyReleased( int key ) {
+
+	if (key == ofKey::OF_KEY_SHIFT)
+	{
+		camera.disableMouseInput();
+	}
+}
+

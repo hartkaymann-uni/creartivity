@@ -54,8 +54,18 @@ private:
 
 	fluid::ccSolver solver;
 
-	ofShader displayScalarProgram;
-	ofShader displayVectorProgram;
+	ofShader displayScalar;
+	ofShader displayVector;
+	ofShader displayLines;
+	enum ShadingType {
+		DEFAULT,
+		PIXELS
+	};
+	ShadingType shading;
+	void changeShading();
+
+	void drawDefault();
+	void drawPixelated();
 
 	// Members for sequences
 	enum class SequenceName {

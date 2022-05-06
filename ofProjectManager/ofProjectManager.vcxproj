@@ -286,6 +286,7 @@
     <ClInclude Include="..\..\..\addons\ofxOsc\libs\oscpack\src\osc\OscTypes.h" />
     <ClInclude Include="..\..\..\addons\ofxUbo\src\ofxUbo.h" />
     <ClInclude Include="src\scenes\swarm\SwarmScene.h" />
+    <ClInclude Include="src\utils\ccPingPong.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="$(OF_ROOT)\libs\openFrameworksCompiled\project\vs\openframeworksLib.vcxproj">
@@ -309,11 +310,13 @@
     <None Include="src\scenes\fluid\shader\fluid\gravity.frag" />
     <None Include="src\scenes\fluid\shader\fluid\jacobiscalar.frag" />
     <None Include="src\scenes\fluid\shader\fluid\jacobivector.frag" />
-    <None Include="src\scenes\fluid\shader\lines.frag" />
+    <None Include="src\scenes\fluid\shader\pixels.frag" />
     <None Include="src\scenes\fluid\shader\passthru.vert" />
     <None Include="src\scenes\fluid\shader\fluid\splat.frag" />
     <None Include="src\scenes\fluid\shader\fluid\vorticity.frag" />
     <None Include="src\scenes\fluid\shader\fluid\vorticityforce.frag" />
+    <None Include="src\scenes\gameoflife\shader\metaballs.frag" />
+    <None Include="src\scenes\gameoflife\shader\splat.frag" />
     <None Include="src\scenes\swarm\shader\colorSplash.comp" />
     <None Include="src\scenes\contourlines\shader\contour.frag" />
     <None Include="src\scenes\contourlines\shader\contour.vert" />
