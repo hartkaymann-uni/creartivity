@@ -330,6 +330,7 @@
     <ClInclude Include="src\ccUserManager.h" />
     <ClInclude Include="src\scenes\fluid\ccFluid.h" />
     <ClInclude Include="src\scenes\fluid\FluidScene.h" />
+    <ClInclude Include="src\utils\ccPingPong.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="icon.rc" />
@@ -370,5 +371,6 @@
     <None Include="src\scenes\swarm\shader\intro.comp" />
     <None Include="src\scenes\fluid\shader\pixels.frag" />
     <None Include="src\scenes\gameoflife\shader\metaballs.frag" />
+    <None Include="src\scenes\gameoflife\shader\splat.frag" />
   </ItemGroup>
 </Project>

@@ -12,7 +12,7 @@ namespace gol {
 		sequenceDuration( 10.f ),
 		sequenceTransitionDuration( 1.f ),
 		lastSequene( SequenceName::Empty ),
-		currentSequence( SequenceName::Empty ),
+		currentSequence( SequenceName::Default ),
 		lastSequenceTime( 0.f ),
 		shading( ShadingType::OUTLINE )
 	{
@@ -25,6 +25,11 @@ namespace gol {
 			(void)ofLogError( module, "Failed to load logic shader!" );
 		}
 
+		bool err_splat = splatShader.load(shader_path / "passthru.vert", shader_path / "splat.frag");
+		if (!err_splat) {
+			(void)ofLogError(module, "Failed to load splat shader!");
+		}
+
 		bool err_instanced = instancedShader.load( shader_path / "renderInstanced.vert", shader_path / "renderInstanced.frag" );
 		if (!err_instanced) {
 			(void)ofLogError( module, "Failed to load logic shader!" );
@@ -34,7 +39,6 @@ namespace gol {
 		if (!err_outline) {
 			(void)ofLogError( module, "Failed to load outline shader!" );
 		}
-
 
 		bool err_metaballs = metaballShader.load( shader_path / "passthru.vert", shader_path / "metaballs.frag" );
 		if (!err_metaballs) {
@@ -59,7 +63,7 @@ namespace gol {
 		sphereResolution.set( "circleRes", 20, 1, 100 );
 		sphereRadius.set( "radius", 10.f, 0.f, 50.f );
 		dataSrcSize.set( "srcSize", 0.f, 0.f, 9.f );
-		mouseRadius.set( "mouseRad", 5.f, 0.f, 10.f );
+		mouseRadius.set( "mouseRad", 0.1f, 0.f, 1.f );
 		mouseStrength.set( "mouseStr", 0.5f, 0.f, 1.f );
 		jiggleFactor.set( "jiggle", 1.f, 0.f, 10.f );
 		runSequences.set( "Run sequences", true );
@@ -112,13 +116,13 @@ namespace gol {
 	{
 		lastSequenceTime = time;
 		// Standart
-		sequenceMap.insert( pair<GameOfLifeScene::SequenceName, SequenceParameters>( SequenceName::Default, { 0.05, cellOffset, 1.0 } ) );
+		sequenceMap.insert( pair<GameOfLifeScene::SequenceName, SequenceParameters>( SequenceName::Default, { 0.05, cellOffset, 1.0}));
 		// No Jiggle
 		sequenceMap.insert( pair<GameOfLifeScene::SequenceName, SequenceParameters>( SequenceName::NoJiggle, { 0.05, cellOffset, 0.0 } ) );
 		// Big cells
-		sequenceMap.insert( pair<GameOfLifeScene::SequenceName, SequenceParameters>( SequenceName::BigCells, { 0.03, cellOffset * 4.f, 3.0 } ) );
+		sequenceMap.insert( pair<GameOfLifeScene::SequenceName, SequenceParameters>( SequenceName::BigCells, { 0.03,  cellOffset * 4.f, 3.0 } ) );
 		// Small cell
-		sequenceMap.insert( pair<GameOfLifeScene::SequenceName, SequenceParameters>( SequenceName::SmallCells, { 0.085, cellOffset * .75f, 0.5 } ) );
+		sequenceMap.insert( pair<GameOfLifeScene::SequenceName, SequenceParameters>( SequenceName::SmallCells, { 0.085,  cellOffset * .75f, 0.5 } ) );
 		// Fast evolution
 		sequenceMap.insert( pair<GameOfLifeScene::SequenceName, SequenceParameters>( SequenceName::FastEvolution, { 0.15, cellOffset, 2.0 } ) );
 		// Slow evolution
@@ -138,25 +142,53 @@ namespace gol {
 		updateSequence();
 		updateParameters();
 
-		// Main logic
+		// Apply logic
+		step();
+
+		// Apply interaction for all users
+		vector<ccUser> u = userManager->getUserVec();
+		for (vector<ccUser>::iterator it = u.begin(); it != u.end(); it++) {
+			glm::vec2 left(it->getPositons().first);
+			glm::vec2 right(it->getPositons().second);
+			addInteraction(left);
+			addInteraction(right);
+		}
+	}
+
+	void GameOfLifeScene::step() {
 		cellPingPong.dst->begin();
-		ofClear( 0 );
+		ofClear(0);
 		logicShader.begin();
-		logicShader.setUniforms( shaderUniforms );
-		logicShader.setUniformTexture( "cellData", cellPingPong.src->getTexture(), 0 );
-		logicShader.setUniform2f( "resolution", (float)n_cells_x, (float)n_cells_y );
-		logicShader.setUniform2f( "screen", (float)width, (float)height );
-		logicShader.setUniform1f( "offset", cellOffset );
-		logicShader.setUniform2fv( "hands", &user_positions[0].x, sizeof( ofVec2f ) * 10 );
+		logicShader.setUniforms(shaderUniforms);
+		logicShader.setUniformTexture("cellData", cellPingPong.src->getTexture(), 0);
+		logicShader.setUniform2f("screen", (float)width, (float)height);
+		logicShader.setUniform1f("offset", cellOffset);
 
 		// Draw cell texture to call shaders, logic happens in shaders
-		cellPingPong.src->draw( 0, 0 );
+		cellPingPong.src->draw(0, 0);
 
 		logicShader.end();
 
 		// Ping pong
 		cellPingPong.dst->end();
 		cellPingPong.swap();
+	}
+
+	void GameOfLifeScene::addInteraction(glm::vec2 point) {
+		splatShader.begin();
+		splatShader.setUniforms(shaderUniforms);
+		splatShader.setUniformTexture("cellData", cellPingPong.src->getTexture(), 0);
+		splatShader.setUniform2f("resolution", (float)n_cells_x, (float)n_cells_y);
+		splatShader.setUniform2f("point", point);
+
+		// Draw cell texture to call splat shader
+		cellPingPong.dst->begin();
+		ofClear(0);
+		cellPingPong.src->draw(0, 0);
+		cellPingPong.dst->end();
+		cellPingPong.swap();
+
+		splatShader.end();
 	}
 
 	// Handles sequence changes
@@ -189,6 +221,9 @@ namespace gol {
 		if (runSequences.get() && time - lastSequenceTime <= sequenceTransitionDuration)
 		{
 			float timeSinceSequenceChange = time - lastSequenceTime;
+			if (timeSinceSequenceChange < 0) {
+				return;
+			}
 			evolutionFactor.set( ofMap( timeSinceSequenceChange, 0.0, sequenceTransitionDuration, sequenceMap.at( lastSequene ).evolution, sequenceMap.at( currentSequence ).evolution ) );
 			sphereRadius.set( ofMap( timeSinceSequenceChange, 0.0, sequenceTransitionDuration, sequenceMap.at( lastSequene ).radius, sequenceMap.at( currentSequence ).radius ) );
 			jiggleFactor.set( ofMap( timeSinceSequenceChange, 0.0, sequenceTransitionDuration, sequenceMap.at( lastSequene ).jiggle, sequenceMap.at( currentSequence ).jiggle ) );
@@ -391,6 +426,13 @@ namespace gol {
 		switch (key) {
 		case 's':
 			changeShading();
+			break;
+		case 'r':
+			camera.reset();
+			camera.setPosition(width / 2, height / 2, (width + height) / 2);
+			break;
+		case ofKey::OF_KEY_SHIFT:
+			camera.enableMouseInput();
 			break;
 		}
 	}

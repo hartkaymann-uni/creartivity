@@ -305,7 +305,7 @@ void FluidScene::keyPressed( int key ) {
 		break;
 	case 'r':
 		resetCamera();
-
+		break;
 	case 'd':
 		debug = !debug;
 		cout << "Debug: " << (debug ? "On" : "Off") << endl;

@@ -67,6 +67,9 @@ namespace gol {
 
 		float time;
 
+		void step();
+		void addInteraction(glm::vec2 point);
+
 		enum ShadingType {
 			OUTLINE,
 			METABALL
@@ -75,6 +78,7 @@ namespace gol {
 		void changeShading();
 
 		ofShader logicShader;
+		ofShader splatShader;
 		ofShader instancedShader;
 		ofShader outlineShader;
 		ofShader metaballShader;

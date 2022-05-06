@@ -10,11 +10,8 @@ uniform sampler2DRect cellData; // Previous generation cell data
 
 uniform float evolutionFac;
 uniform vec2 screen;
+uniform vec2 resolution;
 uniform float offset;
-
-uniform float mouseRad;
-uniform float mouseStr;
-uniform vec2 hands[N_USERS];
 
 in vec2 vTexCoord;
 
@@ -58,27 +55,6 @@ void main(void){
             next_state.x -= evolutionFac;
         }
     }
-   
-    // Interaction    
-    for(int i = 0; i < N_USERS; i++) {
-        if(hands[i].xy != vec2(0.0)){
-            if(distance(vTexCoord, hands[i].xy/offset) <= mouseRad) {
-                next_state.x += mouseStr;
-                next_state.z = 1.0;
-            }
-        } 
-     }
-
-     // Find the highest interaction factor in all neighbouring cells
-    float influence = max(tl.z, max(tc.z, max( tr.z, max( cl.z, max( cr.z, max( bl.z, max( bc.z, max( br.z, state.z ))))))));
-
-    // Set interaction factor of a cell by indirect interaction only once
-    if(next_state.x > 0 && next_state.z <= 0) {
-        next_state.z = influence * (0.9 - evolutionFac);
-    } else if (state.z > 0.0) {
-        next_state.z = state.z - evolutionFac;    
-    }
-        
 
      // Clamp values between 0.0 and 1.0
     next_state.x = clamp(next_state.x, 0.0, 1.0);
