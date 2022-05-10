@@ -350,8 +350,6 @@
     <None Include="src\scenes\swarm\shader\swarm.comp" />
     <None Include="src\scenes\swarm\shader\swarm.frag" />
     <None Include="src\scenes\swarm\shader\swarm.vert" />
-    <None Include="src\scenes\contourlines\shader\contourLines.frag" />
-    <None Include="src\scenes\contourlines\shader\contourLines.vert" />
     <None Include="src\scenes\swarm\shader\swarmUserEnter.comp" />
     <None Include="addons.make" />
     <None Include="src\scenes\fluid\shader\fluid\vorticityforce.frag" />

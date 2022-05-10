@@ -2,6 +2,7 @@
 #define N_USERS 10
 
 uniform mat4 modelViewProjectionMatrix;
+
 uniform float u_time;
 uniform float u_speed;
 uniform float u_scale;
@@ -16,12 +17,12 @@ in vec4 position;
 in vec2 texcoord;
 
 out vec4 vPosition;
-out vec4 vColor;
+out vec2 vTexcoord;
+out vec3 vNormal;
 
-//--------------------------------------------------------------
-// Classic 3D Perlin Noise 
-// by Stefan Gustavson
-// https://gist.github.com/patriciogonzalezvivo/670c22f3966e662d2f83
+//	Classic Perlin 3D Noise 
+//	by Stefan Gustavson
+//	Source: https://gist.github.com/patriciogonzalezvivo/670c22f3966e662d2f83
 vec4 permute(vec4 x){return mod(((x*34.0)+1.0)*x, 289.0);}
 vec4 taylorInvSqrt(vec4 r){return 1.79284291400159 - 0.85373472095314 * r;}
 vec3 fade(vec3 t) {return t*t*t*(t*(t*6.0-15.0)+10.0);}
@@ -93,26 +94,28 @@ float cnoise(vec3 P){
   float n_xyz = mix(n_yz.x, n_yz.y, fade_xyz.x); 
   return 2.2 * n_xyz;
 }
-//--------------------------------------------------------------
-
-float rand(vec2 co){
-    return fract(sin(dot(co, vec2(12.9898, 78.233))) * 43758.5453);
-}
 
 void main(){
-	vec4 pos = position;
-	vColor = vec4( -1.0 * pos.z / u_limit, 0.0, 0.0, 1.0);
+	vec3 pos = vec3( position.xy, 0.f ); // position of vertex
+	
+	float time = u_time * u_speed;
 
-	float shift = abs(cnoise(vec3(position.xy * u_scale, u_speed * u_time))) * u_amplitude;
-	pos.z += shift;
+	vec2 ij = vec2(1.f, 0.f);
 
-	float dist = distance(position.xy, hands[0].xy);
-	if (dist < float(u_radius)){
-		float force =(dist / float(u_radius));
-		pos.z *= force * force;
-		pos.z -= 5.5 * (1.0 - force)* (1.0 - force)* (1.0 - force);
-	}
-
-	vPosition = pos;
-	gl_Position = modelViewProjectionMatrix * pos;
+	vec3 point  = vec3( pos.xy * u_scale, time ); // position for noise calculation
+	vec3 top    = vec3( ( pos.xy + ij.yx ) * u_scale, time );
+	vec3 right  = vec3( ( pos.xy + ij.xy ) * u_scale, time );
+	vec3 bottom = vec3( ( pos.xy - ij.yx ) * u_scale, time );
+	vec3 left   = vec3( ( pos.xy - ij.xy ) * u_scale, time );
+	
+	pos.z = (cnoise( point )) * u_amplitude;
+	top		= vec3(pos.xy + ij.yx , cnoise( top ) * u_amplitude);
+	right	= vec3(pos.xy + ij.xy, cnoise( right ) * u_amplitude);
+	bottom	= vec3(pos.xy - ij.yx, cnoise( bottom ) * u_amplitude);
+	left	= vec3(pos.xy - ij.xy, cnoise( left) * u_amplitude);
+	
+	vNormal = normalize( cross( right - left, top - bottom));
+	vTexcoord = texcoord;
+	vPosition = vec4( pos, 1.f );
+	gl_Position = modelViewProjectionMatrix * vec4( pos, 1.f );
 }

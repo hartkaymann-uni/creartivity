@@ -320,8 +320,6 @@
     <None Include="src\scenes\swarm\shader\colorSplash.comp" />
     <None Include="src\scenes\contourlines\shader\contour.frag" />
     <None Include="src\scenes\contourlines\shader\contour.vert" />
-    <None Include="src\scenes\contourlines\shader\contourLines.frag" />
-    <None Include="src\scenes\contourlines\shader\contourLines.vert" />
     <None Include="src\scenes\gameoflife\shader\gol.frag" />
     <None Include="src\scenes\particles\shader\instancedParticles.frag" />
     <None Include="src\scenes\particles\shader\instancedParticles.vert" />

@@ -8,43 +8,31 @@
 class ContourLinesScene :public ccScene
 {
 public:
-	ContourLinesScene();
+	ContourLinesScene(int w = 128, int h = 80);
 	void setup();
 	void update();
 	void draw();
 
 	void keyPressed(int key);
 	void keyReleased(int key);
-	void mouseMoved(int x, int y);
-	void mouseDragged(int x, int y, int button);
-	void mousePressed(int x, int y, int button);
-	void mouseReleased(int x, int y, int button);
-	void mouseEntered(int x, int y);
-	void mouseExited(int x, int y);
-	void windowResized(int w, int h);
-	void dragEvent(ofDragInfo dragInfo);
-	void gotMessage(ofMessage msg);
 
 private:
+	float time;
 
 	ofShader contourLineShader;
-
-	ofEasyCam camera;
-
-	ofMesh mesh;
+	bool wireframeShading = false;
+	void changeShading();
+		
+	glm::vec2 grid;
+	ofPlanePrimitive plane;
 
 	ofParameterGroup shaderUniforms;
-	ofParameter<float> speed;
-	ofParameter<float> scale;
-	ofParameter<float> amplitude;
-	ofParameter<float> radius;
-	ofParameter<float> thickness;
-	ofParameter<float> limit;
+	ofParameter<float> p_Speed;
+	ofParameter<float> p_Scale;
+	ofParameter<float> p_Amplitude;
+	ofParameter<float> p_MouseRadius;
+	ofParameter<float> p_Thickness;
 
-	int meshWidth, meshHeight;
-	float time;
-	int sbv;
-	int count;
 
 };
 

@@ -1,57 +1,26 @@
 #include "ContourLinesScene.h"
 
-ContourLinesScene::ContourLinesScene() : ccScene( "ContourLines" ),
+ContourLinesScene::ContourLinesScene(int w, int h) : ccScene( "ContourLines" ),
 time( 0.f ),
-sbv( 0 ),
-meshWidth( 0 ),
-meshHeight( 0 ),
-count( 0 )
+grid({ w, h })
 {}
 
 void ContourLinesScene::setup()
 {
 	// Load Shader
 	filesystem::path shader_path = getShaderPath();
-	bool shadersloaded = contourLineShader.load( shader_path / "contour.vert", shader_path / "contour.frag" );
+	bool loaded = contourLineShader.load( shader_path / "contour.vert", shader_path / "contour.frag" );	
 
-	// Set camera in the middle of the scene
-	camera.disableMouseInput();
-	camera.setPosition( width / 2, height / 2, (width + height) / 2 );
-
-	// Set variables
-	count = 1;
-	sbv = 3; // SpaceBetweenVetices 
-	meshWidth = width / sbv + 1;
-	meshHeight = height / sbv + 1;
-
-	// Fill mesh with vertices
-	mesh.setMode( OF_PRIMITIVE_TRIANGLES );
-	for (int y = 0; y < meshHeight; y++) {
-		for (int x = 0; x < meshWidth; x++) {
-			mesh.addVertex( glm::vec3( x * sbv, y * sbv, 0 ) );
-			mesh.addTexCoord( { (x * sbv) / width , (y * sbv) / height } );
-		}
-	}
-	for (int y = 0; y < meshHeight - 1; y++) {
-		for (int x = 0; x < meshWidth - 1; x++) {
-			mesh.addIndex( x + y * meshWidth );
-			mesh.addIndex( (x + 1) + y * meshWidth );
-			mesh.addIndex( x + (y + 1) * meshWidth );
-
-			mesh.addIndex( (x + 1) + y * meshWidth );
-			mesh.addIndex( (x + 1) + (y + 1) * meshWidth );
-			mesh.addIndex( x + (y + 1) * meshWidth );
-		}
-	}
+	plane = ofPlanePrimitive(width, height, grid.x, grid.y);
+	plane.setPosition(width / 2, height / 2 , 0.f);
 
 	// Setup gui and parameters
 	shaderUniforms.setName( "Shader Parameters" );
-	shaderUniforms.add( speed.set( "u_speed", 0.015, 0.00, 0.1 ) );
-	shaderUniforms.add( scale.set( "u_scale", 0.01, 0.0, 0.05 ) );
-	shaderUniforms.add( amplitude.set( "u_amplitude", 10.0, 0.0, 20.0 ) );
-	shaderUniforms.add( radius.set( "u_radius", 100.0, 25.0, 500.0 ) );
-	shaderUniforms.add( thickness.set( "u_thickness", 1.0, 0.1, 5.0 ) );
-	shaderUniforms.add( limit.set( "u_limit", 3.5, 0.0, 10.0 ) );
+	shaderUniforms.add( p_Speed.set( "u_speed", 0.015, 0.00, 0.1 ) );
+	shaderUniforms.add( p_Scale.set( "u_scale", 0.01, 0.0, 0.05 ) );
+	shaderUniforms.add( p_Amplitude.set( "u_amplitude", 50.0, 0.0, 100.0 ) );
+	shaderUniforms.add( p_MouseRadius.set( "u_radius", 100.0, 25.0, 500.0 ) );
+	shaderUniforms.add( p_Thickness.set( "u_thickness", 1.0, 0.1, 5.0 ) );
 
 	gui.add( shaderUniforms );
 	gui.setPosition( width - gui.getWidth() - 10, height - gui.getHeight() - 10 );
@@ -60,9 +29,8 @@ void ContourLinesScene::setup()
 void ContourLinesScene::update()
 {
 	time = ofGetElapsedTimef();
-	updateUserPositions();
 
-	// TODO: somehow combine mouse and user interaction so this function isn't as long and ugly anymore
+#if 0
 	map<int, ccUser>* users = userManager->getUsers();
 	std::map<int, ccUser>::iterator it = users->begin();
 	std::map<int, ccUser>::iterator itEnd = users->end();
@@ -80,33 +48,15 @@ void ContourLinesScene::update()
 			ofVec3f v = mesh.getVertex( i );
 
 			float distance = min( v.distance( left ), v.distance( right ) );
-			if (distance < radius) {
-				v.z -= ofMap( distance, radius, 0.0, 0.0, 1.0 );
+			if (distance < p_MouseRadius.get()) {
+				v.z -= ofMap( distance, p_MouseRadius.get(), 0.0, 0.0, 1.0);
 			}
 
 			mesh.setVertex( i, v );
 		}
 		it++;
 	}
-
-	ofVec3f mouse = ofVec3f( ofGetMouseX(), height - ofGetMouseY(), 0.0f );
-
-	for (size_t i = 0; i < mesh.getNumVertices(); i++) {
-		ofVec3f v = mesh.getVertex( i );
-		mouse.z = v.z;
-
-		float distance = v.distance( mouse );
-		if (distance < radius) {
-			//if (v.z >= ofMap(distance, 0.0, radius, -1.0 * limit, 0.0))
-			v.z -= ofMap( distance, radius, 0.0, 0.0, 1.0 );
-		}
-
-		if (v.z < 0.f) {
-			v.z += 0.05 * limit;
-		}
-
-		mesh.setVertex( i, v );
-	}
+#endif
 }
 
 void ContourLinesScene::draw()
@@ -121,42 +71,32 @@ void ContourLinesScene::draw()
 			//contourLineShader.setUniform2fv("hands", &user_positions[0].x, sizeof(ofVec2f) * 10);
 			contourLineShader.setUniforms( shaderUniforms );
 
-			mesh.draw();
+			ofDisableAlphaBlending();
+			glEnable(GL_POINT_SMOOTH);
+			
+			if(!wireframeShading) plane.draw();
+			else plane.drawWireframe();
 		}
 		contourLineShader.end();
-
-		// Draw circles at the corners of the sceen and at mouseposition
-		ofNoFill();
-		ofDrawCircle( 0, 0, 30 );
-		ofDrawCircle( width, 0, 30 );
-		ofDrawCircle( width, height, 30 );
-		ofDrawCircle( 0, height, 30 );
-		ofDrawCircle( ofGetMouseX(), height - ofGetMouseY(), 30 );
-
-		/*
-		ofSetColor(255,0, 0);
-		//mesh.drawVertices();
-		ofSetColor(0, 50, 0);
-		//mesh.drawFaces();
-		ofSetColor( 255 );
-		mesh.drawWireframe();
-		*/
 	}
-	camera.end();
 
-	ofSetColor( 255 );
+	camera.end();
 }
 
 void ContourLinesScene::keyPressed( int key )
 {
 	// reset the camera to the middle of the scene
-	if (key == 'r') {
+	switch(key) {
+	case 'r':
 		camera.reset();
 		camera.setPosition( width / 2, height / 2, (width + height) / 2 );
-	}
-
-	if (key == ofKey::OF_KEY_SHIFT) {
+		break;
+	case ofKey::OF_KEY_SHIFT:
 		camera.enableMouseInput();
+		break;
+	case 's':
+		changeShading();
+		break;
 	}
 }
 
@@ -167,38 +107,6 @@ void ContourLinesScene::keyReleased( int key )
 	}
 }
 
-void ContourLinesScene::mouseMoved( int x, int y )
-{
-}
-
-void ContourLinesScene::mouseDragged( int x, int y, int button )
-{
-}
-
-void ContourLinesScene::mousePressed( int x, int y, int button )
-{
-}
-
-void ContourLinesScene::mouseReleased( int x, int y, int button )
-{
-}
-
-void ContourLinesScene::mouseEntered( int x, int y )
-{
-}
-
-void ContourLinesScene::mouseExited( int x, int y )
-{
-}
-
-void ContourLinesScene::windowResized( int w, int h )
-{
-}
-
-void ContourLinesScene::dragEvent( ofDragInfo dragInfo )
-{
-}
-
-void ContourLinesScene::gotMessage( ofMessage msg )
-{
+void ContourLinesScene::changeShading() {
+	wireframeShading = !wireframeShading;
 }
