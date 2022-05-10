@@ -12,7 +12,7 @@ void ContourLinesScene::setup()
 	bool loaded = contourLineShader.load( shader_path / "contour.vert", shader_path / "contour.frag" );	
 
 	plane = ofPlanePrimitive(width, height, grid.x, grid.y);
-	plane.setPosition(width / 2, height / 2 , 0.f);
+	plane.setPosition(width / 2, height / 2, 0.f);
 
 	// Setup gui and parameters
 	shaderUniforms.setName( "Shader Parameters" );
@@ -79,7 +79,6 @@ void ContourLinesScene::draw()
 		}
 		contourLineShader.end();
 	}
-
 	camera.end();
 }
 

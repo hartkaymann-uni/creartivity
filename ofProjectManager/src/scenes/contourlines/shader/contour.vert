@@ -100,7 +100,7 @@ void main(){
 	
 	float time = u_time * u_speed;
 
-	vec2 ij = vec2(1.f, 0.f);
+	vec2 ij = vec2(0.001f, 0.f);
 
 	vec3 point  = vec3( pos.xy * u_scale, time ); // position for noise calculation
 	vec3 top    = vec3( ( pos.xy + ij.yx ) * u_scale, time );
@@ -113,8 +113,10 @@ void main(){
 	right	= vec3(pos.xy + ij.xy, cnoise( right ) * u_amplitude);
 	bottom	= vec3(pos.xy - ij.yx, cnoise( bottom ) * u_amplitude);
 	left	= vec3(pos.xy - ij.xy, cnoise( left) * u_amplitude);
-	
-	vNormal = normalize( cross( right - left, top - bottom));
+	vec3 normal = normalize( cross( right - left, top - bottom));
+
+
+	vNormal = normal;
 	vTexcoord = texcoord;
 	vPosition = vec4( pos, 1.f );
 	gl_Position = modelViewProjectionMatrix * vec4( pos, 1.f );
