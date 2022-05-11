@@ -1,15 +1,13 @@
 #pragma once
-#include "ofMain.h"
 
 #include "ccScene.h"
-
-#include "ofxGui.h"
+#include "utils/ccPingPong.h"
 
 class ContourLinesScene :public ccScene
 {
 public:
 	ContourLinesScene(int w = 128, int h = 80);
-	void setup();
+	void setup();	
 	void update();
 	void draw();
 
@@ -33,6 +31,7 @@ private:
 	ofParameter<float> p_MouseRadius;
 	ofParameter<float> p_Thickness;
 
-
+	PingPong interaction;
+	ofShader splat;
 };
 

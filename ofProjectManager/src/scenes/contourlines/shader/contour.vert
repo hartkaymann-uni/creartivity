@@ -2,6 +2,7 @@
 #define N_USERS 10
 
 uniform mat4 modelViewProjectionMatrix;
+uniform mat4 modelMatrix;
 
 uniform float u_time;
 uniform float u_speed;
@@ -19,6 +20,7 @@ in vec2 texcoord;
 out vec4 vPosition;
 out vec2 vTexcoord;
 out vec3 vNormal;
+out vec3 vColor;
 
 //	Classic Perlin 3D Noise 
 //	by Stefan Gustavson
@@ -95,27 +97,29 @@ float cnoise(vec3 P){
   return 2.2 * n_xyz;
 }
 
+float terrain(vec3 p, vec2 offset) {
+	float e =	1.f * cnoise( vec3( 1.f * (p.x + offset.x), 1.f * (p.y + offset.y), p.z ) ) 
+			+  0.5f * cnoise( vec3( 2.f * (p.x + offset.x), 2.f * (p.y + offset.y), p.z ) ) 
+			+ 0.25f * cnoise( vec3( 4.f * (p.x + offset.x), 4.f * (p.y + offset.y), p.z ) );
+	return e / ( 1 + 0.5 + 0.25 );
+}
+
 void main(){
 	vec3 pos = vec3( position.xy, 0.f ); // position of vertex
-	
 	float time = u_time * u_speed;
 
-	vec2 ij = vec2(0.001f, 0.f);
-
-	vec3 point  = vec3( pos.xy * u_scale, time ); // position for noise calculation
-	vec3 top    = vec3( ( pos.xy + ij.yx ) * u_scale, time );
-	vec3 right  = vec3( ( pos.xy + ij.xy ) * u_scale, time );
-	vec3 bottom = vec3( ( pos.xy - ij.yx ) * u_scale, time );
-	vec3 left   = vec3( ( pos.xy - ij.xy ) * u_scale, time );
+	vec3 p  = vec3( pos.xy * u_scale, time ); // position for noise calculation
+	pos.z = terrain(p, vec2(0.f)) * u_amplitude;
 	
-	pos.z = (cnoise( point )) * u_amplitude;
-	top		= vec3(pos.xy + ij.yx , cnoise( top ) * u_amplitude);
-	right	= vec3(pos.xy + ij.xy, cnoise( right ) * u_amplitude);
-	bottom	= vec3(pos.xy - ij.yx, cnoise( bottom ) * u_amplitude);
-	left	= vec3(pos.xy - ij.xy, cnoise( left) * u_amplitude);
-	vec3 normal = normalize( cross( right - left, top - bottom));
+	vec2 ij = vec2(0.001f, 0.f);
+	vec3 top		= vec3(  ij.yx, terrain(p,  ij.yx));
+	vec3 right		= vec3(  ij.xy, terrain(p,  ij.xy));
+	vec3 bottom		= vec3(- ij.yx, terrain(p, -ij.yx));
+	vec3 left		= vec3(- ij.xy, terrain(p, -ij.xy));
+	
+	vec3 normal = normalize( cross( top - bottom,  left - right));
 
-
+	vColor = vec3(terrain(p, vec2(0.f)) + 0.5f);
 	vNormal = normal;
 	vTexcoord = texcoord;
 	vPosition = vec4( pos, 1.f );

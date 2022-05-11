@@ -24,7 +24,7 @@ void ofApp::setup() {
 	scenes.push_back( (FluidScene*)sceneManager.add( new FluidScene() ) );
 	scenes.push_back( (GameOfLifeScene*)sceneManager.add( new GameOfLifeScene(SCREEN_WIDTH / 10, SCREEN_HEIGHT / 10) ) );
 	scenes.push_back( (SwarmScene*)sceneManager.add( new SwarmScene() ) );
-	scenes.push_back( (ContourLinesScene*)sceneManager.add( new ContourLinesScene(SCREEN_WIDTH / 5, SCREEN_HEIGHT / 5) ) );
+	scenes.push_back( (ContourLinesScene*)sceneManager.add( new ContourLinesScene(SCREEN_WIDTH / 4, SCREEN_HEIGHT / 4) ) );
 
 	// Initialize scene manager
 	sceneManager.setup( true ); // Setup all scenes now

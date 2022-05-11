@@ -9,10 +9,14 @@ void ContourLinesScene::setup()
 {
 	// Load Shader
 	filesystem::path shader_path = getShaderPath();
-	bool loaded = contourLineShader.load( shader_path / "contour.vert", shader_path / "contour.frag" );	
+	bool err_contour = contourLineShader.load( shader_path / "contour.vert", shader_path / "contour.frag" );	
+	bool err_splat = contourLineShader.load( shader_path / "passthru.vert", shader_path / "splat.frag" );	
 
+	// Create mesh
 	plane = ofPlanePrimitive(width, height, grid.x, grid.y);
 	plane.setPosition(width / 2, height / 2, 0.f);
+
+	interaction.allocate( glm::vec2( width, height ) );
 
 	// Setup gui and parameters
 	shaderUniforms.setName( "Shader Parameters" );
@@ -30,33 +34,22 @@ void ContourLinesScene::update()
 {
 	time = ofGetElapsedTimef();
 
-#if 0
-	map<int, ccUser>* users = userManager->getUsers();
-	std::map<int, ccUser>::iterator it = users->begin();
-	std::map<int, ccUser>::iterator itEnd = users->end();
-	while (it != itEnd) {
+	// Apply interaction for all users
+	vector<ccUser> u = userManager->getUserVec();
+	for (vector<ccUser>::iterator it = u.begin(); it != u.end(); it++) {
+		interaction.write->begin();
 
-		ofVec2f left = it->second.left();
-		ofVec2f right = it->second.right();
+		glm::vec2 left( it->getPositons().first );
+		glm::vec2 right( it->getPositons().second );
 
-		left.x *= width;
-		right.x *= width;
-		left.y = height - (left.y * height);
-		right.y = height - (right.y * height);
+		splat.begin();
 
-		for (size_t i = 0; i < mesh.getNumVertices(); i++) {
-			ofVec3f v = mesh.getVertex( i );
+		splat.setUniformTexture( "read", interaction.read->getTexture(), 0 );
 
-			float distance = min( v.distance( left ), v.distance( right ) );
-			if (distance < p_MouseRadius.get()) {
-				v.z -= ofMap( distance, p_MouseRadius.get(), 0.0, 0.0, 1.0);
-			}
-
-			mesh.setVertex( i, v );
-		}
-		it++;
+		splat.end();
+		interaction.write->end();
+		interaction.swap();
 	}
-#endif
 }
 
 void ContourLinesScene::draw()
