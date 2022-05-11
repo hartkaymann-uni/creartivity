@@ -29,9 +29,10 @@ private:
 	ofParameter<float> p_Scale;
 	ofParameter<float> p_Amplitude;
 	ofParameter<float> p_MouseRadius;
-	ofParameter<float> p_Thickness;
+	ofParameter<float> p_MouseStrength;
 
 	PingPong interaction;
-	ofShader splat;
+	ofShader splatShader;
+	ofShader subtractShader;
 };
 
