@@ -187,6 +187,8 @@
     <ClCompile Include="src\ccUser.cpp" />
     <ClCompile Include="src\ccUserManager.cpp" />
     <ClCompile Include="src\scenes\contourlines\ContourLinesScene.cpp" />
+    <None Include="src\scenes\contourlines\shader\passthru.vert" />
+    <None Include="src\scenes\contourlines\shader\splat.frag" />
     <None Include="src\scenes\fluid\shader\displayscalar.frag" />
     <ClCompile Include="src\scenes\fluid\ccFluid.cpp" />
     <ClCompile Include="src\scenes\fluid\FluidScene.cpp" />
