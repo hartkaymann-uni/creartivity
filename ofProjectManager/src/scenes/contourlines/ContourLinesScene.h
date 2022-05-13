@@ -24,15 +24,25 @@ private:
 	glm::vec2 grid;
 	ofPlanePrimitive plane;
 
-	ofParameterGroup shaderUniforms;
+	ofParameterGroup terrainUniforms;
 	ofParameter<float> p_Speed;
 	ofParameter<float> p_Scale;
 	ofParameter<float> p_Amplitude;
+	ofParameter<float> p_Lacunarity;
+	ofParameter<float> p_Persistance;
+	ofParameter<float> p_Thickness;
+	
+	ofParameterGroup mouseUniforms;
 	ofParameter<float> p_MouseRadius;
 	ofParameter<float> p_MouseStrength;
+
+	ofParameterGroup lightUniforms;
+	ofParameter<bool> p_MoveLight;
 
 	PingPong interaction;
 	ofShader splatShader;
 	ofShader subtractShader;
+
+	void splat( glm::vec3 point );
 };
 

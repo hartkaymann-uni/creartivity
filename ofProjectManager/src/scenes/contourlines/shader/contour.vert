@@ -2,7 +2,8 @@
 #define N_USERS 10
 
 uniform mat4 modelViewProjectionMatrix;
-uniform mat4 modelMatrix;
+
+uniform sampler2D interaction;
 
 uniform float u_time;
 uniform float u_speed;
@@ -10,9 +11,10 @@ uniform float u_scale;
 uniform float u_amplitude;
 uniform float u_limit;
 uniform float u_radius;
-uniform vec2 u_mouse;
+uniform float u_lacunarity;
+uniform float u_persistance;
 
-uniform vec2 hands[N_USERS];
+uniform vec2 u_resolution;
 
 in vec4 position;
 in vec2 texcoord;
@@ -98,18 +100,21 @@ float cnoise(vec3 P){
 }
 
 float terrain(vec3 p, vec2 offset) {
-	float e =	1.f * cnoise( vec3( 1.f * (p.x + offset.x), 1.f * (p.y + offset.y), p.z ) ) 
-			+  0.5f * cnoise( vec3( 2.f * (p.x + offset.x), 2.f * (p.y + offset.y), p.z ) ) 
-			+ 0.25f * cnoise( vec3( 4.f * (p.x + offset.x), 4.f * (p.y + offset.y), p.z ) );
-	return e / ( 1 + 0.5 + 0.25 );
+	float e = 1.f					* cnoise( vec3(	1.f					 * (p.x + offset.x), 1.f				  * (p.y + offset.y), p.z ) ) 
+			+ u_persistance			* cnoise( vec3(	u_lacunarity		 * (p.x + offset.x), u_lacunarity		  * (p.y + offset.y), p.z ) ) 
+			+ pow(u_persistance, 2)	* cnoise( vec3( pow(u_lacunarity, 2) * (p.x + offset.x), pow(u_lacunarity, 2) * (p.y + offset.y), p.z ) );
+	return e / ( 1 + u_persistance + pow(u_persistance, 2) );
 }
 
 void main(){
-	vec3 pos = vec3( position.xy, 0.f ); // position of vertex
 	float time = u_time * u_speed;
 
+	vec3 pos = vec3( position.xy, 0.f ); // position of vertex
+    vec2 uv = pos.xy / u_resolution.xy;
+
 	vec3 p  = vec3( pos.xy * u_scale, time ); // position for noise calculation
-	pos.z = terrain(p, vec2(0.f)) * u_amplitude;
+	pos.z = (terrain(p, vec2(0.f)) + texture(interaction, texcoord).x) * u_amplitude;
+	//pos.z = (terrain(p, vec2(0.f)) * ( 1.0 -texture(interaction, texcoord).x)) * u_amplitude;
 	
 	vec2 ij = vec2(0.001f, 0.f);
 	vec3 top		= vec3(  ij.yx, terrain(p,  ij.yx));
@@ -119,7 +124,7 @@ void main(){
 	
 	vec3 normal = normalize( cross( top - bottom,  left - right));
 
-	vColor = vec3(terrain(p, vec2(0.f)) + 0.5f);
+	vColor = vec3( texcoord, 0.f);
 	vNormal = normal;
 	vTexcoord = texcoord;
 	vPosition = vec4( pos, 1.f );
