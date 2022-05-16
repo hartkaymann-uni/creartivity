@@ -13,7 +13,7 @@ out vec4 vFragColor;
 
 void main()
 {
-    vec3 c = vec3(0.f);
+    vec3 c = vec3(0.0);
     float height = 1000;
     int y = int(vTexCoord.y * height);
     
@@ -23,8 +23,13 @@ void main()
     st.y = (y - offset) / height;
     //st.x = floor(st.x * 100.f) / 100.f;
 
-    if(texture(read, st).x >= .2f) c = vec3(1.f);
-
+    vec3 tex = texture(read, st).xyz; 
+    if(tex.x >= .2f) {
+        if(tex.x - tex.y > 0.5)
+          c = vec3(1.0, 0.0, 0.0);
+        else
+          c = vec3(1.0);
+    }
 
     vFragColor = vec4(c, 1.0);
     //vFragColor = vec4(vTexCoord, vTexCoord);

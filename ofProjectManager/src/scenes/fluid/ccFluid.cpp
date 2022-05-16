@@ -257,13 +257,14 @@ namespace fluid {
 		for (int i = 0; i < s.jacobiIterations; i++) {
 			diffuseStep( jacobi, x, b, output, alpha, beta );
 		}
+
 	}
 
 	void ccSolver::diffuseStep( ofShader& jacobi, Field& x, Field& b, Field& output, float alpha, float beta ) {
 		jacobi.begin();
 
-		jacobi.setUniformTexture( "x", x.read->getTexture(), 2 );
-		jacobi.setUniformTexture( "b", b.read->getTexture(), 1 );
+		jacobi.setUniformTexture( "x", x.read->getTexture(), 1 );
+		jacobi.setUniformTexture( "b", b.read->getTexture(), 2 );
 		jacobi.setUniform2f( "gridSize", grid.size );
 		jacobi.setUniform1f( "gridScale", grid.scale );
 		jacobi.setUniform1f( "alpha", alpha );

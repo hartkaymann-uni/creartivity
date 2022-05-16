@@ -372,5 +372,7 @@
     <None Include="src\scenes\fluid\shader\pixels.frag" />
     <None Include="src\scenes\gameoflife\shader\metaballs.frag" />
     <None Include="src\scenes\gameoflife\shader\splat.frag" />
+    <None Include="src\scenes\fluid\shader\velocity.frag" />
+    <None Include="src\scenes\fluid\shader\texture.frag" />
   </ItemGroup>
 </Project>

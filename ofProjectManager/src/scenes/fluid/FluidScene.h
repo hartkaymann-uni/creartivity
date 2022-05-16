@@ -57,26 +57,42 @@ private:
 	ofShader displayScalar;
 	ofShader displayVector;
 	ofShader displayLines;
+	ofShader displayVelocity;
+	ofShader displayTexture;
 	enum ShadingType {
 		DEFAULT,
-		PIXELS
+		PIXELS,
+		VELOCITY,
+		TEXTURE
 	};
+	const int NUM_SHADING = 4;
 	ShadingType shading;
 	void changeShading();
 
 	void drawDefault();
+	void drawDebug();
+	void drawScalarField(ofFbo* const field, int x, int y, int w, int h);
 	void drawPixelated();
+	void drawVelocity();
+	void drawTexture();
+	fluid::Field texture;
+	ofPlanePrimitive plane;
 
 	// Members for sequences
 	enum class SequenceName {
 		Default,
 		Smoke,
 		Fast,
+		Red,
+		FastSmoke,
+		Viscous,
+		Stop,
 		Empty
 	};
-	const int NUM_SEQ = 3;
+	const int NUM_SEQ = 7;
 
 	struct SequenceParameters {
+		float timestep;
 		float scale;
 		float splat;
 		float dissipation;
