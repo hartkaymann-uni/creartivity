@@ -43,21 +43,28 @@ private:
 	void sendUser(int id, user& user);
 	void registerUser(int id);
 	void removeUser(int id);
+	void addNewUsers(int amount);
+	void removeMostRecentUser(bool keepLastUser = true);
 
 	void printUsers();
 	void sendConnectionStarted();
 
-	void handleRegisterUser();
-	void handleRemoveUser();
+	void handleAddButtonClick();
+	void handleRemoveButtonClick();
 
 	void createUserPattern(int x, int y);
 	ofColor getUserColor(int id);
 
 	// #### Sequencer
 	enum class SequenceName {
-		RandomSmooth,
+		Smooth,
+		SmoothCenter,
 		RandomJiggle,
-		RandomFast,
+		Crazy,
+		Fast,
+		NoUsers,
+		UserChaos,
+		RandomTeleport,
 		Edging,
 		OutOfBounds
 	};
@@ -69,7 +76,7 @@ private:
 
 		ParameterSequence() {
 			duration = 5;
-			sequenceType = SequenceName::RandomSmooth;
+			sequenceType = SequenceName::Smooth;
 		}
 
 		ParameterSequence(float newDuration, SequenceName newType) {
@@ -83,11 +90,13 @@ private:
 	int currentSequenceIndex;
 	float lastSequenceTime, nextSequenceTime;
 
+	void InitTestSeqeuenceArray();
 	void UpdateSequence();
 	void CheckForNextSequence();
 	void SetSequence(ParameterSequence sequence);
 	void StartSequence();
 	void OnSequencerControlChange(bool& inControl);
+	void RemoveAllUsers();
 	// ####
 
 	// #### Movement
@@ -95,7 +104,9 @@ private:
 
 	void AssignRandomEdges();
 	void AssignRandomOutOfBounds();
-	void ApplyPerlinMovement();
+	void ApplyPerlinMovement(float speedMod = 1.0f, float exaggerateMod = 1.0f);
 	void MoveToTarget();
+	void TeleportToRandomLocation();
 	void MoveUserTowardsPoint(int id, glm::vec2 point);
+	glm::vec2 ExaggerateMovement(glm::vec2 point, float modifier);
 };

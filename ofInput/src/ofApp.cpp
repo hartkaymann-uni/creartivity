@@ -20,19 +20,11 @@ void ofApp::setup()
 	gui.add(isSequencerInControl.set("Let Sequencer control", true));
 
 	gui.setPosition(width - gui.getWidth() - 1, height - gui.getHeight() - 10);
-	add_button.addListener(this, &ofApp::handleRegisterUser);
-	remove_button.addListener(this, &ofApp::handleRemoveUser);
+	add_button.addListener(this, &ofApp::handleAddButtonClick);
+	remove_button.addListener(this, &ofApp::handleRemoveButtonClick);
 	isSequencerInControl.addListener(this, &ofApp::OnSequencerControlChange);
 
-	// Set up Sequences
-	currentSequenceIndex = 0;
-	sequences.push_back(ParameterSequence(5, SequenceName::RandomSmooth));
-	sequences.push_back(ParameterSequence(6, SequenceName::Edging));
-	sequences.push_back(ParameterSequence(2, SequenceName::RandomSmooth));
-	sequences.push_back(ParameterSequence(6, SequenceName::OutOfBounds));
-	//sequences.push_back(ParameterSequence(1, SequenceName::RandomJiggle));
-	//sequences.push_back(ParameterSequence(1, SequenceName::RandomFast));
-	StartSequence();
+	InitTestSeqeuenceArray();
 
 	lastMousePos = unmapped(glm::vec2(0.4f, 0.7f));
 
@@ -128,18 +120,32 @@ void ofApp::sendConnectionStarted() {
 	sender.sendMessage(m);
 }
 
-void ofApp::handleRegisterUser()
+void ofApp::addNewUsers(int amount)
 {
-	int id = users.size();
-	registerUser(id);
+	for (int i = 0; i < amount; i++)
+	{
+		int id = users.size();
+		registerUser(id);
+	}
 }
 
-void ofApp::handleRemoveUser()
+void ofApp::removeMostRecentUser(bool keepLastUser)
 {
 	int id = users.size() - 1;
-	if (id > 0) {
-		removeUser(id);
+	if (keepLastUser == true) {
+		if (id > 0) removeUser(id);
 	}
+	else if (id >= 0) removeUser(id);
+}
+
+void ofApp::handleAddButtonClick()
+{
+	addNewUsers(1);
+}
+
+void ofApp::handleRemoveButtonClick()
+{
+	removeMostRecentUser();
 }
 
 void ofApp::mouseDragged(int x, int y, int button) {
@@ -192,6 +198,20 @@ glm::vec2 ofApp::unmapped(glm::vec2 v)
 // CodeSection: Sequencer
 // ######################
 
+void ofApp::InitTestSeqeuenceArray() {
+	currentSequenceIndex = 0;
+	sequences.push_back(ParameterSequence(5, SequenceName::Smooth));
+	sequences.push_back(ParameterSequence(10, SequenceName::UserChaos));
+	sequences.push_back(ParameterSequence(5, SequenceName::NoUsers));
+	sequences.push_back(ParameterSequence(5, SequenceName::Edging));
+	sequences.push_back(ParameterSequence(5, SequenceName::Crazy));
+	sequences.push_back(ParameterSequence(5, SequenceName::OutOfBounds));
+	sequences.push_back(ParameterSequence(5, SequenceName::RandomTeleport));
+	sequences.push_back(ParameterSequence(5, SequenceName::SmoothCenter));
+	sequences.push_back(ParameterSequence(5, SequenceName::Fast));
+	StartSequence();
+}
+
 // Sets currentSequence to a new sequence and immediately activates it.
 void ofApp::SetSequence(ParameterSequence sequence) {
 	currentSequence = sequence;
@@ -203,18 +223,20 @@ void ofApp::StartSequence() {
 	lastSequenceTime = ofGetElapsedTimef();
 	nextSequenceTime = lastSequenceTime + currentSequence.duration;
 
+	RemoveAllUsers();
+	addNewUsers(3);
+
 	switch (currentSequence.sequenceType)
 	{
-	case SequenceName::RandomSmooth:
-		break;
-	case SequenceName::RandomJiggle:
-		break;
-	case SequenceName::RandomFast:
+	case SequenceName::NoUsers:
+		RemoveAllUsers();
 		break;
 	case SequenceName::Edging:
+		ApplyPerlinMovement();
 		AssignRandomEdges();
 		break;
 	case SequenceName::OutOfBounds:
+		ApplyPerlinMovement();
 		AssignRandomOutOfBounds();
 		break;
 	default:
@@ -245,19 +267,32 @@ void ofApp::UpdateSequence() {
 
 	switch (currentSequence.sequenceType)
 	{
-	case SequenceName::RandomSmooth:
+	case SequenceName::Smooth:
+		ApplyPerlinMovement(0.5f, 2.5f);
+		break;
+	case SequenceName::SmoothCenter:
 		ApplyPerlinMovement();
 		break;
-	case SequenceName::RandomJiggle:
+	case SequenceName::Crazy:
+		ApplyPerlinMovement(1.0f, 2.5f);
 		break;
-	case SequenceName::RandomFast:
+	case SequenceName::Fast:
+		ApplyPerlinMovement(2.0f, 1.0f);
+		break;
+	case SequenceName::RandomTeleport:
+		if (ofRandom(1.0f) < 0.2f) TeleportToRandomLocation();
 		break;
 	case SequenceName::Edging:
 		MoveToTarget();
-		//MoveUserTowardsPoint(2, glm::vec2(0.5f, 0.5f));
 		break;
 	case SequenceName::OutOfBounds:
 		MoveToTarget();
+		break;
+	case SequenceName::UserChaos:
+		if ((ofRandom(1.0f) > 0.48f) && users.size() <= 25) addNewUsers(1);
+		else removeMostRecentUser();
+
+		ApplyPerlinMovement(1.25f, 2.0f);
 		break;
 	default:
 		break;
@@ -271,26 +306,61 @@ void ofApp::OnSequencerControlChange(bool& inControl)
 	}
 }
 
+void ofApp::RemoveAllUsers()
+{
+	int n = users.size();
+	for (size_t i = 0; i < n; i++) {
+		removeMostRecentUser(false);
+	}
+}
+
+
 // ##########################
 // CodeSection: User Movement
 // ##########################
 
-void ofApp::ApplyPerlinMovement()
+void ofApp::ApplyPerlinMovement(float speedMod, float exaggerateMod)
 {
 	int n = users.size();
 	for (size_t i = 0; i < n; i++) {
 		float offset = i * 1.378f;
 
-		float x = ofNoise(ofGetElapsedTimef() * 0.8 + offset);
-		float y = ofNoise(ofGetElapsedTimef() * 0.7 + offset + 0.4);
+		float x = ofNoise(ofGetElapsedTimef() * 0.8 * speedMod + offset);
+		float y = ofNoise(ofGetElapsedTimef() * 0.7 * speedMod + offset + 0.4);
 
-		users[i].left = glm::vec2(x, y);
+		users[i].left = ExaggerateMovement(glm::vec2(x, y), exaggerateMod);
 
-		x = ofNoise(ofGetElapsedTimef() * 0.2 + offset + 0.6);
-		y = ofNoise(ofGetElapsedTimef() * 0.4 + offset + 0.3);
+		// Different Movement for right hand of user
+		x = ofNoise(ofGetElapsedTimef() * 0.2 * speedMod + offset + 0.6);
+		y = ofNoise(ofGetElapsedTimef() * 0.4 * speedMod + offset + 0.3);
 
-		users[i].right = glm::vec2(x, y);
+		users[i].right = ExaggerateMovement(glm::vec2(x, y), exaggerateMod);
 
+	}
+}
+
+// Pushes a point more towards the boundaries of the box
+glm::vec2 ofApp::ExaggerateMovement(glm::vec2 point, float mod) {
+	float splitAt = 0.5f;
+
+	point.x = (point.x - splitAt) * mod;
+	//point.x = min(max(point.x, -splitAt), splitAt) + splitAt;
+	point.x += splitAt;
+
+	point.y = (point.y - splitAt) * mod;
+	//point.y = min(max(point.y, -splitAt), splitAt) + splitAt;
+	point.y += splitAt;
+
+	return point;
+}
+
+// Teleports all users to a random position that can also be out of the bounds of the input area
+void ofApp::TeleportToRandomLocation()
+{
+	int n = users.size();
+	for (size_t i = 0; i < n; i++) {
+		users[i].left = glm::vec2(ofRandom(1.5f) - 0.25f, ofRandom(1.5f) - 0.25f);
+		users[i].right = glm::vec2(ofRandom(1.5f) - 0.25f, ofRandom(1.5f) - 0.25f);
 	}
 }
 
@@ -298,7 +368,7 @@ void ofApp::AssignRandomOutOfBounds()
 {
 	int n = users.size();
 	for (size_t i = 0; i < n; i++) {
-		userTargets[i] = glm::vec2(4 * (rand() % 2 -0.5f) , 4 * (rand() % 2 - 0.5f));
+		userTargets[i] = glm::vec2(4 * (rand() % 2 - 0.5f), 4 * (rand() % 2 - 0.5f));
 	}
 }
 
@@ -306,7 +376,7 @@ void ofApp::AssignRandomEdges()
 {
 	int n = users.size();
 	for (size_t i = 0; i < n; i++) {
-		 userTargets[i] = glm::vec2(rand() % 2, rand() % 2);
+		userTargets[i] = glm::vec2(rand() % 2, rand() % 2);
 	}
 }
 

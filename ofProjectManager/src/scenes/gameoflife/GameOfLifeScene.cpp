@@ -139,7 +139,6 @@ namespace gol {
 	{
 		time = ofGetElapsedTimef();
 
-		updateUserPositions();
 		updateSequence();
 		updateParameters();
 

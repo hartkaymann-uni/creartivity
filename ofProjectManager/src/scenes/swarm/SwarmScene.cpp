@@ -170,6 +170,13 @@ void SwarmScene::update() {
 	atractor = { getProjectedPosition(mousePosition) };
 
 	compute.setUniform3f("attractor", atractor.x, atractor.y, atractor.z);
+
+	/*std::array<T, N> arr;
+	std::copy_n(vec.begin(), N, arr.begin());*/
+
+	vector<ccUser> hello = userManager->getUserVec();
+
+	array<ofVec2f, 10> user_positions;
 	compute.setUniform2fv("hands", &user_positions[0].x, sizeof(ofVec2f) * 10);
 	compute.setUniform2fv("hands", &user_positions[0].x, sizeof(ofVec2f) * 10);
 	compute.setUniform2f("mouse", (float)ofGetMouseX(), (float)ofGetMouseY());
