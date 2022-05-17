@@ -91,6 +91,7 @@ public:
 	ofParameterGroup shaderUniforms;
 	ofParameter<float> fps;
 	ofParameter<bool> dirAsColor;
+	ofParameter<bool> isSequencerInControl;
 
 	//Scene Handling
 	float SceneIntro() override;
@@ -111,18 +112,15 @@ private:
 	//--------------------------------------------------------------
 	// Sequence Stuff
 	void InitSequences();
-	void UpdateSequences();
+	void UpdateSequence();
+	void CheckForNextSequence();
 	void SetSequence(ParameterSequence sequence);
 	void StartSequence();
-	void UpdateParameters();
 	void ActivateRules();
 
 
 	vector<ParameterSequence> sequences;
-	float lastSequenceTime;
-	float nextSequenceTime;
-	int currentSequenceIndex;
 	ParameterSequence currentSequence;
-
-	bool DoUpdateSequence;
+	int currentSequenceIndex;
+	float lastSequenceTime, nextSequenceTime;
 };
