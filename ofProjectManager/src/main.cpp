@@ -1,7 +1,9 @@
 #include "ofMain.h"
 #include "ofApp.h"
 
-//#define PRESENTATION_MODE
+#if 0
+#define PRESENTATION_MODE
+#endif 
 
 #ifdef PRESENTATION_MODE
 int SCREEN_WIDTH = 3840;
@@ -22,7 +24,7 @@ int main() {
 	//settings.multiMonitorFullScreen = true;
 	settings.setPosition( ofVec2f( 0.0, 0.0 ) );
 	settings.monitor = 2;
-	isettings.windowMode = OF_FULLSCREEN;
+	settings.windowMode = OF_FULLSCREEN;
 #endif
 
 	//settings.decorated = false;

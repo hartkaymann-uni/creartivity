@@ -19,10 +19,10 @@ uniform vec2 u_resolution;
 in vec4 position;
 in vec2 texcoord;
 
-out vec4 vPosition;
-out vec2 vTexcoord;
-out vec3 vNormal;
 out vec3 vColor;
+out vec2 vTexcoord;
+out vec4 vPosition;
+//out vec3 vNormal;
 
 //	Classic Perlin 3D Noise 
 //	by Stefan Gustavson
@@ -110,22 +110,26 @@ void main(){
 	float time = u_time * u_speed;
 
 	vec3 pos = vec3( position.xy, 0.f ); // position of vertex
-    vec2 uv = pos.xy / u_resolution.xy;
+//  vec2 uv = pos.xy / u_resolution.xy;
 
-	vec3 p  = vec3( pos.xy * u_scale, time ); // position for noise calculation
-	pos.z = (terrain(p, vec2(0.f)) + texture(interaction, texcoord).x) * u_amplitude;
-	//pos.z = (terrain(p, vec2(0.f)) * ( 1.0 -texture(interaction, texcoord).x)) * u_amplitude;
-	
-	vec2 ij = vec2(0.001f, 0.f);
-	vec3 top		= vec3(  ij.yx, terrain(p,  ij.yx));
-	vec3 right		= vec3(  ij.xy, terrain(p,  ij.xy));
-	vec3 bottom		= vec3(- ij.yx, terrain(p, -ij.yx));
-	vec3 left		= vec3(- ij.xy, terrain(p, -ij.xy));
-	
-	vec3 normal = normalize( cross( top - bottom,  left - right));
+	vec3 p = vec3( pos.xy * u_scale, time ); // position for noise calculation
 
-	vColor = vec3( texcoord, 0.f);
-	vNormal = normal;
+	float interaction_offset = texture(interaction, texcoord).x;
+	bool red = interaction_offset >= 0.1 ? false : true;
+	pos.z = (terrain(p, vec2(0.f)) * (  1.0 - interaction_offset)) * u_amplitude;
+	
+//	vec2 ij = vec2(0.001f, 0.f);
+//	vec3 top		= vec3(  ij.yx, terrain(p,  ij.yx));
+//	vec3 right		= vec3(  ij.xy, terrain(p,  ij.xy));
+//	vec3 bottom		= vec3(- ij.yx, terrain(p, -ij.yx));
+//	vec3 left		= vec3(- ij.xy, terrain(p, -ij.xy));
+
+//	vec3 normal = normalize( cross( top - bottom,  left - right));
+
+//	vNormal = normal;
+	vColor = red ?  vec3(1.0) : vec3(1.0, 0.0, 0.0); // reversed so it works with step in fragment shader 
+//	vColor = vec3(interaction_offset);
+
 	vTexcoord = texcoord;
 	vPosition = vec4( pos, 1.f );
 	gl_Position = modelViewProjectionMatrix * vec4( pos, 1.f );

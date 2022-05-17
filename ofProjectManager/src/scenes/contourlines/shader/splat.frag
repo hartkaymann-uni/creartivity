@@ -26,5 +26,4 @@ void main()
 	
 	float col = clamp(base + splat, 0.0, 1.0);
 	vFragColor = vec4( col, 0.0, 0.0, 1.0 );
-	//vFragColor = vec4( clamp(base.xy + left - right, vec2(0, 0), vec2(1, 1)), base.z, 1.f);
 }

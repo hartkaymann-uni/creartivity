@@ -3,6 +3,7 @@
 #include "scenes/scenes.h"
 
 using namespace gol;
+using namespace contour;
 
 extern int SCREEN_WIDTH;
 extern int SCREEN_HEIGHT;

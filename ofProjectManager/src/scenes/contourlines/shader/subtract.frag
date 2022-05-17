@@ -9,8 +9,9 @@ out vec4 vFragColor;
 void main() 
 {
     vec2 uv = gl_FragCoord.xy / grid.xy;
-	vec3 base = texture( read, uv ).xyz;
+	float base = texture( read, uv ).x;
 	
-	vFragColor = vec4( base * 0.99f, 1.f );
+	//vFragColor = vec4( vec3(pow(base * 0.999, 1.1)), 1.f );
+	vFragColor = vec4( vec3((base * 0.99)), 1.f );
 	//vFragColor = vec4( uv, uv);	
 }
