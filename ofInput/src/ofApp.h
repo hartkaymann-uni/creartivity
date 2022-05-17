@@ -45,6 +45,7 @@ private:
 	void removeUser(int id);
 	void addNewUsers(int amount);
 	void removeMostRecentUser(bool keepLastUser = true);
+	void RemoveAllUsers();
 
 	void printUsers();
 	void sendConnectionStarted();
@@ -96,7 +97,6 @@ private:
 	void SetSequence(ParameterSequence sequence);
 	void StartSequence();
 	void OnSequencerControlChange(bool& inControl);
-	void RemoveAllUsers();
 	// ####
 
 	// #### Movement

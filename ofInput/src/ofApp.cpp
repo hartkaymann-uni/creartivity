@@ -25,6 +25,9 @@ void ofApp::setup()
 	isSequencerInControl.addListener(this, &ofApp::OnSequencerControlChange);
 
 	InitTestSeqeuenceArray();
+	/*currentSequenceIndex = 0;
+	sequences.push_back(ParameterSequence(10000, SequenceName::Smooth));
+	StartSequence();*/
 
 	lastMousePos = unmapped(glm::vec2(0.4f, 0.7f));
 
@@ -138,6 +141,14 @@ void ofApp::removeMostRecentUser(bool keepLastUser)
 	else if (id >= 0) removeUser(id);
 }
 
+void ofApp::RemoveAllUsers()
+{
+	int n = users.size();
+	for (size_t i = 0; i < n; i++) {
+		removeMostRecentUser(false);
+	}
+}
+
 void ofApp::handleAddButtonClick()
 {
 	addNewUsers(1);
@@ -209,7 +220,7 @@ void ofApp::InitTestSeqeuenceArray() {
 	sequences.push_back(ParameterSequence(5, SequenceName::RandomTeleport));
 	sequences.push_back(ParameterSequence(5, SequenceName::SmoothCenter));
 	sequences.push_back(ParameterSequence(5, SequenceName::Fast));
-	StartSequence();
+	SetSequence(sequences[currentSequenceIndex]);
 }
 
 // Sets currentSequence to a new sequence and immediately activates it.
@@ -253,7 +264,7 @@ void ofApp::CheckForNextSequence() {
 		if (currentSequenceIndex >= sequences.size() || currentSequenceIndex < 0) currentSequenceIndex = 0;
 
 		SetSequence(sequences[currentSequenceIndex]);
-		cout << "Switched to next Scene with index " << currentSequenceIndex << " . Will wait for " << sequences[currentSequenceIndex].duration << " seconds now." << endl;
+		cout << "Input-Tester switched to next sequence with index " << currentSequenceIndex << " . Will wait for " << sequences[currentSequenceIndex].duration << " seconds now." << endl;
 	}
 }
 
@@ -262,8 +273,6 @@ void ofApp::UpdateSequence() {
 	if (isSequencerInControl.get() == false) return;
 
 	CheckForNextSequence();
-
-	float currentTime = ofGetElapsedTimef();
 
 	switch (currentSequence.sequenceType)
 	{
@@ -303,14 +312,6 @@ void ofApp::OnSequencerControlChange(bool& inControl)
 {
 	if (inControl == false) {
 		createUserPattern(lastMousePos.x, lastMousePos.y);
-	}
-}
-
-void ofApp::RemoveAllUsers()
-{
-	int n = users.size();
-	for (size_t i = 0; i < n; i++) {
-		removeMostRecentUser(false);
 	}
 }
 

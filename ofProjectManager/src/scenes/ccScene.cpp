@@ -114,13 +114,13 @@ void ccScene::windowResized( int w, int h ) {
 	height = h;
 }
 
-//--------------------------------------------------------------
+// Triggered when this scene is opened
 float ccScene::SceneIntro() {
 	cout << "Default Scene Intro Triggered" << endl;
 	return 1.f;
 }
 
-//--------------------------------------------------------------
+// Triggered when this scene is closed
 float ccScene::SceneOutro() {
 	cout << "Default Scene Outro Triggered" << endl;
 	return 1.f;
