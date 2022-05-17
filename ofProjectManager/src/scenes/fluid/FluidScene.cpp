@@ -14,7 +14,7 @@ FluidScene::FluidScene()
 	sequenceDuration( 10.f ),
 	sequenceTransitionDuration( 1.f ),
 	lastSequene( SequenceName::Empty ),
-	currentSequence( SequenceName::Empty ),
+	currentSequence( SequenceName::Default ),
 	lastSequenceTime( 0.f ),
 	shading( DEFAULT ) {}
 
@@ -54,7 +54,7 @@ void FluidScene::setup()
 	groupGeneral.setName( "View" );
 
 	groupGeneral.add( p_Timestep.set( "Timestep", solverSettings.timestep, 0.f, 2.f ) );
-	groupGeneral.add( p_SplatRadius.set( "Splat", solverSettings.splatRadius, 0.f, .005f ) );
+	groupGeneral.add( p_SplatRadius.set( "Splat", solverSettings.splatRadius, 0.f, .001f ) );
 	groupGeneral.add( p_SplatColor.set( "Color", solverSettings.splatColor ) );
 	groupGeneral.add( p_Dissipation.set( "Dissipation", solverSettings.dissipation, 0.9f, 1.f ) );
 	groupSolver.add( p_JacobiIterations.set( "Iterations", solverSettings.jacobiIterations, 0, 120 ) );
@@ -266,21 +266,21 @@ void FluidScene::drawTexture()
 void FluidScene::setupSequences() {
 	lastSequenceTime = time;
 	// Standart
-	sequenceMap.insert( pair<FluidScene::SequenceName, SequenceParameters>( SequenceName::Default, { 1.f, 1.f,  0.002f, 0.998f, false, 0.f, false, 0.f, {1.f, 1.f, 1.f } } ) );
+	sequenceMap.insert( pair<FluidScene::SequenceName, SequenceParameters>( SequenceName::Default, { 1.f, 1.f,  0.001f, 0.998f, false, 0.f, false, 0.f, {1.f, 1.f, 1.f } } ) );
 	// Fast
 	sequenceMap.insert( pair<FluidScene::SequenceName, SequenceParameters>( SequenceName::Fast, { 1.f,  0.2f,  0.001f, 0.992f, false, 0.f, false, 0.f,{1.f, 1.f, 1.f } } ) );
 	// Smoke
-	sequenceMap.insert( pair<FluidScene::SequenceName, SequenceParameters>( SequenceName::Smoke, { 1.f, 0.5f,  0.002f, 0.998f, true, .1f, false, 0.f, {1.f, 1.f, 1.f } } ) );
+	sequenceMap.insert( pair<FluidScene::SequenceName, SequenceParameters>( SequenceName::Smoke, { 1.f, 0.5f,  0.0015f, 0.998f, true, .1f, false, 0.f, {1.f, 1.f, 1.f } } ) );
 	// Red
-	sequenceMap.insert( pair<FluidScene::SequenceName, SequenceParameters>( SequenceName::Red, { 1.f, 1.f,  0.002f, 0.995f, false, 0.f, false, 0.f, {1.f, 0.f, 0.f } } ) );
+	sequenceMap.insert( pair<FluidScene::SequenceName, SequenceParameters>( SequenceName::Red, { 1.f, 1.f,  0.0015f, 0.995f, false, 0.f, false, 0.f, {1.f, 0.f, 0.f } } ) );
 	// Fast Smoke
 	sequenceMap.insert( pair<FluidScene::SequenceName, SequenceParameters>( SequenceName::FastSmoke, { 1.f, 0.3f,  0.001f, 0.996f, true, 0.15f, false, 0.f, {1.f, 0.f, 0.f } } ) );
 	// Viscous
-	sequenceMap.insert( pair<FluidScene::SequenceName, SequenceParameters>( SequenceName::Viscous, { 1.f, 1.f,  0.003f, 0.99f, false, 0.f, true, .8f, {1.f, 1.f, 1.f } } ) );
+	sequenceMap.insert( pair<FluidScene::SequenceName, SequenceParameters>( SequenceName::Viscous, { 1.f, 1.f,  0.0015f, 0.99f, false, 0.f, true, .8f, {1.f, 1.f, 1.f } } ) );
 	// Stop
-	sequenceMap.insert( pair<FluidScene::SequenceName, SequenceParameters>( SequenceName::Stop, { 0.f, 0.5f,  0.002f, 1.f, false, 0.f, false, .0f, {1.f, 1.f, 1.f } } ) );
+	sequenceMap.insert( pair<FluidScene::SequenceName, SequenceParameters>( SequenceName::Stop, { 0.f, 0.1f,  0.001f, 1.f, false, 0.f, false, .0f, {1.f, 1.f, 1.f } } ) );
 	// Empty
-	sequenceMap.insert( pair<FluidScene::SequenceName, SequenceParameters>( SequenceName::Empty, { 0.f, 1.f,  0.002f, 0.9f, false, 0.f, false, 0.f, {0.f, 0.f, 0.f } } ) );
+	sequenceMap.insert( pair<FluidScene::SequenceName, SequenceParameters>( SequenceName::Empty, { 0.f, 1.f,  0.000f, 0.9f, false, 0.f, false, 0.f, {0.f, 0.f, 0.f } } ) );
 }
 
 void FluidScene::updateSequence() {

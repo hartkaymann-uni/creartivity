@@ -62,9 +62,8 @@ namespace gol {
 		sphereResolution.set( "circleRes", 20, 1, 100 );
 		sphereRadius.set( "radius", 10.f, 0.f, 50.f );
 		dataSrcSize.set( "srcSize", 0.f, 0.f, 9.f );
-		mouseRadius.set( "mouseRad", 0.1f, 0.f, 1.f );
-
-		mouseStrength.set( "mouseStr", 0.5f, 0.f, 1.f );
+		mouseRadius.set( "mouseRad", 0.05f, 0.f, 1.f );
+		mouseStrength.set( "mouseStr", 0.25f, 0.f, 1.f );
 		jiggleFactor.set( "jiggle", 1.f, 0.f, 10.f );
 		runSequences.set( "Run sequences", true );
 
@@ -123,7 +122,6 @@ namespace gol {
 		sequenceMap.insert( pair<GameOfLifeScene::SequenceName, SequenceParameters>( SequenceName::BigCells, { 0.03,  cellOffset * 4.f, 3.0 } ) );
 		// Small cell
 		sequenceMap.insert( pair<GameOfLifeScene::SequenceName, SequenceParameters>( SequenceName::SmallCells, { 0.085,  cellOffset * .75f, 0.5 } ) );
-
 		// Fast evolution
 		sequenceMap.insert( pair<GameOfLifeScene::SequenceName, SequenceParameters>( SequenceName::FastEvolution, { 0.15, cellOffset, 2.0 } ) );
 		// Slow evolution

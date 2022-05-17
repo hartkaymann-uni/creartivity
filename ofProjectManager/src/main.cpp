@@ -4,8 +4,8 @@
 //#define PRESENTATION_MODE
 
 #ifdef PRESENTATION_MODE
-int SCREEN_WIDTH = 3840;
-int SCREEN_HEIGHT = 1080;
+int SCREEN_WIDTH = 2560; // 3840
+int SCREEN_HEIGHT = 1440; // 1080
 #else
 int SCREEN_WIDTH = 1280;
 int SCREEN_HEIGHT = 800;
@@ -22,7 +22,7 @@ int main() {
 	//settings.multiMonitorFullScreen = true;
 	settings.setPosition( ofVec2f( 0.0, 0.0 ) );
 	settings.monitor = 2;
-	isettings.windowMode = OF_FULLSCREEN;
+	settings.windowMode = OF_FULLSCREEN;
 #endif
 
 	//settings.decorated = false;
