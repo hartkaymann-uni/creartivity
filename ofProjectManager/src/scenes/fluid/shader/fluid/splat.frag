@@ -8,6 +8,7 @@ uniform vec3 color;
 uniform vec2 point;
 uniform float radius;
 
+
 out vec4 vFragColor;
 
 float gauss(vec2 p, float r) 
