@@ -103,6 +103,7 @@ private:
 	void ApplyBiggusShadus();
 	void ApplyParticleRules();
 	void ApplyInteraction();
+	array<ofVec3f, 10> GetFixedUserArray();
 
 	// ### Controls
 	ofVec3f mousePosition;

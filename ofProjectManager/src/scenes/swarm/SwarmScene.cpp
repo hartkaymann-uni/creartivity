@@ -534,9 +534,14 @@ void SwarmScene::ApplyInteraction() {
 	interactionShader.setUniform1f("timeLastFrame", ofGetLastFrameTime());
 	interactionShader.setUniform1f("elapsedTime", ofGetElapsedTimef());
 
-	vector<ofVec3f> user_hands = getHandsWorldCoords();
-	interactionShader.setUniform3fv("hands", &user_hands[0].x, sizeof(ofVec3f) * 10);
-	interactionShader.setUniform1i("hand_count", user_hands.size());
+	array<ofVec3f, 10> user_hands = GetFixedUserArray();
+	if (user_hands.empty()) {
+		interactionShader.setUniform1i("hand_count", 0);
+	}
+	else {
+		interactionShader.setUniform3fv("hands", &user_hands[0].x, sizeof(ofVec3f) * 10);
+		interactionShader.setUniform1i("hand_count", user_hands.size());
+	}
 
 	/*cout << "0. Hand Position: " << user_hands[0] << endl;
 	cout << "MousePosition: " << getProjectedPosition(mousePosition) << endl;
@@ -547,6 +552,24 @@ void SwarmScene::ApplyInteraction() {
 	interactionShader.end();
 
 	particlesBuffer.copyTo(particlesBuffer2);
+}
+
+
+array<ofVec3f, 10> SwarmScene::GetFixedUserArray() {
+	vector<ofVec3f> user_hands = getHandsWorldCoords();
+	array<ofVec3f, 10> hands_max;
+
+	if (user_hands.empty()) return hands_max;
+
+	hands_max.fill(ofVec3f(0.f));
+
+	int n = user_hands.size();
+	for (size_t i = 0; i < n; i++) {
+		if (i >= hands_max.max_size()) break;
+		hands_max[i] = user_hands[i];
+	}
+
+	return hands_max;
 }
 
 // ##############################

@@ -26,7 +26,10 @@ void ofApp::setup()
 
 	//InitTestSeqeuenceArray();
 	currentSequenceIndex = 0;
-	sequences.push_back(ParameterSequence(10000, SequenceName::Smooth));
+	sequences.push_back(ParameterSequence(20, SequenceName::UserChaos));
+	sequences.push_back(ParameterSequence(1, SequenceName::NoUsers));
+	sequences.push_back(ParameterSequence(5, SequenceName::RandomTeleport));
+	sequences.push_back(ParameterSequence(5, SequenceName::OutOfBounds));
 	SetSequence(sequences[currentSequenceIndex]);
 
 	lastMousePos = unmapped(glm::vec2(0.4f, 0.7f));

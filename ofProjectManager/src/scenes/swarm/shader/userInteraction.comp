@@ -68,22 +68,8 @@ void calculateMovement(){
 	p[gl_GlobalInvocationID.x].vel.xyz = applyMaxSpeed(p[gl_GlobalInvocationID.x].vel.xyz, max_speed);
 }
 
-
 // ### Main
 void main(){
-	//vec3 particle = p2[gl_GlobalInvocationID.x].pos.xyz;
+	if(hand_count == 0) return;
 	calculateMovement();
-
-
-	// vec4 testColor = vec4(0,0,0,1);
-	// //testColor.r = 0.1 * hand_count;
-	// testColor.rgb = hands[0].xyz;
-    // p[gl_GlobalInvocationID.x].color = testColor;
-	// int index = int(p[gl_GlobalInvocationID.x].unique.y);
-	// p3[index].color = p[gl_GlobalInvocationID.x].color;
-}
-
-
-float map(float value, float min1, float max1, float min2, float max2) {
-  return min2 + (value - min1) * (max2 - min2) / (max1 - min1);
 }
