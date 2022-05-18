@@ -1,7 +1,7 @@
 #include "ofMain.h"
 #include "ofApp.h"
 
-#if 0
+#if 1
 #define PRESENTATION_MODE
 #endif 
 

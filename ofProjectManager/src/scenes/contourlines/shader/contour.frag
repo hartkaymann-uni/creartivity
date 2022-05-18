@@ -4,18 +4,18 @@ uniform float u_time;
 uniform float u_amplitude;
 uniform float u_thickness;
 
-uniform bool u_moving;
+//uniform bool u_moving;
 
 uniform vec2 u_mouse;
 uniform vec3 viewPos;
 
-float specularStrength = 0.5;
+//float specularStrength = 0.5;
 
-vec3 lightDir = vec3(-1.f, 1.f, 1.f);
-vec3 lightCol = vec3(1.f, 1.f, 1.f);
+//vec3 lightDir = vec3(-1.f, 1.f, 1.f);
+//vec3 lightCol = vec3(1.f, 1.f, 1.f);
 
-float ambientStrength = 0.5f;
-vec3 ambientColor = vec3(1.f, 1.f, 1.1f);
+//float ambientStrength = 0.5f;
+//vec3 ambientColor = vec3(1.f, 1.f, 1.1f);
 
 in vec4 vPosition;
 //in vec3 vNormal;
