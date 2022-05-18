@@ -33,7 +33,8 @@ public:
 	inline void setUserManager( ccUserManager* um ) { userManager = um; }
 	inline ofxPanel& getGui() { return gui; };
 
-	//Scene Handling
+	// Scene Handling
+
 	virtual float SceneIntro();
 	virtual float SceneOutro();
 

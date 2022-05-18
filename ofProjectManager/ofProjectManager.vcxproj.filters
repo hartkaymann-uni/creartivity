@@ -373,5 +373,6 @@
     <None Include="src\scenes\contourlines\shader\splat.frag" />
     <None Include="src\scenes\contourlines\shader\passthru.vert" />
     <None Include="src\scenes\contourlines\shader\subtract.frag" />
+    <None Include="src\scenes\swarm\shader\userInteraction.comp" />
   </ItemGroup>
 </Project>

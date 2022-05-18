@@ -1,0 +1,100 @@
+#version 440
+
+struct Particle{
+	vec4 pos;
+	vec4 vel;
+	vec4 color;
+	vec4 unique;
+	vec4 initialPos;
+	vec4 bufferPos;
+};
+
+layout(std140, binding=0) buffer particle{
+    Particle p[];
+};
+
+layout(std140, binding=1) buffer particleBack{
+    Particle p2[];
+};
+
+layout(std140, binding=3) buffer particleDraw{
+    Particle p3[];
+};
+
+layout(std140, binding=2) buffer indices{
+	uint idx[];
+};
+
+uniform float timeLastFrame;
+uniform float elapsedTime;
+uniform vec3 attractor;
+uniform float max_speed;
+uniform float attr_force;
+uniform vec2 hands[N_USERS];
+uniform vec2 mouse;
+
+uniform int freeze_particles;
+
+void applyMaxSpeed(float limit){
+	vec3 dir = normalize(p[gl_GlobalInvocationID.x].vel.xyz);
+	// If current velocity exeeds the max_speed, set it to max_speed
+	if(length(p[gl_GlobalInvocationID.x].vel.xyz)>limit){
+		p[gl_GlobalInvocationID.x].vel.xyz = dir * limit;
+	}
+}
+
+void calculateMovement(vec3 acc){
+	if(freeze_particles == 1) {
+		return;
+	}
+	//p[gl_GlobalInvocationID.x].pos.xyz += p[gl_GlobalInvocationID.x].vel.xyz*timeLastFrame;
+	p[gl_GlobalInvocationID.x].pos.xy += p[gl_GlobalInvocationID.x].vel.xy*timeLastFrame;
+
+
+	p[gl_GlobalInvocationID.x].vel.xyz += acc*timeLastFrame;
+	p[gl_GlobalInvocationID.x].vel.xyz *= 0.99;
+}
+
+float map(float value, float min1, float max1, float min2, float max2) {
+  return min2 + (value - min1) * (max2 - min2) / (max1 - min1);
+}
+
+
+layout(local_size_x = 1024, local_size_y = 1, local_size_z = 1) in;
+void main(){
+	vec3 particle = p2[gl_GlobalInvocationID.x].pos.xyz;
+
+	vec3 modAttractor = attractor;
+	vec3 attrDir = modAttractor - particle;
+	//vec3 attrDir = vec3(hands[0].xy, 0.0) - particle;
+
+	acc += normalize(attrDir) * attr_force;
+	calculateMovement(acc);
+	applyMaxSpeed(max_speed);
+
+
+	int index = int(p[gl_GlobalInvocationID.x].unique.y);
+	p3[index].pos.xy = p[gl_GlobalInvocationID.x].pos.xy;
+	//p3[index].pos.xyz = p[gl_GlobalInvocationID.x].pos.xyz;
+	p3[index].color = p[gl_GlobalInvocationID.x].color;
+}
+
+void calculateAttraction(vec3 particle){
+	int radius = 100;
+	vec3 modAttractor = vec3(0.0, 0.0, 1000);
+	for(int i = 0; i < N_USERS; i++) {
+		vec2 hand = hands[i].xy;
+		if(hand != vec2(0.0)) {
+			float dist = distance(particle.xy, hand);
+			float influence = map(dist, radius, 0.0, 0.0, 1.0);
+			//modAttractor.xy += (hand - particle.xy) * influence;
+		}
+	}
+
+	// Mouse also interacts
+	float dist = distance(particle.xy, attractor.xy);
+	float influence = map(dist, radius, 0.0, 0.0, 1.0);
+	modAttractor.xy += (attractor.xy - particle.xy) * influence;
+	
+	modAttractor = vec3(hands[0].x, hands[0].y, 1000);
+}

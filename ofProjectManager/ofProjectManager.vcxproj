@@ -230,6 +230,7 @@
     <ClCompile Include="..\..\..\addons\ofxOsc\libs\oscpack\src\osc\OscTypes.cpp" />
     <ClCompile Include="..\..\..\addons\ofxUbo\src\ofxUbo.cpp" />
     <ClCompile Include="src\scenes\swarm\SwarmScene.cpp" />
+    <None Include="src\scenes\swarm\shader\userInteraction.comp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\ccUser.h" />
