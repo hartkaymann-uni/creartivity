@@ -370,6 +370,8 @@
     <None Include="src\scenes\fluid\shader\pixels.frag" />
     <None Include="src\scenes\gameoflife\shader\metaballs.frag" />
     <None Include="src\scenes\gameoflife\shader\splat.frag" />
+    <None Include="src\scenes\fluid\shader\velocity.frag" />
+    <None Include="src\scenes\fluid\shader\texture.frag" />
     <None Include="src\scenes\contourlines\shader\splat.frag" />
     <None Include="src\scenes\contourlines\shader\passthru.vert" />
     <None Include="src\scenes\contourlines\shader\subtract.frag" />

@@ -22,7 +22,7 @@ void main()
 	float pb = texture(p, uv - yOffset).x;
 	float pt = texture(p, uv + yOffset).x;
 
-	float scale = 0.5 / gridScale;
+	float scale = 0.5 / gridScale; // halfrdx
 	vec2 gradient = scale * vec2(pr - pl, pt - pb);
 
 	vec2 wc = texture(w, uv).xy;

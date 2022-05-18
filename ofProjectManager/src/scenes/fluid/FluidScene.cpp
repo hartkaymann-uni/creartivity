@@ -2,7 +2,7 @@
 
 using namespace fluid;
 
- 
+
 extern int SCREEN_WIDTH;
 extern int SCREEN_HEIGHT;
 
@@ -14,7 +14,7 @@ FluidScene::FluidScene()
 	sequenceDuration( 10.f ),
 	sequenceTransitionDuration( 1.f ),
 	lastSequene( SequenceName::Empty ),
-	currentSequence( SequenceName::Empty ),
+	currentSequence( SequenceName::Default ),
 	lastSequenceTime( 0.f ),
 	shading( DEFAULT ) {}
 
@@ -30,7 +30,7 @@ void FluidScene::setup()
 	solverSettings.viscosity = 0.3f;
 	solverSettings.epsilon = 0.00024414f;
 	solverSettings.curl = 0.1f;
-	solverSettings.jacobiIterations = 40;
+	solverSettings.jacobiIterations = 81;
 	solverSettings.dissipation = 0.998f;
 	solverSettings.applyGravity = false;
 	solverSettings.gravityDir = { 0.0, 1.0 };
@@ -38,7 +38,7 @@ void FluidScene::setup()
 	solver = ccSolver( solverSettings );
 
 	ccSolver::Grid solverGrid;
-	solverGrid.size = glm::vec2( SCREEN_WIDTH, SCREEN_HEIGHT);
+	solverGrid.size = glm::vec2( SCREEN_WIDTH, SCREEN_HEIGHT );
 
 	solverGrid.scale = 1.0f;
 	solverGrid.applyBounds = true;
@@ -54,12 +54,12 @@ void FluidScene::setup()
 	groupGeneral.setName( "View" );
 
 	groupGeneral.add( p_Timestep.set( "Timestep", solverSettings.timestep, 0.f, 2.f ) );
-	groupGeneral.add( p_SplatRadius.set( "Splat", solverSettings.splatRadius, 0.f, .005f ) );
+	groupGeneral.add( p_SplatRadius.set( "Splat", solverSettings.splatRadius, 0.f, .001f ) );
 	groupGeneral.add( p_SplatColor.set( "Color", solverSettings.splatColor ) );
 	groupGeneral.add( p_Dissipation.set( "Dissipation", solverSettings.dissipation, 0.9f, 1.f ) );
 	groupSolver.add( p_JacobiIterations.set( "Iterations", solverSettings.jacobiIterations, 0, 120 ) );
 	groupGrid.add( p_Bounds.set( "Bounds", solverGrid.applyBounds ) );
-	groupGrid.add( p_Scale.set( "Scale", 1.f, 0.f, 1.f ) );
+	groupGrid.add( p_Scale.set( "Scale", 1.f, 0.f, 2.f ) );
 	groupVorticity.add( p_ApplyVorticity.set( "Apply Vorticity", solverSettings.applyVorticity ) );
 	groupVorticity.add( p_Epsilon.set( "Epsilon", solverSettings.epsilon, 0.f, .1f ) );
 	groupVorticity.add( p_Curl.set( "Curl", solverSettings.curl, 0.f, 1.f ) );
@@ -101,17 +101,26 @@ void FluidScene::setup()
 	bool err_loadscalar = displayScalar.load( shaderPath / "passthru.vert", shaderPath / "displayscalar.frag" );
 	bool err_loadvector = displayVector.load( shaderPath / "passthru.vert", shaderPath / "displayvector.frag" );
 	bool err_loadpixel = displayLines.load( shaderPath / "passthru.vert", shaderPath / "pixels.frag" );
+	bool err_loadvel = displayVelocity.load( shaderPath / "passthru.vert", shaderPath / "velocity.frag" );
+	bool err_loadtex = displayTexture.load( shaderPath / "passthru.vert", shaderPath / "texture.frag" );
 
 
 	// Initialize Sequences
 	setupSequences();
+
+	plane = ofPlanePrimitive( width, height, 2, 2 );
+	plane.setPosition( width / 2, height / 2, 0.f );
+
+	ofDisableArbTex();
+	texture.allocate( { width, height }, GL_RGB32F );
+	ofEnableArbTex();
 }
 
 void FluidScene::update()
 {
 	time = ofGetElapsedTimef();
 
-	if (debug && !step)
+	if ( debug && !step )
 		return;
 
 	updateSequence();
@@ -122,47 +131,20 @@ void FluidScene::update()
 	// Do one solver step
 	solver.step( u );
 
-	if (debug) step = false;
+	if ( debug ) step = false;
 }
 
 void FluidScene::draw()
 {
 	ofBackground( 0 );
 
-	if (p_DebugView.get()) {
-		// Debug view showing all fields in a grid pattern and with a caption
-		ccSolver::Grid grid = *(solver.getGrid());
+	if ( p_DebugView.get() ) {
 
-		float w = width / 2;
-		float h = height / 3;
-
-		ofDrawBitmapString( "density", 0.f, 0.f + 10.f );
-		solver.getDensity()->draw( 0.f, 0.f, w, h );
-
-		// Velocity field needs special shader to be displayed, as its values range from -1.0 to 1.0 so they have to be normalized using a bias
-		// For details see displayvector shader
-		ofDrawBitmapString( "velocity", 0.f, h + 10.f );
-		displayVector.begin();
-		displayVector.setUniformTexture( "read", solver.getVelocity()->getTexture(), 1 );
-		displayVector.setUniform3f( "bias", glm::vec3( 0.5, 0.5, 0.5 ) );
-		displayVector.setUniform3f( "scale", glm::vec3( 0.5, 0.5, 0.5 ) );
-		displayVector.setUniform2f( "gridSize", solver.getGrid()->size );
-		solver.getVelocity()->draw( 0.f, h, w, h );
-		displayVector.end();
-
-		ofDrawBitmapString( "divergence", w, 0.f + 10.f );
-		solver.getDivergence()->draw( w, 0.f, w, h );
-
-		ofDrawBitmapString( "vorticity", w, h + 10.f );
-		solver.getVorticity()->draw( w, h, w, h );
-
-		ofDrawBitmapString( "pressure", 0.f, h * 2.f + 10.f );
-		solver.getPressure()->draw( 0.f, h * 2.f, w, h );
-
+		drawDebug();
 	}
 	else {
 		// Only draw density texture
-		switch (shading)
+		switch ( shading )
 		{
 		case ShadingType::DEFAULT:
 			drawDefault();
@@ -170,22 +152,64 @@ void FluidScene::draw()
 		case ShadingType::PIXELS:
 			drawPixelated();
 			break;
+		case ShadingType::VELOCITY:
+			drawVelocity();
+			break;
+		case ShadingType::TEXTURE:
+			drawTexture();
+			break;
 		default:
 			break;
 		}
 	}
 }
 
+// Draw all solver fields with caption for debugging
+void FluidScene::drawDebug() {
+	ccSolver::Grid grid = *(solver.getGrid());
+
+	float w = width / 2;
+	float h = height / 3;
+
+	ofDrawBitmapString( "density", 0.f, 0.f + 10.f );
+	drawScalarField( solver.getDensity(), 0.f, 0.f, w, h );
+
+	// Velocity field needs special shader to be displayed, as its values range from -1.0 to 1.0 so they have to be normalized using a bias
+	// For details see displayvector shader
+	ofDrawBitmapString( "velocity", 0.f, h + 10.f );
+	displayVector.begin();
+	displayVector.setUniformTexture( "read", solver.getVelocity()->getTexture(), 1 );
+	displayVector.setUniform3f( "bias", glm::vec3( 0.5, 0.5, 0.5 ) );
+	displayVector.setUniform3f( "scale", glm::vec3( 0.5, 0.5, 0.5 ) );
+	displayVector.setUniform2f( "gridSize", solver.getGrid()->size );
+	solver.getVelocity()->draw( 0.f, h, w, h );
+	displayVector.end();
+
+	ofDrawBitmapString( "divergence", w, 0.f + 10.f );
+	drawScalarField( solver.getDivergence(), w, 0.f, w, h );
+
+	ofDrawBitmapString( "vorticity", w, h + 10.f );
+	drawScalarField( solver.getVorticity(),w, h, w, h );
+
+	ofDrawBitmapString( "pressure", 0.f, h * 2.f + 10.f );
+	drawScalarField( solver.getPressure(),0.f, h * 2.f, w, h );
+}
+
+void FluidScene::drawScalarField( ofFbo* const field, int x, int y, int w, int h ) {
+	displayScalar.begin();
+	displayScalar.setUniformTexture( "read", field->getTexture(), 1);
+	displayScalar.setUniform2f( "gridSize", solver.getGrid()->size );
+	displayScalar.setUniform3f( "bias", glm::vec3( 0.5, 0.5, 0.5 ) );
+	displayScalar.setUniform3f( "scale", glm::vec3( 0.5, 0.5, 0.5 ) );
+	field->draw( x, y, w, h );
+	displayScalar.end();
+}
+
 // Draw using the default shader
 void FluidScene::drawDefault() {
 	camera.begin();
-	displayScalar.begin();
-	displayScalar.setUniformTexture( "read", solver.getDensity()->getTexture(), 1 );
-	displayScalar.setUniform3f( "bias", glm::vec3( 0.5, 0.5, 0.5 ) );
-	displayScalar.setUniform3f( "scale", glm::vec3( 0.5, 0.5, 0.5 ) );
-	displayScalar.setUniform2f( "gridSize", solver.getGrid()->size );
+	//drawScalarField( solver.getDensity(), 0.f, 0.f, width, height );
 	solver.getDensity()->draw( 0.f, 0.f, width, height );
-	displayScalar.end();
 	camera.end();
 }
 
@@ -202,27 +226,69 @@ void FluidScene::drawPixelated() {
 	camera.end();
 }
 
+void FluidScene::drawVelocity() {
+	camera.begin();
+	displayVelocity.begin();
+	displayVelocity.setUniformTexture( "read", solver.getVelocity()->getTexture(), 1 );
+	displayVelocity.setUniform2f( "gridSize", solver.getGrid()->size );
+	displayVelocity.setUniform3f( "bias", glm::vec3( 0.5, 0.5, 0.5 ) );
+	displayVelocity.setUniform3f( "scale", glm::vec3( 0.5, 0.5, 0.5 ) );
+	solver.getVelocity()->draw( 0.f, 0.f, width, height );
+	displayVelocity.end();
+	camera.end();
+}
+
+void FluidScene::drawTexture()
+{
+	displayTexture.begin();
+
+	displayTexture.setUniformTexture( "read", texture.read->getTexture(), 1 );
+	displayTexture.setUniformTexture( "velocity", solver.getVelocity()->getTexture(), 2 );
+	displayTexture.setUniform2f( "resolution", { width, height } );
+
+	texture.write->begin();
+	ofClear( 0 );
+	plane.draw();
+
+	texture.write->end();
+	texture.swap();
+
+	displayTexture.end();
+
+	camera.begin();
+	texture.read->getTexture().draw( 0, 0, width, height );
+	camera.end();
+}
+
 ///////////////
 // Sequences //
 ///////////////
 void FluidScene::setupSequences() {
 	lastSequenceTime = time;
 	// Standart
-	sequenceMap.insert( pair<FluidScene::SequenceName, SequenceParameters>( SequenceName::Default, { 1.f,  0.002f, 0.998f, false, 0.f, false, 0.f, {1.f, 1.f, 1.f } } ) );
+	sequenceMap.insert( pair<FluidScene::SequenceName, SequenceParameters>( SequenceName::Default, { 1.f, 1.f,  0.001f, 0.998f, false, 0.f, false, 0.f, {1.f, 1.f, 1.f } } ) );
 	// Fast
-	sequenceMap.insert( pair<FluidScene::SequenceName, SequenceParameters>( SequenceName::Fast, { 0.2f,  0.001f, 0.992f, false, 0.f, false, 0.f,{1.f, 1.f, 1.f } } ) );
+	sequenceMap.insert( pair<FluidScene::SequenceName, SequenceParameters>( SequenceName::Fast, { 1.f,  0.2f,  0.001f, 0.992f, false, 0.f, false, 0.f,{1.f, 1.f, 1.f } } ) );
 	// Smoke
-	sequenceMap.insert( pair<FluidScene::SequenceName, SequenceParameters>( SequenceName::Smoke, { 0.5f,  0.002f, 0.998f, true, .15f, false, 0.f, {1.f, 1.f, 1.f } } ) );
+	sequenceMap.insert( pair<FluidScene::SequenceName, SequenceParameters>( SequenceName::Smoke, { 1.f, 0.5f,  0.0015f, 0.998f, true, .1f, false, 0.f, {1.f, 1.f, 1.f } } ) );
+	// Red
+	sequenceMap.insert( pair<FluidScene::SequenceName, SequenceParameters>( SequenceName::Red, { 1.f, 1.f,  0.0015f, 0.995f, false, 0.f, false, 0.f, {1.f, 0.f, 0.f } } ) );
+	// Fast Smoke
+	sequenceMap.insert( pair<FluidScene::SequenceName, SequenceParameters>( SequenceName::FastSmoke, { 1.f, 0.3f,  0.001f, 0.996f, true, 0.15f, false, 0.f, {1.f, 0.f, 0.f } } ) );
+	// Viscous
+	sequenceMap.insert( pair<FluidScene::SequenceName, SequenceParameters>( SequenceName::Viscous, { 1.f, 1.f,  0.0015f, 0.99f, false, 0.f, true, .8f, {1.f, 1.f, 1.f } } ) );
+	// Stop
+	sequenceMap.insert( pair<FluidScene::SequenceName, SequenceParameters>( SequenceName::Stop, { 0.f, 0.1f,  0.001f, 1.f, false, 0.f, false, .0f, {1.f, 1.f, 1.f } } ) );
 	// Empty
-	sequenceMap.insert( pair<FluidScene::SequenceName, SequenceParameters>( SequenceName::Empty, { 1.f,  0.002f, 0.9f, false, 0.f, false, 0.f, {0.f, 0.f, 0.f } } ) );
+	sequenceMap.insert( pair<FluidScene::SequenceName, SequenceParameters>( SequenceName::Empty, { 0.f, 1.f,  0.000f, 0.9f, false, 0.f, false, 0.f, {0.f, 0.f, 0.f } } ) );
 }
 
 void FluidScene::updateSequence() {
-	if (!p_Sequences)
+	if ( !p_Sequences )
 		return;
 
 	// Change sequences periodically
-	if (time - lastSequenceTime > sequenceDuration) {
+	if ( time - lastSequenceTime > sequenceDuration ) {
 		//Set to a random sequence
 		setSequence( randSequence() );
 		cout << "Changing Sequence! Current Sequence: " << static_cast<int>(currentSequence) << endl;
@@ -241,9 +307,10 @@ void FluidScene::setSequence( SequenceName name ) {
 
 // Changes happening graduallyduring sequence change
 void FluidScene::updateParameters() {
-	if (p_Sequences.get() && time - lastSequenceTime <= sequenceTransitionDuration)
+	if ( p_Sequences.get() && time - lastSequenceTime <= sequenceTransitionDuration )
 	{
 		float timeSinceSequenceChange = time - lastSequenceTime;
+		p_Timestep.set( ofMap( timeSinceSequenceChange, 0.0, sequenceTransitionDuration, sequenceMap.at( lastSequene ).timestep, sequenceMap.at( currentSequence ).timestep ) );
 		p_Scale.set( ofMap( timeSinceSequenceChange, 0.0, sequenceTransitionDuration, sequenceMap.at( lastSequene ).scale, sequenceMap.at( currentSequence ).scale ) );
 		p_SplatRadius.set( ofMap( timeSinceSequenceChange, 0.0, sequenceTransitionDuration, sequenceMap.at( lastSequene ).splat, sequenceMap.at( currentSequence ).splat ) );
 		p_Dissipation.set( ofMap( timeSinceSequenceChange, 0.0, sequenceTransitionDuration, sequenceMap.at( lastSequene ).dissipation, sequenceMap.at( currentSequence ).dissipation ) );
@@ -276,7 +343,8 @@ float FluidScene::SceneIntro()
 	lastSequene = SequenceName::Empty;
 	setSequence( randSequence() );
 
-	//changeShading();
+	changeShading();
+	if ( shading == ShadingType::TEXTURE ) return 0.f;
 	return sequenceTransitionDuration;
 }
 
@@ -289,7 +357,8 @@ float FluidScene::SceneOutro()
 
 // Change shading type, right now just switches between outlined and metaball shading
 void FluidScene::changeShading() {
-	shading = shading ? ShadingType::DEFAULT : ShadingType::PIXELS;
+	shading = static_cast<ShadingType>((shading + 1) % NUM_SHADING);
+	texture.read->getTexture().loadScreenData( 0, 0, width, height );
 }
 
 
@@ -300,7 +369,7 @@ void FluidScene::changeShading() {
 void FluidScene::keyPressed( int key ) {
 
 	//std::cout << key << std::endl;
-	switch (key) {
+	switch ( key ) {
 	case ofKey::OF_KEY_SHIFT:
 		camera.enableMouseInput();
 		break;
@@ -312,7 +381,7 @@ void FluidScene::keyPressed( int key ) {
 		cout << "Debug: " << (debug ? "On" : "Off") << endl;
 		break;
 	case 32:
-		if (debug) step = true;
+		if ( debug ) step = true;
 		break;
 	case's':
 		changeShading();
@@ -322,7 +391,7 @@ void FluidScene::keyPressed( int key ) {
 
 void FluidScene::keyReleased( int key ) {
 
-	if (key == ofKey::OF_KEY_SHIFT)
+	if ( key == ofKey::OF_KEY_SHIFT )
 	{
 		camera.disableMouseInput();
 	}
