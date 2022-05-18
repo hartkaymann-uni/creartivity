@@ -3,6 +3,7 @@
 #include "scenes/scenes.h"
 
 using namespace gol;
+using namespace contour;
 
 extern int SCREEN_WIDTH;
 extern int SCREEN_HEIGHT;
@@ -24,12 +25,12 @@ void ofApp::setup() {
 	scenes.push_back( (FluidScene*)sceneManager.add( new FluidScene() ) );
 	scenes.push_back( (GameOfLifeScene*)sceneManager.add( new GameOfLifeScene(SCREEN_WIDTH / 10, SCREEN_HEIGHT / 10) ) );
 	scenes.push_back( (SwarmScene*)sceneManager.add( new SwarmScene() ) );
-	scenes.push_back( (ContourLinesScene*)sceneManager.add( new ContourLinesScene() ) );
+	scenes.push_back( (ContourLinesScene*)sceneManager.add( new ContourLinesScene(SCREEN_WIDTH / 4, SCREEN_HEIGHT / 4) ) );
 
 	// Initialize scene manager
 	sceneManager.setup( true ); // Setup all scenes now
 	ofSetLogLevel( "ofxScenemanager", OF_LOG_VERBOSE );
-	sceneManager.gotoScene( "Fluid", true );
+	sceneManager.gotoScene( "ContourLines", true );
 
 	lastScene = sceneManager.getCurrentSceneIndex();
 	sceneManager.setOverlap( false );
@@ -130,6 +131,7 @@ void ofApp::keyPressed( int key ) {
 	case 'o':
 		sceneManager.setOverlap( !sceneManager.getOverlap() );
 		break;
+
 	case 'x':
 		// Take a screenshot
 		img.grabScreen( 0, 0, ofGetWidth(), ofGetHeight() );

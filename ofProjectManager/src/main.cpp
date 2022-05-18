@@ -1,7 +1,9 @@
 #include "ofMain.h"
 #include "ofApp.h"
 
-//#define PRESENTATION_MODE
+#if 1
+#define PRESENTATION_MODE
+#endif 
 
 #ifdef PRESENTATION_MODE
 int SCREEN_WIDTH = 2560; // 3840

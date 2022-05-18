@@ -1,204 +1,247 @@
 #include "ContourLinesScene.h"
 
-ContourLinesScene::ContourLinesScene() : ccScene( "ContourLines" ),
-time( 0.f ),
-sbv( 0 ),
-meshWidth( 0 ),
-meshHeight( 0 ),
-count( 0 )
-{}
+namespace contour {
+	ContourLinesScene::ContourLinesScene( int w, int h ) : ccScene( "ContourLines" ),
+		time( 0.f ),
+		grid( { w, h } ),
+		sequenceDuration( 10.f ),
+		sequenceTransitionDuration( 3.f ),
+		lastSequene( SequenceName::Empty ),
+		currentSequence( SequenceName::Default ),
+		lastSequenceTime( 0.f )
+	{}
 
-void ContourLinesScene::setup()
-{
-	// Load Shader
-	filesystem::path shader_path = getShaderPath();
-	bool shadersloaded = contourLineShader.load( shader_path / "contour.vert", shader_path / "contour.frag" );
-
-	// Set camera in the middle of the scene
-	camera.disableMouseInput();
-	camera.setPosition( width / 2, height / 2, (width + height) / 2 );
-
-	// Set variables
-	count = 1;
-	sbv = 3; // SpaceBetweenVetices 
-	meshWidth = width / sbv + 1;
-	meshHeight = height / sbv + 1;
-
-	// Fill mesh with vertices
-	mesh.setMode( OF_PRIMITIVE_TRIANGLES );
-	for (int y = 0; y < meshHeight; y++) {
-		for (int x = 0; x < meshWidth; x++) {
-			mesh.addVertex( glm::vec3( x * sbv, y * sbv, 0 ) );
-			mesh.addTexCoord( { (x * sbv) / width , (y * sbv) / height } );
-		}
-	}
-	for (int y = 0; y < meshHeight - 1; y++) {
-		for (int x = 0; x < meshWidth - 1; x++) {
-			mesh.addIndex( x + y * meshWidth );
-			mesh.addIndex( (x + 1) + y * meshWidth );
-			mesh.addIndex( x + (y + 1) * meshWidth );
-
-			mesh.addIndex( (x + 1) + y * meshWidth );
-			mesh.addIndex( (x + 1) + (y + 1) * meshWidth );
-			mesh.addIndex( x + (y + 1) * meshWidth );
-		}
-	}
-
-	// Setup gui and parameters
-	shaderUniforms.setName( "Shader Parameters" );
-	shaderUniforms.add( speed.set( "u_speed", 0.015, 0.00, 0.1 ) );
-	shaderUniforms.add( scale.set( "u_scale", 0.01, 0.0, 0.05 ) );
-	shaderUniforms.add( amplitude.set( "u_amplitude", 10.0, 0.0, 20.0 ) );
-	shaderUniforms.add( radius.set( "u_radius", 100.0, 25.0, 500.0 ) );
-	shaderUniforms.add( thickness.set( "u_thickness", 1.0, 0.1, 5.0 ) );
-	shaderUniforms.add( limit.set( "u_limit", 3.5, 0.0, 10.0 ) );
-
-	gui.add( shaderUniforms );
-	gui.setPosition( width - gui.getWidth() - 10, height - gui.getHeight() - 10 );
-}
-
-void ContourLinesScene::update()
-{
-	time = ofGetElapsedTimef();
-	updateUserPositions();
-
-	// TODO: somehow combine mouse and user interaction so this function isn't as long and ugly anymore
-	map<int, ccUser>* users = userManager->getUsers();
-	std::map<int, ccUser>::iterator it = users->begin();
-	std::map<int, ccUser>::iterator itEnd = users->end();
-	while (it != itEnd) {
-
-		ofVec2f left = it->second.left();
-		ofVec2f right = it->second.right();
-
-		left.x *= width;
-		right.x *= width;
-		left.y = height - (left.y * height);
-		right.y = height - (right.y * height);
-
-		for (size_t i = 0; i < mesh.getNumVertices(); i++) {
-			ofVec3f v = mesh.getVertex( i );
-
-			float distance = min( v.distance( left ), v.distance( right ) );
-			if (distance < radius) {
-				v.z -= ofMap( distance, radius, 0.0, 0.0, 1.0 );
-			}
-
-			mesh.setVertex( i, v );
-		}
-		it++;
-	}
-
-	ofVec3f mouse = ofVec3f( ofGetMouseX(), height - ofGetMouseY(), 0.0f );
-
-	for (size_t i = 0; i < mesh.getNumVertices(); i++) {
-		ofVec3f v = mesh.getVertex( i );
-		mouse.z = v.z;
-
-		float distance = v.distance( mouse );
-		if (distance < radius) {
-			//if (v.z >= ofMap(distance, 0.0, radius, -1.0 * limit, 0.0))
-			v.z -= ofMap( distance, radius, 0.0, 0.0, 1.0 );
-		}
-
-		if (v.z < 0.f) {
-			v.z += 0.05 * limit;
-		}
-
-		mesh.setVertex( i, v );
-	}
-}
-
-void ContourLinesScene::draw()
-{
-
-	camera.begin();
+	void ContourLinesScene::setup()
 	{
-		contourLineShader.begin();
-		{
-			contourLineShader.setUniform1f( "u_time", time );
-			contourLineShader.setUniform2f( "u_mouse", ofGetMouseX(), height - ofGetMouseY() );
-			//contourLineShader.setUniform2fv("hands", &user_positions[0].x, sizeof(ofVec2f) * 10);
-			contourLineShader.setUniforms( shaderUniforms );
+		// Load Shader
+		filesystem::path shader_path = getShaderPath();
+		bool err_cont = contourLineShader.load( shader_path / "contour.vert", shader_path / "contour.frag" );
+		bool err_splat = splatShader.load( shader_path / "passthru.vert", shader_path / "splat.frag" );
+		bool err_sub = subtractShader.load( shader_path / "passthru.vert", shader_path / "subtract.frag" );
 
-			mesh.draw();
+		// Create mesh
+		plane = ofPlanePrimitive( width, height, grid.x, grid.y );
+		plane.setPosition( width / 2, height / 2, 0.f );
+
+		ofDisableArbTex();
+		interaction.allocate( grid, GL_R32F );
+		ofEnableArbTex();
+
+		// Setup gui and parameters
+		terrainUniforms.setName( "Terrain" );
+		terrainUniforms.add( p_Speed.set( "u_speed", 0.015, 0.00, 0.5 ) );
+		terrainUniforms.add( p_Scale.set( "u_scale", 0.01, 0.0, 0.05 ) );
+		terrainUniforms.add( p_Amplitude.set( "u_amplitude", 5.0, 0.0, 100.0 ) );
+		terrainUniforms.add( p_Thickness.set( "u_thickness", 0.2, 0.0, 1.0 ) );
+		terrainUniforms.add( p_Lacunarity.set( "u_lacunarity", 0.0, 0.0, 5.0 ) );
+		terrainUniforms.add( p_Persistance.set( "u_persistance", 0.0, 0.0, 1.0 ) );
+		terrainUniforms.add( p_Sequences.set( "Run Sequences", true ) );
+
+		mouseUniforms.setName( "Mouse" );
+		mouseUniforms.add( p_MouseRadius.set( "u_radius", 0.005, 0.0, 0.01 ) );
+		mouseUniforms.add( p_MouseStrength.set( "u_strength", 0.1, 0.0, 1.0 ) );
+
+//		lightUniforms.add( p_MoveLight.set( "u_moving", false ) );
+//		lightUniforms.setName( "Light" );
+
+		gui.add( terrainUniforms );
+		gui.add( mouseUniforms );
+//		gui.add( lightUniforms );
+
+		gui.setPosition( width - gui.getWidth() - 10, height - gui.getHeight() - 10 );
+
+		initSequences();
+	}
+
+	void ContourLinesScene::update()
+	{
+		time = ofGetElapsedTimef();
+
+		updateSequence();
+		updateParameters();
+
+		// Apply interaction for all users
+		vector<ccUser> u = userManager->getUserVec();
+		for ( vector<ccUser>::iterator it = u.begin(); it != u.end(); it++ ) {
+			ccUser user = *it;
+			// Only apply interaction if user is moving
+			if ( glm::length( user.getMotions().first ) > 0.f )
+				splat( user.getPositons().first );
+			if ( glm::length( user.getMotions().second ) > 0.f )
+				splat( user.getPositons().second );
 		}
-		contourLineShader.end();
 
-		// Draw circles at the corners of the sceen and at mouseposition
-		ofNoFill();
-		ofDrawCircle( 0, 0, 30 );
-		ofDrawCircle( width, 0, 30 );
-		ofDrawCircle( width, height, 30 );
-		ofDrawCircle( 0, height, 30 );
-		ofDrawCircle( ofGetMouseX(), height - ofGetMouseY(), 30 );
+		// Flatten terrain
+		subtractShader.begin();
+		subtractShader.setUniformTexture( "read", interaction.read->getTexture(), 2 );
+		subtractShader.setUniform2f( "grid", grid );
 
-		/*
-		ofSetColor(255,0, 0);
-		//mesh.drawVertices();
-		ofSetColor(0, 50, 0);
-		//mesh.drawFaces();
-		ofSetColor( 255 );
-		mesh.drawWireframe();
-		*/
-	}
-	camera.end();
+		interaction.write->begin();
+		plane.draw();
+		interaction.write->end();
+		interaction.swap();
 
-	ofSetColor( 255 );
-}
-
-void ContourLinesScene::keyPressed( int key )
-{
-	// reset the camera to the middle of the scene
-	if (key == 'r') {
-		camera.reset();
-		camera.setPosition( width / 2, height / 2, (width + height) / 2 );
+		subtractShader.end();
 	}
 
-	if (key == ofKey::OF_KEY_SHIFT) {
-		camera.enableMouseInput();
+	void ContourLinesScene::draw()
+	{
+		camera.begin();
+		{
+			contourLineShader.begin();
+			{
+				contourLineShader.setUniformTexture( "interaction", interaction.read->getTexture(), 2 );
+				contourLineShader.setUniform2f( "u_resolution", { width, height } );
+				contourLineShader.setUniform1f( "u_time", time );
+				contourLineShader.setUniform2f( "u_mouse", ofGetMouseX(), height - ofGetMouseY() );
+				contourLineShader.setUniforms( terrainUniforms );
+//				contourLineShader.setUniforms( lightUniforms );
+
+				ofDisableAlphaBlending();
+
+				if ( !wireframeShading ) plane.draw();
+				else plane.drawWireframe();
+			}
+			contourLineShader.end();
+		}
+		camera.end();
+
+		//interaction.read->draw( 0, 0, width, height );
 	}
-}
 
-void ContourLinesScene::keyReleased( int key )
-{
-	if (key == ofKey::OF_KEY_SHIFT) {
-		camera.disableMouseInput();
+	void ContourLinesScene::splat( glm::vec3 point ) {
+		splatShader.begin();
+
+		splatShader.setUniformTexture( "read", interaction.read->getTexture(), 2 );
+		splatShader.setUniform2f( "grid", grid );
+		splatShader.setUniform2f( "u_point", point );
+		splatShader.setUniforms( mouseUniforms );
+
+		interaction.write->begin();
+		ofClear( 0 );
+		ofFill();
+		plane.draw();
+		interaction.write->end();
+		interaction.swap();
+
+		splatShader.end();
 	}
-}
 
-void ContourLinesScene::mouseMoved( int x, int y )
-{
-}
+	void ContourLinesScene::keyPressed( int key )
+	{
+		// reset the camera to the middle of the scene
+		switch ( key ) {
+		case 'r':
+			camera.reset();
+			camera.setPosition( width / 2, height / 2, (width + height) / 2 );
+			break;
+		case ofKey::OF_KEY_SHIFT:
+			camera.enableMouseInput();
+			break;
+		case 's':
+			changeShading();
+			break;
+		}
+	}
 
-void ContourLinesScene::mouseDragged( int x, int y, int button )
-{
-}
+	void ContourLinesScene::keyReleased( int key )
+	{
+		if ( key == ofKey::OF_KEY_SHIFT ) {
+			camera.disableMouseInput();
+		}
+	}
 
-void ContourLinesScene::mousePressed( int x, int y, int button )
-{
-}
+	void ContourLinesScene::changeShading() {
+		wireframeShading = !wireframeShading;
+	}
 
-void ContourLinesScene::mouseReleased( int x, int y, int button )
-{
-}
 
-void ContourLinesScene::mouseEntered( int x, int y )
-{
-}
+	///////////////
+	// Sequences //
+	///////////////	
 
-void ContourLinesScene::mouseExited( int x, int y )
-{
-}
+	/*	Define values for different sequences and create sequence map */
+	/*
+	*	type	name
+	*	float	speed
+	*	float	scale
+	*	float	amplitude
+	*	float	thickness
+	*	float	lacunarity
+	*	float	persistance
+	*/
+	void ContourLinesScene::initSequences()
+	{
+		lastSequenceTime = time;
+		// Standart
+		sequenceMap.insert( pair<ContourLinesScene::SequenceName, SequenceParameters>( SequenceName::Default, { 0.02, 0.01, 5.0,  0.2, 0.0, 0.0 } ) );
+		// Fast change
+		sequenceMap.insert( pair<ContourLinesScene::SequenceName, SequenceParameters>( SequenceName::Fast, { 0.5, 0.01, 5.0,  0.2, 0.0, 0.0 } ) );
+		// Big scale
+		sequenceMap.insert( pair<ContourLinesScene::SequenceName, SequenceParameters>( SequenceName::Big, { 0.04, 0.02, 5.0,  0.2, 0.0, 0.0 } ) );
+		// High Amplitude
+		sequenceMap.insert( pair<ContourLinesScene::SequenceName, SequenceParameters>( SequenceName::HighAmplitude, { 0.02, 0.01, 15.0,  0.2, 0.0, 0.0 } ) );
+		// Rough terrain
+		sequenceMap.insert( pair<ContourLinesScene::SequenceName, SequenceParameters>( SequenceName::Rough, { 0.02, 0.01, 5.0,  0.2, 2.5, 0.25 } ) );
+		// Empty Sequence for Intro and Outro
+		sequenceMap.insert( pair<ContourLinesScene::SequenceName, SequenceParameters>( SequenceName::Empty, { 0.0, 0.0, 1.0, 0.0, 0.0, 0.0 } ) );
+	}
 
-void ContourLinesScene::windowResized( int w, int h )
-{
-}
+	// Handles sequence changes
+	void ContourLinesScene::updateSequence() {
+		if ( !p_Sequences )
+			return;
 
-void ContourLinesScene::dragEvent( ofDragInfo dragInfo )
-{
-}
+		// Change sequences periodically
+		if ( time - lastSequenceTime > sequenceDuration ) {
+			//Set to a random sequence
+			setSequence( randSequence() );
+			cout << "Changing Sequence! Current Sequence: " << static_cast<int>(currentSequence) << endl;
+		}
+	}
 
-void ContourLinesScene::gotMessage( ofMessage msg )
-{
+	void ContourLinesScene::setSequence( SequenceName name )
+	{
+		lastSequene = currentSequence;
+		currentSequence = name;
+		lastSequenceTime = ofGetElapsedTimef();
+	}
+
+	// Updates parameters e.g. after sequence change
+	void ContourLinesScene::updateParameters() {
+		if ( p_Sequences.get() && time - lastSequenceTime <= sequenceTransitionDuration )
+		{
+			float timeSinceSequenceChange = time - lastSequenceTime;
+			if ( timeSinceSequenceChange < 0 ) {
+				return;
+			}
+			p_Speed.set( ofMap( timeSinceSequenceChange, 0.0, sequenceTransitionDuration, sequenceMap.at( lastSequene ).speed, sequenceMap.at( currentSequence ).speed ) );
+			p_Scale.set( ofMap( timeSinceSequenceChange, 0.0, sequenceTransitionDuration, sequenceMap.at( lastSequene ).scale, sequenceMap.at( currentSequence ).scale ) );
+			p_Amplitude.set( ofMap( timeSinceSequenceChange, 0.0, sequenceTransitionDuration, sequenceMap.at( lastSequene ).amplitude, sequenceMap.at( currentSequence ).amplitude ) );
+			p_Thickness.set( ofMap( timeSinceSequenceChange, 0.0, sequenceTransitionDuration, sequenceMap.at( lastSequene ).thickness, sequenceMap.at( currentSequence ).thickness ) );
+			p_Lacunarity.set( ofMap( timeSinceSequenceChange, 0.0, sequenceTransitionDuration, sequenceMap.at( lastSequene ).lacunarity, sequenceMap.at( currentSequence ).lacunarity ) );
+			p_Persistance.set( ofMap( timeSinceSequenceChange, 0.0, sequenceTransitionDuration, sequenceMap.at( lastSequene ).persistance, sequenceMap.at( currentSequence ).persistance ) );
+		}
+	}
+
+	ContourLinesScene::SequenceName ContourLinesScene::randSequence()
+	{
+		return static_cast<SequenceName>(rand() % NUM_SEQ);
+	}
+
+	//////////////////////
+	// Scene Transition //
+	//////////////////////
+
+	float ContourLinesScene::SceneIntro() {
+		lastSequene = SequenceName::Empty;
+		setSequence( randSequence() );
+
+		return sequenceTransitionDuration;
+	}
+
+	float ContourLinesScene::SceneOutro() {
+		setSequence( SequenceName::Empty );
+		return sequenceTransitionDuration;
+	}
 }

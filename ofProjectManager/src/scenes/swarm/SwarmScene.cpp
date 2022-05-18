@@ -83,29 +83,13 @@ void SwarmScene::setup() {
 	shaderUniforms.add(particleColorEnd.set("particle_color_end", glm::vec3(0.9, 0.9, 0.9), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1)));
 	shaderUniforms.add(freezeParticles.set("freeze_particles", false));
 	gui.add(shaderUniforms);
+	gui.add(isSequencerInControl.set("Let Sequencer control", true));
 	gui.add(fps.set("fps", 60, 0, 60));
 
 	gui.add(dirAsColor.set("Useless Button", true));
 	//dirAsColor.addListener(this, &SwarmScene::dirAsColorChanged);
 
 	InitSequences();
-
-	DoUpdateSequence = true;
-}
-
-//--------------------------------------------------------------
-void SwarmScene::InitSequences() {
-	currentSequenceIndex = 100;
-	nextSequenceTime = ofGetElapsedTimef() + 2;
-	SetSequence(ParameterSequence(1, SequenceName::NormalAttraction));
-	sequences.push_back(ParameterSequence(16, SequenceName::BrainNeurons));
-	sequences.push_back(ParameterSequence(7, SequenceName::BlackHole, 5));
-	sequences.push_back(ParameterSequence(4, SequenceName::Explosion));
-	sequences.push_back(ParameterSequence(0.1f, SequenceName::NormalAttraction));
-	sequences.push_back(ParameterSequence(16, SequenceName::BrainNeurons));
-	sequences.push_back(ParameterSequence(10, SequenceName::Swarm));
-	sequences.push_back(ParameterSequence(5, SequenceName::RepulsionStutter));
-	sequences.push_back(ParameterSequence(7, SequenceName::BlackHole, 3));
 }
 
 //--------------------------------------------------------------
@@ -150,7 +134,7 @@ void SwarmScene::update() {
 	fps = ofGetFrameRate();
 
 	updateUserPositions();
-	UpdateSequences();
+	UpdateSequence();
 
 	compute.begin();
 	compute.setUniforms(shaderUniforms);
@@ -170,6 +154,13 @@ void SwarmScene::update() {
 	atractor = { getProjectedPosition(mousePosition) };
 
 	compute.setUniform3f("attractor", atractor.x, atractor.y, atractor.z);
+
+	/*std::array<T, N> arr;
+	std::copy_n(vec.begin(), N, arr.begin());*/
+
+	vector<ccUser> hello = userManager->getUserVec();
+
+	array<ofVec2f, 10> user_positions;
 	compute.setUniform2fv("hands", &user_positions[0].x, sizeof(ofVec2f) * 10);
 	compute.setUniform2fv("hands", &user_positions[0].x, sizeof(ofVec2f) * 10);
 	compute.setUniform2f("mouse", (float)ofGetMouseX(), (float)ofGetMouseY());
@@ -292,10 +283,6 @@ void SwarmScene::keyReleased(int key) {
 		SetSequence(ParameterSequence(3, SequenceName::Intro));
 	}
 
-	if (key == 's') {
-		DoUpdateSequence = !DoUpdateSequence;
-	}
-
 	if (key == 'r') {
 		UserEnter();
 	}
@@ -359,33 +346,35 @@ void SwarmScene::dragEvent(ofDragInfo dragInfo) {
 
 }
 
+// ######################
+// CodeSection: Sequencer
+// ######################
 
-//--------------------------------------------------------------
-void SwarmScene::UpdateSequences() {
-	if (DoUpdateSequence == false) return;
-	if (ofGetElapsedTimef() > nextSequenceTime) {
-		currentSequenceIndex++;
-		if (currentSequenceIndex >= sequences.size() || currentSequenceIndex < 0) currentSequenceIndex = 0;
-
-		SetSequence(sequences[currentSequenceIndex]);
-	}
-
-	UpdateParameters();
+// Creates an arrray with sequences
+void SwarmScene::InitSequences() {
+	currentSequenceIndex = 0;
+	sequences.push_back(ParameterSequence(20, SequenceName::BrainNeurons));
+	sequences.push_back(ParameterSequence(7, SequenceName::BlackHole, 5));
+	sequences.push_back(ParameterSequence(4, SequenceName::Explosion));
+	sequences.push_back(ParameterSequence(0.1f, SequenceName::NormalAttraction));
+	sequences.push_back(ParameterSequence(16, SequenceName::BrainNeurons));
+	sequences.push_back(ParameterSequence(10, SequenceName::Swarm));
+	sequences.push_back(ParameterSequence(5, SequenceName::RepulsionStutter));
+	sequences.push_back(ParameterSequence(7, SequenceName::BlackHole, 3));
+	SetSequence(sequences[currentSequenceIndex]);
 }
 
-//--------------------------------------------------------------
+// Sets currentSequence to a new sequence and immediately activates it.
 void SwarmScene::SetSequence(ParameterSequence sequence) {
 	currentSequence = sequence;
-
 	StartSequence();
+}
+
+// Activates the current sequence by setting the intial parameters
+void SwarmScene::StartSequence() {
 	lastSequenceTime = ofGetElapsedTimef();
 	nextSequenceTime = lastSequenceTime + currentSequence.duration;
 
-	UpdateParameters();
-}
-
-//--------------------------------------------------------------
-void SwarmScene::StartSequence() {
 	ActivateRules();
 
 	switch (currentSequence.sequenceType)
@@ -424,21 +413,41 @@ void SwarmScene::StartSequence() {
 	{
 		particleColorStart.set(particleColorStart.getMin());
 		particleColorEnd.set(particleColorEnd.getMin());
+
+		// This ensures that when this sequence is finished, the sequence loop starts with the sequence at the index 0
+		currentSequenceIndex = -1;
 	}
 	default:
 		break;
 	}
+
+	UpdateSequence();
 }
 
-//--------------------------------------------------------------
+// Activates all swarm movement rules
 void SwarmScene::ActivateRules() {
 	//UseAttraction.set(true);
 	//UseCohesion.set(true);
 	UseRepulsion.set(true);
 }
 
-//--------------------------------------------------------------
-void SwarmScene::UpdateParameters() {
+// If nextSequenceTime has arrived, activate the next sequence in the sequences vector
+void SwarmScene::CheckForNextSequence() {
+	if (ofGetElapsedTimef() > nextSequenceTime) {
+		currentSequenceIndex++;
+		if (currentSequenceIndex >= sequences.size() || currentSequenceIndex < 0) currentSequenceIndex = 0;
+
+		SetSequence(sequences[currentSequenceIndex]);
+		cout << "Swarm-Scene switched to next sequence with index " << currentSequenceIndex << " . Will wait for " << sequences[currentSequenceIndex].duration << " seconds now." << endl;
+	}
+}
+
+// Change the parameters over time according to the current scene
+void SwarmScene::UpdateSequence() {
+	if (isSequencerInControl.get() == false) return;
+
+	CheckForNextSequence();
+
 	float currentTime = ofGetElapsedTimef();
 
 	float mod = ruleIterationMod.getMax() / 2 + (abs(sin(ofGetElapsedTimef() / 10)) * ruleIterationMod.getMax() / 2);
@@ -496,7 +505,11 @@ void SwarmScene::UpdateParameters() {
 	}
 }
 
-//--------------------------------------------------------------
+// ##############################
+// CodeSection: Scene Transitions
+// ##############################
+
+// Triggered when this scene is opened
 float SwarmScene::SceneIntro() {
 	cout << "Swarm Intro Triggered" << endl;
 
@@ -513,7 +526,7 @@ float SwarmScene::SceneIntro() {
 	return 4.f;
 }
 
-//--------------------------------------------------------------
+// Triggered when this scene is closed
 float SwarmScene::SceneOutro() {
 	cout << "Swarm Outro Triggered" << endl;
 	return 0.5f;

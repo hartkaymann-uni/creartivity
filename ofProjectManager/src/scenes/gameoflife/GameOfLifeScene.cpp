@@ -12,7 +12,7 @@ namespace gol {
 		sequenceDuration( 10.f ),
 		sequenceTransitionDuration( 1.f ),
 		lastSequene( SequenceName::Empty ),
-		currentSequence( SequenceName::Default ),
+		currentSequence( SequenceName::Empty ),
 		lastSequenceTime( 0.f ),
 		shading( ShadingType::OUTLINE )
 	{
@@ -137,7 +137,6 @@ namespace gol {
 	{
 		time = ofGetElapsedTimef();
 
-		updateUserPositions();
 		updateSequence();
 		updateParameters();
 

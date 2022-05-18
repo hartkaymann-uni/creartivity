@@ -24,6 +24,7 @@ namespace fluid {
 		pressure.allocate( grid.size, GL_RGB16_SNORM );
 		ofEnableArbTex();
 
+#if 0
 		{
 			int no_pixels = grid.size.x * grid.size.y * 3;
 			vector<short> cells( no_pixels );
@@ -54,6 +55,7 @@ namespace fluid {
 			}
 			density.read->getTexture().loadData( cells.data(), grid.size.x, grid.size.y, GL_RGB );
 		}
+#endif
 
 		// Create shader programs
 		filesystem::path shaderPath = "../../src/scenes/fluid/shader";
