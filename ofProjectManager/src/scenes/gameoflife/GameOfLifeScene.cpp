@@ -62,7 +62,7 @@ namespace gol {
 		sphereResolution.set( "circleRes", 20, 1, 100 );
 		sphereRadius.set( "radius", 10.f, 0.f, 50.f );
 		dataSrcSize.set( "srcSize", 0.f, 0.f, 9.f );
-		mouseRadius.set( "mouseRad", 0.05f, 0.f, 1.f );
+		mouseRadius.set( "mouseRad", 0.025f, 0.f, 1.f );
 		mouseStrength.set( "mouseStr", 0.25f, 0.f, 1.f );
 		jiggleFactor.set( "jiggle", 1.f, 0.f, 10.f );
 		runSequences.set( "Run sequences", true );
@@ -249,7 +249,6 @@ namespace gol {
 		}
 
 		// Draw some additional objects for debugging
-
 #if 0
 		ofPushStyle();
 		ofFill();
@@ -438,7 +437,11 @@ namespace gol {
 	}
 
 	void GameOfLifeScene::windowResized( int w, int h ) {
+		width = w;
+		height = h;
+
 		ofVec2f dim = dimensions.get();
 		handleDimensionsChanged( dim );
+		resetCamera();
 	}
 }

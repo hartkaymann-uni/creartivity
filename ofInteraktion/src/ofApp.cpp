@@ -1,6 +1,6 @@
 /*
 *  @author: Irene Santana Martin, Christine Schuller, Kay Hartmann, Cosmo Strattner, Marvin Esche, Franziska Streifert
-* 
+*
 *  May 2022
 *
 *  This class contains basic app functionalities.
@@ -21,6 +21,8 @@ void ofApp::setup() {
 
 	width = ofGetWidth();
 	height = ofGetHeight();
+
+	// Setup tracking device
 	device.setLogLevel( OF_LOG_VERBOSE );
 	bool setup = device.setup( 0 );
 	tracker.setup( device );
@@ -32,13 +34,13 @@ void ofApp::setup() {
 		std::cout << "New user: " << u->getId() << std::endl;
 		registerUser( u );
 		printUsers();
-		} );
+	} );
 
 	lostUserListener = tracker.lostUser.newListener( [this]( ofxNiTE2::User::Ref u ) {
 		std::cout << "Lost user: " << u->getId() << std::endl;
 		removeUser( u );
 		printUsers();
-		} );
+	} );
 
 	sendConnectionStarted();
 }
@@ -50,7 +52,7 @@ void ofApp::setup() {
 void ofApp::update() {
 	device.update();
 	// How many users
-	for (auto i = 0; i < tracker.getNumUser(); i++) {
+	for ( auto i = 0; i < tracker.getNumUser(); i++ ) {
 
 		ofxNiTE2::User::Ref user = tracker.getUser( i );
 
@@ -64,24 +66,24 @@ void ofApp::update() {
 		float yr = RHD.getGlobalPosition().y;
 
 		// Calibration 
-		if (xl < left)left = xl;
-		if (xl > right)right = xl;
-		if (yl < top)top = yl;
-		if (yl > bottom)bottom = yl;
+		if ( xl < left )left = xl;
+		if ( xl > right )right = xl;
+		if ( yl < top )top = yl;
+		if ( yl > bottom )bottom = yl;
 
-		if (xr < left)left = xr;
-		if (xr > right)right = xr;
-		if (yr < top)top = yr;
-		if (yr > bottom)bottom = yr;
+		if ( xr < left )left = xr;
+		if ( xr > right )right = xr;
+		if ( yr < top )top = yr;
+		if ( yr > bottom )bottom = yr;
 
 		int id = user->getId();
 		// Position of left hand
-		users[id].positionLeft.x = ofMap( xl,left, right, 0.f, 1.f, true );
-		users[id].positionLeft.y = 1.f - ofMap( yl, top, bottom, 0.f, 1.f, true );
+		users[id].left.x = ofMap( xl, left, right, 0.f, 1.f, true );
+		users[id].left.y = 1.f - ofMap( yl, top, bottom, 0.f, 1.f, true );
 
 		// Position of right hand
-		users[id].positionRight.x = ofMap( xr, left, right, 0.f, 1.f, true );
-		users[id].positionRight.y = 1.f - ofMap( yr, top, bottom, 0.f, 1.f, true );
+		users[id].right.x = ofMap( xr, left, right, 0.f, 1.f, true );
+		users[id].right.y = 1.f - ofMap( yr, top, bottom, 0.f, 1.f, true );
 
 		ofApp::user& u = users[id];
 		//printf( "user %i: Left:[ %.3f, %.3f] Right:[ %.3f, %.3f ] \n", i, u.positionLeft.x, u.positionLeft.y, u.positionRight.x, u.positionRight.y );
@@ -89,7 +91,7 @@ void ofApp::update() {
 
 	std::map<int, user>::iterator it = users.begin();
 	std::map<int, user>::iterator itEnd = users.end();
-	while (it != itEnd) {
+	while ( it != itEnd ) {
 		sendUser( it->first, it->second );
 		it++;
 	}
@@ -97,7 +99,7 @@ void ofApp::update() {
 
 //--------------------------------------------------------------
 /// <summary>
-/// Captured Userdata is sent to ofProjectManager 
+/// Captured user data is sent to ofProjectManager 
 /// </summary>
 void ofApp::sendUser( int id, user& user ) {
 	ofxOscMessage m;
@@ -106,12 +108,12 @@ void ofApp::sendUser( int id, user& user ) {
 	m.setAddress( addr );
 
 	// Position left hand
-	m.addFloatArg( user.positionLeft.x );
-	m.addFloatArg( user.positionLeft.y );
+	m.addFloatArg( user.left.x );
+	m.addFloatArg( user.left.y );
 
 	// Position rigt hand
-	m.addFloatArg( user.positionRight.x );
-	m.addFloatArg( user.positionRight.y );
+	m.addFloatArg( user.right.x );
+	m.addFloatArg( user.right.y );
 
 	sender.sendMessage( m );
 }
@@ -127,16 +129,16 @@ void ofApp::draw() {
 	// Draw skeleton 2D
 	ofSetColor( 255 );
 	depthTexture.draw( 0, 0 );
-	ofSetColor(ofColor::green);
+	ofSetColor( ofColor::green );
 	tracker.draw();
 
 	std::map<int, user>::iterator it = users.begin();
 	std::map<int, user>::iterator itEnd = users.end();
-	while (it != itEnd) {
+	while ( it != itEnd ) {
 		ofFill();
 		ofSetColor( ofColor::red );
-		ofDrawCircle( it->second.positionLeft, 10 );
-		ofDrawCircle( it->second.positionRight, 10 );
+		ofDrawCircle( it->second.left, 10 );
+		ofDrawCircle( it->second.right, 10 );
 		it++;
 	}
 
@@ -164,7 +166,7 @@ void ofApp::registerUser( ofxNiTE2::User::Ref u )
 	users[id] = newUser;
 
 	ofxOscMessage m;
-	m.setAddress("/user/new/") ;
+	m.setAddress( "/user/new/" );
 	m.addInt32Arg( id );
 	sender.sendMessage( m );
 
@@ -193,7 +195,7 @@ void ofApp::printUsers() {
 	std::cout << "Users: [ ";
 	std::map<int, user>::iterator it = users.begin();
 	std::map<int, user>::iterator itEnd = users.end();
-	while (it != itEnd) {
+	while ( it != itEnd ) {
 		std::cout << it->first << " ";
 		it++;
 	}
@@ -202,7 +204,7 @@ void ofApp::printUsers() {
 
 //--------------------------------------------------------------
 void ofApp::sendConnectionStarted() {
-	
+
 	ofxOscMessage m;
 	m.setAddress( "/connection" );
 	m.addStringArg( "on" );

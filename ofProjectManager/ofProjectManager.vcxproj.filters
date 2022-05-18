@@ -376,5 +376,6 @@
     <None Include="src\scenes\contourlines\shader\passthru.vert" />
     <None Include="src\scenes\contourlines\shader\subtract.frag" />
     <None Include="src\scenes\swarm\shader\userInteraction.comp" />
+    <None Include="src\scenes\fluid\shader\default.frag" />
   </ItemGroup>
 </Project>

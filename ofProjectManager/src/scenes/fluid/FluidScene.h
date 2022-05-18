@@ -19,6 +19,7 @@ public:
 
 	void keyPressed( int key );
 	void keyReleased( int key );
+	void windowResized( int w, int h );
 
 private:
 
@@ -56,6 +57,7 @@ private:
 
 	ofShader displayScalar;
 	ofShader displayVector;
+	ofShader displayDefault;
 	ofShader displayLines;
 	ofShader displayVelocity;
 	ofShader displayTexture;

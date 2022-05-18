@@ -23,7 +23,7 @@ void FluidScene::setup()
 	// Initialize all values necessary for the solver
 	ccSolver::Settings solverSettings;
 	solverSettings.timestep = 1.0f;
-	solverSettings.splatRadius = 0.002f;
+	solverSettings.splatRadius = 0.001f;
 	solverSettings.splatColor = ofFloatColor( 1.f );
 	solverSettings.applyVorticity = false;
 	solverSettings.applyViscosity = false;
@@ -100,6 +100,7 @@ void FluidScene::setup()
 	filesystem::path shaderPath = getShaderPath();
 	bool err_loadscalar = displayScalar.load( shaderPath / "passthru.vert", shaderPath / "displayscalar.frag" );
 	bool err_loadvector = displayVector.load( shaderPath / "passthru.vert", shaderPath / "displayvector.frag" );
+	bool err_loaddefault = displayDefault.load( shaderPath / "passthru.vert", shaderPath / "default.frag" );
 	bool err_loadpixel = displayLines.load( shaderPath / "passthru.vert", shaderPath / "pixels.frag" );
 	bool err_loadvel = displayVelocity.load( shaderPath / "passthru.vert", shaderPath / "velocity.frag" );
 	bool err_loadtex = displayTexture.load( shaderPath / "passthru.vert", shaderPath / "texture.frag" );
@@ -208,8 +209,10 @@ void FluidScene::drawScalarField( ofFbo* const field, int x, int y, int w, int h
 // Draw using the default shader
 void FluidScene::drawDefault() {
 	camera.begin();
-	//drawScalarField( solver.getDensity(), 0.f, 0.f, width, height );
+	displayDefault.begin();
+	displayDefault.setUniformTexture( "read", solver.getDensity()->getTexture(), 1 );
 	solver.getDensity()->draw( 0.f, 0.f, width, height );
+	displayDefault.end();
 	camera.end();
 }
 
@@ -343,7 +346,7 @@ float FluidScene::SceneIntro()
 	lastSequene = SequenceName::Empty;
 	setSequence( randSequence() );
 
-	changeShading();
+	//changeShading();
 	if ( shading == ShadingType::TEXTURE ) return 0.f;
 	return sequenceTransitionDuration;
 }
@@ -395,5 +398,12 @@ void FluidScene::keyReleased( int key ) {
 	{
 		camera.disableMouseInput();
 	}
+}
+
+void FluidScene::windowResized( int w, int h ) {
+	width = w;
+	height = h;
+
+	resetCamera();
 }
 

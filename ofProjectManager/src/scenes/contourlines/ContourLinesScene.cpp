@@ -20,6 +20,8 @@ namespace contour {
 		bool err_sub = subtractShader.load( shader_path / "passthru.vert", shader_path / "subtract.frag" );
 
 		// Create mesh
+		float ws = ofGetWindowWidth();
+		float wi = ofGetWidth();
 		plane = ofPlanePrimitive( width, height, grid.x, grid.y );
 		plane.setPosition( width / 2, height / 2, 0.f );
 
@@ -38,7 +40,7 @@ namespace contour {
 		terrainUniforms.add( p_Sequences.set( "Run Sequences", true ) );
 
 		mouseUniforms.setName( "Mouse" );
-		mouseUniforms.add( p_MouseRadius.set( "u_radius", 0.005, 0.0, 0.01 ) );
+		mouseUniforms.add( p_MouseRadius.set( "u_radius", 0.001, 0.0, 0.01 ) );
 		mouseUniforms.add( p_MouseStrength.set( "u_strength", 0.1, 0.0, 1.0 ) );
 
 //		lightUniforms.add( p_MoveLight.set( "u_moving", false ) );
@@ -153,6 +155,16 @@ namespace contour {
 
 	void ContourLinesScene::changeShading() {
 		wireframeShading = !wireframeShading;
+	}
+
+	void ContourLinesScene::windowResized( int w, int h ) {
+		width = w;
+		height = h;
+
+		plane = ofPlanePrimitive( width, height, grid.x, grid.y );
+		plane.setPosition( width / 2, height / 2, 0.f );
+
+		resetCamera();
 	}
 
 
