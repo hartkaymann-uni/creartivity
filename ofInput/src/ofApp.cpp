@@ -32,8 +32,8 @@ void ofApp::setup()
 	lastMousePos = unmapped(glm::vec2(0.4f, 0.7f));
 
 
-	// Register first user
-	registerUser(0);
+	// Register a user
+	//addNewUsers(1);
 }
 
 void ofApp::update() {
@@ -156,7 +156,7 @@ void ofApp::handleAddButtonClick()
 
 void ofApp::handleRemoveButtonClick()
 {
-	removeMostRecentUser();
+	removeMostRecentUser(false);
 }
 
 void ofApp::mouseDragged(int x, int y, int button) {
@@ -178,7 +178,7 @@ void ofApp::createUserPattern(int x, int y) {
 	for (size_t i = 0; i < n; i++) {
 		float offset = 0.1f * ceil(i / 2.0) * (i % 2 ? 1.f : -1.f);
 		users[i].left = coords + glm::vec2{ offset };
-		//users[i].right = glm::vec2(1.f) - coords + glm::vec2{ offset };
+		users[i].right = glm::vec2(1.f) - coords + glm::vec2{ offset };
 	}
 }
 

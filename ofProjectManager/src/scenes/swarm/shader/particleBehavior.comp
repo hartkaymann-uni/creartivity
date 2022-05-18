@@ -173,7 +173,7 @@ void calculateColor() {
 	// Set transparency depending on z-position
 	newColor.a =  0.05 + (1 - depthPercentage) * 0.95 * 0.05;
 
-	newColor = applyBlink(newColor, depth);
+	//newColor = applyBlink(newColor, depth);
 
 	p[gl_GlobalInvocationID.x].color = newColor;
 }

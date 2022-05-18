@@ -22,7 +22,7 @@ void SwarmScene::setup() {
 	for (auto& p : particles) {
 		p.pos.x = ofRandom(0, 1000);
 		p.pos.y = ofRandom(0, 1000);
-		p.pos.z = ofRandom(-maxParticleDepth, 5000);
+		p.pos.z = ofRandom(-maxParticleDepth, 0);
 		p.pos.w = 1;
 
 		p.u = { 0,0,0,0 };
@@ -125,7 +125,7 @@ vector<SwarmScene::Particle> SwarmScene::SortParticles() {
 void SwarmScene::update() {
 	fps = ofGetFrameRate();
 
-	//UpdateSequence(); 
+	UpdateSequence();
 	ApplyParticleRules();
 	ApplyInteraction();
 	//ApplyBiggusShadus();
@@ -404,8 +404,8 @@ void SwarmScene::UpdateSequence() {
 
 	float currentTime = ofGetElapsedTimef();
 
-	float mod = ruleIterationMod.getMax() / 2 + (abs(sin(ofGetElapsedTimef() / 10)) * ruleIterationMod.getMax() / 2);
-	ruleIterationMod.set(mod);
+	//float mod = ruleIterationMod.getMax() / 2 + (abs(sin(ofGetElapsedTimef() / 10)) * ruleIterationMod.getMax() / 2);
+	//ruleIterationMod.set(mod);
 
 	switch (currentSequence.sequenceType)
 	{
@@ -452,6 +452,15 @@ void SwarmScene::UpdateSequence() {
 
 		particleColorStart.set(glm::vec3(0, 0, 0) * percentage);
 		particleColorEnd.set(glm::vec3(0.9, 0.9, 0.9) * percentage);
+		break;
+	}
+	case SequenceName::Outro:
+	{
+		ofVec3f increment = ofVec3f(-1.f) * ofGetLastFrameTime() * 0.35f;
+
+		particleColorStart.set(particleColorStart.get() + increment);
+		particleColorEnd.set(particleColorEnd.get() + increment);
+
 		break;
 	}
 	default:
@@ -524,15 +533,14 @@ void SwarmScene::ApplyInteraction() {
 	interactionShader.setUniform1i("freeze_particles", (freezeParticles.get() ? 1 : 0));
 	interactionShader.setUniform1f("timeLastFrame", ofGetLastFrameTime());
 	interactionShader.setUniform1f("elapsedTime", ofGetElapsedTimef());
-	interactionShader.setUniform3f("mouse", getProjectedPosition(mousePosition));
 
 	vector<ofVec3f> user_hands = getHandsWorldCoords();
 	interactionShader.setUniform3fv("hands", &user_hands[0].x, sizeof(ofVec3f) * 10);
-	int userCount = userManager->getUserCount();
-	interactionShader.setUniform1i("user_count", userCount);
+	interactionShader.setUniform1i("hand_count", user_hands.size());
 
 	/*cout << "0. Hand Position: " << user_hands[0] << endl;
-	cout << "MousePosition: " << getProjectedPosition(mousePosition) << endl;*/
+	cout << "MousePosition: " << getProjectedPosition(mousePosition) << endl;
+	cout << "Handcount: " << user_hands.size() << endl;*/
 
 	interactionShader.dispatchCompute((particles.size() + 1024 - 1) / 1024, 1, 1);
 
@@ -565,5 +573,8 @@ float SwarmScene::SceneIntro() {
 // Triggered when this scene is closed
 float SwarmScene::SceneOutro() {
 	cout << "Swarm Outro Triggered" << endl;
-	return 0.5f;
+
+	SetSequence(ParameterSequence(3, SequenceName::Outro));
+
+	return 3.f;
 }

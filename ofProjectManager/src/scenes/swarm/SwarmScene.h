@@ -35,7 +35,8 @@ public:
 		BrainNeurons,
 		Swarm,
 		RepulsionStutter,
-		Intro
+		Intro,
+		Outro
 	};
 
 	struct ParameterSequence

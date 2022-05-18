@@ -29,9 +29,8 @@ uniform float timeLastFrame;
 uniform float elapsedTime;
 uniform float max_speed;
 uniform float attr_force;
-uniform vec3 mouse;
 uniform vec3 hands[N_USERS];
-uniform int user_count;
+uniform int hand_count;
 
 
 // ### Movement
@@ -47,11 +46,13 @@ vec3 applyMaxSpeed(vec3 velocity, float limit){
 
 vec3 calculateAcceleration(vec3 particlePos) {
 	vec3 acc = vec3(0.0,0.0,0.0);
-	
-	vec3 extra = vec3(mouse.x, mouse.y, -100);
-	vec3 attrDir = extra - particlePos;
 
-	acc += normalize(attrDir) * attr_force;
+	uint index = gl_GlobalInvocationID.x % (hand_count);
+
+  	vec3 handPos = vec3(hands[index].x, hands[index].y, 100);
+	vec3 difference = handPos - particlePos;
+	acc += normalize(difference) * attr_force;
+	
 
 	return acc;
 }
@@ -75,7 +76,7 @@ void main(){
 
 
 	// vec4 testColor = vec4(0,0,0,1);
-	// //testColor.r = 0.1 * user_count;
+	// //testColor.r = 0.1 * hand_count;
 	// testColor.rgb = hands[0].xyz;
     // p[gl_GlobalInvocationID.x].color = testColor;
 	// int index = int(p[gl_GlobalInvocationID.x].unique.y);
@@ -86,23 +87,3 @@ void main(){
 float map(float value, float min1, float max1, float min2, float max2) {
   return min2 + (value - min1) * (max2 - min2) / (max1 - min1);
 }
-
-// void calculateAttraction(vec3 particle){
-// 	int radius = 100;
-// 	vec3 modAttractor = vec3(0.0, 0.0, 1000);
-// 	for(int i = 0; i < N_USERS; i++) {
-// 		vec2 hand = hands[i].xy;
-// 		if(hand != vec2(0.0)) {
-// 			float dist = distance(particle.xy, hand);
-// 			float influence = map(dist, radius, 0.0, 0.0, 1.0);
-// 			//modAttractor.xy += (hand - particle.xy) * influence;
-// 		}
-// 	}
-
-// 	// Mouse also interacts
-// 	float dist = distance(particle.xy, attractor.xy);
-// 	float influence = map(dist, radius, 0.0, 0.0, 1.0);
-// 	modAttractor.xy += (attractor.xy - particle.xy) * influence;
-	
-// 	modAttractor = vec3(hands[0].x, hands[0].y, 1000);
-// }
