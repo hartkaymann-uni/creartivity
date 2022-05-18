@@ -102,6 +102,12 @@ void ofApp::update() {
 /// Captured user data is sent to ofProjectManager 
 /// </summary>
 void ofApp::sendUser( int id, user& user ) {
+	if ( !(user.left.x >= 0.f
+		&& user.left.y >= 0.f
+		&& user.right.x >= 0.f &&
+		user.right.y >= 0.f) )
+		return;
+
 	ofxOscMessage m;
 	std::string addr = "/user/data/";
 	addr += ofToString( id );

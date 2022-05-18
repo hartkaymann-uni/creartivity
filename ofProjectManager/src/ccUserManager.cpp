@@ -12,8 +12,9 @@ ccUserManager::ccUserManager()
 void ccUserManager::registerUser( ccUser& user )
 {
 	int id = user.getId();
+	if ( id == 2 )
+		cout << "yeet" << endl;
 	users.insert( pair<int, ccUser>( id, user ) );
-
 }
 
 void ccUserManager::removeUser( int id )

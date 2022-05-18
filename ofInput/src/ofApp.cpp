@@ -31,7 +31,6 @@ void ofApp::setup()
 
 	lastMousePos = unmapped(glm::vec2(0.4f, 0.7f));
 
-
 	// Register first user
 	registerUser(0);
 }
@@ -70,6 +69,8 @@ void ofApp::draw() {
 
 // Send user information
 void ofApp::sendUser(int id, user& user) {
+	// check if values make sense
+	
 	ofxOscMessage m;
 	std::string addr = "/user/data/";
 	addr += ofToString(id);

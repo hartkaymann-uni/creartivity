@@ -62,17 +62,6 @@ namespace contour {
 		updateSequence();
 		updateParameters();
 
-		// Apply interaction for all users
-		vector<ccUser> u = userManager->getUserVec();
-		for ( vector<ccUser>::iterator it = u.begin(); it != u.end(); it++ ) {
-			ccUser user = *it;
-			// Only apply interaction if user is moving
-			if ( glm::length( user.getMotions().first ) > 0.f )
-				splat( user.getPositons().first );
-			if ( glm::length( user.getMotions().second ) > 0.f )
-				splat( user.getPositons().second );
-		}
-
 		// Flatten terrain
 		subtractShader.begin();
 		subtractShader.setUniformTexture( "read", interaction.read->getTexture(), 2 );
@@ -84,6 +73,17 @@ namespace contour {
 		interaction.swap();
 
 		subtractShader.end();
+
+		// Apply interaction for all users
+		vector<ccUser> u = userManager->getUserVec();
+		for ( vector<ccUser>::iterator it = u.begin(); it != u.end(); it++ ) {
+			ccUser user = *it;
+			// Only apply interaction if user is moving
+			if ( glm::length( user.getMotions().first ) > 0.f )
+				splat( user.getPositons().first );
+			if ( glm::length( user.getMotions().second ) > 0.f )
+				splat( user.getPositons().second );
+		}
 	}
 
 	void ContourLinesScene::draw()

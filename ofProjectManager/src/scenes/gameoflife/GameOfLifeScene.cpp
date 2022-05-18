@@ -174,6 +174,7 @@ namespace gol {
 
 	void GameOfLifeScene::addInteraction(glm::vec2 point) {
 		splatShader.begin();
+
 		splatShader.setUniforms(shaderUniforms);
 		splatShader.setUniformTexture("cellData", cellPingPong.src->getTexture(), 0);
 		splatShader.setUniform2f("resolution", (float)n_cells_x, (float)n_cells_y);
