@@ -32,6 +32,7 @@ public:
 
 	inline void setUserManager( ccUserManager* um ) { userManager = um; }
 	inline ofxPanel& getGui() { return gui; };
+	vector<ofVec3f> getHandsWorldCoords();
 
 	// Scene Handling
 
@@ -56,6 +57,7 @@ protected:
 	void resetCamera();
 	void updateUserPositions();
 	ofVec3f getProjectedPosition( ofVec3f mp );
+	ofVec3f getNormalToWorldPosition(ofVec2f cameraPos);
 
 	bool isInBounds( ofVec2f pos );
 	bool isInBounds( int x, int y );

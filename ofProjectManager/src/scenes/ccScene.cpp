@@ -30,6 +30,14 @@ ofVec3f ccScene::getProjectedPosition( ofVec3f p ) {
 	return ofVec3f( pos );
 }
 
+ofVec3f ccScene::getNormalToWorldPosition(ofVec2f normalPos) {
+	ofVec2f cleanNormalPos = ofVec2f(min(max(normalPos.x,0.f), 1.f), min(max(normalPos.y, 0.f), 1.f));
+
+	ofVec2f screenPos = ofVec2f(cleanNormalPos.x * ofGetWidth(), cleanNormalPos.y * ofGetHeight());
+
+	return getProjectedPosition(screenPos);
+}
+
 void ccScene::updateUserPositions()
 {
 	map<int, ccUser>* users = userManager->getUsers();
@@ -112,6 +120,18 @@ void ccScene::mouseDragged( int x, int y, int button )
 void ccScene::windowResized( int w, int h ) {
 	width = w;
 	height = h;
+}
+
+vector<ofVec3f> ccScene::getHandsWorldCoords() {
+	vector<ofVec2f> hands_camera = userManager->getHandsVec();
+
+	vector<ofVec3f> hands_world;
+	for (auto& h : hands_camera) {
+		ofVec3f hand = ofVec3f(h.x, h.y, 0.0);
+		hands_world.push_back(getNormalToWorldPosition(hand));
+	}
+
+	return hands_world;
 }
 
 // Triggered when this scene is opened

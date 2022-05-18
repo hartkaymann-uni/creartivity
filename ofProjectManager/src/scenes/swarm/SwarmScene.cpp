@@ -22,7 +22,7 @@ void SwarmScene::setup() {
 	for (auto& p : particles) {
 		p.pos.x = ofRandom(0, 1000);
 		p.pos.y = ofRandom(0, 1000);
-		p.pos.z = ofRandom(-maxParticleDepth, 0);
+		p.pos.z = ofRandom(-maxParticleDepth, 5000);
 		p.pos.w = 1;
 
 		p.u = { 0,0,0,0 };
@@ -46,8 +46,11 @@ void SwarmScene::setup() {
 	introShader.setupShaderFromFile(GL_COMPUTE_SHADER, shader_path / "intro.comp");
 	introShader.linkProgram();
 
-	introShader.setupShaderFromFile(GL_COMPUTE_SHADER, shader_path / "intro.comp");
-	introShader.linkProgram();
+	behaviorShader.setupShaderFromFile(GL_COMPUTE_SHADER, shader_path / "particleBehavior.comp");
+	behaviorShader.linkProgram();
+
+	interactionShader.setupShaderFromFile(GL_COMPUTE_SHADER, shader_path / "userInteraction.comp");
+	interactionShader.linkProgram();
 
 	userEnter.setupShaderFromFile(GL_COMPUTE_SHADER, shader_path / "swarmUserEnter.comp");
 	userEnter.linkProgram();
@@ -97,17 +100,6 @@ vector<SwarmScene::Particle> SwarmScene::SortParticles() {
 	vector<Particle> output(particles);
 	std::sort(output.begin(), output.end(), SortByDepthOperator());
 
-	/*for (auto &p : particles) {
-		int index = 0;
-		for (auto const &x : output) {
-			if (p.unique.y == x.unique.y) {
-				p.unique.y = index;
-				break;
-			}
-			index++;
-		}
-	}*/
-
 	vector<int> lookup(output.size());
 
 	int index = 0;
@@ -133,48 +125,10 @@ vector<SwarmScene::Particle> SwarmScene::SortParticles() {
 void SwarmScene::update() {
 	fps = ofGetFrameRate();
 
-	updateUserPositions();
-	UpdateSequence();
-
-	compute.begin();
-	compute.setUniforms(shaderUniforms);
-	compute.setUniform1i("use_attraction", (UseAttraction.get() ? 1 : 0));
-	compute.setUniform1i("use_cohesion", (UseCohesion.get() ? 1 : 0));
-	compute.setUniform1i("use_repulsion", (UseRepulsion.get() ? 1 : 0));
-	compute.setUniform1i("freeze_particles", (freezeParticles.get() ? 1 : 0));
-	compute.setUniform1f("timeLastFrame", ofGetLastFrameTime());
-	compute.setUniform1f("elapsedTime", ofGetElapsedTimef());
-	//compute.setUniform1i("particleAmount", particleAmount);
-	compute.setUniform1i("particleAmount", ruleIterationMod * 1024);
-	compute.setUniform1i("max_particle_depth", maxParticleDepth);
-	float size = 4;
-	/*atractor3 = {ofMap(ofNoise(ofGetElapsedTimef()*0.9+0.1),0,1,-ofGetWidth()*size,ofGetWidth()*size),
-				ofMap(ofNoise(ofGetElapsedTimef()*0.9+0.5),0,1,-ofGetHeight()*size,ofGetHeight()*size),
-				ofMap(ofNoise(ofGetElapsedTimef()*0.9+0.7),0,1,0,-ofGetHeight()*size)};*/
-	atractor = { getProjectedPosition(mousePosition) };
-
-	compute.setUniform3f("attractor", atractor.x, atractor.y, atractor.z);
-
-	/*std::array<T, N> arr;
-	std::copy_n(vec.begin(), N, arr.begin());*/
-
-	vector<ccUser> hello = userManager->getUserVec();
-
-	array<ofVec2f, 10> user_positions;
-	compute.setUniform2fv("hands", &user_positions[0].x, sizeof(ofVec2f) * 10);
-	compute.setUniform2fv("hands", &user_positions[0].x, sizeof(ofVec2f) * 10);
-	compute.setUniform2f("mouse", (float)ofGetMouseX(), (float)ofGetMouseY());
-
-	// since each work group has a local_size of 1024 (this is defined in the shader)
-	// we only have to issue 1 / 1024 workgroups to cover the full workload.
-	// note how we add 1024 and subtract one, this is a fast way to do the equivalent
-	// of std::ceil() in the float domain, i.e. to round up, so that we're also issueing
-	// a work group should the total size of particles be < 1024
-	compute.dispatchCompute((particles.size() + 1024 - 1) / 1024, 1, 1);
-
-	compute.end();
-
-	particlesBuffer.copyTo(particlesBuffer2);
+	//UpdateSequence(); 
+	ApplyParticleRules();
+	ApplyInteraction();
+	//ApplyBiggusShadus();
 }
 
 //--------------------------------------------------------------
@@ -213,9 +167,9 @@ void SwarmScene::draw() {
 
 	//ofEnableBlendMode(OF_BLENDMODE_ADD);
 	ofFill();
-	//ofSetColor(ofColor::red);
+	ofSetColor(ofColor::red);
 	//ofDrawRectangle(ofVec2f(user_positions[0].x, user_positions[0].y), 20, 20);
-	//ofDrawRectangle(mousePosition, 20, 20);
+	ofDrawRectangle(mousePosition, 20, 20);
 	ofSetColor(255);
 }
 
@@ -503,6 +457,88 @@ void SwarmScene::UpdateSequence() {
 	default:
 		break;
 	}
+}
+
+// ####################
+// CodeSection: Shaders
+// ####################
+
+
+void SwarmScene::ApplyBiggusShadus() {
+	compute.begin();
+	compute.setUniforms(shaderUniforms);
+	compute.setUniform1i("use_attraction", (UseAttraction.get() ? 1 : 0));
+	compute.setUniform1i("use_cohesion", (UseCohesion.get() ? 1 : 0));
+	compute.setUniform1i("use_repulsion", (UseRepulsion.get() ? 1 : 0));
+	compute.setUniform1i("freeze_particles", (freezeParticles.get() ? 1 : 0));
+	compute.setUniform1f("timeLastFrame", ofGetLastFrameTime());
+	compute.setUniform1f("elapsedTime", ofGetElapsedTimef());
+	//compute.setUniform1i("particleAmount", particleAmount);
+	compute.setUniform1i("particleAmount", ruleIterationMod * 1024);
+	compute.setUniform1i("max_particle_depth", maxParticleDepth);
+	glm::vec3 atractor = { getProjectedPosition(mousePosition) };
+
+	compute.setUniform3f("attractor", atractor.x, atractor.y, atractor.z);
+
+
+	vector<ofVec2f> user_hands = userManager->getHandsVec();
+	compute.setUniform2fv("hands", &user_hands[0].x, sizeof(ofVec2f) * 10);
+	compute.setUniform2f("mouse", (float)ofGetMouseX(), (float)ofGetMouseY());
+
+	// since each work group has a local_size of 1024 (this is defined in the shader)
+	// we only have to issue 1 / 1024 workgroups to cover the full workload.
+	// note how we add 1024 and subtract one, this is a fast way to do the equivalent
+	// of std::ceil() in the float domain, i.e. to round up, so that we're also issueing
+	// a work group should the total size of particles be < 1024
+	compute.dispatchCompute((particles.size() + 1024 - 1) / 1024, 1, 1);
+
+	compute.end();
+
+	particlesBuffer.copyTo(particlesBuffer2);
+}
+
+void SwarmScene::ApplyParticleRules() {
+	behaviorShader.begin();
+
+	behaviorShader.setUniforms(shaderUniforms);
+	behaviorShader.setUniform1f("timeLastFrame", ofGetLastFrameTime());
+	behaviorShader.setUniform1f("elapsedTime", ofGetElapsedTimef());
+	behaviorShader.setUniform1i("use_attraction", (UseAttraction.get() ? 1 : 0));
+	behaviorShader.setUniform1i("use_cohesion", (UseCohesion.get() ? 1 : 0));
+	behaviorShader.setUniform1i("use_repulsion", (UseRepulsion.get() ? 1 : 0));
+	behaviorShader.setUniform1i("freeze_particles", (freezeParticles.get() ? 1 : 0));
+	//behaviorShader.setUniform1i("particleAmount", particleAmount);
+	behaviorShader.setUniform1i("particleAmount", ruleIterationMod * 1024);
+	behaviorShader.setUniform1i("max_particle_depth", maxParticleDepth);
+
+	behaviorShader.dispatchCompute((particles.size() + 1024 - 1) / 1024, 1, 1);
+
+	behaviorShader.end();
+
+	particlesBuffer.copyTo(particlesBuffer2);
+}
+
+void SwarmScene::ApplyInteraction() {
+	interactionShader.begin();
+	interactionShader.setUniforms(shaderUniforms);
+	interactionShader.setUniform1i("freeze_particles", (freezeParticles.get() ? 1 : 0));
+	interactionShader.setUniform1f("timeLastFrame", ofGetLastFrameTime());
+	interactionShader.setUniform1f("elapsedTime", ofGetElapsedTimef());
+	interactionShader.setUniform3f("mouse", getProjectedPosition(mousePosition));
+
+	vector<ofVec3f> user_hands = getHandsWorldCoords();
+	interactionShader.setUniform3fv("hands", &user_hands[0].x, sizeof(ofVec3f) * 10);
+	int userCount = userManager->getUserCount();
+	interactionShader.setUniform1i("user_count", userCount);
+
+	/*cout << "0. Hand Position: " << user_hands[0] << endl;
+	cout << "MousePosition: " << getProjectedPosition(mousePosition) << endl;*/
+
+	interactionShader.dispatchCompute((particles.size() + 1024 - 1) / 1024, 1, 1);
+
+	interactionShader.end();
+
+	particlesBuffer.copyTo(particlesBuffer2);
 }
 
 // ##############################

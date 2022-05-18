@@ -74,13 +74,12 @@ public:
 	int particleGroups;
 	int particleAmount;
 	int maxParticleDepth;
-	ofShader compute, colorSplash, particleShader, userEnter, introShader;
 	vector<Particle> particles;
 	ofBufferObject particlesBuffer, particlesBuffer2, particlesBuffer3;
 	GLuint vaoID;
 	ofVbo vbo;
-	glm::vec3 atractor;
 
+	// ### Parameters & GUI
 	ofParameter<float> attractionCoeff, cohesionCoeff, repulsionCoeff;
 	ofParameter<bool> UseAttraction, UseCohesion, UseRepulsion;
 	ofParameter<bool> freezeParticles;
@@ -93,13 +92,18 @@ public:
 	ofParameter<bool> dirAsColor;
 	ofParameter<bool> isSequencerInControl;
 
-	//Scene Handling
+	// Transitions
 	float SceneIntro() override;
 	float SceneOutro() override;
 private:
-	//--------------------------------------------------------------
-	// Controls
+	// ### Shaders
+	ofShader compute, colorSplash, particleShader, userEnter, introShader, behaviorShader, interactionShader;
 
+	void ApplyBiggusShadus();
+	void ApplyParticleRules();
+	void ApplyInteraction();
+
+	// ### Controls
 	ofVec3f mousePosition;
 	ofVec3f mouseClickPosition;
 	bool isPressingMouse;
@@ -109,8 +113,7 @@ private:
 	void UserEnter();
 	vector<Particle> SortParticles();
 
-	//--------------------------------------------------------------
-	// Sequence Stuff
+	// ### Sequencer
 	void InitSequences();
 	void UpdateSequence();
 	void CheckForNextSequence();

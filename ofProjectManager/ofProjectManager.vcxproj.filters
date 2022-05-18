@@ -373,5 +373,6 @@
     <None Include="src\scenes\gameoflife\shader\metaballs.frag" />
     <None Include="src\scenes\gameoflife\shader\splat.frag" />
     <None Include="src\scenes\swarm\shader\userInteraction.comp" />
+    <None Include="src\scenes\swarm\shader\particleBehavior.comp" />
   </ItemGroup>
 </Project>

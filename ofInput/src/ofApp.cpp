@@ -24,10 +24,10 @@ void ofApp::setup()
 	remove_button.addListener(this, &ofApp::handleRemoveButtonClick);
 	isSequencerInControl.addListener(this, &ofApp::OnSequencerControlChange);
 
-	InitTestSeqeuenceArray();
-	/*currentSequenceIndex = 0;
+	//InitTestSeqeuenceArray();
+	currentSequenceIndex = 0;
 	sequences.push_back(ParameterSequence(10000, SequenceName::Smooth));
-	StartSequence();*/
+	SetSequence(sequences[currentSequenceIndex]);
 
 	lastMousePos = unmapped(glm::vec2(0.4f, 0.7f));
 
@@ -178,7 +178,7 @@ void ofApp::createUserPattern(int x, int y) {
 	for (size_t i = 0; i < n; i++) {
 		float offset = 0.1f * ceil(i / 2.0) * (i % 2 ? 1.f : -1.f);
 		users[i].left = coords + glm::vec2{ offset };
-		users[i].right = glm::vec2(1.f) - coords + glm::vec2{ offset };
+		//users[i].right = glm::vec2(1.f) - coords + glm::vec2{ offset };
 	}
 }
 
