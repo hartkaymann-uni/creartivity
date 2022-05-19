@@ -62,6 +62,10 @@ public:
 	vector<ccScene*> scenes;
 
 private:
+
+	float durationPerScene = 20.f;
+	float lastSceneChangeTime;
+
 	void NextScene();
 	void PreviousScene();
 

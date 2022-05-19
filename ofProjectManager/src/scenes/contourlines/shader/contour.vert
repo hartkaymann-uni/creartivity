@@ -107,7 +107,7 @@ float terrain(vec3 p, vec2 offset) {
 }
 
 void main(){
-	float time = u_time * u_speed;
+	float time = u_time;
 
 	vec3 pos = vec3( position.xy, 0.f ); // position of vertex
 //  vec2 uv = pos.xy / u_resolution.xy;
@@ -115,7 +115,7 @@ void main(){
 	vec3 p = vec3( pos.xy * u_scale, time ); // position for noise calculation
 
 	float interaction_offset = texture(interaction, texcoord).x;
-	bool red = interaction_offset >= 0.1 ? false : true;
+	bool red = interaction_offset >= 0.25 ? false : true;
 	pos.z = (terrain(p, vec2(0.f)) * (  1.0 - interaction_offset)) * u_amplitude;
 	
 //	vec2 ij = vec2(0.001f, 0.f);

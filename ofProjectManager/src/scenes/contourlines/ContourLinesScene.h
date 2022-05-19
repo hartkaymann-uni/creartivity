@@ -19,6 +19,7 @@ namespace contour {
 
 	private:
 		float time;
+		float sceneTime;
 
 		ofShader contourLineShader;
 		bool wireframeShading = false;

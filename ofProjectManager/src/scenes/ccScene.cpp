@@ -12,8 +12,9 @@ ccScene::ccScene( std::string name )
 	camera.disableMouseInput();
 	camera.enableOrtho();
 	camera.setPosition( width / 2, height / 2, (width + height) / 2 );
-	camera.setNearClip( -10 * ofGetWidth() );
-	camera.setFarClip( ofGetWidth() * 10 );
+	camera.setNearClip( -1000000 );
+	camera.setFarClip( 1000000 );
+
 
 	gui.setup();
 }

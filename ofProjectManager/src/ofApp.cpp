@@ -2,6 +2,8 @@
 
 #include "scenes/scenes.h"
 
+//#define SWITCH_SCENES
+
 using namespace gol;
 using namespace contour;
 
@@ -23,7 +25,7 @@ void ofApp::setup() {
 
 	// Load scenes
 	scenes.push_back( (FluidScene*)sceneManager.add( new FluidScene() ) );
-	scenes.push_back( (GameOfLifeScene*)sceneManager.add( new GameOfLifeScene(SCREEN_WIDTH / 10, SCREEN_HEIGHT / 10) ) );
+	scenes.push_back( (GameOfLifeScene*)sceneManager.add( new GameOfLifeScene(SCREEN_WIDTH / 20, SCREEN_HEIGHT / 20) ) );
 	scenes.push_back( (SwarmScene*)sceneManager.add( new SwarmScene() ) );
 	scenes.push_back( (ContourLinesScene*)sceneManager.add( new ContourLinesScene(SCREEN_WIDTH / 4, SCREEN_HEIGHT / 4) ) );
 
@@ -48,6 +50,14 @@ void ofApp::setup() {
 //--------------------------------------------------------------
 void ofApp::update() {
 
+#ifdef SWITCH_SCENES
+	// Change to next scene at an intervall
+	float time = ofGetElapsedTimef();
+	if ( time - lastSceneChangeTime > durationPerScene ) {
+		lastSceneChangeTime = time;
+		ChangeScene( SceneChangeType::Next );
+	}
+#endif
 	receiver.receiveMessages();
 
 	// Display framerate in window title

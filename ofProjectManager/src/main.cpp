@@ -9,8 +9,8 @@
 int SCREEN_WIDTH = 3840; // 3840
 int SCREEN_HEIGHT = 1080; // 1080
 #else
-int SCREEN_WIDTH = 1280;
-int SCREEN_HEIGHT = 800;
+int SCREEN_WIDTH = 1080;
+int SCREEN_HEIGHT = 1080;
 #endif 
 
 //========================================================================

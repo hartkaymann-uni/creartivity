@@ -3,9 +3,10 @@
 namespace contour {
 	ContourLinesScene::ContourLinesScene( int w, int h ) : ccScene( "ContourLines" ),
 		time( 0.f ),
+		sceneTime(0.f),
 		grid( { w, h } ),
 		sequenceDuration( 10.f ),
-		sequenceTransitionDuration( 3.f ),
+		sequenceTransitionDuration( 5.f ),
 		lastSequene( SequenceName::Empty ),
 		currentSequence( SequenceName::Default ),
 		lastSequenceTime( 0.f )
@@ -20,8 +21,6 @@ namespace contour {
 		bool err_sub = subtractShader.load( shader_path / "passthru.vert", shader_path / "subtract.frag" );
 
 		// Create mesh
-		float ws = ofGetWindowWidth();
-		float wi = ofGetWidth();
 		plane = ofPlanePrimitive( width, height, grid.x, grid.y );
 		plane.setPosition( width / 2, height / 2, 0.f );
 
@@ -33,15 +32,15 @@ namespace contour {
 		terrainUniforms.setName( "Terrain" );
 		terrainUniforms.add( p_Speed.set( "u_speed", 0.015, 0.00, 0.5 ) );
 		terrainUniforms.add( p_Scale.set( "u_scale", 0.01, 0.0, 0.05 ) );
-		terrainUniforms.add( p_Amplitude.set( "u_amplitude", 5.0, 0.0, 100.0 ) );
+		terrainUniforms.add( p_Amplitude.set( "u_amplitude", 3.0, 0.0, 20.0 ) );
 		terrainUniforms.add( p_Thickness.set( "u_thickness", 0.2, 0.0, 1.0 ) );
 		terrainUniforms.add( p_Lacunarity.set( "u_lacunarity", 0.0, 0.0, 5.0 ) );
 		terrainUniforms.add( p_Persistance.set( "u_persistance", 0.0, 0.0, 1.0 ) );
 		terrainUniforms.add( p_Sequences.set( "Run Sequences", true ) );
 
 		mouseUniforms.setName( "Mouse" );
-		mouseUniforms.add( p_MouseRadius.set( "u_radius", 0.001, 0.0, 0.01 ) );
-		mouseUniforms.add( p_MouseStrength.set( "u_strength", 0.1, 0.0, 1.0 ) );
+		mouseUniforms.add( p_MouseRadius.set( "u_radius", 0.003, 0.0, 0.01 ) );
+		mouseUniforms.add( p_MouseStrength.set( "u_strength", 0.2, 0.0, 1.0 ) );
 
 //		lightUniforms.add( p_MoveLight.set( "u_moving", false ) );
 //		lightUniforms.setName( "Light" );
@@ -58,6 +57,9 @@ namespace contour {
 	void ContourLinesScene::update()
 	{
 		time = ofGetElapsedTimef();
+		float dt = ofGetLastFrameTime();
+		sceneTime += dt * p_Speed.get();
+		//cout << sceneTime << endl;
 
 		updateSequence();
 		updateParameters();
@@ -94,7 +96,7 @@ namespace contour {
 			{
 				contourLineShader.setUniformTexture( "interaction", interaction.read->getTexture(), 2 );
 				contourLineShader.setUniform2f( "u_resolution", { width, height } );
-				contourLineShader.setUniform1f( "u_time", time );
+				contourLineShader.setUniform1f( "u_time", sceneTime );
 				contourLineShader.setUniform2f( "u_mouse", ofGetMouseX(), height - ofGetMouseY() );
 				contourLineShader.setUniforms( terrainUniforms );
 //				contourLineShader.setUniforms( lightUniforms );
@@ -186,15 +188,15 @@ namespace contour {
 	{
 		lastSequenceTime = time;
 		// Standart
-		sequenceMap.insert( pair<ContourLinesScene::SequenceName, SequenceParameters>( SequenceName::Default, { 0.02, 0.01, 5.0,  0.2, 0.0, 0.0 } ) );
+		sequenceMap.insert( pair<ContourLinesScene::SequenceName, SequenceParameters>( SequenceName::Default, { 0.02, 0.01, 3.0,  0.2, 0.0, 0.0 } ) );
 		// Fast change
-		sequenceMap.insert( pair<ContourLinesScene::SequenceName, SequenceParameters>( SequenceName::Fast, { 0.5, 0.01, 5.0,  0.2, 0.0, 0.0 } ) );
+		sequenceMap.insert( pair<ContourLinesScene::SequenceName, SequenceParameters>( SequenceName::Fast, { 0.5, 0.01, 3.0,  0.2, 0.0, 0.0 } ) );
 		// Big scale
-		sequenceMap.insert( pair<ContourLinesScene::SequenceName, SequenceParameters>( SequenceName::Big, { 0.04, 0.02, 5.0,  0.2, 0.0, 0.0 } ) );
+		sequenceMap.insert( pair<ContourLinesScene::SequenceName, SequenceParameters>( SequenceName::Big, { 0.04, 0.02, 3.0,  0.2, 0.0, 0.0 } ) );
 		// High Amplitude
-		sequenceMap.insert( pair<ContourLinesScene::SequenceName, SequenceParameters>( SequenceName::HighAmplitude, { 0.02, 0.01, 15.0,  0.2, 0.0, 0.0 } ) );
+		sequenceMap.insert( pair<ContourLinesScene::SequenceName, SequenceParameters>( SequenceName::HighAmplitude, { 0.02, 0.01, 8.0,  0.2, 0.0, 0.0 } ) );
 		// Rough terrain
-		sequenceMap.insert( pair<ContourLinesScene::SequenceName, SequenceParameters>( SequenceName::Rough, { 0.02, 0.01, 5.0,  0.2, 2.5, 0.25 } ) );
+		sequenceMap.insert( pair<ContourLinesScene::SequenceName, SequenceParameters>( SequenceName::Rough, { 0.02, 0.01, 3.0,  0.2, 2.5, 0.25 } ) );
 		// Empty Sequence for Intro and Outro
 		sequenceMap.insert( pair<ContourLinesScene::SequenceName, SequenceParameters>( SequenceName::Empty, { 0.0, 0.0, 1.0, 0.0, 0.0, 0.0 } ) );
 	}
