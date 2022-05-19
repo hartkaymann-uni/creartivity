@@ -5,6 +5,7 @@
 
 #include "ccScene.h"
 
+#define MAX_SWARM_HANDS 30
 
 class SwarmScene : public ccScene
 {
@@ -97,13 +98,17 @@ public:
 	float SceneIntro() override;
 	float SceneOutro() override;
 private:
+	// ### Drawing
+	void DrawParticles();
+	void DrawUserCircles();
+
 	// ### Shaders
-	ofShader compute, colorSplash, particleShader, userEnter, introShader, behaviorShader, interactionShader;
+	ofShader compute, colorSplash, particleShader, userEnter, introShader, behaviorShader, interactionShader, userCircleShader;
 
 	void ApplyBiggusShadus();
 	void ApplyParticleRules();
 	void ApplyInteraction();
-	array<ofVec3f, 10> GetFixedUserArray();
+	array<ofVec3f, MAX_SWARM_HANDS> GetUserHandsArray(ccScene::CoordinateSystem system);
 
 	// ### Controls
 	ofVec3f mousePosition;

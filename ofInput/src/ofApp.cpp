@@ -17,7 +17,7 @@ void ofApp::setup()
 	gui.setup();
 	gui.add(add_button.setup("Add user", 30, 30));
 	gui.add(remove_button.setup("Remove user", 30, 30));
-	gui.add(isSequencerInControl.set("Let Sequencer control", true));
+	gui.add(isSequencerInControl.set("Let Sequencer control", false));
 
 	gui.setPosition(width - gui.getWidth() - 1, height - gui.getHeight() - 10);
 	add_button.addListener(this, &ofApp::handleAddButtonClick);
@@ -26,10 +26,10 @@ void ofApp::setup()
 
 	//InitTestSeqeuenceArray();
 	currentSequenceIndex = 0;
-	sequences.push_back(ParameterSequence(20, SequenceName::UserChaos));
-	sequences.push_back(ParameterSequence(1, SequenceName::NoUsers));
-	sequences.push_back(ParameterSequence(5, SequenceName::RandomTeleport));
-	sequences.push_back(ParameterSequence(5, SequenceName::OutOfBounds));
+	//sequences.push_back(ParameterSequence(20, SequenceName::UserChaos));
+	//sequences.push_back(ParameterSequence(1, SequenceName::NoUsers));
+	//sequences.push_back(ParameterSequence(5, SequenceName::RandomTeleport));
+	sequences.push_back(ParameterSequence(1000, SequenceName::Smooth));
 	SetSequence(sequences[currentSequenceIndex]);
 
 	lastMousePos = unmapped(glm::vec2(0.4f, 0.7f));
@@ -238,7 +238,7 @@ void ofApp::StartSequence() {
 	nextSequenceTime = lastSequenceTime + currentSequence.duration;
 
 	RemoveAllUsers();
-	addNewUsers(3);
+	addNewUsers(1);
 
 	switch (currentSequence.sequenceType)
 	{

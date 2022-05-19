@@ -374,5 +374,7 @@
     <None Include="src\scenes\gameoflife\shader\splat.frag" />
     <None Include="src\scenes\swarm\shader\userInteraction.comp" />
     <None Include="src\scenes\swarm\shader\particleBehavior.comp" />
+    <None Include="src\scenes\swarm\shader\userCircles.frag" />
+    <None Include="src\scenes\swarm\shader\userCircles.vert" />
   </ItemGroup>
 </Project>

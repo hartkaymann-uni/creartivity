@@ -56,6 +56,7 @@ void SwarmScene::setup() {
 	userEnter.linkProgram();
 
 	particleShader.load(shader_path / "swarm.vert", shader_path / "swarm.frag");
+	userCircleShader.load(shader_path / "userCircles.vert", shader_path / "userCircles.frag");
 
 	vector<Particle> sorted = SortParticles();
 
@@ -86,7 +87,7 @@ void SwarmScene::setup() {
 	shaderUniforms.add(particleColorEnd.set("particle_color_end", glm::vec3(0.9, 0.9, 0.9), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1)));
 	shaderUniforms.add(freezeParticles.set("freeze_particles", false));
 	gui.add(shaderUniforms);
-	gui.add(isSequencerInControl.set("Let Sequencer control", true));
+	gui.add(isSequencerInControl.set("Let Sequencer control", false));
 	gui.add(fps.set("fps", 60, 0, 60));
 
 	gui.add(dirAsColor.set("Useless Button", true));
@@ -131,23 +132,33 @@ void SwarmScene::update() {
 	//ApplyBiggusShadus();
 }
 
-//--------------------------------------------------------------
+// ####################
+// CodeSection: Drawing
+// ####################
+
 void SwarmScene::draw() {
 	ofClear(ofColor(0, 0, 0, 255));
 
 	camera.begin();
 	glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
 
-	/*glEnable(GL_DEPTH_TEST);
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glAlphaFunc(GL_GREATER, 0.1);
-	glEnable(GL_ALPHA_TEST);*/
 	ofEnableDepthTest();
 	ofEnableBlendMode(OF_BLENDMODE_ALPHA);
 
+	DrawParticles();
+
+	camera.end();
+
+	DrawUserCircles();
+
+	//ofEnableBlendMode(OF_BLENDMODE_ADD);
+	ofSetColor(255);
+}
+
+void SwarmScene::DrawParticles() {
 	particleShader.begin();
 
+	// Inner particle core
 	particleShader.setUniform1i("max_particle_depth", maxParticleDepth);
 	particleShader.setUniform1f("alphaMod", 1.0);
 	particleShader.setUniform1f("pointSize", 2);
@@ -156,21 +167,40 @@ void SwarmScene::draw() {
 
 	ofDisableDepthTest();
 
+	// Outer more transparent particle ring
 	particleShader.setUniform1f("alphaMod", 0.3);
 	particleShader.setUniform1f("pointSize", 5);
 	glPointSize(5);
 	vbo.draw(GL_POINTS, 0, particles.size());
 
 	particleShader.end();
+}
 
-	camera.end();
+void SwarmScene::DrawUserCircles() {
+	array<ofVec3f, MAX_SWARM_HANDS> user_hands = GetUserHandsArray(ccScene::CoordinateSystem::Screen);
+	int hand_count = min(MAX_SWARM_HANDS, userManager->getUserCount() * 2);
+	int circle_radius = 100;
 
-	//ofEnableBlendMode(OF_BLENDMODE_ADD);
-	ofFill();
-	ofSetColor(ofColor::red);
-	//ofDrawRectangle(ofVec2f(user_positions[0].x, user_positions[0].y), 20, 20);
-	ofDrawRectangle(mousePosition, 20, 20);
-	ofSetColor(255);
+	for (int i = 0; i < hand_count; i++)
+	{
+		userCircleShader.begin();
+
+		ofFill();
+		ofSetColor(ofColor::cyan);
+
+
+		userCircleShader.setUniform2f("screen_resolution", ofVec2f(ofGetWidth(), ofGetHeight()));
+		userCircleShader.setUniform3f("hand_position", user_hands[i]);
+		userCircleShader.setUniform1f("radius", circle_radius);
+
+		ofDrawCircle(user_hands[i], circle_radius);
+
+		//ofDisableDepthTest();
+
+		userCircleShader.end();
+	}
+
+
 }
 
 //--------------------------------------------------------------
@@ -534,13 +564,14 @@ void SwarmScene::ApplyInteraction() {
 	interactionShader.setUniform1f("timeLastFrame", ofGetLastFrameTime());
 	interactionShader.setUniform1f("elapsedTime", ofGetElapsedTimef());
 
-	array<ofVec3f, 10> user_hands = GetFixedUserArray();
+	array<ofVec3f, MAX_SWARM_HANDS> user_hands = GetUserHandsArray(ccScene::CoordinateSystem::World);
+	int hand_count = min(MAX_SWARM_HANDS, userManager->getUserCount() * 2);
 	if (user_hands.empty()) {
 		interactionShader.setUniform1i("hand_count", 0);
 	}
 	else {
 		interactionShader.setUniform3fv("hands", &user_hands[0].x, sizeof(ofVec3f) * 10);
-		interactionShader.setUniform1i("hand_count", user_hands.size());
+		interactionShader.setUniform1i("hand_count", hand_count);
 	}
 
 	/*cout << "0. Hand Position: " << user_hands[0] << endl;
@@ -555,9 +586,9 @@ void SwarmScene::ApplyInteraction() {
 }
 
 
-array<ofVec3f, 10> SwarmScene::GetFixedUserArray() {
-	vector<ofVec3f> user_hands = getHandsWorldCoords();
-	array<ofVec3f, 10> hands_max;
+array<ofVec3f, MAX_SWARM_HANDS> SwarmScene::GetUserHandsArray(ccScene::CoordinateSystem system) {
+	vector<ofVec3f> user_hands = getHandPositions(system);
+	array<ofVec3f, MAX_SWARM_HANDS> hands_max;
 
 	if (user_hands.empty()) return hands_max;
 

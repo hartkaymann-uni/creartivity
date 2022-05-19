@@ -228,6 +228,8 @@
     <ClCompile Include="..\..\..\addons\ofxUbo\src\ofxUbo.cpp" />
     <ClCompile Include="src\scenes\swarm\SwarmScene.cpp" />
     <None Include="src\scenes\swarm\shader\particleBehavior.comp" />
+    <None Include="src\scenes\swarm\shader\userCircles.frag" />
+    <None Include="src\scenes\swarm\shader\userCircles.vert" />
     <None Include="src\scenes\swarm\shader\userInteraction.comp" />
   </ItemGroup>
   <ItemGroup>

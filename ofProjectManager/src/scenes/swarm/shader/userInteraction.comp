@@ -1,5 +1,5 @@
 #version 440
-#define N_USERS 10
+#define N_HANDS 30
 
 struct Particle{
 	vec4 pos;
@@ -29,7 +29,7 @@ uniform float timeLastFrame;
 uniform float elapsedTime;
 uniform float max_speed;
 uniform float attr_force;
-uniform vec3 hands[N_USERS];
+uniform vec3 hands[N_HANDS];
 uniform int hand_count;
 
 
@@ -68,8 +68,28 @@ void calculateMovement(){
 	p[gl_GlobalInvocationID.x].vel.xyz = applyMaxSpeed(p[gl_GlobalInvocationID.x].vel.xyz, max_speed);
 }
 
+// ### Color
+void calculateColor() {
+	vec3 particlePos = p2[gl_GlobalInvocationID.x].pos.xyz;
+	vec4 newColor = p2[gl_GlobalInvocationID.x].color;
+
+	// Add Red and Brightness depending on distance to attractor
+	for(int i = 0 ; i < hand_count; i++)
+	{
+		float dist = distance(hands[i].xy,particlePos.xy);
+		float distPercentage = clamp(1 - (dist / 100), 0, 1);
+		newColor.r += 0.5f * distPercentage;
+	}
+
+	p[gl_GlobalInvocationID.x].color = newColor;
+
+	int index = int(p[gl_GlobalInvocationID.x].unique.y);
+	p3[index].color = newColor;
+}
+
 // ### Main
 void main(){
 	if(hand_count == 0) return;
 	calculateMovement();
+	calculateColor();
 }
