@@ -5,8 +5,8 @@ namespace contour {
 		time( 0.f ),
 		sceneTime(0.f),
 		grid( { w, h } ),
-		sequenceDuration( 10.f ),
-		sequenceTransitionDuration( 5.f ),
+		sequenceDuration( 5.f ),
+		sequenceTransitionDuration( 3.f ),
 		lastSequene( SequenceName::Empty ),
 		currentSequence( SequenceName::Default ),
 		lastSequenceTime( 0.f )
@@ -30,12 +30,12 @@ namespace contour {
 
 		// Setup gui and parameters
 		terrainUniforms.setName( "Terrain" );
-		terrainUniforms.add( p_Speed.set( "u_speed", 0.015, 0.00, 0.5 ) );
-		terrainUniforms.add( p_Scale.set( "u_scale", 0.01, 0.0, 0.05 ) );
-		terrainUniforms.add( p_Amplitude.set( "u_amplitude", 3.0, 0.0, 20.0 ) );
+		terrainUniforms.add( p_Speed.set( "u_speed", 0.01, 0.00, 0.5 ) );
+		terrainUniforms.add( p_Scale.set( "u_scale", 0.005, 0.0, 0.05 ) );
+		terrainUniforms.add( p_Amplitude.set( "u_amplitude", 5.0, 0.0, 20.0 ) );
 		terrainUniforms.add( p_Thickness.set( "u_thickness", 0.2, 0.0, 1.0 ) );
-		terrainUniforms.add( p_Lacunarity.set( "u_lacunarity", 0.0, 0.0, 5.0 ) );
-		terrainUniforms.add( p_Persistance.set( "u_persistance", 0.0, 0.0, 1.0 ) );
+		terrainUniforms.add( p_Lacunarity.set( "u_lacunarity", 1.0, 0.0, 5.0 ) );
+		terrainUniforms.add( p_Persistance.set( "u_persistance", 0.25, 0.0, 1.0 ) );
 		terrainUniforms.add( p_Sequences.set( "Run Sequences", true ) );
 
 		mouseUniforms.setName( "Mouse" );
@@ -188,17 +188,17 @@ namespace contour {
 	{
 		lastSequenceTime = time;
 		// Standart
-		sequenceMap.insert( pair<ContourLinesScene::SequenceName, SequenceParameters>( SequenceName::Default, { 0.02, 0.01, 3.0,  0.2, 0.0, 0.0 } ) );
+		sequenceMap.insert( pair<ContourLinesScene::SequenceName, SequenceParameters>( SequenceName::Default, { 0.01, 0.005, 6.0,  0.2, 1.0, 0.25 } ) );
 		// Fast change
-		sequenceMap.insert( pair<ContourLinesScene::SequenceName, SequenceParameters>( SequenceName::Fast, { 0.5, 0.01, 3.0,  0.2, 0.0, 0.0 } ) );
+		sequenceMap.insert( pair<ContourLinesScene::SequenceName, SequenceParameters>( SequenceName::Fast, { 0.1, 0.001, 6.0,  0.2, 1.0, 0.25 } ) );
 		// Big scale
-		sequenceMap.insert( pair<ContourLinesScene::SequenceName, SequenceParameters>( SequenceName::Big, { 0.04, 0.02, 3.0,  0.2, 0.0, 0.0 } ) );
+		sequenceMap.insert( pair<ContourLinesScene::SequenceName, SequenceParameters>( SequenceName::Big, { 0.01, 0.02, 4.0,  0.2, 1.0, 0.25 } ) );
 		// High Amplitude
-		sequenceMap.insert( pair<ContourLinesScene::SequenceName, SequenceParameters>( SequenceName::HighAmplitude, { 0.02, 0.01, 8.0,  0.2, 0.0, 0.0 } ) );
+		sequenceMap.insert( pair<ContourLinesScene::SequenceName, SequenceParameters>( SequenceName::HighAmplitude, { 0.01, 0.005, 10.0,  0.2, 1.0, 0.25 } ) );
 		// Rough terrain
-		sequenceMap.insert( pair<ContourLinesScene::SequenceName, SequenceParameters>( SequenceName::Rough, { 0.02, 0.01, 3.0,  0.2, 2.5, 0.25 } ) );
+		sequenceMap.insert( pair<ContourLinesScene::SequenceName, SequenceParameters>( SequenceName::Rough, { 0.01, 0.005, 6.0, 0.2, 2.5, 0.25 } ) );
 		// Empty Sequence for Intro and Outro
-		sequenceMap.insert( pair<ContourLinesScene::SequenceName, SequenceParameters>( SequenceName::Empty, { 0.0, 0.0, 1.0, 0.0, 0.0, 0.0 } ) );
+		sequenceMap.insert( pair<ContourLinesScene::SequenceName, SequenceParameters>( SequenceName::Empty, { 0.01, 0.000, 0.1,  0.0, 0.0, 0.0 } ) );
 	}
 
 	// Handles sequence changes

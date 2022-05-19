@@ -41,7 +41,7 @@ void main() {
 //	vec3 col = vec3( sin( vPosition.z * u_thickness) );
 //	col = vec3( map( vPosition.z, -u_amplitude, u_amplitude, 0.0, 1.0 ) );
 	vec3 col = vec3( 1 - step(u_thickness, fract(vPosition.z))) * vColor;
-	if(abs(vPosition.z) <= 0.01) col = vec3(0.0);
+	if(vPosition.z <= 0.01) col = vec3(0.0);
 
 //	float f = fract(vPosition.z * u_thickness);
 //	float df = fwidth(0.1 * f * u_thickness);
