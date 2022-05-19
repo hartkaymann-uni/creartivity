@@ -87,7 +87,7 @@ void SwarmScene::setup() {
 	shaderUniforms.add(particleColorEnd.set("particle_color_end", glm::vec3(0.9, 0.9, 0.9), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1)));
 	shaderUniforms.add(freezeParticles.set("freeze_particles", false));
 	gui.add(shaderUniforms);
-	gui.add(isSequencerInControl.set("Let Sequencer control", false));
+	gui.add(isSequencerInControl.set("Let Sequencer control", true));
 	gui.add(fps.set("fps", 60, 0, 60));
 
 	gui.add(dirAsColor.set("Useless Button", true));
@@ -337,14 +337,16 @@ void SwarmScene::dragEvent(ofDragInfo dragInfo) {
 // Creates an arrray with sequences
 void SwarmScene::InitSequences() {
 	currentSequenceIndex = 0;
-	sequences.push_back(ParameterSequence(20, SequenceName::BrainNeurons));
+	sequences.push_back(ParameterSequence(10, SequenceName::Swarm));
+	sequences.push_back(ParameterSequence(200, SequenceName::BrainNeuronsCoarse));
+	/*sequences.push_back(ParameterSequence(20, SequenceName::BrainNeurons));
 	sequences.push_back(ParameterSequence(7, SequenceName::BlackHole, 5));
 	sequences.push_back(ParameterSequence(4, SequenceName::Explosion));
 	sequences.push_back(ParameterSequence(0.1f, SequenceName::NormalAttraction));
 	sequences.push_back(ParameterSequence(16, SequenceName::BrainNeurons));
 	sequences.push_back(ParameterSequence(10, SequenceName::Swarm));
 	sequences.push_back(ParameterSequence(5, SequenceName::RepulsionStutter));
-	sequences.push_back(ParameterSequence(7, SequenceName::BlackHole, 3));
+	sequences.push_back(ParameterSequence(7, SequenceName::BlackHole, 3));*/
 	SetSequence(sequences[currentSequenceIndex]);
 }
 
@@ -387,12 +389,20 @@ void SwarmScene::StartSequence() {
 		repulsionCoeff.set(repulsionCoeff.getMax());
 		maxSpeed.set(5000);
 		break;
+	case SequenceName::BrainNeuronsCoarse:
+	{
+		attractionCoeff.set(attractionCoeff.getMin());
+		repulsionCoeff.set(repulsionCoeff.getMax());
+		attractorForce.set(1500);
+		maxSpeed.set(2500);
+		break;
+	}
 	case SequenceName::Swarm:
 		attractionCoeff.set(attractionCoeff.getMax());
 		attractorForce.set(5000);
 		repulsionCoeff.set(repulsionCoeff.getMax());
 		maxSpeed.set(5000);
-		break;
+		break; 
 	case SequenceName::Intro:
 	{
 		particleColorStart.set(particleColorStart.getMin());
@@ -400,6 +410,7 @@ void SwarmScene::StartSequence() {
 
 		// This ensures that when this sequence is finished, the sequence loop starts with the sequence at the index 0
 		currentSequenceIndex = -1;
+		break;
 	}
 	default:
 		break;
@@ -457,6 +468,15 @@ void SwarmScene::UpdateSequence() {
 		float newSpeed = maxSpeed.getMax() - 200 * diff;
 		newSpeed = std::max(newSpeed, 1500.0f);
 		maxSpeed.set(newSpeed);
+		break;
+	}
+	case SequenceName::BrainNeuronsCoarse:
+	{
+		float diff = currentTime - lastSequenceTime;
+		float newSpeed = min(maxSpeed.getMax(), maxSpeed.get() + 500 * diff);
+		maxSpeed.set(newSpeed);
+		float newForce = sin(ofGetElapsedTimef() / 2) * 500 + 1000;
+		attractorForce.set(newForce);
 		break;
 	}
 	case SequenceName::Swarm:
