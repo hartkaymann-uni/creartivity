@@ -37,6 +37,21 @@ vector<ccUser> const ccUserManager::getUserVec()
 	return v;
 }
 
+vector<ofVec2f> ccUserManager::getHandsVec()
+{
+	vector<ofVec2f> v;
+	for (auto& u : users) {
+		v.push_back(u.second.left());
+		v.push_back(u.second.right());
+	}
+
+	return v;
+}
+
+int ccUserManager::getUserCount() {
+	return users.size();
+}
+
 ccUser* const ccUserManager::getUser( int id )
 {
 	return &(users.at( id ));

@@ -5,6 +5,7 @@
 
 #include "ccScene.h"
 
+#define MAX_SWARM_HANDS 30
 
 class SwarmScene : public ccScene
 {
@@ -35,7 +36,9 @@ public:
 		BrainNeurons,
 		Swarm,
 		RepulsionStutter,
-		Intro
+		Intro,
+		Outro,
+		BrainNeuronsCoarse
 	};
 
 	struct ParameterSequence
@@ -74,13 +77,12 @@ public:
 	int particleGroups;
 	int particleAmount;
 	int maxParticleDepth;
-	ofShader compute, colorSplash, particleShader, userEnter, introShader;
 	vector<Particle> particles;
 	ofBufferObject particlesBuffer, particlesBuffer2, particlesBuffer3;
 	GLuint vaoID;
 	ofVbo vbo;
-	glm::vec3 atractor;
 
+	// ### Parameters & GUI
 	ofParameter<float> attractionCoeff, cohesionCoeff, repulsionCoeff;
 	ofParameter<bool> UseAttraction, UseCohesion, UseRepulsion;
 	ofParameter<bool> freezeParticles;
@@ -93,13 +95,23 @@ public:
 	ofParameter<bool> dirAsColor;
 	ofParameter<bool> isSequencerInControl;
 
-	//Scene Handling
+	// Transitions
 	float SceneIntro() override;
 	float SceneOutro() override;
 private:
-	//--------------------------------------------------------------
-	// Controls
+	// ### Drawing
+	void DrawParticles();
+	void DrawUserCircles();
 
+	// ### Shaders
+	ofShader compute, colorSplash, particleShader, userEnter, introShader, behaviorShader, interactionShader, userCircleShader;
+
+	void ApplyBiggusShadus();
+	void ApplyParticleRules();
+	void ApplyInteraction();
+	array<ofVec3f, MAX_SWARM_HANDS> GetUserHandsArray(ccScene::CoordinateSystem system);
+
+	// ### Controls
 	ofVec3f mousePosition;
 	ofVec3f mouseClickPosition;
 	bool isPressingMouse;
@@ -109,8 +121,7 @@ private:
 	void UserEnter();
 	vector<Particle> SortParticles();
 
-	//--------------------------------------------------------------
-	// Sequence Stuff
+	// ### Sequencer
 	void InitSequences();
 	void UpdateSequence();
 	void CheckForNextSequence();

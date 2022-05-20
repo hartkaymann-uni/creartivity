@@ -32,7 +32,8 @@ void ofApp::setup() {
 	// Initialize scene manager
 	sceneManager.setup( true ); // Setup all scenes now
 	ofSetLogLevel( "ofxScenemanager", OF_LOG_VERBOSE );
-	sceneManager.gotoScene( "Fluid", true );
+	sceneManager.gotoScene( "Swarm", true );
+
 
 	lastScene = sceneManager.getCurrentSceneIndex();
 	sceneManager.setOverlap( false );

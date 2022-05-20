@@ -56,7 +56,7 @@ private:
 	void createUserPattern(int x, int y);
 	ofColor getUserColor(int id);
 
-	// #### Sequencer
+	// ### Sequencer
 	enum class SequenceName {
 		Smooth,
 		SmoothCenter,
@@ -97,9 +97,8 @@ private:
 	void SetSequence(ParameterSequence sequence);
 	void StartSequence();
 	void OnSequencerControlChange(bool& inControl);
-	// ####
 
-	// #### Movement
+	// ### Movement
 	std::map<int, glm::vec2> userTargets; // Positions you want users to move towards. Used in some specific movement functions.
 
 	void AssignRandomEdges();
