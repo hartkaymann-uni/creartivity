@@ -344,13 +344,11 @@
     <None Include="src\scenes\gameoflife\shader\passthru.vert" />
     <None Include="src\scenes\gameoflife\shader\renderInstanced.frag" />
     <None Include="src\scenes\gameoflife\shader\renderInstanced.vert" />
-    <None Include="src\scenes\swarm\shader\colorSplash.comp" />
     <None Include="src\scenes\contourlines\shader\contour.frag" />
     <None Include="src\scenes\contourlines\shader\contour.vert" />
     <None Include="src\scenes\swarm\shader\swarm.comp" />
     <None Include="src\scenes\swarm\shader\swarm.frag" />
     <None Include="src\scenes\swarm\shader\swarm.vert" />
-    <None Include="src\scenes\swarm\shader\swarmUserEnter.comp" />
     <None Include="addons.make" />
     <None Include="src\scenes\fluid\shader\fluid\vorticityforce.frag" />
     <None Include="src\scenes\fluid\shader\fluid\advect.frag" />
@@ -382,5 +380,6 @@
     <None Include="src\scenes\fluid\shader\bloomblur.frag" />
     <None Include="src\scenes\fluid\shader\bloomfinal.frag" />
     <None Include="src\scenes\fluid\shader\halfhalf.frag" />
+    <None Include="src\scenes\swarm\shader\changeDepth.comp" />
   </ItemGroup>
 </Project>

@@ -1,0 +1,52 @@
+#version 440
+#define N_USERS 10
+
+uniform int original_min_particle_depth;
+uniform int original_max_particle_depth;
+uniform int new_min_particle_depth;
+uniform int new_max_particle_depth;
+
+struct Particle{
+	vec4 pos;
+	vec4 vel;
+	vec4 color;
+	vec4 unique;
+	vec4 initialPos;
+	vec4 bufferPos;
+};
+
+layout(std140, binding=0) buffer particle{
+    Particle p[];
+};
+
+layout(std140, binding=1) buffer particleBack{
+    Particle p2[];
+};
+
+layout(std140, binding=3) buffer particleDraw{
+    Particle p3[];
+};
+
+layout(std140, binding=2) buffer indices{
+	uint idx[];
+};
+
+float map(float value, float min1, float max1, float min2, float max2) {
+	float result = min2 + (value - min1) * (max2 - min2) / (max1 - min1);
+	result = min(max(result, min2), max2);
+	return result;
+}
+
+
+layout(local_size_x = 1024, local_size_y = 1, local_size_z = 1) in;
+void main(){
+	//Shift the particles according to the new depth range
+	float newDepth = map( - p[gl_GlobalInvocationID.x].initialPos.z, original_min_particle_depth, original_max_particle_depth, new_min_particle_depth, new_max_particle_depth);
+	p[gl_GlobalInvocationID.x].pos.z = -newDepth;
+
+	int index = int(p[gl_GlobalInvocationID.x].unique.y);
+	p3[index].pos.z = p[gl_GlobalInvocationID.x].pos.z;
+
+	
+	//p3[index].color = vec4(1,1,0,1);
+}

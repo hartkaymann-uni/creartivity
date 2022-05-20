@@ -11,7 +11,8 @@ void SwarmScene::setup() {
 	camera.setFarClip(ofGetWidth() * 100);
 	ofShowCursor();
 	particleGroups = 400;
-	maxParticleDepth = 1000;
+	maxParticleDepth = ORIGINAL_MAX_PARTICLE_DEPTH;
+	minParticleDepth = ORIGINAL_MIN_PARTICLE_DEPTH;
 	particleAmount = 1024 * particleGroups;
 
 
@@ -22,7 +23,7 @@ void SwarmScene::setup() {
 	for (auto& p : particles) {
 		p.pos.x = ofRandom(0, 1000);
 		p.pos.y = ofRandom(0, 1000);
-		p.pos.z = ofRandom(-maxParticleDepth, 0);
+		p.pos.z = ofRandom(-maxParticleDepth, -minParticleDepth);
 		p.pos.w = 1;
 
 		p.u = { 0,0,0,0 };
@@ -37,11 +38,6 @@ void SwarmScene::setup() {
 	}
 
 	filesystem::path shader_path = getShaderPath();
-	compute.setupShaderFromFile(GL_COMPUTE_SHADER, shader_path / "swarm.comp");
-	compute.linkProgram();
-
-	//colorSplash.setupShaderFromFile(GL_COMPUTE_SHADER, shader_path / "colorSplash.comp");
-	//colorSplash.linkProgram();
 
 	introShader.setupShaderFromFile(GL_COMPUTE_SHADER, shader_path / "intro.comp");
 	introShader.linkProgram();
@@ -54,6 +50,9 @@ void SwarmScene::setup() {
 
 	userEnter.setupShaderFromFile(GL_COMPUTE_SHADER, shader_path / "swarmUserEnter.comp");
 	userEnter.linkProgram();
+
+	changeDepthShader.setupShaderFromFile(GL_COMPUTE_SHADER, shader_path / "changeDepth.comp");
+	changeDepthShader.linkProgram();
 
 	particleShader.load(shader_path / "swarm.vert", shader_path / "swarm.frag");
 	userCircleShader.load(shader_path / "userCircles.vert", shader_path / "userCircles.frag");
@@ -87,7 +86,7 @@ void SwarmScene::setup() {
 	shaderUniforms.add(particleColorEnd.set("particle_color_end", glm::vec3(0.9, 0.9, 0.9), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1)));
 	shaderUniforms.add(freezeParticles.set("freeze_particles", false));
 	gui.add(shaderUniforms);
-	gui.add(isSequencerInControl.set("Let Sequencer control", true));
+	gui.add(isSequencerInControl.set("Let Sequencer control", false));
 	gui.add(fps.set("fps", 60, 0, 60));
 
 	gui.add(dirAsColor.set("Useless Button", true));
@@ -129,7 +128,6 @@ void SwarmScene::update() {
 	UpdateSequence();
 	ApplyParticleRules();
 	ApplyInteraction();
-	//ApplyBiggusShadus();
 }
 
 // ####################
@@ -171,7 +169,7 @@ void SwarmScene::DrawParticles() {
 	particleShader.setUniform1f("alphaMod", 0.3);
 	particleShader.setUniform1f("pointSize", 5);
 	glPointSize(5);
-	vbo.draw( GL_POINTS, 0, particles.size());
+	vbo.draw(GL_POINTS, 0, particles.size());
 
 	particleShader.end();
 }
@@ -204,34 +202,6 @@ void SwarmScene::DrawUserCircles() {
 }
 
 //--------------------------------------------------------------
-void SwarmScene::ColorSplash() {
-	colorSplash.begin();
-	colorSplash.setUniform3f("color", 1.0, 0.0, 0.0);
-	ofVec3f projPos = getProjectedPosition(mousePosition);
-	colorSplash.setUniform2f("mousePos", projPos.x, projPos.y);
-
-	colorSplash.dispatchCompute((particles.size() + 1024 - 1) / 1024, 1, 1);
-
-	colorSplash.end();
-
-	particlesBuffer.copyTo(particlesBuffer2);
-}
-
-//--------------------------------------------------------------
-void SwarmScene::UserEnter() {
-	userEnter.begin();
-	userEnter.setUniform3f("color", 0.0, 1.0, 1.0);
-	userEnter.setUniform2f("range", 0, 1024 * 2);
-	userEnter.setUniform1f("user", 1);
-
-	userEnter.dispatchCompute((particles.size() + 1024 - 1) / 1024, 1, 1);
-
-	userEnter.end();
-
-	particlesBuffer.copyTo(particlesBuffer2);
-}
-
-//--------------------------------------------------------------
 void SwarmScene::dirAsColorChanged(bool& dirAsColor) {
 	if (dirAsColor) {
 		vbo.enableColors();
@@ -258,17 +228,15 @@ void SwarmScene::keyPressed(int key) {
 
 //--------------------------------------------------------------
 void SwarmScene::keyReleased(int key) {
-	if (key == 'f') {
-		ofToggleFullscreen();
-	}
-
 	if (key == 't') {
 		cout << "Retrigger Scene Intro" << endl;
 		SetSequence(ParameterSequence(3, SequenceName::Intro));
 	}
-
-	if (key == 'r') {
-		UserEnter();
+	else if (key == 'd') {
+		ChangeParticleDepth(5000, 10000);
+	}
+	else if (key == 'r') {
+		RevertParticleDepthToOriginal();
 	}
 }
 
@@ -339,14 +307,14 @@ void SwarmScene::InitSequences() {
 	currentSequenceIndex = 0;
 	sequences.push_back(ParameterSequence(10, SequenceName::Swarm));
 	sequences.push_back(ParameterSequence(1000, SequenceName::BrainNeuronsCoarse));
-//	sequences.push_back(ParameterSequence(20, SequenceName::BrainNeurons));
-//	sequences.push_back(ParameterSequence(7, SequenceName::BlackHole, 5));
-//	sequences.push_back(ParameterSequence(4, SequenceName::Explosion));
-//	sequences.push_back(ParameterSequence(0.1f, SequenceName::NormalAttraction));
-//	sequences.push_back(ParameterSequence(10, SequenceName::BrainNeurons));
-//	sequences.push_back(ParameterSequence(10, SequenceName::Swarm));
-//	sequences.push_back(ParameterSequence(5, SequenceName::RepulsionStutter));
-//	sequences.push_back(ParameterSequence(7, SequenceName::BlackHole, 3));
+	//	sequences.push_back(ParameterSequence(20, SequenceName::BrainNeurons));
+	//	sequences.push_back(ParameterSequence(7, SequenceName::BlackHole, 5));
+	//	sequences.push_back(ParameterSequence(4, SequenceName::Explosion));
+	//	sequences.push_back(ParameterSequence(0.1f, SequenceName::NormalAttraction));
+	//	sequences.push_back(ParameterSequence(10, SequenceName::BrainNeurons));
+	//	sequences.push_back(ParameterSequence(10, SequenceName::Swarm));
+	//	sequences.push_back(ParameterSequence(5, SequenceName::RepulsionStutter));
+	//	sequences.push_back(ParameterSequence(7, SequenceName::BlackHole, 3));
 	SetSequence(sequences[currentSequenceIndex]);
 }
 
@@ -402,7 +370,7 @@ void SwarmScene::StartSequence() {
 		attractorForce.set(5000);
 		repulsionCoeff.set(repulsionCoeff.getMax());
 		maxSpeed.set(5000);
-		break; 
+		break;
 	case SequenceName::Intro:
 	{
 		particleColorStart.set(particleColorStart.getMin());
@@ -522,40 +490,6 @@ void SwarmScene::UpdateSequence() {
 // CodeSection: Shaders
 // ####################
 
-
-void SwarmScene::ApplyBiggusShadus() {
-	compute.begin();
-	compute.setUniforms(shaderUniforms);
-	compute.setUniform1i("use_attraction", (UseAttraction.get() ? 1 : 0));
-	compute.setUniform1i("use_cohesion", (UseCohesion.get() ? 1 : 0));
-	compute.setUniform1i("use_repulsion", (UseRepulsion.get() ? 1 : 0));
-	compute.setUniform1i("freeze_particles", (freezeParticles.get() ? 1 : 0));
-	compute.setUniform1f("timeLastFrame", ofGetLastFrameTime());
-	compute.setUniform1f("elapsedTime", ofGetElapsedTimef());
-	//compute.setUniform1i("particleAmount", particleAmount);
-	compute.setUniform1i("particleAmount", ruleIterationMod * 1024);
-	compute.setUniform1i("max_particle_depth", maxParticleDepth);
-	glm::vec3 atractor = { getProjectedPosition(mousePosition) };
-
-	compute.setUniform3f("attractor", atractor.x, atractor.y, atractor.z);
-
-
-	vector<ofVec2f> user_hands = userManager->getHandsVec();
-	compute.setUniform2fv("hands", &user_hands[0].x, sizeof(ofVec2f) * 10);
-	compute.setUniform2f("mouse", (float)ofGetMouseX(), (float)ofGetMouseY());
-
-	// since each work group has a local_size of 1024 (this is defined in the shader)
-	// we only have to issue 1 / 1024 workgroups to cover the full workload.
-	// note how we add 1024 and subtract one, this is a fast way to do the equivalent
-	// of std::ceil() in the float domain, i.e. to round up, so that we're also issueing
-	// a work group should the total size of particles be < 1024
-	compute.dispatchCompute((particles.size() + 1024 - 1) / 1024, 1, 1);
-
-	compute.end();
-
-	particlesBuffer.copyTo(particlesBuffer2);
-}
-
 void SwarmScene::ApplyParticleRules() {
 	behaviorShader.begin();
 
@@ -603,6 +537,40 @@ void SwarmScene::ApplyInteraction() {
 	interactionShader.end();
 
 	particlesBuffer.copyTo(particlesBuffer2);
+}
+
+void SwarmScene::ChangeParticleDepth(float newMin, float newMax) {
+	changeDepthShader.begin();
+	changeDepthShader.setUniform1i("original_min_particle_depth", ORIGINAL_MIN_PARTICLE_DEPTH);
+	changeDepthShader.setUniform1i("original_max_particle_depth", ORIGINAL_MAX_PARTICLE_DEPTH);
+	changeDepthShader.setUniform1i("new_min_particle_depth", newMin);
+	changeDepthShader.setUniform1i("new_max_particle_depth", newMax);
+
+	changeDepthShader.dispatchCompute((particles.size() + 1024 - 1) / 1024, 1, 1);
+
+	changeDepthShader.end();
+
+	particlesBuffer.copyTo(particlesBuffer2);
+
+	minParticleDepth = newMin;
+	maxParticleDepth = newMax;
+}
+
+void SwarmScene::RevertParticleDepthToOriginal() {
+	changeDepthShader.begin();
+	changeDepthShader.setUniform1i("original_min_particle_depth", ORIGINAL_MIN_PARTICLE_DEPTH);
+	changeDepthShader.setUniform1i("original_max_particle_depth", ORIGINAL_MAX_PARTICLE_DEPTH);
+	changeDepthShader.setUniform1i("new_min_particle_depth", ORIGINAL_MIN_PARTICLE_DEPTH);
+	changeDepthShader.setUniform1i("new_max_particle_depth", ORIGINAL_MAX_PARTICLE_DEPTH);
+
+	changeDepthShader.dispatchCompute((particles.size() + 1024 - 1) / 1024, 1, 1);
+
+	changeDepthShader.end();
+
+	particlesBuffer.copyTo(particlesBuffer2);
+
+	minParticleDepth = ORIGINAL_MIN_PARTICLE_DEPTH;
+	maxParticleDepth = ORIGINAL_MAX_PARTICLE_DEPTH;
 }
 
 

@@ -6,6 +6,8 @@
 #include "ccScene.h"
 
 #define MAX_SWARM_HANDS 30
+#define ORIGINAL_MIN_PARTICLE_DEPTH 0
+#define ORIGINAL_MAX_PARTICLE_DEPTH 10000
 
 class SwarmScene : public ccScene
 {
@@ -77,6 +79,7 @@ public:
 	int particleGroups;
 	int particleAmount;
 	int maxParticleDepth;
+	int minParticleDepth;
 	vector<Particle> particles;
 	ofBufferObject particlesBuffer, particlesBuffer2, particlesBuffer3;
 	GLuint vaoID;
@@ -104,9 +107,9 @@ private:
 	void DrawUserCircles();
 
 	// ### Shaders
-	ofShader compute, colorSplash, particleShader, userEnter, introShader, behaviorShader, interactionShader, userCircleShader;
+	ofShader particleShader, userEnter, behaviorShader, interactionShader, userCircleShader;
+	ofShader introShader, changeDepthShader;
 
-	void ApplyBiggusShadus();
 	void ApplyParticleRules();
 	void ApplyInteraction();
 	array<ofVec3f, MAX_SWARM_HANDS> GetUserHandsArray(ccScene::CoordinateSystem system);
@@ -117,8 +120,8 @@ private:
 	bool isPressingMouse;
 
 	void UpdateMousePos(int x, int y, string action = "default");
-	void ColorSplash();
-	void UserEnter();
+	void ChangeParticleDepth(float newMin, float newMax);
+	void RevertParticleDepthToOriginal();
 	vector<Particle> SortParticles();
 
 	// ### Sequencer
