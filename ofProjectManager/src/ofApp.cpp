@@ -49,6 +49,7 @@ void ofApp::setup() {
 
 //--------------------------------------------------------------
 void ofApp::update() {
+	userManager.updateUserPositions();
 
 #ifdef SWITCH_SCENES
 	// Change to next scene at an intervall

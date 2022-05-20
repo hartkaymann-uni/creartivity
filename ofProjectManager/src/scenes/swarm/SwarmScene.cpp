@@ -10,7 +10,7 @@ SwarmScene::SwarmScene() : ccScene("Swarm") {
 void SwarmScene::setup() {
 	camera.setFarClip(ofGetWidth() * 100);
 	ofShowCursor();
-	particleGroups = 400;
+	particleGroups = 10;
 	maxParticleDepth = 10000;
 	particleAmount = 1024 * particleGroups;
 
