@@ -24,39 +24,6 @@ namespace fluid {
 		pressure.allocate( grid.size, GL_RGB16_SNORM );
 		ofEnableArbTex();
 
-#if 0
-		{
-			int no_pixels = grid.size.x * grid.size.y * 3;
-			vector<short> cells( no_pixels );
-			for (size_t x = 0; x < grid.size.y; x++) {
-				for (size_t y = 0; y < grid.size.x; y++) {
-					size_t i = x * grid.size.x + y;
-
-					cells[i * 3 + 0] = ofMap( ofNoise( 2.f * x / grid.size.y, 2.f * y / grid.size.x ), 0.0, 1.0, SHRT_MIN, SHRT_MAX );
-					cells[i * 3 + 1] = ofMap( ofNoise( x / grid.size.x, y / grid.size.y ), 0.0, 1.0, SHRT_MIN, SHRT_MAX );
-					cells[i * 3 + 2] = 0.0;
-				}
-			}
-			velocity.read->getTexture().loadData( cells.data(), grid.size.x, grid.size.y, GL_RGB );
-		}
-
-		{
-			int no_pixels = grid.size.x * grid.size.y * 3;
-			vector<short> cells( no_pixels );
-			for (size_t x = 0; x < grid.size.y; x++) {
-				for (size_t y = 0; y < grid.size.x; y++) {
-					size_t i = x * grid.size.x + y;
-					short initialValue = ofMap( ofNoise( 2.f * x / grid.size.y, 2.f * y / grid.size.x ), 0.0, 1.0, SHRT_MIN, SHRT_MAX );
-
-					cells[i * 3 + 0] = initialValue;
-					cells[i * 3 + 1] = initialValue;
-					cells[i * 3 + 2] = initialValue;
-				}
-			}
-			density.read->getTexture().loadData( cells.data(), grid.size.x, grid.size.y, GL_RGB );
-		}
-#endif
-
 		// Create shader programs
 		filesystem::path shaderPath = "../../src/scenes/fluid/shader";
 
@@ -72,6 +39,17 @@ namespace fluid {
 		bool err_grav = gravityProgram.load( shaderPath / "passthru.vert", shaderPath / "fluid/gravity.frag" );
 	}
 
+	void ccSolver::colorDensity(ofShader& shader)
+	{
+		shader.begin();
+		density.write->begin();
+		ofClear( 0 );
+		plane.draw();
+		density.write->end();
+		density.swap();
+		shader.end();
+	}
+
 	ofFbo ccSolver::createFbo( int format ) {
 		ofFbo temp;
 		temp.allocate( grid.size.x, grid.size.y, format );
@@ -82,10 +60,7 @@ namespace fluid {
 
 	void ccSolver::step( vector<ccUser> users )
 	{
-		ofDisableAlphaBlending();
-		ofDisableBlendMode();
-
-		if (s.applyGravity) {
+		if ( s.applyGravity ) {
 			gravitate( velocity );
 		}
 
@@ -96,16 +71,16 @@ namespace fluid {
 		advect( density, density, s.dissipation );
 
 		// Add external forces
-		for (vector<ccUser>::iterator it = users.begin(); it != users.end(); it++) {
+		for ( vector<ccUser>::iterator it = users.begin(); it != users.end(); it++ ) {
 			addForces( *it );
 		}
 
-		if (s.applyVorticity) {
+		if ( s.applyVorticity ) {
 			vortex( vorticity );
 			vortexConfine( vorticity, velocity );
 			boundary( velocity, velocity, -1.f );
 		}
-		if (s.applyViscosity && s.viscosity > 0.f) {
+		if ( s.applyViscosity && s.viscosity > 0.f ) {
 			float scale = grid.scale;
 
 			float alpha = (scale * scale) / (s.viscosity * s.timestep);
@@ -136,20 +111,20 @@ namespace fluid {
 		glm::vec3 colorR = user.getMotions().second;
 
 		// Left
-		if (colorL.x != 0.f || colorL.y != 0) {
+		if ( colorL.x != 0.f || colorL.y != 0 ) {
 			glm::vec2 point = user.left();
 			// Map positions to grid
 			ofFloatColor c = s.splatColor;
 			splat( velocity, glm::normalize( colorL ), point );
-			splat( density, { c.r, c.g, c.b }, point );
+			if ( s.splatDensity ) splat( density, { c.r, c.g, c.b }, point );
 		}
 		// Right
-		if (colorR.x != 0.f || colorR.y != 0) {
+		if ( colorR.x != 0.f || colorR.y != 0 ) {
 			glm::vec2 point = user.right();
 			// Map positions to grid
 			ofFloatColor c = s.splatColor;
 			splat( velocity, glm::normalize( colorR ), point );
-			splat( density, { c.r, c.g, c.b }, point );
+			if ( s.splatDensity )splat( density, { c.r, c.g, c.b }, point );
 		}
 		boundary( velocity, velocity, -1.f );
 	}
@@ -176,7 +151,7 @@ namespace fluid {
 
 	// Computes the boundaries of the simulation domain
 	void ccSolver::boundary( Field& input, Field& output, float scale ) {
-		if (!grid.applyBounds)
+		if ( !grid.applyBounds )
 			return;
 
 		// default offset: 1
@@ -259,7 +234,7 @@ namespace fluid {
 	}
 
 	void ccSolver::diffuse( ofShader& jacobi, Field& x, Field& b, Field& output, float alpha, float beta, float scale ) {
-		for (int i = 0; i < s.jacobiIterations; i++) {
+		for ( int i = 0; i < s.jacobiIterations; i++ ) {
 			diffuseStep( jacobi, x, b, output, alpha, beta );
 			boundary( output, output, scale );
 		}

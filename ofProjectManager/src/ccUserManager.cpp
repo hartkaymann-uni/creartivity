@@ -2,18 +2,12 @@
 
 ccUserManager::ccUserManager()
 {
-	// Set mouse as first user
-	ccUser mouse;
-	mouse.setId( 0 );
-	registerUser( mouse );
-
+	users.clear();
 }
 
 void ccUserManager::registerUser( ccUser& user )
 {
 	int id = user.getId();
-	if ( id == 2 )
-		cout << "yeet" << endl;
 	users.insert( pair<int, ccUser>( id, user ) );
 }
 

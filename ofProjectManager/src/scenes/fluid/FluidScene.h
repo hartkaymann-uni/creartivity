@@ -66,6 +66,7 @@ private:
 	ofShader displayVelocity;
 	ofShader bloomFilter;
 	ofShader bloomBlur;
+	ofShader halfShader;
 	enum ShadingType {
 		DEFAULT,
 		BLOOM,

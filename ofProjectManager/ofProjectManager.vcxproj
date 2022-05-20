@@ -231,6 +231,7 @@
     <ClCompile Include="..\..\..\addons\ofxOsc\libs\oscpack\src\osc\OscTypes.cpp" />
     <ClCompile Include="..\..\..\addons\ofxUbo\src\ofxUbo.cpp" />
     <ClCompile Include="src\scenes\swarm\SwarmScene.cpp" />
+    <None Include="src\scenes\fluid\shader\halfhalf.frag" />
     <None Include="src\scenes\swarm\shader\particleBehavior.comp" />
     <None Include="src\scenes\swarm\shader\userCircles.frag" />
     <None Include="src\scenes\swarm\shader\userCircles.vert" />

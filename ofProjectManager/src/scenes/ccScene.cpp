@@ -158,8 +158,6 @@ vector<ofVec3f> ccScene::getHandPositions(CoordinateSystem system) {
 		}
 	}
 
-
-
 	return hands_world;
 }
 

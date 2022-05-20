@@ -13,7 +13,7 @@ FluidScene::FluidScene()
 	step( false ),
 	sequenceDuration( 10.f ),
 	sequenceTransitionDuration( 1.f ),
-	lastSequene( SequenceName::Empty ),
+	lastSequene( SequenceName::Default ),
 	currentSequence( SequenceName::Default ),
 	lastSequenceTime( 0.f ),
 	shading( DEFAULT ) {}
@@ -31,7 +31,7 @@ void FluidScene::setup()
 	solverSettings.epsilon = 0.00024414f;
 	solverSettings.curl = 0.1f;
 	solverSettings.jacobiIterations = 81;
-	solverSettings.dissipation = 0.998f;
+	solverSettings.dissipation = 1.f;
 	solverSettings.applyGravity = false;
 	solverSettings.gravityDir = { 0.0, 1.0 };
 	solverSettings.gravityStr = 9.81f;
@@ -71,7 +71,7 @@ void FluidScene::setup()
 	groupGravity.add( p_GravityStrength.set( "Strength", solverSettings.gravityStr, 0.f, 20.f ) );
 	groupBloom.add( p_BloomIterations.set( "Iterations", 8, 0, 20 ) );
 	groupBloom.add( p_BloomThreshhold.set( "threshhold", 0.5f, 0.0f, 1.0f ) );
-	groupView.add( p_Sequences.set( "RunSequences", true ) );
+	groupView.add( p_Sequences.set( "RunSequences", false ) );
 	groupView.add( p_DebugView.set( "Debug", false ) );
 
 	p_Curl.addListener( this, &FluidScene::handleCurlChanged );
@@ -108,6 +108,7 @@ void FluidScene::setup()
 	bool err_loadvel = displayVelocity.load( shaderPath / "passthru.vert", shaderPath / "velocity.frag" );
 	bool err_loadbloompre = bloomFilter.load( shaderPath / "passthru.vert", shaderPath / "bloomfilter.frag" );
 	bool err_loadbloomblur = bloomBlur.load( shaderPath / "passthru.vert", shaderPath / "bloomblur.frag" );
+	bool err_half = halfShader.load( shaderPath / "passthru.vert", shaderPath / "halfhalf.frag" );
 
 	// Initialize Sequences
 	setupSequences();
@@ -136,6 +137,8 @@ void FluidScene::update()
 
 void FluidScene::draw()
 {
+	solver.getDensity()->draw( 0, 0, width, height );
+	return;
 	ofBackground( 0 );
 
 	if ( p_DebugView.get() ) {
@@ -233,7 +236,7 @@ void FluidScene::drawBloom() {
 
 	// Apply bloom blur
 	bloomBlur.begin();
-	displayVelocity.setUniform2f( "gridSize", solver.getGrid()->size );
+	bloomBlur.setUniform2f( "gridSize", solver.getGrid()->size );
 	for ( int i = 0; i < p_BloomIterations.get(); i++ ) {
 		bloomBlur.setUniformTexture( "read", bloom.read->getTexture(), 1 );
 		bloom.write->begin();
@@ -247,15 +250,7 @@ void FluidScene::drawBloom() {
 }
 
 void FluidScene::drawVelocity() {
-	camera.begin();
-	displayVelocity.begin();
-	displayVelocity.setUniformTexture( "read", solver.getVelocity()->getTexture(), 1 );
-	displayVelocity.setUniform2f( "gridSize", solver.getGrid()->size );
-	displayVelocity.setUniform3f( "bias", glm::vec3( 0.5, 0.5, 0.5 ) );
-	displayVelocity.setUniform3f( "scale", glm::vec3( 0.5, 0.5, 0.5 ) );
-	solver.getVelocity()->draw( 0.f, 0.f, width, height );
-	displayVelocity.end();
-	camera.end();
+	solver.getDensity()->draw( 0.f, 0.f, width, height );
 }
 
 ///////////////
@@ -311,9 +306,11 @@ void FluidScene::updateParameters() {
 		p_Timestep.set( ofMap( timeSinceSequenceChange, 0.0, sequenceTransitionDuration, sequenceMap.at( lastSequene ).timestep, sequenceMap.at( currentSequence ).timestep ) );
 		p_Scale.set( ofMap( timeSinceSequenceChange, 0.0, sequenceTransitionDuration, sequenceMap.at( lastSequene ).scale, sequenceMap.at( currentSequence ).scale ) );
 		p_SplatRadius.set( ofMap( timeSinceSequenceChange, 0.0, sequenceTransitionDuration, sequenceMap.at( lastSequene ).splat, sequenceMap.at( currentSequence ).splat ) );
-		p_Dissipation.set( ofMap( timeSinceSequenceChange, 0.0, sequenceTransitionDuration, sequenceMap.at( lastSequene ).dissipation, sequenceMap.at( currentSequence ).dissipation ) );
 		p_Curl.set( ofMap( timeSinceSequenceChange, 0.0, sequenceTransitionDuration, sequenceMap.at( lastSequene ).curl, sequenceMap.at( currentSequence ).curl ) );
 		p_Viscosity.set( ofMap( timeSinceSequenceChange, 0.0, sequenceTransitionDuration, sequenceMap.at( lastSequene ).viscosity, sequenceMap.at( currentSequence ).viscosity ) );
+		// In velocity shading mode dissipation should always be 1
+		if ( shading != ShadingType::VELOCITY )
+			p_Dissipation.set( ofMap( timeSinceSequenceChange, 0.0, sequenceTransitionDuration, sequenceMap.at( lastSequene ).dissipation, sequenceMap.at( currentSequence ).dissipation ) );
 
 		// Changing color is a bit more complex
 		glm::vec3 currCol = sequenceMap.at( lastSequene ).color;
@@ -339,8 +336,8 @@ float FluidScene::SceneIntro()
 {
 	lastSequene = SequenceName::Empty;
 	setSequence( randSequence() );
+	changeShading();
 
-	//changeShading();
 	return sequenceTransitionDuration;
 }
 
@@ -354,6 +351,17 @@ float FluidScene::SceneOutro()
 // Change shading type, right now just switches between outlined and metaball shading
 void FluidScene::changeShading() {
 	shading = static_cast<ShadingType>((shading + 1) % NUM_SHADING);
+
+	// Velocity shading requires some preparation
+	if ( shading == ShadingType::VELOCITY ) {
+		solver.colorDensity( halfShader );
+		solver.setSplatDensity( false );
+		solver.setDissipation( 1.f );
+	}
+	else {
+		solver.setSplatDensity( true );
+	}
+
 	// Print out shading mode
 	char* ShadingTypes[] =
 	{
@@ -363,7 +371,6 @@ void FluidScene::changeShading() {
 	};
 	cout << "Shading type: " << ShadingTypes[shading] << endl;
 }
-
 
 //////////////////
 // Input Events //

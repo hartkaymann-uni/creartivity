@@ -338,15 +338,15 @@ void SwarmScene::dragEvent(ofDragInfo dragInfo) {
 void SwarmScene::InitSequences() {
 	currentSequenceIndex = 0;
 	sequences.push_back(ParameterSequence(10, SequenceName::Swarm));
-	sequences.push_back(ParameterSequence(200, SequenceName::BrainNeuronsCoarse));
-	/*sequences.push_back(ParameterSequence(20, SequenceName::BrainNeurons));
+	sequences.push_back(ParameterSequence(10, SequenceName::BrainNeuronsCoarse));
+	//sequences.push_back(ParameterSequence(20, SequenceName::BrainNeurons));
 	sequences.push_back(ParameterSequence(7, SequenceName::BlackHole, 5));
 	sequences.push_back(ParameterSequence(4, SequenceName::Explosion));
 	sequences.push_back(ParameterSequence(0.1f, SequenceName::NormalAttraction));
-	sequences.push_back(ParameterSequence(16, SequenceName::BrainNeurons));
+	sequences.push_back(ParameterSequence(10, SequenceName::BrainNeurons));
 	sequences.push_back(ParameterSequence(10, SequenceName::Swarm));
 	sequences.push_back(ParameterSequence(5, SequenceName::RepulsionStutter));
-	sequences.push_back(ParameterSequence(7, SequenceName::BlackHole, 3));*/
+	sequences.push_back(ParameterSequence(7, SequenceName::BlackHole, 3));
 	SetSequence(sequences[currentSequenceIndex]);
 }
 
