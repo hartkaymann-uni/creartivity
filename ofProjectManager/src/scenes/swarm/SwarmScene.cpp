@@ -86,7 +86,7 @@ void SwarmScene::setup() {
 	shaderUniforms.add(particleColorEnd.set("particle_color_end", glm::vec3(0.9, 0.9, 0.9), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1)));
 	shaderUniforms.add(freezeParticles.set("freeze_particles", false));
 	gui.add(shaderUniforms);
-	gui.add(isSequencerInControl.set("Let Sequencer control", false));
+	gui.add(isSequencerInControl.set("Let Sequencer control", true));
 	gui.add(fps.set("fps", 60, 0, 60));
 
 	gui.add(dirAsColor.set("Useless Button", true));
@@ -198,6 +198,7 @@ void SwarmScene::DrawUserCircles() {
 		userCircleShader.end();
 	}
 
+	//cout << "rez: " << ofVec2f(ofGetWidth(), ofGetHeight()) << " - hand pos 0 : " << user_hands[0] << endl;
 
 }
 
@@ -305,15 +306,14 @@ void SwarmScene::dragEvent(ofDragInfo dragInfo) {
 // Creates an arrray with sequences
 void SwarmScene::InitSequences() {
 	currentSequenceIndex = 0;
+	sequences.push_back(ParameterSequence(10, SequenceName::BrainNeuronsDense));
+	sequences.push_back(ParameterSequence(10, SequenceName::BrainNeuronsFlashLight));
+	sequences.push_back(ParameterSequence(10, SequenceName::CrazyTestOne));
 	sequences.push_back(ParameterSequence(10, SequenceName::Swarm));
-	sequences.push_back(ParameterSequence(1000, SequenceName::BrainNeuronsCoarse));
 	//	sequences.push_back(ParameterSequence(20, SequenceName::BrainNeurons));
 	//	sequences.push_back(ParameterSequence(7, SequenceName::BlackHole, 5));
 	//	sequences.push_back(ParameterSequence(4, SequenceName::Explosion));
 	//	sequences.push_back(ParameterSequence(0.1f, SequenceName::NormalAttraction));
-	//	sequences.push_back(ParameterSequence(10, SequenceName::BrainNeurons));
-	//	sequences.push_back(ParameterSequence(10, SequenceName::Swarm));
-	//	sequences.push_back(ParameterSequence(5, SequenceName::RepulsionStutter));
 	//	sequences.push_back(ParameterSequence(7, SequenceName::BlackHole, 3));
 	SetSequence(sequences[currentSequenceIndex]);
 }
@@ -329,6 +329,10 @@ void SwarmScene::StartSequence() {
 	lastSequenceTime = ofGetElapsedTimef();
 	nextSequenceTime = lastSequenceTime + currentSequence.duration;
 
+	RevertParticleDepthToOriginal();
+	particleColorStart.set(ofVec3f(0, 0, 0));
+	particleColorEnd.set(ofVec3f(0.9f, 0.9f, 0.9f));
+
 	ActivateRules();
 
 	switch (currentSequence.sequenceType)
@@ -338,12 +342,26 @@ void SwarmScene::StartSequence() {
 		attractorForce.set(1250 * currentSequence.modifier);
 		repulsionCoeff.set(repulsionCoeff.getMin());
 		maxSpeed.set(2500 * currentSequence.modifier);
+		ChangeParticleDepth(3000, ORIGINAL_MAX_PARTICLE_DEPTH);
+		break;
+	case SequenceName::RepulsionStutter:
+		attractionCoeff.set(attractionCoeff.getMin());
+		attractorForce.set(attractorForce.getMax());
+		repulsionCoeff.set(repulsionCoeff.getMin());
+		maxSpeed.set(4000);
+		ChangeParticleDepth(3000, ORIGINAL_MAX_PARTICLE_DEPTH);
 		break;
 	case SequenceName::Explosion:
 		attractionCoeff.set(attractionCoeff.getMin());
 		attractorForce.set(attractorForce.getMin());
 		repulsionCoeff.set(repulsionCoeff.getMax());
 		maxSpeed.set(maxSpeed.getMax());
+		break;
+	case SequenceName::CrazyTestOne:
+		attractionCoeff.set(attractionCoeff.getMin());
+		attractorForce.set(attractorForce.getMax());
+		repulsionCoeff.set(0.3f);
+		maxSpeed.set(2500);
 		break;
 	case SequenceName::NormalAttraction:
 		attractionCoeff.set(attractionCoeff.getMin());
@@ -358,6 +376,7 @@ void SwarmScene::StartSequence() {
 		maxSpeed.set(5000);
 		break;
 	case SequenceName::BrainNeuronsCoarse:
+	case SequenceName::BrainNeuronsFlashLight:
 	{
 		attractionCoeff.set(attractionCoeff.getMin());
 		repulsionCoeff.set(repulsionCoeff.getMax());
@@ -365,8 +384,17 @@ void SwarmScene::StartSequence() {
 		maxSpeed.set(2500);
 		break;
 	}
+	case SequenceName::BrainNeuronsDense:
+	{
+		attractionCoeff.set(attractionCoeff.getMin());
+		repulsionCoeff.set(0.15f);
+		attractorForce.set(attractorForce.getMax());
+		maxSpeed.set(2500);
+		ChangeParticleDepth(3000, 6000);
+		break;
+	}
 	case SequenceName::Swarm:
-		attractionCoeff.set(attractionCoeff.getMax());
+		attractionCoeff.set(0.25f);
 		attractorForce.set(5000);
 		repulsionCoeff.set(repulsionCoeff.getMax());
 		maxSpeed.set(5000);
@@ -389,8 +417,8 @@ void SwarmScene::StartSequence() {
 
 // Activates all swarm movement rules
 void SwarmScene::ActivateRules() {
-	//UseAttraction.set(true);
-	//UseCohesion.set(true);
+	UseAttraction.set(true);
+	UseCohesion.set(true);
 	UseRepulsion.set(true);
 }
 
@@ -412,6 +440,12 @@ void SwarmScene::UpdateSequence() {
 	CheckForNextSequence();
 
 	float currentTime = ofGetElapsedTimef();
+	float timeSinceStart = currentTime - lastSequenceTime;
+	// ofGetElapsedTime is sometimes buggy and results in a negative timeSinceStart, so this line prevents anything funky from happening
+	timeSinceStart = max(0.f, timeSinceStart);
+
+	bool fadeOutColor = false;
+	if (currentSequence.duration - timeSinceStart < 3.f && currentSequence.sequenceType != SequenceName::Intro && currentSequence.sequenceType != SequenceName::Outro) fadeOutColor = true;
 
 	//float mod = ruleIterationMod.getMax() / 2 + (abs(sin(ofGetElapsedTimef() / 10)) * ruleIterationMod.getMax() / 2);
 	//ruleIterationMod.set(mod);
@@ -419,10 +453,17 @@ void SwarmScene::UpdateSequence() {
 	switch (currentSequence.sequenceType)
 	{
 	case SequenceName::BlackHole: {
+	}
+	case SequenceName::Explosion: {
 
 		break;
 	}
-	case SequenceName::Explosion: {
+	case SequenceName::CrazyTestOne: {
+		float newMaxDepth = 5000;
+		float newMinDepth = abs(sin(ofGetElapsedTimef())) * newMaxDepth - 100;
+		ChangeParticleDepth(newMinDepth, newMaxDepth);
+
+		if(!fadeOutColor) particleColorStart.set(ofVec3f(min(0.8f, timeSinceStart * 0.5f), 0, 0));
 
 		break;
 	}
@@ -432,41 +473,60 @@ void SwarmScene::UpdateSequence() {
 	}
 	case SequenceName::BrainNeurons:
 	{
-		float diff = currentTime - lastSequenceTime;
-		float newSpeed = maxSpeed.getMax() - 200 * diff;
+		float newSpeed = maxSpeed.getMax() - 200 * timeSinceStart;
 		newSpeed = std::max(newSpeed, 1500.0f);
 		maxSpeed.set(newSpeed);
+
+		if (!fadeOutColor) particleColorStart.set(ofVec3f(min(0.15f, timeSinceStart * 0.5f), 0, 0));
+		break;
+	}
+	case SequenceName::BrainNeuronsDense:
+	{
+		if (!fadeOutColor) particleColorStart.set(ofVec3f(min(0.3f, timeSinceStart * 0.5f), 0, 0));
 		break;
 	}
 	case SequenceName::BrainNeuronsCoarse:
 	{
-		float diff = currentTime - lastSequenceTime;
-		float newSpeed = min(maxSpeed.getMax(), maxSpeed.get() + 500 * diff);
+		float newSpeed = min(maxSpeed.getMax(), maxSpeed.get() + 500 * timeSinceStart);
 		maxSpeed.set(newSpeed);
 		float newForce = sin(ofGetElapsedTimef() / 2) * 500 + 1000;
 		attractorForce.set(newForce);
+
+		break;
+	}	
+	case SequenceName::BrainNeuronsFlashLight:
+	{
+		float newSpeed = min(maxSpeed.getMax(), maxSpeed.get() + 500 * timeSinceStart);
+		maxSpeed.set(newSpeed);
+		float newForce = sin(ofGetElapsedTimef() / 2) * 500 + 1000;
+		attractorForce.set(newForce);
+
+
+		float newWhite = pow(abs(sin(ofGetElapsedTimef())), 8) * 0.5f;
+		if (timeSinceStart < 2.f) newWhite = (1 - (timeSinceStart / 2.0f)) * 0.9f;
+		if (!fadeOutColor) particleColorEnd.set(ofVec3f(newWhite));
 		break;
 	}
 	case SequenceName::Swarm:
 	{
-		float diff = currentTime - lastSequenceTime;
-		float newSpeed = maxSpeed.getMax() - 400 * diff;
+		float newSpeed = maxSpeed.getMax() - 400 * timeSinceStart;
 		newSpeed = std::max(newSpeed, 750.0f);
 		maxSpeed.set(newSpeed);
+
+
+		float newRed = pow(abs(sin(ofGetElapsedTimef())), 25) * 0.3f;
+		if (!fadeOutColor) particleColorStart.set(ofVec3f(newRed, 0, 0));
 		break;
 	}
 	case SequenceName::RepulsionStutter:
 	{
-		float diff = currentTime - (int)currentTime;
-		if (diff < 0.1f) UseRepulsion.set(true);
-		else UseRepulsion.set(false);
+		float newRepulsion = abs(sin(ofGetElapsedTimef() * 2)) * 0.3f;
+		repulsionCoeff.set(newRepulsion);
 		break;
 	}
 	case SequenceName::Intro:
 	{
-		float diff = currentTime - lastSequenceTime;
-
-		float percentage = min(diff / currentSequence.duration, 1.f);
+		float percentage = min(timeSinceStart / currentSequence.duration, 1.f);
 
 		particleColorStart.set(glm::vec3(0, 0, 0) * percentage);
 		particleColorEnd.set(glm::vec3(0.9, 0.9, 0.9) * percentage);
@@ -484,6 +544,19 @@ void SwarmScene::UpdateSequence() {
 	default:
 		break;
 	}
+
+	// Put Colors back to original value
+	if (fadeOutColor) {
+		ofVec3f startCol = particleColorStart.get();
+		startCol.x = max(0.0, startCol.x - (0.1f + pow(startCol.x, 2) * 0.75f) * ofGetLastFrameTime());
+		particleColorStart.set(startCol);
+
+		ofVec3f endCol = particleColorEnd.get();
+		float newWhite = min(0.9, endCol.x + (0.1f + pow(endCol.x, 2) * 0.75f) * ofGetLastFrameTime());
+		particleColorEnd.set(ofVec3f(newWhite));
+	}
+
+	cout << "dur: " << currentSequence.duration << " time since start: " << timeSinceStart << endl;
 }
 
 // ####################
@@ -502,6 +575,7 @@ void SwarmScene::ApplyParticleRules() {
 	behaviorShader.setUniform1i("freeze_particles", (freezeParticles.get() ? 1 : 0));
 	//behaviorShader.setUniform1i("particleAmount", particleAmount);
 	behaviorShader.setUniform1i("particleAmount", ruleIterationMod * 1024);
+	behaviorShader.setUniform1i("min_particle_depth", minParticleDepth);
 	behaviorShader.setUniform1i("max_particle_depth", maxParticleDepth);
 
 	behaviorShader.dispatchCompute((particles.size() + 1024 - 1) / 1024, 1, 1);
@@ -517,6 +591,9 @@ void SwarmScene::ApplyInteraction() {
 	interactionShader.setUniform1i("freeze_particles", (freezeParticles.get() ? 1 : 0));
 	interactionShader.setUniform1f("timeLastFrame", ofGetLastFrameTime());
 	interactionShader.setUniform1f("elapsedTime", ofGetElapsedTimef());
+	behaviorShader.setUniform1i("min_particle_depth", minParticleDepth);
+	behaviorShader.setUniform1i("max_particle_depth", maxParticleDepth);
+
 
 	array<ofVec3f, MAX_SWARM_HANDS> user_hands = GetUserHandsArray(ccScene::CoordinateSystem::World);
 	int hand_count = min(MAX_SWARM_HANDS, userManager->getUserCount() * 2);

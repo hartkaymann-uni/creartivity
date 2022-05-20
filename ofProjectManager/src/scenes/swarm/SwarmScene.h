@@ -40,7 +40,10 @@ public:
 		RepulsionStutter,
 		Intro,
 		Outro,
-		BrainNeuronsCoarse
+		BrainNeuronsCoarse,
+		BrainNeuronsDense,
+		BrainNeuronsFlashLight,
+		CrazyTestOne
 	};
 
 	struct ParameterSequence

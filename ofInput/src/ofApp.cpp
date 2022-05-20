@@ -17,7 +17,7 @@ void ofApp::setup()
 	gui.setup();
 	gui.add(add_button.setup("Add user", 30, 30));
 	gui.add(remove_button.setup("Remove user", 30, 30));
-	gui.add(isSequencerInControl.set("Let Sequencer control", false));
+	gui.add(isSequencerInControl.set("Let Sequencer control", true));
 
 	gui.setPosition(width - gui.getWidth() - 1, height - gui.getHeight() - 10);
 	add_button.addListener(this, &ofApp::handleAddButtonClick);

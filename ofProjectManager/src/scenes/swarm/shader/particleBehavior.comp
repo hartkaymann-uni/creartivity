@@ -40,6 +40,7 @@ uniform float attr_force;
 
 uniform int freeze_particles;
 uniform int particleAmount;
+uniform int min_particle_depth;
 uniform int max_particle_depth;
 uniform vec3 particle_color_start;
 uniform vec3 particle_color_end;
@@ -163,8 +164,8 @@ void calculateColor() {
 	vec3 particlePos = p2[gl_GlobalInvocationID.x].pos.xyz;
 	vec4 newColor = vec4(1);
 
-	float depth = abs(clamp(particlePos.z, -max_particle_depth, 0));
-	float depthPercentage = (depth/max_particle_depth);
+	float depth = abs(clamp(particlePos.z, -max_particle_depth, -min_particle_depth));
+	float depthPercentage = ((depth - min_particle_depth)/(max_particle_depth - min_particle_depth));
 
 	// Set base color depending on z-position
 	vec3 colorDiff = particle_color_start - particle_color_end;

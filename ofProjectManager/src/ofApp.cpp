@@ -18,9 +18,9 @@ void ofApp::setup() {
 	ofSetFrameRate( 60 );
 	ofSetVerticalSync( false );
 
-	transformer.setRenderSize( SCREEN_WIDTH, SCREEN_HEIGHT );
+	/*transformer.setRenderSize( SCREEN_WIDTH, SCREEN_HEIGHT );
 	transformer.setTransforms( true, true, false, true, true );
-	setTransformer( &transformer );
+	setTransformer( &transformer );*/
 
 	receiver.setUserManager( &userManager );
 #ifdef MOUSE_INTERACTION

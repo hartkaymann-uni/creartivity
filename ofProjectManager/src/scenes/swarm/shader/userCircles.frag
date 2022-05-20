@@ -17,9 +17,9 @@ void main() {
     float percentage = 1 - (max(min(distance / radius, 1.0), 0.0));
     //float percentage = distance / 500;
 
-    colorOut = vec4(1, 0, 0, 1);
+    colorOut = vec4(0.5, 0, 0, 1);
 
-    colorOut.a = 0.5 * pow(percentage,1); 
+    colorOut.a = 0.65 * pow(percentage,2); 
     
 
     outputColor = colorOut;
