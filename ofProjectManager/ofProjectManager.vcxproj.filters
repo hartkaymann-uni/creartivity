@@ -367,15 +367,16 @@
     <None Include="src\scenes\fluid\shader\displayvector.frag" />
     <None Include="src\scenes\fluid\shader\displayscalar.frag" />
     <None Include="src\scenes\swarm\shader\intro.comp" />
-    <None Include="src\scenes\fluid\shader\pixels.frag" />
     <None Include="src\scenes\gameoflife\shader\metaballs.frag" />
     <None Include="src\scenes\gameoflife\shader\splat.frag" />
     <None Include="src\scenes\fluid\shader\velocity.frag" />
-    <None Include="src\scenes\fluid\shader\texture.frag" />
     <None Include="src\scenes\contourlines\shader\splat.frag" />
     <None Include="src\scenes\contourlines\shader\passthru.vert" />
     <None Include="src\scenes\contourlines\shader\subtract.frag" />
     <None Include="src\scenes\swarm\shader\userInteraction.comp" />
     <None Include="src\scenes\fluid\shader\default.frag" />
+    <None Include="src\scenes\fluid\shader\bloomfilter.frag" />
+    <None Include="src\scenes\fluid\shader\bloomblur.frag" />
+    <None Include="src\scenes\fluid\shader\bloomfinal.frag" />
   </ItemGroup>
 </Project>

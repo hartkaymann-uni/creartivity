@@ -17,7 +17,7 @@ float gauss(vec2 p, float r)
 
 void main() 
 {
-    vec2 uv = gl_FragCoord.xy / grid.xy;
+    vec2 uv = gl_FragCoord.xy / grid.xx;
 	float base = texture( read, uv ).x;
 	
 	vec2 p = u_point.xy - uv;
@@ -26,4 +26,5 @@ void main()
 	
 	float col = clamp(base + splat, 0.0, 1.0);
 	vFragColor = vec4( col, 0.0, 0.0, 1.0 );
+	//vFragColor = vec4(uv, 0.0, 1.0);
 }

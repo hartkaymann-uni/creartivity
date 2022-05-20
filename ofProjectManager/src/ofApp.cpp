@@ -32,7 +32,7 @@ void ofApp::setup() {
 	// Initialize scene manager
 	sceneManager.setup( true ); // Setup all scenes now
 	ofSetLogLevel( "ofxScenemanager", OF_LOG_VERBOSE );
-	sceneManager.gotoScene( "ContourLines", true );
+	sceneManager.gotoScene( "Fluid", true );
 
 	lastScene = sceneManager.getCurrentSceneIndex();
 	sceneManager.setOverlap( false );
@@ -41,7 +41,6 @@ void ofApp::setup() {
 	setSceneManager( &sceneManager );
 
 	// Give all scenes a pointer to the receiver
-	// TODO: Scenen dont need this anymore, as user array does the work here
 	for (ccScene* scene : scenes) {
 		scene->setUserManager( &userManager );
 	}

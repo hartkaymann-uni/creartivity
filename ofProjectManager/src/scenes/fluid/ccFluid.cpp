@@ -82,6 +82,9 @@ namespace fluid {
 
 	void ccSolver::step( vector<ccUser> users )
 	{
+		ofDisableAlphaBlending();
+		ofDisableBlendMode();
+
 		if (s.applyGravity) {
 			gravitate( velocity );
 		}
@@ -258,6 +261,7 @@ namespace fluid {
 	void ccSolver::diffuse( ofShader& jacobi, Field& x, Field& b, Field& output, float alpha, float beta, float scale ) {
 		for (int i = 0; i < s.jacobiIterations; i++) {
 			diffuseStep( jacobi, x, b, output, alpha, beta );
+			boundary( output, output, scale );
 		}
 
 	}

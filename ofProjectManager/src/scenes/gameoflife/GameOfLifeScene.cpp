@@ -10,7 +10,7 @@ namespace gol {
 		time( 0.f ),
 		cellOffset( 0.f ),
 		sequenceDuration( 10.f ),
-		sequenceTransitionDuration( 1.f ),
+		sequenceTransitionDuration( 5.f ),
 		lastSequene( SequenceName::Empty ),
 		currentSequence( SequenceName::Empty ),
 		lastSequenceTime( 0.f ),
@@ -110,9 +110,18 @@ namespace gol {
 		cellPingPong.dst->getTexture().loadData( cells.data(), rows, cols, GL_RGB );
 	}
 
-
+	/*
+	*	type	value
+	*	float	evolution;
+	*	float	radius;
+	*	float	jiggle;
+	*/
 	void GameOfLifeScene::initSequences()
 	{
+
+		// Clear map first
+		sequenceMap.clear();
+
 		lastSequenceTime = time;
 		// Standart
 		sequenceMap.insert( pair<GameOfLifeScene::SequenceName, SequenceParameters>( SequenceName::Default, { 0.05, cellOffset, 1.0}));
@@ -411,6 +420,8 @@ namespace gol {
 		dimensions.setWithoutEventNotifications( ofVec2f( n_cells_x, n_cells_y ) );
 
 		allocateCellBuffer( n_cells_x, n_cells_y );
+		cellOffset = calculateSphereRadius( ofVec2f( n_cells_x, n_cells_y ) );
+		initSequences();
 		reset();
 	}
 

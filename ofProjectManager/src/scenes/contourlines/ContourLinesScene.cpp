@@ -110,7 +110,6 @@ namespace contour {
 		}
 		camera.end();
 
-		//interaction.read->draw( 0, 0, width, height );
 	}
 
 	void ContourLinesScene::splat( glm::vec3 point ) {

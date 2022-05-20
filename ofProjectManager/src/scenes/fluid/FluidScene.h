@@ -27,12 +27,15 @@ private:
 	bool debug;
 	bool step;
 
+	ofPlanePrimitive plane;
+
 	ofParameterGroup groupGeneral;
 	ofParameterGroup groupGrid;
 	ofParameterGroup groupViscosity;
 	ofParameterGroup groupVorticity;
 	ofParameterGroup groupSolver;
 	ofParameterGroup groupGravity;
+	ofParameterGroup groupBloom;
 	ofParameterGroup groupView;
 
 	ofParameter<bool> p_Sequences;
@@ -42,6 +45,7 @@ private:
 	ofParameter<bool> p_ApplyVorticity;
 	ofParameter<bool> p_ApplyGravity;
 	ofParameter<int> p_JacobiIterations;
+	ofParameter<int> p_BloomIterations;
 	ofParameter<float> p_Curl;
 	ofParameter<float> p_Scale;
 	ofParameter<float> p_Epsilon;
@@ -50,6 +54,7 @@ private:
 	ofParameter<float> p_SplatRadius;
 	ofParameter<float> p_Dissipation;
 	ofParameter<float> p_GravityStrength;
+	ofParameter<float> p_BloomThreshhold;
 	ofParameter<glm::vec2> p_GravityDirection;
 	ofParameter<ofFloatColor> p_SplatColor;
 
@@ -58,27 +63,24 @@ private:
 	ofShader displayScalar;
 	ofShader displayVector;
 	ofShader displayDefault;
-	ofShader displayLines;
 	ofShader displayVelocity;
-	ofShader displayTexture;
+	ofShader bloomFilter;
+	ofShader bloomBlur;
 	enum ShadingType {
 		DEFAULT,
-		PIXELS,
-		VELOCITY,
-		TEXTURE
+		BLOOM,
+		VELOCITY
 	};
-	const int NUM_SHADING = 4;
+	const int NUM_SHADING = 3;
 	ShadingType shading;
 	void changeShading();
 
 	void drawDefault();
 	void drawDebug();
 	void drawScalarField(ofFbo* const field, int x, int y, int w, int h);
-	void drawPixelated();
 	void drawVelocity();
-	void drawTexture();
-	fluid::Field texture;
-	ofPlanePrimitive plane;
+	void drawBloom();
+	fluid::Field bloom;
 
 	// Members for sequences
 	enum class SequenceName {
