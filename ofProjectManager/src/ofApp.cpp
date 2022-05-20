@@ -3,7 +3,7 @@
 #include "scenes/scenes.h"
 
 //#define SWITCH_SCENES
-//#define MOUSE_INTERACTION
+#define MOUSE_INTERACTION
 
 using namespace gol;
 using namespace contour;
@@ -39,7 +39,7 @@ void ofApp::setup() {
 	// Initialize scene manager
 	sceneManager.setup( true ); // Setup all scenes now
 	ofSetLogLevel( "ofxScenemanager", OF_LOG_VERBOSE );
-	sceneManager.gotoScene( "Swarm", true );
+	sceneManager.gotoScene( "GameOfLife", true );
 
 
 	lastScene = sceneManager.getCurrentSceneIndex();

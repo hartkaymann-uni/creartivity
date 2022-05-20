@@ -36,7 +36,10 @@ void main()
     float bc = texture(cellData, vTexCoord.xy + vec2( 0.0,  1.0)).z;
     float br = texture(cellData, vTexCoord.xy + vec2( 1.0,  1.0)).z;
     
-    if(distance(uv, point) < mouseRad) {
+    vec2 p = point - uv;
+    p.x *= resolution.x / resolution.y;
+
+    if(length(p) < mouseRad) {
         splat.x = mouseStr;
         splat.z = 1.f;
     }

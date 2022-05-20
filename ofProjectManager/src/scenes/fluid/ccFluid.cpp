@@ -92,11 +92,23 @@ namespace fluid {
 		project();
 	}
 
+	void ccSolver::reset()
+	{
+		velocity.clear();
+		density.clear();
+		divergence.clear();
+		vorticity.clear();
+		pressure.clear();
+	}
+
 	void ccSolver::project() {
 		diverge( divergence );
 
 		// Start of with 0 for poisson equation
 		pressure.clear();
+		pressure.write->begin();
+		ofClear( 0 );
+		pressure.write->end();
 
 		float alpha = -grid.scale * grid.scale;
 		diffuse( jacobiscalarProgram, pressure, divergence, pressure, alpha, 4.f, 1.f );

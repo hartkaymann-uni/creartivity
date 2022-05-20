@@ -31,7 +31,7 @@ void FluidScene::setup()
 	solverSettings.epsilon = 0.00024414f;
 	solverSettings.curl = 0.1f;
 	solverSettings.jacobiIterations = 81;
-	solverSettings.dissipation = 1.f;
+	solverSettings.dissipation = 0.998f;
 	solverSettings.applyGravity = false;
 	solverSettings.gravityDir = { 0.0, 1.0 };
 	solverSettings.gravityStr = 9.81f;
@@ -71,7 +71,7 @@ void FluidScene::setup()
 	groupGravity.add( p_GravityStrength.set( "Strength", solverSettings.gravityStr, 0.f, 20.f ) );
 	groupBloom.add( p_BloomIterations.set( "Iterations", 8, 0, 20 ) );
 	groupBloom.add( p_BloomThreshhold.set( "threshhold", 0.5f, 0.0f, 1.0f ) );
-	groupView.add( p_Sequences.set( "RunSequences", false ) );
+	groupView.add( p_Sequences.set( "RunSequences", true ) );
 	groupView.add( p_DebugView.set( "Debug", false ) );
 
 	p_Curl.addListener( this, &FluidScene::handleCurlChanged );
@@ -137,8 +137,6 @@ void FluidScene::update()
 
 void FluidScene::draw()
 {
-	solver.getDensity()->draw( 0, 0, width, height );
-	return;
 	ofBackground( 0 );
 
 	if ( p_DebugView.get() ) {
@@ -151,9 +149,6 @@ void FluidScene::draw()
 		{
 		case ShadingType::DEFAULT:
 			drawDefault();
-			break;
-		case ShadingType::BLOOM:
-			drawBloom();
 			break;
 		case ShadingType::VELOCITY:
 			drawVelocity();
@@ -250,7 +245,14 @@ void FluidScene::drawBloom() {
 }
 
 void FluidScene::drawVelocity() {
+
+	camera.begin();
+	displayVelocity.begin();
+	displayVelocity.setUniformTexture( "read", solver.getDensity()->getTexture(), 1 );
+	displayVelocity.setUniformTexture( "velocity", solver.getVelocity()->getTexture(), 2 );
 	solver.getDensity()->draw( 0.f, 0.f, width, height );
+	displayVelocity.end();
+	camera.end();
 }
 
 ///////////////
@@ -264,12 +266,8 @@ void FluidScene::setupSequences() {
 	sequenceMap.insert( pair<FluidScene::SequenceName, SequenceParameters>( SequenceName::Fast, { 1.f,  0.2f,  0.001f, 0.992f, false, 0.f, false, 0.f,{1.f, 1.f, 1.f } } ) );
 	// Smoke
 	sequenceMap.insert( pair<FluidScene::SequenceName, SequenceParameters>( SequenceName::Smoke, { 1.f, 0.5f,  0.0015f, 0.998f, true, .1f, false, 0.f, {1.f, 1.f, 1.f } } ) );
-	// Red
-	sequenceMap.insert( pair<FluidScene::SequenceName, SequenceParameters>( SequenceName::Red, { 1.f, 1.f,  0.0015f, 0.995f, false, 0.f, false, 0.f, {1.f, 0.f, 0.f } } ) );
 	// Fast Smoke
-	sequenceMap.insert( pair<FluidScene::SequenceName, SequenceParameters>( SequenceName::FastSmoke, { 1.f, 0.3f,  0.001f, 0.996f, true, 0.15f, false, 0.f, {1.f, 0.f, 0.f } } ) );
-	// Viscous
-	sequenceMap.insert( pair<FluidScene::SequenceName, SequenceParameters>( SequenceName::Viscous, { 1.f, 1.f,  0.0015f, 0.99f, false, 0.f, true, .8f, {1.f, 1.f, 1.f } } ) );
+	sequenceMap.insert( pair<FluidScene::SequenceName, SequenceParameters>( SequenceName::FastSmoke, { 1.f, 0.3f,  0.001f, 0.996f, true, 0.15f, false, 0.f, {1.f, 1.f, 1.f } } ) );
 	// Stop
 	sequenceMap.insert( pair<FluidScene::SequenceName, SequenceParameters>( SequenceName::Stop, { 0.f, 0.1f,  0.001f, 1.f, false, 0.f, false, .0f, {1.f, 1.f, 1.f } } ) );
 	// Empty
@@ -351,22 +349,23 @@ float FluidScene::SceneOutro()
 // Change shading type, right now just switches between outlined and metaball shading
 void FluidScene::changeShading() {
 	shading = static_cast<ShadingType>((shading + 1) % NUM_SHADING);
+	solver.reset();
 
 	// Velocity shading requires some preparation
 	if ( shading == ShadingType::VELOCITY ) {
 		solver.colorDensity( halfShader );
 		solver.setSplatDensity( false );
 		solver.setDissipation( 1.f );
+		setSequence( SequenceName::Smoke );
 	}
 	else {
 		solver.setSplatDensity( true );
 	}
-
+	
 	// Print out shading mode
 	char* ShadingTypes[] =
 	{
 		"DEFAULT",
-		"BLOOM",
 		"VELOCITY"
 	};
 	cout << "Shading type: " << ShadingTypes[shading] << endl;

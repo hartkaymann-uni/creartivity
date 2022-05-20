@@ -85,6 +85,7 @@ namespace fluid {
 
 		void setup( Grid& grid );
 		void step( vector<ccUser> users);
+		void reset();
 
 		inline Grid* const getGrid() { return &grid; }
 		inline ofFbo* const getDensity() { return density.read; }

@@ -189,7 +189,7 @@ namespace contour {
 		// Standart
 		sequenceMap.insert( pair<ContourLinesScene::SequenceName, SequenceParameters>( SequenceName::Default, { 0.01, 0.005, 6.0,  0.2, 1.0, 0.25 } ) );
 		// Fast change
-		sequenceMap.insert( pair<ContourLinesScene::SequenceName, SequenceParameters>( SequenceName::Fast, { 0.1, 0.001, 6.0,  0.2, 1.0, 0.25 } ) );
+		sequenceMap.insert( pair<ContourLinesScene::SequenceName, SequenceParameters>( SequenceName::Fast, { 0.1, 0.005, 6.0,  0.2, 1.0, 0.25 } ) );
 		// Big scale
 		sequenceMap.insert( pair<ContourLinesScene::SequenceName, SequenceParameters>( SequenceName::Big, { 0.01, 0.02, 4.0,  0.2, 1.0, 0.25 } ) );
 		// High Amplitude

@@ -12,12 +12,13 @@ out vec4 vFragColor;
 
 float gauss(vec2 p, float r) 
 {
+	p.x *= grid.x / grid.y;
 	return exp(-dot(p, p) / r);
 }
 
 void main() 
 {
-    vec2 uv = gl_FragCoord.xy / grid.xx;
+    vec2 uv = gl_FragCoord.xy / grid.xy;
 	float base = texture( read, uv ).x;
 	
 	vec2 p = u_point.xy - uv;

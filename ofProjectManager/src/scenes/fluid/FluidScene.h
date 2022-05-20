@@ -69,10 +69,9 @@ private:
 	ofShader halfShader;
 	enum ShadingType {
 		DEFAULT,
-		BLOOM,
 		VELOCITY
 	};
-	const int NUM_SHADING = 3;
+	const int NUM_SHADING = 2;
 	ShadingType shading;
 	void changeShading();
 
@@ -88,13 +87,11 @@ private:
 		Default,
 		Smoke,
 		Fast,
-		Red,
 		FastSmoke,
-		Viscous,
 		Stop,
 		Empty
 	};
-	const int NUM_SEQ = 7;
+	const int NUM_SEQ = 5;
 
 	struct SequenceParameters {
 		float timestep;
