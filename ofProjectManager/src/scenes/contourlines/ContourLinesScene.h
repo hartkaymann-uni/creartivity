@@ -1,50 +1,89 @@
 #pragma once
-#include "ofMain.h"
 
 #include "ccScene.h"
+#include "utils/ccPingPong.h"
 
-#include "ofxGui.h"
+namespace contour {
 
-class ContourLinesScene :public ccScene
-{
-public:
-	ContourLinesScene();
-	void setup();
-	void update();
-	void draw();
+	class ContourLinesScene :public ccScene
+	{
+	public:
+		ContourLinesScene( int w = 128, int h = 80 );
+		void setup();
+		void update();
+		void draw();
 
-	void keyPressed(int key);
-	void keyReleased(int key);
-	void mouseMoved(int x, int y);
-	void mouseDragged(int x, int y, int button);
-	void mousePressed(int x, int y, int button);
-	void mouseReleased(int x, int y, int button);
-	void mouseEntered(int x, int y);
-	void mouseExited(int x, int y);
-	void windowResized(int w, int h);
-	void dragEvent(ofDragInfo dragInfo);
-	void gotMessage(ofMessage msg);
+		void keyPressed( int key );
+		void keyReleased( int key );
+		void windowResized( int w, int h);
 
-private:
+	private:
+		float time;
+		float sceneTime;
 
-	ofShader contourLineShader;
+		ofShader contourLineShader;
+		bool wireframeShading = false;
+		void changeShading();
 
-	ofEasyCam camera;
+		glm::vec2 grid;
+		ofPlanePrimitive plane;
 
-	ofMesh mesh;
+		ofParameterGroup terrainUniforms;
+		ofParameter<float> p_Speed;
+		ofParameter<float> p_Scale;
+		ofParameter<float> p_Amplitude;
+		ofParameter<float> p_Thickness;
+		ofParameter<float> p_Lacunarity;
+		ofParameter<float> p_Persistance;
+		ofParameter<bool> p_Sequences;
 
-	ofParameterGroup shaderUniforms;
-	ofParameter<float> speed;
-	ofParameter<float> scale;
-	ofParameter<float> amplitude;
-	ofParameter<float> radius;
-	ofParameter<float> thickness;
-	ofParameter<float> limit;
+		ofParameterGroup mouseUniforms;
+		ofParameter<float> p_MouseRadius;
+		ofParameter<float> p_MouseStrength;
 
-	int meshWidth, meshHeight;
-	float time;
-	int sbv;
-	int count;
+		ofParameterGroup lightUniforms;
+		ofParameter<bool> p_MoveLight;
 
-};
+		PingPong interaction;
+		ofShader splatShader;
+		ofShader subtractShader;
 
+		void splat( glm::vec3 point );
+
+		// Members for sequences
+		enum class SequenceName {
+			Default,
+			Fast,
+			Big,
+			HighAmplitude,
+			Rough,
+			Empty
+		};
+		const int NUM_SEQ = 5;
+
+		struct SequenceParameters {
+			float speed;
+			float scale;
+			float amplitude;
+			float thickness;
+			float lacunarity;
+			float persistance;
+		};
+
+		SequenceName lastSequene;
+		SequenceName currentSequence;
+		float lastSequenceTime;
+		float sequenceDuration;
+		float sequenceTransitionDuration;
+		map<SequenceName, SequenceParameters> sequenceMap;
+
+		void initSequences();
+		void updateSequence();
+		void setSequence( SequenceName name );
+		void updateParameters();
+		SequenceName randSequence();
+
+		float SceneIntro();
+		float SceneOutro();
+	};
+}

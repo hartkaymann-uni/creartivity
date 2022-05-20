@@ -19,6 +19,7 @@ public:
 
 	void keyPressed( int key );
 	void keyReleased( int key );
+	void windowResized( int w, int h );
 
 private:
 
@@ -26,12 +27,15 @@ private:
 	bool debug;
 	bool step;
 
+	ofPlanePrimitive plane;
+
 	ofParameterGroup groupGeneral;
 	ofParameterGroup groupGrid;
 	ofParameterGroup groupViscosity;
 	ofParameterGroup groupVorticity;
 	ofParameterGroup groupSolver;
 	ofParameterGroup groupGravity;
+	ofParameterGroup groupBloom;
 	ofParameterGroup groupView;
 
 	ofParameter<bool> p_Sequences;
@@ -41,6 +45,7 @@ private:
 	ofParameter<bool> p_ApplyVorticity;
 	ofParameter<bool> p_ApplyGravity;
 	ofParameter<int> p_JacobiIterations;
+	ofParameter<int> p_BloomIterations;
 	ofParameter<float> p_Curl;
 	ofParameter<float> p_Scale;
 	ofParameter<float> p_Epsilon;
@@ -49,6 +54,7 @@ private:
 	ofParameter<float> p_SplatRadius;
 	ofParameter<float> p_Dissipation;
 	ofParameter<float> p_GravityStrength;
+	ofParameter<float> p_BloomThreshhold;
 	ofParameter<glm::vec2> p_GravityDirection;
 	ofParameter<ofFloatColor> p_SplatColor;
 
@@ -56,27 +62,41 @@ private:
 
 	ofShader displayScalar;
 	ofShader displayVector;
-	ofShader displayLines;
+	ofShader displayDefault;
+	ofShader displayVelocity;
+	ofShader bloomFilter;
+	ofShader bloomBlur;
 	enum ShadingType {
 		DEFAULT,
-		PIXELS
+		BLOOM,
+		VELOCITY
 	};
+	const int NUM_SHADING = 3;
 	ShadingType shading;
 	void changeShading();
 
 	void drawDefault();
-	void drawPixelated();
+	void drawDebug();
+	void drawScalarField(ofFbo* const field, int x, int y, int w, int h);
+	void drawVelocity();
+	void drawBloom();
+	fluid::Field bloom;
 
 	// Members for sequences
 	enum class SequenceName {
 		Default,
 		Smoke,
 		Fast,
+		Red,
+		FastSmoke,
+		Viscous,
+		Stop,
 		Empty
 	};
-	const int NUM_SEQ = 3;
+	const int NUM_SEQ = 7;
 
 	struct SequenceParameters {
+		float timestep;
 		float scale;
 		float splat;
 		float dissipation;

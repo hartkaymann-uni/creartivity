@@ -10,9 +10,9 @@ namespace gol {
 		time( 0.f ),
 		cellOffset( 0.f ),
 		sequenceDuration( 10.f ),
-		sequenceTransitionDuration( 1.f ),
+		sequenceTransitionDuration( 5.f ),
 		lastSequene( SequenceName::Empty ),
-		currentSequence( SequenceName::Default ),
+		currentSequence( SequenceName::Empty ),
 		lastSequenceTime( 0.f ),
 		shading( ShadingType::OUTLINE )
 	{
@@ -62,9 +62,8 @@ namespace gol {
 		sphereResolution.set( "circleRes", 20, 1, 100 );
 		sphereRadius.set( "radius", 10.f, 0.f, 50.f );
 		dataSrcSize.set( "srcSize", 0.f, 0.f, 9.f );
-		mouseRadius.set( "mouseRad", 0.1f, 0.f, 1.f );
-
-		mouseStrength.set( "mouseStr", 0.5f, 0.f, 1.f );
+		mouseRadius.set( "mouseRad", 0.025f, 0.f, 1.f );
+		mouseStrength.set( "mouseStr", 0.25f, 0.f, 1.f );
 		jiggleFactor.set( "jiggle", 1.f, 0.f, 10.f );
 		runSequences.set( "Run sequences", true );
 
@@ -111,9 +110,18 @@ namespace gol {
 		cellPingPong.dst->getTexture().loadData( cells.data(), rows, cols, GL_RGB );
 	}
 
-
+	/*
+	*	type	value
+	*	float	evolution;
+	*	float	radius;
+	*	float	jiggle;
+	*/
 	void GameOfLifeScene::initSequences()
 	{
+
+		// Clear map first
+		sequenceMap.clear();
+
 		lastSequenceTime = time;
 		// Standart
 		sequenceMap.insert( pair<GameOfLifeScene::SequenceName, SequenceParameters>( SequenceName::Default, { 0.05, cellOffset, 1.0}));
@@ -123,7 +131,6 @@ namespace gol {
 		sequenceMap.insert( pair<GameOfLifeScene::SequenceName, SequenceParameters>( SequenceName::BigCells, { 0.03,  cellOffset * 4.f, 3.0 } ) );
 		// Small cell
 		sequenceMap.insert( pair<GameOfLifeScene::SequenceName, SequenceParameters>( SequenceName::SmallCells, { 0.085,  cellOffset * .75f, 0.5 } ) );
-
 		// Fast evolution
 		sequenceMap.insert( pair<GameOfLifeScene::SequenceName, SequenceParameters>( SequenceName::FastEvolution, { 0.15, cellOffset, 2.0 } ) );
 		// Slow evolution
@@ -176,6 +183,7 @@ namespace gol {
 
 	void GameOfLifeScene::addInteraction(glm::vec2 point) {
 		splatShader.begin();
+
 		splatShader.setUniforms(shaderUniforms);
 		splatShader.setUniformTexture("cellData", cellPingPong.src->getTexture(), 0);
 		splatShader.setUniform2f("resolution", (float)n_cells_x, (float)n_cells_y);
@@ -251,7 +259,6 @@ namespace gol {
 		}
 
 		// Draw some additional objects for debugging
-
 #if 0
 		ofPushStyle();
 		ofFill();
@@ -413,6 +420,8 @@ namespace gol {
 		dimensions.setWithoutEventNotifications( ofVec2f( n_cells_x, n_cells_y ) );
 
 		allocateCellBuffer( n_cells_x, n_cells_y );
+		cellOffset = calculateSphereRadius( ofVec2f( n_cells_x, n_cells_y ) );
+		initSequences();
 		reset();
 	}
 
@@ -440,7 +449,11 @@ namespace gol {
 	}
 
 	void GameOfLifeScene::windowResized( int w, int h ) {
+		width = w;
+		height = h;
+
 		ofVec2f dim = dimensions.get();
 		handleDimensionsChanged( dim );
+		resetCamera();
 	}
 }

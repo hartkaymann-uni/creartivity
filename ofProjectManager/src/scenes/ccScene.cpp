@@ -15,6 +15,7 @@ ccScene::ccScene(std::string name)
 	camera.setNearClip(-10 * ofGetWidth());
 	camera.setFarClip(ofGetWidth() * 10);
 
+
 	gui.setup();
 }
 

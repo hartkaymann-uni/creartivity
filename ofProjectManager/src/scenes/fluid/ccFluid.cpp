@@ -24,6 +24,7 @@ namespace fluid {
 		pressure.allocate( grid.size, GL_RGB16_SNORM );
 		ofEnableArbTex();
 
+#if 0
 		{
 			int no_pixels = grid.size.x * grid.size.y * 3;
 			vector<short> cells( no_pixels );
@@ -54,6 +55,7 @@ namespace fluid {
 			}
 			density.read->getTexture().loadData( cells.data(), grid.size.x, grid.size.y, GL_RGB );
 		}
+#endif
 
 		// Create shader programs
 		filesystem::path shaderPath = "../../src/scenes/fluid/shader";
@@ -80,6 +82,9 @@ namespace fluid {
 
 	void ccSolver::step( vector<ccUser> users )
 	{
+		ofDisableAlphaBlending();
+		ofDisableBlendMode();
+
 		if (s.applyGravity) {
 			gravitate( velocity );
 		}
@@ -256,14 +261,16 @@ namespace fluid {
 	void ccSolver::diffuse( ofShader& jacobi, Field& x, Field& b, Field& output, float alpha, float beta, float scale ) {
 		for (int i = 0; i < s.jacobiIterations; i++) {
 			diffuseStep( jacobi, x, b, output, alpha, beta );
+			boundary( output, output, scale );
 		}
+
 	}
 
 	void ccSolver::diffuseStep( ofShader& jacobi, Field& x, Field& b, Field& output, float alpha, float beta ) {
 		jacobi.begin();
 
-		jacobi.setUniformTexture( "x", x.read->getTexture(), 2 );
-		jacobi.setUniformTexture( "b", b.read->getTexture(), 1 );
+		jacobi.setUniformTexture( "x", x.read->getTexture(), 1 );
+		jacobi.setUniformTexture( "b", b.read->getTexture(), 2 );
 		jacobi.setUniform2f( "gridSize", grid.size );
 		jacobi.setUniform1f( "gridScale", grid.scale );
 		jacobi.setUniform1f( "alpha", alpha );
