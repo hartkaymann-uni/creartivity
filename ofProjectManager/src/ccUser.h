@@ -2,8 +2,8 @@
 
 #include "ofMain.h"
 
-#define MAX_MOVEMENT_SPEED 8.0f
-#define BASE_ACCELERATION 3.0f
+#define MAX_MOVEMENT_SPEED 10.0f
+#define BASE_ACCELERATION 5.0f
 
 /*
 	User Class

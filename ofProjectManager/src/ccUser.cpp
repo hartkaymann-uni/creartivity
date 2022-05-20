@@ -40,15 +40,19 @@ void ccUser::setPositions( glm::vec3 left, glm::vec3 right)
 
 void ccUser::setTargetPositions( glm::vec3 left, glm::vec3 right )
 {
-	//positions.first = left;
-	//positions.second = right;
 	targetPositions.first = left;
 	targetPositions.second = right;
 }
 
 void ccUser::moveTowardsTarget() {
+	glm::vec3 oldF = positions.first;
+	glm::vec3 oldS = positions.second;
+
 	positions.first += calculateAcceleration(velocities.first, positions.first, targetPositions.first);
 	positions.second += calculateAcceleration( velocities.second, positions.second, targetPositions.second );
+
+	motions.first = positions.first - oldF;
+	motions.second = positions.second - oldS;
 }
 
 glm::vec3 ccUser::calculateAcceleration(glm::vec3 currentVelocity, glm::vec3 origin, glm::vec3 target ) {

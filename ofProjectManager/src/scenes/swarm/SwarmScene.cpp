@@ -10,8 +10,8 @@ SwarmScene::SwarmScene() : ccScene("Swarm") {
 void SwarmScene::setup() {
 	camera.setFarClip(ofGetWidth() * 100);
 	ofShowCursor();
-	particleGroups = 10;
-	maxParticleDepth = 10000;
+	particleGroups = 400;
+	maxParticleDepth = 1000;
 	particleAmount = 1024 * particleGroups;
 
 
@@ -171,7 +171,7 @@ void SwarmScene::DrawParticles() {
 	particleShader.setUniform1f("alphaMod", 0.3);
 	particleShader.setUniform1f("pointSize", 5);
 	glPointSize(5);
-	vbo.draw(GL_POINTS, 0, particles.size());
+	vbo.draw( GL_POINTS, 0, particles.size());
 
 	particleShader.end();
 }
@@ -338,15 +338,15 @@ void SwarmScene::dragEvent(ofDragInfo dragInfo) {
 void SwarmScene::InitSequences() {
 	currentSequenceIndex = 0;
 	sequences.push_back(ParameterSequence(10, SequenceName::Swarm));
-	sequences.push_back(ParameterSequence(10, SequenceName::BrainNeuronsCoarse));
-	//sequences.push_back(ParameterSequence(20, SequenceName::BrainNeurons));
-	sequences.push_back(ParameterSequence(7, SequenceName::BlackHole, 5));
-	sequences.push_back(ParameterSequence(4, SequenceName::Explosion));
-	sequences.push_back(ParameterSequence(0.1f, SequenceName::NormalAttraction));
-	sequences.push_back(ParameterSequence(10, SequenceName::BrainNeurons));
-	sequences.push_back(ParameterSequence(10, SequenceName::Swarm));
-	sequences.push_back(ParameterSequence(5, SequenceName::RepulsionStutter));
-	sequences.push_back(ParameterSequence(7, SequenceName::BlackHole, 3));
+	sequences.push_back(ParameterSequence(1000, SequenceName::BrainNeuronsCoarse));
+//	sequences.push_back(ParameterSequence(20, SequenceName::BrainNeurons));
+//	sequences.push_back(ParameterSequence(7, SequenceName::BlackHole, 5));
+//	sequences.push_back(ParameterSequence(4, SequenceName::Explosion));
+//	sequences.push_back(ParameterSequence(0.1f, SequenceName::NormalAttraction));
+//	sequences.push_back(ParameterSequence(10, SequenceName::BrainNeurons));
+//	sequences.push_back(ParameterSequence(10, SequenceName::Swarm));
+//	sequences.push_back(ParameterSequence(5, SequenceName::RepulsionStutter));
+//	sequences.push_back(ParameterSequence(7, SequenceName::BlackHole, 3));
 	SetSequence(sequences[currentSequenceIndex]);
 }
 
