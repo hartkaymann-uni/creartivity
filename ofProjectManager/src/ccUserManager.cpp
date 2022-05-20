@@ -22,6 +22,13 @@ map<int, ccUser>* const ccUserManager::getUsers()
 	return &users;
 }
 
+void ccUserManager::updateUserPositions() {
+
+	for ( auto& u : users ) {
+		u.second.moveTowardsTarget();
+	}
+}
+
 vector<ccUser> const ccUserManager::getUserVec()
 {
 	vector<ccUser> v;

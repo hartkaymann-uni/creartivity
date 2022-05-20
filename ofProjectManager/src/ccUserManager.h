@@ -8,6 +8,7 @@ public:
 
 	ccUserManager();
 
+	void updateUserPositions();
 	void registerUser( ccUser& user );
 	void removeUser( int id );
 
