@@ -12,6 +12,7 @@ out vec4 vFragColor;
 
 float gauss(vec2 p, float r) 
 {
+	p.x *= grid.x / grid.y;
 	return exp(-dot(p, p) / r);
 }
 
@@ -26,4 +27,5 @@ void main()
 	
 	float col = clamp(base + splat, 0.0, 1.0);
 	vFragColor = vec4( col, 0.0, 0.0, 1.0 );
+	//vFragColor = vec4(uv, 0.0, 1.0);
 }

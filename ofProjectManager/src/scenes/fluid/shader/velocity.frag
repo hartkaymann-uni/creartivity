@@ -1,28 +1,27 @@
 #version 150
 
-in vec2 vTexCoord;
+vec3 black = vec3(0.0);
+vec3 white = vec3(1.0);
+vec3 red = vec3(1.0, 0.0, 0.0);
 
 uniform sampler2D read;
+uniform sampler2D velocity;
 
-uniform vec2 gridSize;
-
-uniform vec3 bias;
-uniform vec3 scale;
+in vec2 vTexCoord;
 
 out vec4 vFragColor; 
 
-float map(float value, float min1, float max1, float min2, float max2) {
-  return min2 + (value - min1) * (max2 - min2) / (max1 - min1);
-}
 
 void main()
 {
-    
-    vec2 tex = texture(read, vTexCoord).xy; 
-    float mag = length(tex);
+    float base = texture(read, vTexCoord).x;
 
-    vec3 col = vec3(mag);   
+    vec2 vel = texture(velocity, vTexCoord).xy;
+    float speed = dot(vel, vel);
 
-    vFragColor = vec4(col, 1.0);
-    //vFragColor = vec4(vTexCoord, vTexCoord);
+    float white = smoothstep(1.5, 1.0, speed);
+    vec3 col = vec3(1.0, white, white);
+
+    vFragColor = vec4(base * col, 1.0);
+   // vFragColor = vec4(vTexCoord, vTexCoord);
 }

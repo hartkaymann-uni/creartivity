@@ -13,7 +13,7 @@ FluidScene::FluidScene()
 	step( false ),
 	sequenceDuration( 10.f ),
 	sequenceTransitionDuration( 1.f ),
-	lastSequene( SequenceName::Empty ),
+	lastSequene( SequenceName::Default ),
 	currentSequence( SequenceName::Default ),
 	lastSequenceTime( 0.f ),
 	shading( DEFAULT ) {}
@@ -23,7 +23,7 @@ void FluidScene::setup()
 	// Initialize all values necessary for the solver
 	ccSolver::Settings solverSettings;
 	solverSettings.timestep = 1.0f;
-	solverSettings.splatRadius = 0.002f;
+	solverSettings.splatRadius = 0.001f;
 	solverSettings.splatColor = ofFloatColor( 1.f );
 	solverSettings.applyVorticity = false;
 	solverSettings.applyViscosity = false;
@@ -51,6 +51,7 @@ void FluidScene::setup()
 	groupVorticity.setName( "Vorticity" );
 	groupViscosity.setName( "Viscosity" );
 	groupGravity.setName( "Gravity" );
+	groupBloom.setName( "Bloom" );
 	groupGeneral.setName( "View" );
 
 	groupGeneral.add( p_Timestep.set( "Timestep", solverSettings.timestep, 0.f, 2.f ) );
@@ -68,6 +69,8 @@ void FluidScene::setup()
 	groupGravity.add( p_ApplyGravity.set( solverSettings.applyGravity ) );
 	groupGravity.add( p_GravityDirection.set( "Direction", solverSettings.gravityDir, { -1.f, -1.f }, { 1.f, 1.f } ) );
 	groupGravity.add( p_GravityStrength.set( "Strength", solverSettings.gravityStr, 0.f, 20.f ) );
+	groupBloom.add( p_BloomIterations.set( "Iterations", 8, 0, 20 ) );
+	groupBloom.add( p_BloomThreshhold.set( "threshhold", 0.5f, 0.0f, 1.0f ) );
 	groupView.add( p_Sequences.set( "RunSequences", true ) );
 	groupView.add( p_DebugView.set( "Debug", false ) );
 
@@ -94,26 +97,24 @@ void FluidScene::setup()
 	gui.add( groupVorticity );
 	gui.add( groupViscosity );
 	//gui.add( groupGravity );
+	gui.add( groupBloom );
 	gui.add( groupView );
 
 	// Load display shaders
 	filesystem::path shaderPath = getShaderPath();
 	bool err_loadscalar = displayScalar.load( shaderPath / "passthru.vert", shaderPath / "displayscalar.frag" );
 	bool err_loadvector = displayVector.load( shaderPath / "passthru.vert", shaderPath / "displayvector.frag" );
-	bool err_loadpixel = displayLines.load( shaderPath / "passthru.vert", shaderPath / "pixels.frag" );
+	bool err_loaddefault = displayDefault.load( shaderPath / "passthru.vert", shaderPath / "default.frag" );
 	bool err_loadvel = displayVelocity.load( shaderPath / "passthru.vert", shaderPath / "velocity.frag" );
-	bool err_loadtex = displayTexture.load( shaderPath / "passthru.vert", shaderPath / "texture.frag" );
-
+	bool err_loadbloompre = bloomFilter.load( shaderPath / "passthru.vert", shaderPath / "bloomfilter.frag" );
+	bool err_loadbloomblur = bloomBlur.load( shaderPath / "passthru.vert", shaderPath / "bloomblur.frag" );
+	bool err_half = halfShader.load( shaderPath / "passthru.vert", shaderPath / "halfhalf.frag" );
 
 	// Initialize Sequences
 	setupSequences();
 
-	plane = ofPlanePrimitive( width, height, 2, 2 );
-	plane.setPosition( width / 2, height / 2, 0.f );
-
-	ofDisableArbTex();
-	texture.allocate( { width, height }, GL_RGB32F );
-	ofEnableArbTex();
+	// Initialize everything that is dependent on window size
+	windowResized( width, height );
 }
 
 void FluidScene::update()
@@ -149,14 +150,8 @@ void FluidScene::draw()
 		case ShadingType::DEFAULT:
 			drawDefault();
 			break;
-		case ShadingType::PIXELS:
-			drawPixelated();
-			break;
 		case ShadingType::VELOCITY:
 			drawVelocity();
-			break;
-		case ShadingType::TEXTURE:
-			drawTexture();
 			break;
 		default:
 			break;
@@ -189,15 +184,15 @@ void FluidScene::drawDebug() {
 	drawScalarField( solver.getDivergence(), w, 0.f, w, h );
 
 	ofDrawBitmapString( "vorticity", w, h + 10.f );
-	drawScalarField( solver.getVorticity(),w, h, w, h );
+	drawScalarField( solver.getVorticity(), w, h, w, h );
 
 	ofDrawBitmapString( "pressure", 0.f, h * 2.f + 10.f );
-	drawScalarField( solver.getPressure(),0.f, h * 2.f, w, h );
+	drawScalarField( solver.getPressure(), 0.f, h * 2.f, w, h );
 }
 
 void FluidScene::drawScalarField( ofFbo* const field, int x, int y, int w, int h ) {
 	displayScalar.begin();
-	displayScalar.setUniformTexture( "read", field->getTexture(), 1);
+	displayScalar.setUniformTexture( "read", field->getTexture(), 1 );
 	displayScalar.setUniform2f( "gridSize", solver.getGrid()->size );
 	displayScalar.setUniform3f( "bias", glm::vec3( 0.5, 0.5, 0.5 ) );
 	displayScalar.setUniform3f( "scale", glm::vec3( 0.5, 0.5, 0.5 ) );
@@ -208,55 +203,55 @@ void FluidScene::drawScalarField( ofFbo* const field, int x, int y, int w, int h
 // Draw using the default shader
 void FluidScene::drawDefault() {
 	camera.begin();
-	//drawScalarField( solver.getDensity(), 0.f, 0.f, width, height );
+	displayDefault.begin();
+	displayDefault.setUniformTexture( "read", solver.getDensity()->getTexture(), 1 );
 	solver.getDensity()->draw( 0.f, 0.f, width, height );
+	displayDefault.end();
 	camera.end();
 }
 
-// Draw using the pixelated shader
-void FluidScene::drawPixelated() {
-	camera.begin();
-	displayLines.begin();
-	displayLines.setUniformTexture( "read", solver.getDensity()->getTexture(), 1 );
-	displayLines.setUniform2f( "gridSize", solver.getGrid()->size );
-	displayLines.setUniform3f( "bias", glm::vec3( 0.5, 0.5, 0.5 ) );
-	displayLines.setUniform3f( "scale", glm::vec3( 0.5, 0.5, 0.5 ) );
-	solver.getDensity()->draw( 0.f, 0.f, width, height );
-	displayLines.end();
-	camera.end();
+void FluidScene::drawBloom() {
+	// Draw base once
+	bloom.write->begin();
+	drawDefault();
+	bloom.write->end();
+	bloom.swap();
+	bloom.read->draw( 0, 0, width, height );
+
+	// Bloom filter for bright colors
+	bloomFilter.begin();
+	bloomFilter.setUniformTexture( "read", bloom.read->getTexture(), 1 );
+	bloomFilter.setUniform1f( "threshhold", p_BloomThreshhold );
+	bloom.write->begin();
+	ofClear( 0 );
+	plane.draw();
+	bloom.write->end();
+	bloom.swap();
+	bloomFilter.end();
+
+	// Apply bloom blur
+	bloomBlur.begin();
+	bloomBlur.setUniform2f( "gridSize", solver.getGrid()->size );
+	for ( int i = 0; i < p_BloomIterations.get(); i++ ) {
+		bloomBlur.setUniformTexture( "read", bloom.read->getTexture(), 1 );
+		bloom.write->begin();
+		ofClear( 0 );
+		plane.draw();
+		bloom.write->end();
+		bloom.swap();
+	}
+	bloomBlur.end();
+	bloom.read->draw( 0, 0, width, height );
 }
 
 void FluidScene::drawVelocity() {
+
 	camera.begin();
 	displayVelocity.begin();
-	displayVelocity.setUniformTexture( "read", solver.getVelocity()->getTexture(), 1 );
-	displayVelocity.setUniform2f( "gridSize", solver.getGrid()->size );
-	displayVelocity.setUniform3f( "bias", glm::vec3( 0.5, 0.5, 0.5 ) );
-	displayVelocity.setUniform3f( "scale", glm::vec3( 0.5, 0.5, 0.5 ) );
-	solver.getVelocity()->draw( 0.f, 0.f, width, height );
+	displayVelocity.setUniformTexture( "read", solver.getDensity()->getTexture(), 1 );
+	displayVelocity.setUniformTexture( "velocity", solver.getVelocity()->getTexture(), 2 );
+	solver.getDensity()->draw( 0.f, 0.f, width, height );
 	displayVelocity.end();
-	camera.end();
-}
-
-void FluidScene::drawTexture()
-{
-	displayTexture.begin();
-
-	displayTexture.setUniformTexture( "read", texture.read->getTexture(), 1 );
-	displayTexture.setUniformTexture( "velocity", solver.getVelocity()->getTexture(), 2 );
-	displayTexture.setUniform2f( "resolution", { width, height } );
-
-	texture.write->begin();
-	ofClear( 0 );
-	plane.draw();
-
-	texture.write->end();
-	texture.swap();
-
-	displayTexture.end();
-
-	camera.begin();
-	texture.read->getTexture().draw( 0, 0, width, height );
 	camera.end();
 }
 
@@ -271,12 +266,8 @@ void FluidScene::setupSequences() {
 	sequenceMap.insert( pair<FluidScene::SequenceName, SequenceParameters>( SequenceName::Fast, { 1.f,  0.2f,  0.001f, 0.992f, false, 0.f, false, 0.f,{1.f, 1.f, 1.f } } ) );
 	// Smoke
 	sequenceMap.insert( pair<FluidScene::SequenceName, SequenceParameters>( SequenceName::Smoke, { 1.f, 0.5f,  0.0015f, 0.998f, true, .1f, false, 0.f, {1.f, 1.f, 1.f } } ) );
-	// Red
-	sequenceMap.insert( pair<FluidScene::SequenceName, SequenceParameters>( SequenceName::Red, { 1.f, 1.f,  0.0015f, 0.995f, false, 0.f, false, 0.f, {1.f, 0.f, 0.f } } ) );
 	// Fast Smoke
-	sequenceMap.insert( pair<FluidScene::SequenceName, SequenceParameters>( SequenceName::FastSmoke, { 1.f, 0.3f,  0.001f, 0.996f, true, 0.15f, false, 0.f, {1.f, 0.f, 0.f } } ) );
-	// Viscous
-	sequenceMap.insert( pair<FluidScene::SequenceName, SequenceParameters>( SequenceName::Viscous, { 1.f, 1.f,  0.0015f, 0.99f, false, 0.f, true, .8f, {1.f, 1.f, 1.f } } ) );
+	sequenceMap.insert( pair<FluidScene::SequenceName, SequenceParameters>( SequenceName::FastSmoke, { 1.f, 0.3f,  0.001f, 0.996f, true, 0.15f, false, 0.f, {1.f, 1.f, 1.f } } ) );
 	// Stop
 	sequenceMap.insert( pair<FluidScene::SequenceName, SequenceParameters>( SequenceName::Stop, { 0.f, 0.1f,  0.001f, 1.f, false, 0.f, false, .0f, {1.f, 1.f, 1.f } } ) );
 	// Empty
@@ -313,9 +304,11 @@ void FluidScene::updateParameters() {
 		p_Timestep.set( ofMap( timeSinceSequenceChange, 0.0, sequenceTransitionDuration, sequenceMap.at( lastSequene ).timestep, sequenceMap.at( currentSequence ).timestep ) );
 		p_Scale.set( ofMap( timeSinceSequenceChange, 0.0, sequenceTransitionDuration, sequenceMap.at( lastSequene ).scale, sequenceMap.at( currentSequence ).scale ) );
 		p_SplatRadius.set( ofMap( timeSinceSequenceChange, 0.0, sequenceTransitionDuration, sequenceMap.at( lastSequene ).splat, sequenceMap.at( currentSequence ).splat ) );
-		p_Dissipation.set( ofMap( timeSinceSequenceChange, 0.0, sequenceTransitionDuration, sequenceMap.at( lastSequene ).dissipation, sequenceMap.at( currentSequence ).dissipation ) );
 		p_Curl.set( ofMap( timeSinceSequenceChange, 0.0, sequenceTransitionDuration, sequenceMap.at( lastSequene ).curl, sequenceMap.at( currentSequence ).curl ) );
 		p_Viscosity.set( ofMap( timeSinceSequenceChange, 0.0, sequenceTransitionDuration, sequenceMap.at( lastSequene ).viscosity, sequenceMap.at( currentSequence ).viscosity ) );
+		// In velocity shading mode dissipation should always be 1
+		if ( shading != ShadingType::VELOCITY )
+			p_Dissipation.set( ofMap( timeSinceSequenceChange, 0.0, sequenceTransitionDuration, sequenceMap.at( lastSequene ).dissipation, sequenceMap.at( currentSequence ).dissipation ) );
 
 		// Changing color is a bit more complex
 		glm::vec3 currCol = sequenceMap.at( lastSequene ).color;
@@ -323,8 +316,7 @@ void FluidScene::updateParameters() {
 		float r = ofMap( timeSinceSequenceChange, 0.0, sequenceTransitionDuration, currCol.r, targetCol.r );
 		float g = ofMap( timeSinceSequenceChange, 0.0, sequenceTransitionDuration, currCol.g, targetCol.g );
 		float b = ofMap( timeSinceSequenceChange, 0.0, sequenceTransitionDuration, currCol.b, targetCol.b );
-		p_SplatColor.set( ofFloatColor( r, g, b )
-		);
+		p_SplatColor.set( ofFloatColor( r, g, b ) );
 	}
 }
 
@@ -342,9 +334,8 @@ float FluidScene::SceneIntro()
 {
 	lastSequene = SequenceName::Empty;
 	setSequence( randSequence() );
-
 	changeShading();
-	if ( shading == ShadingType::TEXTURE ) return 0.f;
+
 	return sequenceTransitionDuration;
 }
 
@@ -358,9 +349,27 @@ float FluidScene::SceneOutro()
 // Change shading type, right now just switches between outlined and metaball shading
 void FluidScene::changeShading() {
 	shading = static_cast<ShadingType>((shading + 1) % NUM_SHADING);
-	texture.read->getTexture().loadScreenData( 0, 0, width, height );
-}
+	solver.reset();
 
+	// Velocity shading requires some preparation
+	if ( shading == ShadingType::VELOCITY ) {
+		solver.colorDensity( halfShader );
+		solver.setSplatDensity( false );
+		solver.setDissipation( 1.f );
+		setSequence( SequenceName::Smoke );
+	}
+	else {
+		solver.setSplatDensity( true );
+	}
+	
+	// Print out shading mode
+	char* ShadingTypes[] =
+	{
+		"DEFAULT",
+		"VELOCITY"
+	};
+	cout << "Shading type: " << ShadingTypes[shading] << endl;
+}
 
 //////////////////
 // Input Events //
@@ -395,5 +404,21 @@ void FluidScene::keyReleased( int key ) {
 	{
 		camera.disableMouseInput();
 	}
+}
+
+void FluidScene::windowResized( int w, int h ) {
+	width = w;
+	height = h;
+
+	// Create plane for draw calls
+	plane = ofPlanePrimitive( width, height, 2, 2 );
+	plane.setPosition( width / 2, height / 2, 0.f );
+
+	// Allocate bloom texture
+	ofDisableArbTex();
+	bloom.allocate( { width, height }, GL_RGB16_SNORM );
+	ofEnableArbTex();
+
+	resetCamera();
 }
 

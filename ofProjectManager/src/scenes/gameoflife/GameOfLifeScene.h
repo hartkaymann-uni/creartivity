@@ -83,7 +83,6 @@ namespace gol {
 		ofShader outlineShader;
 		ofShader metaballShader;
 
-
 		pingPongBuffer cellPingPong;
 
 		ofVboMesh vboSphere;

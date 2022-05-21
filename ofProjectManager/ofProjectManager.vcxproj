@@ -190,6 +190,7 @@
     <None Include="src\scenes\contourlines\shader\passthru.vert" />
     <None Include="src\scenes\contourlines\shader\splat.frag" />
     <None Include="src\scenes\contourlines\shader\subtract.frag" />
+    <None Include="src\scenes\fluid\shader\default.frag" />
     <None Include="src\scenes\fluid\shader\displayscalar.frag" />
     <ClCompile Include="src\scenes\fluid\ccFluid.cpp" />
     <ClCompile Include="src\scenes\fluid\FluidScene.cpp" />
@@ -230,6 +231,14 @@
     <ClCompile Include="..\..\..\addons\ofxOsc\libs\oscpack\src\osc\OscTypes.cpp" />
     <ClCompile Include="..\..\..\addons\ofxUbo\src\ofxUbo.cpp" />
     <ClCompile Include="src\scenes\swarm\SwarmScene.cpp" />
+    <None Include="src\scenes\fluid\shader\halfhalf.frag" />
+    <None Include="src\scenes\swarm\shader\changeDepth.comp" />
+    <None Include="src\scenes\swarm\shader\particleBehavior.comp" />
+    <None Include="src\scenes\swarm\shader\userCircles.frag" />
+    <None Include="src\scenes\swarm\shader\userCircles.vert" />
+    <None Include="src\scenes\fluid\shader\bloomblur.frag" />
+    <None Include="src\scenes\fluid\shader\bloomfilter.frag" />
+    <None Include="src\scenes\fluid\shader\bloomfinal.frag" />
     <None Include="src\scenes\swarm\shader\userInteraction.comp" />
   </ItemGroup>
   <ItemGroup>
@@ -314,16 +323,13 @@
     <None Include="src\scenes\fluid\shader\fluid\gravity.frag" />
     <None Include="src\scenes\fluid\shader\fluid\jacobiscalar.frag" />
     <None Include="src\scenes\fluid\shader\fluid\jacobivector.frag" />
-    <None Include="src\scenes\fluid\shader\pixels.frag" />
     <None Include="src\scenes\fluid\shader\passthru.vert" />
     <None Include="src\scenes\fluid\shader\fluid\splat.frag" />
     <None Include="src\scenes\fluid\shader\fluid\vorticity.frag" />
     <None Include="src\scenes\fluid\shader\fluid\vorticityforce.frag" />
-    <None Include="src\scenes\fluid\shader\texture.frag" />
     <None Include="src\scenes\fluid\shader\velocity.frag" />
     <None Include="src\scenes\gameoflife\shader\metaballs.frag" />
     <None Include="src\scenes\gameoflife\shader\splat.frag" />
-    <None Include="src\scenes\swarm\shader\colorSplash.comp" />
     <None Include="src\scenes\contourlines\shader\contour.frag" />
     <None Include="src\scenes\contourlines\shader\contour.vert" />
     <None Include="src\scenes\gameoflife\shader\gol.frag" />
@@ -338,7 +344,6 @@
     <None Include="src\scenes\swarm\shader\swarm.comp" />
     <None Include="src\scenes\swarm\shader\swarm.frag" />
     <None Include="src\scenes\swarm\shader\swarm.vert" />
-    <None Include="src\scenes\swarm\shader\swarmUserEnter.comp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ProjectExtensions>

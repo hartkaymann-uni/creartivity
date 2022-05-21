@@ -24,13 +24,15 @@ void ofApp::setup()
 	remove_button.addListener(this, &ofApp::handleRemoveButtonClick);
 	isSequencerInControl.addListener(this, &ofApp::OnSequencerControlChange);
 
-	InitTestSeqeuenceArray();
-	/*currentSequenceIndex = 0;
-	sequences.push_back(ParameterSequence(10000, SequenceName::Smooth));
-	StartSequence();*/
+	//InitTestSeqeuenceArray();
+	currentSequenceIndex = 0;
+	//sequences.push_back(ParameterSequence(20, SequenceName::UserChaos));
+	//sequences.push_back(ParameterSequence(1, SequenceName::NoUsers));
+	//sequences.push_back(ParameterSequence(5, SequenceName::RandomTeleport));
+	sequences.push_back(ParameterSequence(1000, SequenceName::Smooth));
+	SetSequence(sequences[currentSequenceIndex]);
 
 	lastMousePos = unmapped(glm::vec2(0.4f, 0.7f));
-
 
 	// Register first user
 	registerUser(0);
@@ -70,6 +72,8 @@ void ofApp::draw() {
 
 // Send user information
 void ofApp::sendUser(int id, user& user) {
+	// check if values make sense
+	
 	ofxOscMessage m;
 	std::string addr = "/user/data/";
 	addr += ofToString(id);
@@ -156,7 +160,7 @@ void ofApp::handleAddButtonClick()
 
 void ofApp::handleRemoveButtonClick()
 {
-	removeMostRecentUser();
+	removeMostRecentUser(false);
 }
 
 void ofApp::mouseDragged(int x, int y, int button) {
@@ -235,7 +239,7 @@ void ofApp::StartSequence() {
 	nextSequenceTime = lastSequenceTime + currentSequence.duration;
 
 	RemoveAllUsers();
-	addNewUsers(3);
+	addNewUsers(1);
 
 	switch (currentSequence.sequenceType)
 	{

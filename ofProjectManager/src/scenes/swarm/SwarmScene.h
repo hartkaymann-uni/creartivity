@@ -5,6 +5,9 @@
 
 #include "ccScene.h"
 
+#define MAX_SWARM_HANDS 30
+#define ORIGINAL_MIN_PARTICLE_DEPTH 0
+#define ORIGINAL_MAX_PARTICLE_DEPTH 10000
 
 class SwarmScene : public ccScene
 {
@@ -35,7 +38,15 @@ public:
 		BrainNeurons,
 		Swarm,
 		RepulsionStutter,
-		Intro
+		Intro,
+		Outro,
+		BrainNeuronsCoarse,
+		BrainNeuronsDense,
+		BrainNeuronsFlashLight,
+		CrazyTestOne,
+		VeryClose,
+		VeryDense,
+		CrazyClose
 	};
 
 	struct ParameterSequence
@@ -74,13 +85,13 @@ public:
 	int particleGroups;
 	int particleAmount;
 	int maxParticleDepth;
-	ofShader compute, colorSplash, particleShader, userEnter, introShader;
+	int minParticleDepth;
 	vector<Particle> particles;
 	ofBufferObject particlesBuffer, particlesBuffer2, particlesBuffer3;
 	GLuint vaoID;
 	ofVbo vbo;
-	glm::vec3 atractor;
 
+	// ### Parameters & GUI
 	ofParameter<float> attractionCoeff, cohesionCoeff, repulsionCoeff;
 	ofParameter<bool> UseAttraction, UseCohesion, UseRepulsion;
 	ofParameter<bool> freezeParticles;
@@ -93,24 +104,36 @@ public:
 	ofParameter<bool> dirAsColor;
 	ofParameter<bool> isSequencerInControl;
 
-	//Scene Handling
+	// Transitions
 	float SceneIntro() override;
 	float SceneOutro() override;
 private:
-	//--------------------------------------------------------------
-	// Controls
+	// ### Drawing
+	float user_circle_alpha;
+	float user_circle_radius;
 
+	void DrawParticles();
+	void DrawUserCircles();
+
+	// ### Shaders
+	ofShader particleShader, userEnter, behaviorShader, interactionShader, userCircleShader;
+	ofShader introShader, changeDepthShader;
+
+	void ApplyParticleRules();
+	void ApplyInteraction();
+	array<ofVec3f, MAX_SWARM_HANDS> GetUserHandsArray(ccScene::CoordinateSystem system);
+
+	// ### Controls
 	ofVec3f mousePosition;
 	ofVec3f mouseClickPosition;
 	bool isPressingMouse;
 
 	void UpdateMousePos(int x, int y, string action = "default");
-	void ColorSplash();
-	void UserEnter();
+	void ChangeParticleDepth(float newMin, float newMax);
+	void RevertParticleDepthToOriginal();
 	vector<Particle> SortParticles();
 
-	//--------------------------------------------------------------
-	// Sequence Stuff
+	// ### Sequencer
 	void InitSequences();
 	void UpdateSequence();
 	void CheckForNextSequence();

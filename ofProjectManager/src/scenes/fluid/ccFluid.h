@@ -71,6 +71,7 @@ namespace fluid {
 			bool applyGravity = false;
 			glm::vec2 gravityDir = glm::vec2( 0.0, 1.0 );
 			float gravityStr = 9.81; // 9.81
+			bool splatDensity = true; // determines whetether to add to density on interaction
 		};
 
 		struct Grid {
@@ -83,7 +84,8 @@ namespace fluid {
 		ccSolver( Settings& settings );
 
 		void setup( Grid& grid );
-		void step( vector<ccUser> users );
+		void step( vector<ccUser> users);
+		void reset();
 
 		inline Grid* const getGrid() { return &grid; }
 		inline ofFbo* const getDensity() { return density.read; }
@@ -107,6 +109,9 @@ namespace fluid {
 		inline void setApplyGravity( bool g ) { s.applyGravity = g; }
 		inline void setGravityDirection( glm::vec2 d ) { s.gravityDir = d; }
 		inline void setGravityStrength( float g ) { s.gravityStr = g; }
+		inline void setSplatDensity( bool d ) { s.splatDensity= d; }
+
+		void colorDensity( ofShader& shader );
 
 	private:
 		ofFbo createFbo( int format );

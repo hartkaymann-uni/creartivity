@@ -2,6 +2,9 @@
 
 #include "ofMain.h"
 
+#define MAX_MOVEMENT_SPEED 10.0f
+#define BASE_ACCELERATION 5.0f
+
 /*
 	User Class
 	Stores information on position and movements of a user.
@@ -20,7 +23,9 @@ public:
 	void setPosition( glm::vec2 pos );
 	void setPosition( glm::vec3 pos );
 	void setPositions( glm::vec3 left, glm::vec3 right );
+	void setTargetPositions( glm::vec3 left, glm::vec3 right );
 	void setMotions( glm::vec3 ml, glm::vec3 mr);
+	void moveTowardsTarget();
 
 	inline int getId() { return id; };
 	pair<glm::vec3, glm::vec3> getPositons();
@@ -34,6 +39,10 @@ private:
 	int id;
 
 	pair<glm::vec3, glm::vec3> positions;
+	pair<glm::vec3, glm::vec3> targetPositions;
 	pair<glm::vec3, glm::vec3> motions;
+	pair<glm::vec3, glm::vec3> velocities;
+
+	glm::vec3 calculateAcceleration(glm::vec3 currentVelocity, glm::vec3 origin, glm::vec3 target);
 };
 

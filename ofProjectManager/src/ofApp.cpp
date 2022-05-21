@@ -2,6 +2,9 @@
 
 #include "scenes/scenes.h"
 
+//#define SWITCH_SCENES
+#define MOUSE_INTERACTION
+
 using namespace gol;
 using namespace contour;
 
@@ -15,22 +18,29 @@ void ofApp::setup() {
 	ofSetFrameRate( 60 );
 	ofSetVerticalSync( false );
 
-	transformer.setRenderSize( SCREEN_WIDTH, SCREEN_HEIGHT);
+	/*transformer.setRenderSize( SCREEN_WIDTH, SCREEN_HEIGHT );
 	transformer.setTransforms( true, true, false, true, true );
-	setTransformer( &transformer );
+	setTransformer( &transformer );*/
 
 	receiver.setUserManager( &userManager );
+#ifdef MOUSE_INTERACTION
+	// Set mouse as first user
+	ccUser mouse;
+	mouse.setId( 0 );
+	userManager.registerUser( mouse );
+#endif
 
 	// Load scenes
 	scenes.push_back( (FluidScene*)sceneManager.add( new FluidScene() ) );
-	scenes.push_back( (GameOfLifeScene*)sceneManager.add( new GameOfLifeScene(SCREEN_WIDTH / 10, SCREEN_HEIGHT / 10) ) );
+	scenes.push_back( (GameOfLifeScene*)sceneManager.add( new GameOfLifeScene( SCREEN_WIDTH / 20, SCREEN_HEIGHT / 20 ) ) );
 	scenes.push_back( (SwarmScene*)sceneManager.add( new SwarmScene() ) );
-	scenes.push_back( (ContourLinesScene*)sceneManager.add( new ContourLinesScene(SCREEN_WIDTH / 4, SCREEN_HEIGHT / 4) ) );
+	scenes.push_back( (ContourLinesScene*)sceneManager.add( new ContourLinesScene( SCREEN_WIDTH / 4, SCREEN_HEIGHT / 4 ) ) );
 
 	// Initialize scene manager
 	sceneManager.setup( true ); // Setup all scenes now
 	ofSetLogLevel( "ofxScenemanager", OF_LOG_VERBOSE );
-	sceneManager.gotoScene( "ContourLines", true );
+	sceneManager.gotoScene( "Swarm", true );
+
 
 	lastScene = sceneManager.getCurrentSceneIndex();
 	sceneManager.setOverlap( false );
@@ -39,15 +49,23 @@ void ofApp::setup() {
 	setSceneManager( &sceneManager );
 
 	// Give all scenes a pointer to the receiver
-	// TODO: Scenen dont need this anymore, as user array does the work here
-	for (ccScene* scene : scenes) {
+	for ( ccScene* scene : scenes ) {
 		scene->setUserManager( &userManager );
 	}
 }
 
 //--------------------------------------------------------------
 void ofApp::update() {
+	userManager.updateUserPositions();
 
+#ifdef SWITCH_SCENES
+	// Change to next scene at an intervall
+	float time = ofGetElapsedTimef();
+	if ( time - lastSceneChangeTime > durationPerScene ) {
+		lastSceneChangeTime = time;
+		ChangeScene( SceneChangeType::Next );
+	}
+#endif
 	receiver.receiveMessages();
 
 	// Display framerate in window title
@@ -62,7 +80,7 @@ void ofApp::update() {
 //--------------------------------------------------------------
 void ofApp::draw() {
 
-	if (isDebug()) {
+	if ( isDebug() ) {
 		ofNoFill();
 		ofSetColor( 255 );
 		ofSetRectMode( OF_RECTMODE_CORNER );
@@ -78,9 +96,9 @@ void ofApp::draw() {
 		<< "Current Scene: " << sceneManager.getCurrentSceneIndex()
 		<< " " << sceneManager.getCurrentSceneName() << endl;
 
-	if (showGui) {
-		for (ccScene* s : scenes) {
-			if (s->getName() == sceneManager.getCurrentSceneName()) {
+	if ( showGui ) {
+		for ( ccScene* s : scenes ) {
+			if ( s->getName() == sceneManager.getCurrentSceneName() ) {
 				ofxPanel& gui = s->getGui();
 				gui.setPosition( ofGetWidth() - gui.getWidth() - 10, ofGetHeight() - gui.getHeight() - 10 );
 				s->getGui().draw();
@@ -93,7 +111,7 @@ void ofApp::draw() {
 
 //--------------------------------------------------------------
 void ofApp::keyPressed( int key ) {
-	switch (key) {
+	switch ( key ) {
 
 	case 'd':
 		//bDebug = !bDebug;
@@ -118,7 +136,7 @@ void ofApp::keyPressed( int key ) {
 		break;
 
 	case OF_KEY_DOWN:
-		if (sceneManager.getCurrentScene()) { // returns NULL if no scene selected
+		if ( sceneManager.getCurrentScene() ) { // returns NULL if no scene selected
 			lastScene = sceneManager.getCurrentSceneIndex();
 		}
 		sceneManager.noScene();
@@ -143,7 +161,7 @@ void ofApp::keyPressed( int key ) {
 
 //--------------------------------------------------------------
 void ofApp::CheckSceneTransitions() {
-	if (ofGetElapsedTimef() > nextActionTime && nextAction != NULL) {
+	if ( ofGetElapsedTimef() > nextActionTime && nextAction != NULL ) {
 		(this->*nextAction)();
 		nextAction = NULL;
 	}
@@ -156,11 +174,11 @@ void ofApp::ChangeScene( SceneChangeType type ) {
 	float delay = 0.f;
 	// 'scenes' is not in the same order as the array that 'sceneManager' uses. Therefore we can't use the 'currentSceneIndex'
 	// from 'sceneManager' for the 'scenes' array.
-	if (sceneManager.getCurrentScene() != NULL) {
+	if ( sceneManager.getCurrentScene() != NULL ) {
 		delay = static_cast<ccScene*>(sceneManager.getCurrentScene())->SceneOutro();
 	}
 
-	switch (type)
+	switch ( type )
 	{
 	case SceneChangeType::Next:
 		nextAction = &ofApp::NextScene;
@@ -180,7 +198,7 @@ void ofApp::ChangeScene( SceneChangeType type ) {
 void ofApp::NextScene() {
 	int nextSceneIndex = GetSceneIndex( SceneChangeType::Next );
 	sceneManager.nextScene();
-	if (sceneManager.getSceneAt( nextSceneIndex ) != NULL) {
+	if ( sceneManager.getSceneAt( nextSceneIndex ) != NULL ) {
 		static_cast<ccScene*>(sceneManager.getSceneAt( nextSceneIndex ))->SceneIntro();
 	}
 }
@@ -190,10 +208,10 @@ unsigned int  ofApp::GetSceneIndex( SceneChangeType type ) {
 	unsigned int currentSceneIndex = sceneManager.getCurrentSceneIndex();
 
 
-	switch (type)
+	switch ( type )
 	{
 	case SceneChangeType::Next:
-		if (currentSceneIndex >= sceneManager.getNumScenes() - 1) {
+		if ( currentSceneIndex >= sceneManager.getNumScenes() - 1 ) {
 			return 0;
 		}
 		else {
@@ -201,7 +219,7 @@ unsigned int  ofApp::GetSceneIndex( SceneChangeType type ) {
 		}
 		break;
 	case SceneChangeType::Previous:
-		if (currentSceneIndex <= 0) {
+		if ( currentSceneIndex <= 0 ) {
 			return sceneManager.getNumScenes() - 1;
 		}
 		else {
@@ -218,7 +236,7 @@ unsigned int  ofApp::GetSceneIndex( SceneChangeType type ) {
 void ofApp::PreviousScene() {
 	int previousIndex = GetSceneIndex( SceneChangeType::Previous );
 	sceneManager.prevScene();
-	if (sceneManager.getSceneAt( previousIndex ) != NULL) {
+	if ( sceneManager.getSceneAt( previousIndex ) != NULL ) {
 		static_cast<ccScene*>(sceneManager.getSceneAt( previousIndex ))->SceneIntro();
 	}
 }
@@ -236,11 +254,13 @@ void ofApp::mouseMoved( int x, int y ) {
 //--------------------------------------------------------------
 void ofApp::mouseDragged( int x, int y, int button ) {
 	// Left click is left mouse position, right click right mouse position
+#ifdef MOUSE_INTERACTION
 	ccUser* mouse = userManager.getMouseUser();
-	if (button == OF_MOUSE_BUTTON_LEFT)
+	if ( button == OF_MOUSE_BUTTON_LEFT )
 		mouse->setPositions( { (x * 1.f) / ofGetWidth(), (y * 1.f) / ofGetHeight(), 0.f }, mouse->right() );
 	else
 		mouse->setPositions( mouse->left(), { (x * 1.f) / ofGetWidth(), (y * 1.f) / ofGetHeight(), 0.f } );
+#endif //  #ifdef PRESENTATION_MODE
 }
 
 //--------------------------------------------------------------
@@ -249,12 +269,15 @@ void ofApp::mousePressed( int x, int y, int button ) {
 
 //--------------------------------------------------------------
 void ofApp::mouseReleased( int x, int y, int button ) {
+#ifdef MOUSE_INTERACTION
 	// Reset user motion by moving by zero 
 	ccUser* mouse = userManager.getMouseUser();
-	if (button == OF_MOUSE_BUTTON_LEFT)
+	if ( button == OF_MOUSE_BUTTON_LEFT )
 		mouse->setMotions( { 0.f, 0.f, 0.f }, mouse->getMotions().second );
 	else
 		mouse->setMotions( mouse->getMotions().first, { 0.f, 0.f, 0.f } );
+#endif //  #ifdef PRESENTATION_MODE
+
 }
 
 //--------------------------------------------------------------
@@ -270,7 +293,7 @@ void ofApp::mouseExited( int x, int y ) {
 //--------------------------------------------------------------
 void ofApp::windowResized( int w, int h ) {
 	// transformer.setNewScreenSize() is automatically called if the transformer is set
-	for (ccScene* scene : scenes) {
+	for ( ccScene* scene : scenes ) {
 		scene->windowResized( w, h );
 	}
 }

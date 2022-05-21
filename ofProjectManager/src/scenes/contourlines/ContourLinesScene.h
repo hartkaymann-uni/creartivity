@@ -15,9 +15,11 @@ namespace contour {
 
 		void keyPressed( int key );
 		void keyReleased( int key );
+		void windowResized( int w, int h);
 
 	private:
 		float time;
+		float sceneTime;
 
 		ofShader contourLineShader;
 		bool wireframeShading = false;
