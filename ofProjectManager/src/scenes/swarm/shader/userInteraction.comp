@@ -53,12 +53,12 @@ vec3 calculateAcceleration(vec3 particlePos) {
 
 	float depth = abs(clamp(particlePos.z, -max_particle_depth, -min_particle_depth));
 	float depthPercentage = ((depth - min_particle_depth)/(max_particle_depth - min_particle_depth));
-	float extra_attraction = 0.5 * clamp(depthPercentage, 0, 1);
+	float extra_attraction = 0.75 * clamp(depthPercentage, 0, 1);
 
   	vec3 handPos = vec3(hands[index].x, hands[index].y, 100);
 	vec3 difference = handPos - particlePos;
 	float mod = abs(sin(gl_GlobalInvocationID.x)) * 3;
-	acc += normalize(difference) * (attr_force + attr_force* extra_attraction);
+	acc += normalize(difference) * (1.25f * attr_force + attr_force* extra_attraction);
 	
 
 	return acc;

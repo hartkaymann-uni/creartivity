@@ -45,7 +45,8 @@ public:
 		BrainNeuronsFlashLight,
 		CrazyTestOne,
 		VeryClose,
-		VeryDense
+		VeryDense,
+		CrazyClose
 	};
 
 	struct ParameterSequence

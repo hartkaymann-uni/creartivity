@@ -318,7 +318,7 @@ void SwarmScene::InitSequences() {
 	sequences.push_back(ParameterSequence(20, SequenceName::BrainNeuronsDense));
 	sequences.push_back(ParameterSequence(20, SequenceName::Swarm));
 	sequences.push_back(ParameterSequence(20, SequenceName::BrainNeuronsCoarse));
-	// noch ne szne
+	sequences.push_back(ParameterSequence(20, SequenceName::CrazyClose));
 
 	//	sequences.push_back(ParameterSequence(20, SequenceName::BrainNeurons));
 	//	sequences.push_back(ParameterSequence(7, SequenceName::BlackHole, 5));
@@ -424,6 +424,13 @@ void SwarmScene::StartSequence() {
 		repulsionCoeff.set(0.5f);
 		maxSpeed.set(5000);
 		ChangeParticleDepth(1500, 1750);
+		break;
+	case SequenceName::CrazyClose:
+		attractionCoeff.set(0);
+		attractorForce.set(5000);
+		repulsionCoeff.set(0.5f);
+		maxSpeed.set(5000);
+		ChangeParticleDepth(500, 2500);
 		break;
 	case SequenceName::Intro:
 	{
@@ -589,6 +596,16 @@ void SwarmScene::UpdateSequence() {
 		}
 		break;
 	}
+	case SequenceName::CrazyClose:
+	{
+		float newMinDepth = 500; 
+		float newMaxDepth = abs(sin(ofGetElapsedTimef())) * 2000 + 600;
+		ChangeParticleDepth(newMinDepth, newMaxDepth);
+
+		float newMaxSpeed = pow(abs(sin(ofGetElapsedTimef()*2)), 7) * 3000 + 2000;
+		maxSpeed.set(newMaxSpeed);
+		break;
+	}
 	default:
 		break;
 	}
@@ -606,7 +623,7 @@ void SwarmScene::UpdateSequence() {
 		user_circle_radius = max(100.0, user_circle_radius - (0.1f + pow(user_circle_radius, 2) * 0.75f) * ofGetLastFrameTime());
 	}
 
-	cout << "dur: " << currentSequence.duration << " time since start: " << timeSinceStart << endl;
+	//cout << "dur: " << currentSequence.duration << " time since start: " << timeSinceStart << endl;
 }
 
 // ####################
