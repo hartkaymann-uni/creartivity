@@ -43,7 +43,9 @@ public:
 		BrainNeuronsCoarse,
 		BrainNeuronsDense,
 		BrainNeuronsFlashLight,
-		CrazyTestOne
+		CrazyTestOne,
+		VeryClose,
+		VeryDense
 	};
 
 	struct ParameterSequence
@@ -106,6 +108,9 @@ public:
 	float SceneOutro() override;
 private:
 	// ### Drawing
+	float user_circle_alpha;
+	float user_circle_radius;
+
 	void DrawParticles();
 	void DrawUserCircles();
 

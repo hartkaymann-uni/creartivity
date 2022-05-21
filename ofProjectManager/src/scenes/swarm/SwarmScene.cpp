@@ -87,7 +87,10 @@ void SwarmScene::setup() {
 	shaderUniforms.add(freezeParticles.set("freeze_particles", false));
 	gui.add(shaderUniforms);
 	gui.add(isSequencerInControl.set("Let Sequencer control", true));
-	gui.add(fps.set("fps", 60, 0, 60));
+	gui.add(fps.set("fps", 60, 0, 60)); 
+
+	user_circle_alpha = 1.0f;
+	user_circle_radius = 100;
 
 	gui.add(dirAsColor.set("Useless Button", true));
 	//dirAsColor.addListener(this, &SwarmScene::dirAsColorChanged);
@@ -177,7 +180,6 @@ void SwarmScene::DrawParticles() {
 void SwarmScene::DrawUserCircles() {
 	array<ofVec3f, MAX_SWARM_HANDS> user_hands = GetUserHandsArray(ccScene::CoordinateSystem::Screen);
 	int hand_count = min(MAX_SWARM_HANDS, userManager->getUserCount() * 2);
-	int circle_radius = 100;
 
 	for (int i = 0; i < hand_count; i++)
 	{
@@ -188,10 +190,11 @@ void SwarmScene::DrawUserCircles() {
 
 
 		userCircleShader.setUniform2f("screen_resolution", ofVec2f(ofGetWidth(), ofGetHeight()));
-		userCircleShader.setUniform3f("hand_position", user_hands[i]);
-		userCircleShader.setUniform1f("radius", circle_radius);
+		userCircleShader.setUniform3f("hand_position", user_hands[i]); 
+		userCircleShader.setUniform1f("radius", user_circle_radius);
+		userCircleShader.setUniform1f("user_circle_alpha", user_circle_alpha);
 
-		ofDrawCircle(user_hands[i], circle_radius);
+		ofDrawCircle(user_hands[i], user_circle_radius);
 
 		//ofDisableDepthTest();
 
@@ -306,10 +309,17 @@ void SwarmScene::dragEvent(ofDragInfo dragInfo) {
 // Creates an arrray with sequences
 void SwarmScene::InitSequences() {
 	currentSequenceIndex = 0;
-	sequences.push_back(ParameterSequence(10, SequenceName::BrainNeuronsDense));
-	sequences.push_back(ParameterSequence(10, SequenceName::BrainNeuronsFlashLight));
-	sequences.push_back(ParameterSequence(10, SequenceName::CrazyTestOne));
-	sequences.push_back(ParameterSequence(10, SequenceName::Swarm));
+	sequences.push_back(ParameterSequence(20, SequenceName::BrainNeurons));
+	sequences.push_back(ParameterSequence(20, SequenceName::RepulsionStutter));
+	sequences.push_back(ParameterSequence(20, SequenceName::VeryDense));
+	sequences.push_back(ParameterSequence(20, SequenceName::VeryClose));
+	sequences.push_back(ParameterSequence(20, SequenceName::BrainNeuronsFlashLight));
+	sequences.push_back(ParameterSequence(20, SequenceName::CrazyTestOne));
+	sequences.push_back(ParameterSequence(20, SequenceName::BrainNeuronsDense));
+	sequences.push_back(ParameterSequence(20, SequenceName::Swarm));
+	sequences.push_back(ParameterSequence(20, SequenceName::BrainNeuronsCoarse));
+	// noch ne szne
+
 	//	sequences.push_back(ParameterSequence(20, SequenceName::BrainNeurons));
 	//	sequences.push_back(ParameterSequence(7, SequenceName::BlackHole, 5));
 	//	sequences.push_back(ParameterSequence(4, SequenceName::Explosion));
@@ -332,6 +342,8 @@ void SwarmScene::StartSequence() {
 	RevertParticleDepthToOriginal();
 	particleColorStart.set(ofVec3f(0, 0, 0));
 	particleColorEnd.set(ofVec3f(0.9f, 0.9f, 0.9f));
+	user_circle_alpha = 1.0f;
+	user_circle_radius = 100;
 
 	ActivateRules();
 
@@ -394,18 +406,37 @@ void SwarmScene::StartSequence() {
 		break;
 	}
 	case SequenceName::Swarm:
-		attractionCoeff.set(0.25f);
+		attractionCoeff.set(0.2f);
 		attractorForce.set(5000);
 		repulsionCoeff.set(repulsionCoeff.getMax());
 		maxSpeed.set(5000);
+		break;
+	case SequenceName::VeryClose:
+		attractionCoeff.set(0);
+		attractorForce.set(5000);
+		repulsionCoeff.set(0.5f);
+		maxSpeed.set(5000);
+		ChangeParticleDepth(1000, 3000);
+		break;
+	case SequenceName::VeryDense:
+		attractionCoeff.set(0);
+		attractorForce.set(5000);
+		repulsionCoeff.set(0.5f);
+		maxSpeed.set(5000);
+		ChangeParticleDepth(1500, 1750);
 		break;
 	case SequenceName::Intro:
 	{
 		particleColorStart.set(particleColorStart.getMin());
 		particleColorEnd.set(particleColorEnd.getMin());
 
-		// This ensures that when this sequence is finished, the sequence loop starts with the sequence at the index 0
-		currentSequenceIndex = -1;
+		repulsionCoeff.set(0.75f);
+		maxSpeed.set(2500);
+		attractorForce.set(3000);
+
+		// This ensures that when this sequence is finished, the sequence loop starts with the sequence that was running before that
+		//currentSequenceIndex -= 1;
+		//if (currentSequenceIndex < 0) currentSequenceIndex = 0;
 		break;
 	}
 	default:
@@ -449,6 +480,8 @@ void SwarmScene::UpdateSequence() {
 
 	//float mod = ruleIterationMod.getMax() / 2 + (abs(sin(ofGetElapsedTimef() / 10)) * ruleIterationMod.getMax() / 2);
 	//ruleIterationMod.set(mod);
+
+	float percentage = min(timeSinceStart / currentSequence.duration, 1.f);
 
 	switch (currentSequence.sequenceType)
 	{
@@ -499,10 +532,11 @@ void SwarmScene::UpdateSequence() {
 		float newSpeed = min(maxSpeed.getMax(), maxSpeed.get() + 500 * timeSinceStart);
 		maxSpeed.set(newSpeed);
 		float newForce = sin(ofGetElapsedTimef() / 2) * 500 + 1000;
-		attractorForce.set(newForce);
+		attractorForce.set(newForce); 
+		user_circle_radius = min(400.f, 100 + timeSinceStart * 100 * 1.f);
 
 
-		float newWhite = pow(abs(sin(ofGetElapsedTimef())), 8) * 0.5f;
+		float newWhite = pow(abs(sin(ofGetElapsedTimef())), 5) * 0.5f;
 		if (timeSinceStart < 2.f) newWhite = (1 - (timeSinceStart / 2.0f)) * 0.9f;
 		if (!fadeOutColor) particleColorEnd.set(ofVec3f(newWhite));
 		break;
@@ -520,32 +554,46 @@ void SwarmScene::UpdateSequence() {
 	}
 	case SequenceName::RepulsionStutter:
 	{
-		float newRepulsion = abs(sin(ofGetElapsedTimef() * 2)) * 0.3f;
+		float newRepulsion = (pow(abs(sin(ofGetElapsedTimef()* 1.5f)),20)) * 0.75f;
 		repulsionCoeff.set(newRepulsion);
 		break;
 	}
 	case SequenceName::Intro:
 	{
-		float percentage = min(timeSinceStart / currentSequence.duration, 1.f);
-
 		particleColorStart.set(glm::vec3(0, 0, 0) * percentage);
 		particleColorEnd.set(glm::vec3(0.9, 0.9, 0.9) * percentage);
+		user_circle_alpha = min(1.f, percentage);
 		break;
 	}
 	case SequenceName::Outro:
 	{
+		float percentageInverted = 1 - percentage;
 		ofVec3f increment = ofVec3f(-1.f) * ofGetLastFrameTime() * 0.35f;
 
 		particleColorStart.set(particleColorStart.get() + increment);
 		particleColorEnd.set(particleColorEnd.get() + increment);
 
+		user_circle_alpha = max(0.f, percentageInverted);
+
+		break;
+	}
+	case SequenceName::VeryDense:
+	{
+		float section = fmod(timeSinceStart, 9);
+		if (section < 5) {
+			float newRepulsion = section / 5 * 0.5f;
+			repulsionCoeff.set(newRepulsion);
+		}
+		else {
+			repulsionCoeff.set(0);
+		}
 		break;
 	}
 	default:
 		break;
 	}
 
-	// Put Colors back to original value
+	// Put Values back to original smoothly
 	if (fadeOutColor) {
 		ofVec3f startCol = particleColorStart.get();
 		startCol.x = max(0.0, startCol.x - (0.1f + pow(startCol.x, 2) * 0.75f) * ofGetLastFrameTime());
@@ -554,6 +602,8 @@ void SwarmScene::UpdateSequence() {
 		ofVec3f endCol = particleColorEnd.get();
 		float newWhite = min(0.9, endCol.x + (0.1f + pow(endCol.x, 2) * 0.75f) * ofGetLastFrameTime());
 		particleColorEnd.set(ofVec3f(newWhite));
+
+		user_circle_radius = max(100.0, user_circle_radius - (0.1f + pow(user_circle_radius, 2) * 0.75f) * ofGetLastFrameTime());
 	}
 
 	cout << "dur: " << currentSequence.duration << " time since start: " << timeSinceStart << endl;
@@ -591,8 +641,8 @@ void SwarmScene::ApplyInteraction() {
 	interactionShader.setUniform1i("freeze_particles", (freezeParticles.get() ? 1 : 0));
 	interactionShader.setUniform1f("timeLastFrame", ofGetLastFrameTime());
 	interactionShader.setUniform1f("elapsedTime", ofGetElapsedTimef());
-	behaviorShader.setUniform1i("min_particle_depth", minParticleDepth);
-	behaviorShader.setUniform1i("max_particle_depth", maxParticleDepth);
+	interactionShader.setUniform1i("min_particle_depth", minParticleDepth);
+	interactionShader.setUniform1i("max_particle_depth", maxParticleDepth);
 
 
 	array<ofVec3f, MAX_SWARM_HANDS> user_hands = GetUserHandsArray(ccScene::CoordinateSystem::World);
@@ -686,7 +736,7 @@ float SwarmScene::SceneIntro() {
 
 	SetSequence(ParameterSequence(4, SequenceName::Intro));
 
-	return 4.f;
+	return 3.8f;
 }
 
 // Triggered when this scene is closed
@@ -695,5 +745,5 @@ float SwarmScene::SceneOutro() {
 
 	SetSequence(ParameterSequence(3, SequenceName::Outro));
 
-	return 3.f;
+	return 2.8f;
 }
