@@ -31,6 +31,8 @@ uniform float max_speed;
 uniform float attr_force;
 uniform vec3 hands[N_HANDS];
 uniform int hand_count;
+uniform int min_particle_depth;
+uniform int max_particle_depth;
 
 
 // ### Movement
@@ -49,9 +51,14 @@ vec3 calculateAcceleration(vec3 particlePos) {
 
 	uint index = gl_GlobalInvocationID.x % (hand_count);
 
+	float depth = abs(clamp(particlePos.z, -max_particle_depth, -min_particle_depth));
+	float depthPercentage = ((depth - min_particle_depth)/(max_particle_depth - min_particle_depth));
+	float extra_attraction = 0.75 * clamp(depthPercentage, 0, 1);
+
   	vec3 handPos = vec3(hands[index].x, hands[index].y, 100);
 	vec3 difference = handPos - particlePos;
-	acc += normalize(difference) * attr_force;
+	float mod = abs(sin(gl_GlobalInvocationID.x)) * 3;
+	acc += normalize(difference) * (1.25f * attr_force + attr_force* extra_attraction);
 	
 
 	return acc;

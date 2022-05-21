@@ -1,7 +1,7 @@
 #include "ofMain.h"
 #include "ofApp.h"
 
-#if 1
+#if 0
 #define PRESENTATION_MODE
 #endif 
 
@@ -10,7 +10,7 @@ int SCREEN_WIDTH = 3840; // 3840
 int SCREEN_HEIGHT = 1080; // 1080
 #else
 int SCREEN_WIDTH = 1080;
-int SCREEN_HEIGHT = 1080;
+int SCREEN_HEIGHT = 820;
 #endif 
 
 //========================================================================
