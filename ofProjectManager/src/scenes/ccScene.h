@@ -28,12 +28,22 @@ public:
 	void mousePressed( int x, int y, int button );
 	void mouseReleased( int x, int y, int button );
 	void mouseDragged( int x, int y, int button );
-	void windowResized( int w, int h );
+	void windowResized( int w, int h ); 
+	
+	enum class CoordinateSystem {
+		Normals,
+		Screen,
+		World
+	};
 
 	inline void setUserManager( ccUserManager* um ) { userManager = um; }
 	inline ofxPanel& getGui() { return gui; };
+	vector<ofVec3f> getHandPositions(CoordinateSystem system);
 
-	//Scene Handling
+	
+
+	// Scene Handling
+
 	virtual float SceneIntro();
 	virtual float SceneOutro();
 
@@ -55,6 +65,9 @@ protected:
 	void resetCamera();
 	void updateUserPositions();
 	ofVec3f getProjectedPosition( ofVec3f mp );
+	ofVec3f getNormalToScreenPosition(ofVec2f normalPos);
+	ofVec3f getScreenToWorldPosition(ofVec2f screenPos);
+	ofVec3f getNormalToWorldPosition(ofVec2f normalPos);
 
 	bool isInBounds( ofVec2f pos );
 	bool isInBounds( int x, int y );

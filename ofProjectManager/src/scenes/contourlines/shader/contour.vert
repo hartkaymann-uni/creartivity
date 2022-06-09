@@ -2,26 +2,31 @@
 #define N_USERS 10
 
 uniform mat4 modelViewProjectionMatrix;
+
+uniform sampler2D interaction;
+
 uniform float u_time;
 uniform float u_speed;
 uniform float u_scale;
 uniform float u_amplitude;
 uniform float u_limit;
 uniform float u_radius;
-uniform vec2 u_mouse;
+uniform float u_lacunarity;
+uniform float u_persistance;
 
-uniform vec2 hands[N_USERS];
+uniform vec2 u_resolution;
 
 in vec4 position;
 in vec2 texcoord;
 
+out vec3 vColor;
+out vec2 vTexcoord;
 out vec4 vPosition;
-out vec4 vColor;
+//out vec3 vNormal;
 
-//--------------------------------------------------------------
-// Classic 3D Perlin Noise 
-// by Stefan Gustavson
-// https://gist.github.com/patriciogonzalezvivo/670c22f3966e662d2f83
+//	Classic Perlin 3D Noise 
+//	by Stefan Gustavson
+//	Source: https://gist.github.com/patriciogonzalezvivo/670c22f3966e662d2f83
 vec4 permute(vec4 x){return mod(((x*34.0)+1.0)*x, 289.0);}
 vec4 taylorInvSqrt(vec4 r){return 1.79284291400159 - 0.85373472095314 * r;}
 vec3 fade(vec3 t) {return t*t*t*(t*(t*6.0-15.0)+10.0);}
@@ -93,26 +98,39 @@ float cnoise(vec3 P){
   float n_xyz = mix(n_yz.x, n_yz.y, fade_xyz.x); 
   return 2.2 * n_xyz;
 }
-//--------------------------------------------------------------
 
-float rand(vec2 co){
-    return fract(sin(dot(co, vec2(12.9898, 78.233))) * 43758.5453);
+float terrain(vec3 p, vec2 offset) {
+	float e = 1.f					* cnoise( vec3(	1.f					 * (p.x + offset.x), 1.f				  * (p.y + offset.y), p.z ) ) 
+			+ u_persistance			* cnoise( vec3(	u_lacunarity		 * (p.x + offset.x), u_lacunarity		  * (p.y + offset.y), p.z ) ) 
+			+ pow(u_persistance, 2)	* cnoise( vec3( pow(u_lacunarity, 2) * (p.x + offset.x), pow(u_lacunarity, 2) * (p.y + offset.y), p.z ) );
+	return e / ( 1 + u_persistance + pow(u_persistance, 2) );
 }
 
 void main(){
-	vec4 pos = position;
-	vColor = vec4( -1.0 * pos.z / u_limit, 0.0, 0.0, 1.0);
+	float time = u_time;
 
-	float shift = abs(cnoise(vec3(position.xy * u_scale, u_speed * u_time))) * u_amplitude;
-	pos.z += shift;
+	vec3 pos = vec3( position.xy, 0.f ); // position of vertex
+//  vec2 uv = pos.xy / u_resolution.xy;
 
-	float dist = distance(position.xy, hands[0].xy);
-	if (dist < float(u_radius)){
-		float force =(dist / float(u_radius));
-		pos.z *= force * force;
-		pos.z -= 5.5 * (1.0 - force)* (1.0 - force)* (1.0 - force);
-	}
+	vec3 p = vec3( pos.xy * u_scale, time ); // position for noise calculation
 
-	vPosition = pos;
-	gl_Position = modelViewProjectionMatrix * pos;
+	float interaction_offset = texture(interaction, texcoord).x;
+	bool red = interaction_offset >= 0.25 ? false : true;
+	pos.z = (terrain(p, vec2(0.f)) * (  1.0 - interaction_offset)) * u_amplitude;
+	
+//	vec2 ij = vec2(0.001f, 0.f);
+//	vec3 top		= vec3(  ij.yx, terrain(p,  ij.yx));
+//	vec3 right		= vec3(  ij.xy, terrain(p,  ij.xy));
+//	vec3 bottom		= vec3(- ij.yx, terrain(p, -ij.yx));
+//	vec3 left		= vec3(- ij.xy, terrain(p, -ij.xy));
+
+//	vec3 normal = normalize( cross( top - bottom,  left - right));
+
+//	vNormal = normal;
+	vColor = red ?  vec3(1.0) : vec3(1.0, 0.0, 0.0); // reversed so it works with step in fragment shader 
+//	vColor = vec3(interaction_offset);
+
+	vTexcoord = texcoord;
+	vPosition = vec4( pos, 1.f );
+	gl_Position = modelViewProjectionMatrix * vec4( pos, 1.f );
 }

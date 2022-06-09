@@ -101,7 +101,8 @@ float cnoise(vec3 P){
 //--------------------------------------------------------------
 
 
-void main() {
+void main() 
+{
     
     vec2 coords = vec2( floor(gl_InstanceID / resolution.y), mod(gl_InstanceID, resolution.y));
     

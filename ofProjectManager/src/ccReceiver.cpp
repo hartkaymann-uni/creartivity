@@ -27,8 +27,7 @@ void ccReceiver::receiveMessages() {
 				float xr = m.getArgAsFloat( 2 );
 				float yr = m.getArgAsFloat( 3 );
 
-				userManager->getUser( id )->setPositions( glm::vec3( xl, yl, 0.f ), glm::vec3( xr, yr, 0.f ) );
-
+				userManager->getUser( id )->setTargetPositions( glm::vec3( xl, yl, 0.f ), glm::vec3( xr, yr, 0.f ) );
 				ccUser* u = userManager->getUser( id );
 				//printf( "user %i: Left:[ %.3f, %.3f] Right:[ %.3f, %.3f ] \n", id, u->left().x, u->left().y, u->right().x, u->right().y );
 			}

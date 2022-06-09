@@ -8,13 +8,16 @@ public:
 
 	ccUserManager();
 
+	void updateUserPositions();
 	void registerUser( ccUser& user );
 	void removeUser( int id );
 
 	map<int, ccUser>* const getUsers();
 	vector<ccUser> const getUserVec();
+	vector<ofVec2f> getHandsVec();
 	ccUser* const getUser( int id );
 	ccUser* const getMouseUser();
+	int getUserCount();
 
 private:
 
