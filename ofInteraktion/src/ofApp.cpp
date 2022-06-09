@@ -3,7 +3,7 @@
 * 
 *  May 2022
 *
-*  This class contains basic app functionalities.
+*  This class contains basic app functionalities for the interaction.
 */
 
 #pragma once
@@ -45,7 +45,7 @@ void ofApp::setup() {
 
 //--------------------------------------------------------------
 /// <summary>
-///  
+///  This method continuously updates the the transmitted device data from the kinect and picture.
 /// </summary>
 void ofApp::update() {
 	device.update();
@@ -97,7 +97,7 @@ void ofApp::update() {
 
 //--------------------------------------------------------------
 /// <summary>
-/// Captured Userdata is sent to ofProjectManager 
+/// Captured Userdata is sent to ofProjectManager. 
 /// </summary>
 void ofApp::sendUser( int id, user& user ) {
 	ofxOscMessage m;
@@ -172,7 +172,8 @@ void ofApp::registerUser( ofxNiTE2::User::Ref u )
 
 //--------------------------------------------------------------
 /// <summary>
-/// 
+/// If a person leaves the section of interaction, the skeleton can`t be tracked anymore
+/// So the User will be removed
 /// </summary>
 void ofApp::removeUser( ofxNiTE2::User::Ref user )
 {
@@ -187,7 +188,8 @@ void ofApp::removeUser( ofxNiTE2::User::Ref user )
 
 //--------------------------------------------------------------
 /// <summary>
-/// 
+/// Testing Method
+/// It prints the tracked Users with the ID in the Console
 /// </summary>
 void ofApp::printUsers() {
 	std::cout << "Users: [ ";
@@ -201,6 +203,9 @@ void ofApp::printUsers() {
 }
 
 //--------------------------------------------------------------
+/// <summary>
+/// This method starts the connection for OSC
+/// </summary>
 void ofApp::sendConnectionStarted() {
 	
 	ofxOscMessage m;

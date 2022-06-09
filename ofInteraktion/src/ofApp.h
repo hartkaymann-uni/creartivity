@@ -3,9 +3,8 @@
 * 
 *  May 2022
 * 
-*  In this header are the basic methods and variables for the interaction declared/set.
+*  This header contains the basic methods and variables for the interaction.
 */
-
 
 #pragma once
 
@@ -16,7 +15,8 @@
 #include "ofxNI2.h"
 #include "ofxOsc.h"
 
-#define HOST "localhostee"
+// The same Host and Port is used in ofProjectManager
+#define HOST "localhost"
 #define PORT 12345
 
 class ofApp : public ofBaseApp{
@@ -52,6 +52,7 @@ class ofApp : public ofBaseApp{
 		ofEventListener newUserListener;
 		ofEventListener lostUserListener;
 
+		// User detection
 		void sendConnectionStarted();
 		void registerUser(ofxNiTE2::User::Ref user);
 		void removeUser(ofxNiTE2::User::Ref user);

@@ -365,11 +365,10 @@
     <None Include="src\scenes\fluid\shader\passthru.vert" />
     <None Include="src\scenes\fluid\shader\fluid\splat.frag" />
     <None Include="src\scenes\fluid\shader\fluid\vorticity.frag" />
-    <None Include="src\scenes\fluid\shader\vorticityforce.frag" />
     <None Include="src\scenes\fluid\shader\displayvector.frag" />
-    <None Include="src\scenes\fluid\shader\gravity.frag" />
     <None Include="src\scenes\fluid\shader\displayscalar.frag" />
     <None Include="src\scenes\swarm\shader\intro.comp" />
     <None Include="src\scenes\fluid\shader\lines.frag" />
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
 </Project>
