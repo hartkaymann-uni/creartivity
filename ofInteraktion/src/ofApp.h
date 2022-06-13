@@ -6,7 +6,6 @@
 *  In this header are the basic methods and variables for the interaction declared/set.
 */
 
-
 #pragma once
 
 #include "ofMain.h"
