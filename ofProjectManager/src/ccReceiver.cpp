@@ -29,9 +29,8 @@ void ccReceiver::receiveMessages() {
 
 				ccUser* u = userManager->getUser( id );
 				// Check if user exists, create one if it does not
-				if ( u == NULL ) 
-					userManager->registerUser( ccUser(id) );
-				u->setTargetPositions( glm::vec3( xl, yl, 0.f ), glm::vec3( xr, yr, 0.f ) );
+				if ( u != NULL )
+					u->setTargetPositions( glm::vec3( xl, yl, 0.f ), glm::vec3( xr, yr, 0.f ) );
 				//printf( "user %i: Left:[ %.3f, %.3f] Right:[ %.3f, %.3f ] \n", id, u->left().x, u->left().y, u->right().x, u->right().y );
 			}
 			else if (address.find( "new/" ) != string::npos) {
