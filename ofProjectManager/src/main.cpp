@@ -20,7 +20,7 @@ int main() {
 	settings.setGLVersion( 3, 2 );
 	settings.setSize( SCREEN_WIDTH, SCREEN_HEIGHT );
 #ifdef PRESENTATION_MODE
-	settings.setPosition( glm::vec2{ -3840, 0 } );
+	settings.setPosition( glm::vec2( 0, 0 ) );
 	settings.monitor = 1;
 	settings.windowMode = OF_FULLSCREEN;
 #endif

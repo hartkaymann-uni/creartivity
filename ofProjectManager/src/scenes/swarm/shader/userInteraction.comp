@@ -49,6 +49,7 @@ vec3 applyMaxSpeed(vec3 velocity, float limit){
 vec3 calculateAcceleration(vec3 particlePos) {
 	vec3 acc = vec3(0.0,0.0,0.0);
 
+	if(hand_count == 0) return acc;
 	uint index = gl_GlobalInvocationID.x % (hand_count);
 
 	float depth = abs(clamp(particlePos.z, -max_particle_depth, -min_particle_depth));

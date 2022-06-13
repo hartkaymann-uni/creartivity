@@ -10,9 +10,9 @@ namespace gol {
 		time( 0.f ),
 		cellOffset( 0.f ),
 		sequenceDuration( 10.f ),
-		sequenceTransitionDuration( 5.f ),
-		lastSequene( SequenceName::Empty ),
-		currentSequence( SequenceName::Empty ),
+		sequenceTransitionDuration( 1.f ),
+		lastSequene( SequenceName::Default ),
+		currentSequence( SequenceName::Default ),
 		lastSequenceTime( 0.f ),
 		shading( ShadingType::OUTLINE )
 	{

@@ -5,10 +5,10 @@ namespace contour {
 		time( 0.f ),
 		sceneTime(0.f),
 		grid( { w, h } ),
-		sequenceDuration( 5.f ),
-		sequenceTransitionDuration( 3.f ),
+		sequenceDuration( 10.f ),
+		sequenceTransitionDuration( 1.f ),
 		lastSequene( SequenceName::Empty ),
-		currentSequence( SequenceName::Default ),
+		currentSequence( SequenceName::Empty ),
 		lastSequenceTime( 0.f )
 	{}
 
