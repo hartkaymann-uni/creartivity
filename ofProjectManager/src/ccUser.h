@@ -15,7 +15,7 @@ class ccUser
 {
 public:
 	ccUser();
-	ccUser( int id, glm::vec3 left, glm::vec3 right );
+	ccUser( int id, glm::vec3 left = glm::vec3(0.f), glm::vec3 right = glm::vec3( 0.f ) );
 
 	void move( glm::vec3 vl, glm::vec3 vr );
 

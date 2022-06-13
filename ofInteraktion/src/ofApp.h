@@ -39,6 +39,8 @@ private:
 	int width, height;
 	int left, right, top, bottom;
 
+	ofFbo skeletonFbo;
+
 	// Tracking data for the Kinect
 	ofxNI2::Device device;
 	ofxNiTE2::UserTracker tracker;
