@@ -6,28 +6,28 @@
 #endif 
 
 #ifdef PRESENTATION_MODE
-int SCREEN_WIDTH = 3840; // 3840
+int SCREEN_WIDTH = 1920; // 3840
 int SCREEN_HEIGHT = 1080; // 1080
 #else
-int SCREEN_WIDTH = 1080;
-int SCREEN_HEIGHT = 820;
+int SCREEN_WIDTH = 1920;
+int SCREEN_HEIGHT = 1080;
 #endif 
 
 //========================================================================
 int main() {
 
 	ofGLFWWindowSettings settings;
-	settings.setGLVersion( 3, 2 );
-	settings.setSize( SCREEN_WIDTH, SCREEN_HEIGHT );
+	settings.setGLVersion(3, 2);
+	settings.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
 #ifdef PRESENTATION_MODE
-	settings.setPosition( glm::vec2{ -3840, 0 } );
+	settings.setPosition(glm::vec2{ -(SCREEN_WIDTH - 1), 0 });
 	settings.monitor = 1;
 	settings.windowMode = OF_FULLSCREEN;
 #endif
 
 	//settings.decorated = false;
 	settings.stencilBits = 8;
-	ofCreateWindow( settings );
+	ofCreateWindow(settings);
 
-	ofRunAppWithAppUtils( new ofApp() );
+	ofRunAppWithAppUtils(new ofApp());
 }

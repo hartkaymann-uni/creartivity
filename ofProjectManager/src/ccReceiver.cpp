@@ -9,6 +9,7 @@ ccReceiver::ccReceiver( string host, int port )
 // Receive and handle user data sent by our ofInput
 // TODO: create smaller functions to handle different adresses
 void ccReceiver::receiveMessages() {
+	
 	ofxOscMessage m;
 	while (receiver.hasWaitingMessages()) {
 		receiver.getNextMessage( &m );
