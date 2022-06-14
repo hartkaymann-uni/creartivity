@@ -3,7 +3,6 @@
 #include "scenes/scenes.h"
 
 //#define SWITCH_SCENES
-#define MOUSE_INTERACTION
 
 using namespace gol;
 using namespace contour;
@@ -18,17 +17,11 @@ void ofApp::setup() {
 	ofSetFrameRate( 60 );
 	ofSetVerticalSync( false );
 
-	/*transformer.setRenderSize( SCREEN_WIDTH, SCREEN_HEIGHT );
+	/*transformer.setRenderSize(SCREEN_WIDTH, SCREEN_HEIGHT);
 	transformer.setTransforms( true, true, false, true, true );
 	setTransformer( &transformer );*/
 
 	receiver.setUserManager( &userManager );
-#ifdef MOUSE_INTERACTION
-	// Set mouse as first user
-	ccUser mouse;
-	mouse.setId( 0 );
-	userManager.registerUser( mouse );
-#endif
 
 	// Load scenes
 	scenes.push_back( (FluidScene*)sceneManager.add( new FluidScene() ) );
@@ -39,8 +32,7 @@ void ofApp::setup() {
 	// Initialize scene manager
 	sceneManager.setup( true ); // Setup all scenes now
 	ofSetLogLevel( "ofxScenemanager", OF_LOG_VERBOSE );
-	sceneManager.gotoScene( "Swarm", true );
-
+	sceneManager.gotoScene( "GameOfLife", true );
 
 	lastScene = sceneManager.getCurrentSceneIndex();
 	sceneManager.setOverlap( false );
@@ -92,11 +84,11 @@ void ofApp::draw() {
 
 	// Draw current scene info
 	ofSetColor( 200 );
-	ofxBitmapString( 12, ofGetHeight() - 8 )
-		<< "Current Scene: " << sceneManager.getCurrentSceneIndex()
-		<< " " << sceneManager.getCurrentSceneName() << endl;
-
 	if ( showGui ) {
+		ofxBitmapString( 12, ofGetHeight() - 8 )
+			<< "Current Scene: " << sceneManager.getCurrentSceneIndex()
+			<< " " << sceneManager.getCurrentSceneName() << endl;
+
 		for ( ccScene* s : scenes ) {
 			if ( s->getName() == sceneManager.getCurrentSceneName() ) {
 				ofxPanel& gui = s->getGui();
@@ -241,43 +233,29 @@ void ofApp::PreviousScene() {
 	}
 }
 
-//--------------------------------------------------------------
-void ofApp::keyReleased( int key ) {
-
-}
-
-//--------------------------------------------------------------
-void ofApp::mouseMoved( int x, int y ) {
-
-}
 
 //--------------------------------------------------------------
 void ofApp::mouseDragged( int x, int y, int button ) {
 	// Left click is left mouse position, right click right mouse position
-#ifdef MOUSE_INTERACTION
 	ccUser* mouse = userManager.getMouseUser();
+	if ( mouse == NULL )
+		return;
+
 	if ( button == OF_MOUSE_BUTTON_LEFT )
 		mouse->setPositions( { (x * 1.f) / ofGetWidth(), (y * 1.f) / ofGetHeight(), 0.f }, mouse->right() );
-	else
+	else if ( button == OF_MOUSE_BUTTON_RIGHT )
 		mouse->setPositions( mouse->left(), { (x * 1.f) / ofGetWidth(), (y * 1.f) / ofGetHeight(), 0.f } );
-#endif //  #ifdef PRESENTATION_MODE
 }
 
 //--------------------------------------------------------------
 void ofApp::mousePressed( int x, int y, int button ) {
+	if ( userManager.getMouseUser() == NULL )
+		userManager.registerMouseUser();
 }
 
 //--------------------------------------------------------------
 void ofApp::mouseReleased( int x, int y, int button ) {
-#ifdef MOUSE_INTERACTION
-	// Reset user motion by moving by zero 
-	ccUser* mouse = userManager.getMouseUser();
-	if ( button == OF_MOUSE_BUTTON_LEFT )
-		mouse->setMotions( { 0.f, 0.f, 0.f }, mouse->getMotions().second );
-	else
-		mouse->setMotions( mouse->getMotions().first, { 0.f, 0.f, 0.f } );
-#endif //  #ifdef PRESENTATION_MODE
-
+	userManager.removeMouseUser();
 }
 
 //--------------------------------------------------------------

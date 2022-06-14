@@ -38,11 +38,14 @@ void ofApp::setup() {
 
 	lostUserListener = tracker.lostUser.newListener( [this]( ofxNiTE2::User::Ref u ) {
 		std::cout << "Lost user: " << u->getId() << std::endl;
+		std::cout << "Lost user: " << u->getId() << std::endl;
 		removeUser( u );
 		printUsers();
 	} );
 
 	sendConnectionStarted();
+
+	skeletonFbo.allocate( 640, 480, GL_RGBA );
 }
 
 //--------------------------------------------------------------
@@ -129,15 +132,23 @@ void ofApp::sendUser( int id, user& user ) {
 /// This method draws the skeleton and ??
 /// </summary>
 void ofApp::draw() {
+	ofBackground( 0 );
+	ofEnableAlphaBlending();
+
 	depthPixels = tracker.getPixelsRef( 1000, 4000 );
 	depthTexture.loadData( depthPixels );
 
 	// Draw skeleton 2D
 	ofSetColor( 255 );
-	depthTexture.draw( 0, 0 );
+	depthTexture.draw( 0, 0, ofGetWidth(), ofGetHeight() );
 	ofSetColor( ofColor::green );
-	tracker.draw();
 
+	skeletonFbo.begin();
+	ofClear( 0 );
+	tracker.draw();
+	skeletonFbo.end();
+	skeletonFbo.draw( 0, 0, ofGetWidth(), ofGetHeight() );
+	/*
 	std::map<int, user>::iterator it = users.begin();
 	std::map<int, user>::iterator itEnd = users.end();
 	while ( it != itEnd ) {
@@ -147,6 +158,7 @@ void ofApp::draw() {
 		ofDrawCircle( it->second.right, 10 );
 		it++;
 	}
+	*/
 
 	ofSetColor( 255 );
 	ofDrawBitmapString( "Tracker FPS: " + ofToString( tracker.getFrameRate() ), 20, ofGetHeight() - 40 );

@@ -13,8 +13,8 @@ FluidScene::FluidScene()
 	step( false ),
 	sequenceDuration( 10.f ),
 	sequenceTransitionDuration( 1.f ),
-	lastSequene( SequenceName::Default ),
-	currentSequence( SequenceName::Default ),
+	lastSequene( SequenceName::Empty ),
+	currentSequence( SequenceName::Empty ),
 	lastSequenceTime( 0.f ),
 	shading( DEFAULT ) {}
 
@@ -322,7 +322,10 @@ void FluidScene::updateParameters() {
 
 FluidScene::SequenceName FluidScene::randSequence()
 {
-	return static_cast<SequenceName>(rand() % NUM_SEQ);
+	SequenceName seq = static_cast<SequenceName>(rand() % NUM_SEQ);
+	if ( shading == ShadingType::VELOCITY && seq == SequenceName::Stop )
+		seq = randSequence();
+	return seq;
 }
 
 

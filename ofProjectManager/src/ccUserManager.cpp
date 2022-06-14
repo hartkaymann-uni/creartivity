@@ -1,6 +1,7 @@
 #include "ccUserManager.h"
 
-ccUserManager::ccUserManager()
+ccUserManager::ccUserManager() : 
+	mouseUserId( -1 )
 {
 	users.clear();
 }
@@ -14,7 +15,22 @@ void ccUserManager::registerUser( ccUser& user )
 void ccUserManager::removeUser( int id )
 {
 	map<int, ccUser>::iterator it = users.find( id );
-	users.erase( it );
+	if( it != users.end() )
+		users.erase( it );
+}
+
+void ccUserManager::registerMouseUser()
+{
+	ccUser mouseUser;
+	mouseUserId = getUserCount() + (int) ofRandom(1000); // set mouse id to a random value
+	mouseUser.setId( mouseUserId );
+	registerUser( mouseUser );
+}
+
+void ccUserManager::removeMouseUser()
+{
+	removeUser( mouseUserId );
+	mouseUserId = -1;
 }
 
 map<int, ccUser>* const ccUserManager::getUsers()
@@ -55,10 +71,13 @@ int ccUserManager::getUserCount() {
 
 ccUser* const ccUserManager::getUser( int id )
 {
+	if ( !users.count( id ) ) 
+		return NULL;
 	return &(users.at( id ));
 }
 
 ccUser* const ccUserManager::getMouseUser()
 {
-	return &users[0];
+	if ( mouseUserId == -1 ) return NULL;
+	return &users[mouseUserId];
 }

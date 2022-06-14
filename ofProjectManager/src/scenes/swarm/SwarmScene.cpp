@@ -139,7 +139,7 @@ void SwarmScene::update() {
 
 void SwarmScene::draw() {
 	ofClear(ofColor(0, 0, 0, 255));
-
+	ofPushStyle();
 	camera.begin();
 	glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
 
@@ -154,6 +154,7 @@ void SwarmScene::draw() {
 
 	//ofEnableBlendMode(OF_BLENDMODE_ADD);
 	ofSetColor(255);
+	ofPopStyle();
 }
 
 void SwarmScene::DrawParticles() {
@@ -672,8 +673,8 @@ void SwarmScene::ApplyInteraction() {
 		interactionShader.setUniform1i("hand_count", hand_count);
 	}
 
-	/*cout << "0. Hand Position: " << user_hands[0] << endl;
-	cout << "MousePosition: " << getProjectedPosition(mousePosition) << endl;
+	//cout << "0. Hand Position: " << user_hands[0] << " hand count: " << hand_count << endl;
+	/*cout << "MousePosition: " << getProjectedPosition(mousePosition) << endl;
 	cout << "Handcount: " << user_hands.size() << endl;*/
 
 	interactionShader.dispatchCompute((particles.size() + 1024 - 1) / 1024, 1, 1);
@@ -727,9 +728,13 @@ array<ofVec3f, MAX_SWARM_HANDS> SwarmScene::GetUserHandsArray(ccScene::Coordinat
 	hands_max.fill(ofVec3f(0.f));
 
 	int n = user_hands.size();
+	int handCounter = 0;
 	for (size_t i = 0; i < n; i++) {
 		if (i >= hands_max.max_size()) break;
-		hands_max[i] = user_hands[i];
+		if ((!glm::isnan(user_hands[i].x)) && (!glm::isnan( user_hands[i].y )) && (!glm::isnan( user_hands[i].z ))) {
+			hands_max[handCounter] = user_hands[i];
+			handCounter++;
+		} 
 	}
 
 	return hands_max;
@@ -753,7 +758,7 @@ float SwarmScene::SceneIntro() {
 
 	SetSequence(ParameterSequence(4, SequenceName::Intro));
 
-	return 3.8f;
+	return 0.8f;
 }
 
 // Triggered when this scene is closed
@@ -762,5 +767,5 @@ float SwarmScene::SceneOutro() {
 
 	SetSequence(ParameterSequence(3, SequenceName::Outro));
 
-	return 2.8f;
+	return 0.8f;
 }
