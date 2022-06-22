@@ -1,7 +1,7 @@
 /*
 *  @author: Irene Santana Martin, Christine Schuller, Kay Hartmann, Cosmo Strattner, Marvin Esche, Franziska Streifert
 *
-*  May 2022
+*  June 2022
 *
 *  This class contains basic app functionalities for the interaction.
 */
@@ -12,7 +12,7 @@
 
 //--------------------------------------------------------------
 /// <summary>
-/// Initializing all the variables and methods
+/// Initializing all the variables and methods for the program to work properly
 /// </summary>
 void ofApp::setup() {
 	ofSetFrameRate( 60 );
@@ -28,8 +28,10 @@ void ofApp::setup() {
 	tracker.setup( device );
 	tracker.enableTrackingOutOfFrame( true );
 
+	// OSC setup
 	sender.setup( HOST, PORT );
 
+	// Preparing user detection
 	newUserListener = tracker.newUser.newListener( [this]( ofxNiTE2::User::Ref u ) {
 		std::cout << "New user: " << u->getId() << std::endl;
 		registerUser( u );
@@ -68,7 +70,7 @@ void ofApp::update() {
 		float xr = RHD.getGlobalPosition().x;
 		float yr = RHD.getGlobalPosition().y;
 
-		// Calibration 
+		// Calibration of right and left hand in the environment
 		if ( xl < left )left = xl;
 		if ( xl > right )right = xl;
 		if ( yl < top )top = yl;
@@ -80,6 +82,7 @@ void ofApp::update() {
 		if ( yr > bottom )bottom = yr;
 
 		int id = user->getId();
+
 		// Position of left hand
 		users[id].left.x = ofMap( xl, left, right, 0.f, 1.f, true );
 		users[id].left.y = 1.f - ofMap( yl, top, bottom, 0.f, 1.f, true );
@@ -89,6 +92,8 @@ void ofApp::update() {
 		users[id].right.y = 1.f - ofMap( yr, top, bottom, 0.f, 1.f, true );
 
 		ofApp::user& u = users[id];
+
+		// Testing if coordinates of hands are tracked correctly
 		//printf( "user %i: Left:[ %.3f, %.3f] Right:[ %.3f, %.3f ] \n", i, u.positionLeft.x, u.positionLeft.y, u.positionRight.x, u.positionRight.y );
 	};
 
@@ -111,6 +116,7 @@ void ofApp::sendUser( int id, user& user ) {
 		user.right.y >= 0.f) )
 		return;
 
+	// OSC sending user data
 	ofxOscMessage m;
 	std::string addr = "/user/data/";
 	addr += ofToString( id );
@@ -129,7 +135,7 @@ void ofApp::sendUser( int id, user& user ) {
 
 //--------------------------------------------------------------
 /// <summary>
-/// This method draws the skeleton and ??
+/// This method draws the skeleton
 /// </summary>
 void ofApp::draw() {
 	ofBackground( 0 );
@@ -166,6 +172,9 @@ void ofApp::draw() {
 }
 
 //--------------------------------------------------------------
+/// <summary>
+/// ...
+/// </summary>
 void ofApp::exit() {
 	tracker.exit();
 	device.exit();
@@ -173,7 +182,7 @@ void ofApp::exit() {
 
 //--------------------------------------------------------------
 /// <summary>
-/// This method distributes an ID to an user
+/// This method distributes an ID to a new user entering the installation
 /// The first user is assigned to ID 1
 /// </summary>
 void ofApp::registerUser( ofxNiTE2::User::Ref u )
@@ -208,8 +217,8 @@ void ofApp::removeUser( ofxNiTE2::User::Ref user )
 
 //--------------------------------------------------------------
 /// <summary>
-/// Testing Method
-/// It prints the tracked Users with the ID in the Console
+/// Testing method
+/// It prints the tracked users with the ID in the console
 /// </summary>
 void ofApp::printUsers() {
 	std::cout << "Users: [ ";

@@ -29,7 +29,7 @@ public:
 private:
 	int width, height;
 	ofxPanel gui;
-	ofxButton add_button, remove_button;
+	ofxButton add_button, remove_button, coreographed;
 	ofParameter<bool> isSequencerInControl;
 	glm::vec2 lastMousePos;
 
@@ -52,6 +52,14 @@ private:
 
 	void handleAddButtonClick();
 	void handleRemoveButtonClick();
+	
+	bool coreoRunning = false;
+	float coreoStart = 0.f;
+	ofParameter<float> coreoDuration;
+	ofParameter<float> coreoWidth;
+	ofParameter<float> coreoHeight;
+	void OnCoreographedChange();
+
 
 	void createUserPattern(int x, int y);
 	ofColor getUserColor(int id);

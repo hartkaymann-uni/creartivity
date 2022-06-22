@@ -9,6 +9,7 @@ int main( ){
 	settings.setSize( 640, 640 );
 	settings.setPosition( ofVec2f(10, 100) );
 	ofCreateWindow( settings );
+
 	
 	ofRunApp(new ofApp());
 

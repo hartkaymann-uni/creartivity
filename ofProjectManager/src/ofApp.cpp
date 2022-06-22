@@ -92,7 +92,7 @@ void ofApp::draw() {
 		for ( ccScene* s : scenes ) {
 			if ( s->getName() == sceneManager.getCurrentSceneName() ) {
 				ofxPanel& gui = s->getGui();
-				gui.setPosition( ofGetWidth() - gui.getWidth() - 10, ofGetHeight() - gui.getHeight() - 10 );
+				gui.setPosition( ofGetWidth() - gui.getWidth() - 10, ofGetHeight() - gui.getHeight() - 50 );
 				s->getGui().draw();
 			}
 		}
