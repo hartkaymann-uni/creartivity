@@ -141,7 +141,7 @@ namespace fluid {
 		boundary( velocity, velocity, -1.f );
 	}
 
-	void ccSolver::advect( Field& advected, Field& output, float d ) {
+	void ccSolver::advect( PingPong& advected, PingPong& output, float d ) {
 		advectProgram.begin();
 
 		advectProgram.setUniformTexture( "velocity", velocity.read->getTexture(), 2 );
@@ -162,7 +162,7 @@ namespace fluid {
 	}
 
 	// Computes the boundaries of the simulation domain
-	void ccSolver::boundary( Field& input, Field& output, float scale ) {
+	void ccSolver::boundary( PingPong& input, PingPong& output, float scale ) {
 		if ( !grid.applyBounds )
 			return;
 
@@ -191,7 +191,7 @@ namespace fluid {
 	}
 
 	// Apply boundary logic to one side
-	void ccSolver::boundarySide( Field& input, Field& output, ofPolyline& line, glm::vec2 offset, float scale ) {
+	void ccSolver::boundarySide( PingPong& input, PingPong& output, ofPolyline& line, glm::vec2 offset, float scale ) {
 		boundariesProgram.begin();
 
 		boundariesProgram.setUniformTexture( "read", input.read->getTexture(), 1 );
@@ -207,7 +207,7 @@ namespace fluid {
 		boundariesProgram.end();
 	}
 
-	void ccSolver::vortex( Field& output ) {
+	void ccSolver::vortex( PingPong& output ) {
 		vorticityProgram.begin();
 
 		vorticityProgram.setUniformTexture( "velocity", velocity.read->getTexture(), 2 );
@@ -224,7 +224,7 @@ namespace fluid {
 		vorticityProgram.end();
 	}
 
-	void ccSolver::vortexConfine( Field& vorticity, Field& output ) {
+	void ccSolver::vortexConfine( PingPong& vorticity, PingPong& output ) {
 		vorticityforceProgram.begin();
 
 		vorticityforceProgram.setUniformTexture( "velocity", velocity.read->getTexture(), 2 );
@@ -245,7 +245,7 @@ namespace fluid {
 		vorticityforceProgram.end();
 	}
 
-	void ccSolver::diffuse( ofShader& jacobi, Field& x, Field& b, Field& output, float alpha, float beta, float scale ) {
+	void ccSolver::diffuse( ofShader& jacobi, PingPong& x, PingPong& b, PingPong& output, float alpha, float beta, float scale ) {
 		for ( int i = 0; i < s.jacobiIterations; i++ ) {
 			diffuseStep( jacobi, x, b, output, alpha, beta );
 			boundary( output, output, scale );
@@ -253,7 +253,7 @@ namespace fluid {
 
 	}
 
-	void ccSolver::diffuseStep( ofShader& jacobi, Field& x, Field& b, Field& output, float alpha, float beta ) {
+	void ccSolver::diffuseStep( ofShader& jacobi, PingPong& x, PingPong& b, PingPong& output, float alpha, float beta ) {
 		jacobi.begin();
 
 		jacobi.setUniformTexture( "x", x.read->getTexture(), 1 );
@@ -273,7 +273,7 @@ namespace fluid {
 		jacobi.end();
 	}
 
-	void ccSolver::diverge( Field& divergence ) {
+	void ccSolver::diverge( PingPong& divergence ) {
 		divergenceProgram.begin();
 
 		divergenceProgram.setUniformTexture( "velocity", velocity.read->getTexture(), 2 );
@@ -290,7 +290,7 @@ namespace fluid {
 		divergenceProgram.end();
 	}
 
-	void ccSolver::gradiate( Field& output ) {
+	void ccSolver::gradiate( PingPong& output ) {
 		gradientProgram.begin();
 
 		gradientProgram.setUniformTexture( "p", pressure.read->getTexture(), 1 );
@@ -308,7 +308,7 @@ namespace fluid {
 		gradientProgram.end();
 	}
 
-	void ccSolver::splat( Field& read, glm::vec3 color, glm::vec2 point ) {
+	void ccSolver::splat( PingPong& read, glm::vec3 color, glm::vec2 point ) {
 		splatProgram.begin();
 
 		splatProgram.setUniformTexture( "read", read.read->getTexture(), 2 );
@@ -327,7 +327,7 @@ namespace fluid {
 		splatProgram.end();
 	}
 
-	void ccSolver::gravitate( Field& output ) {
+	void ccSolver::gravitate( PingPong& output ) {
 		gravityProgram.begin();
 
 		gravityProgram.setUniformTexture( "velocity", velocity.read->getTexture(), 2 );

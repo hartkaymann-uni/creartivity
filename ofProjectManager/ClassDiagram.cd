@@ -1,2 +1,232 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ClassDiagram /> 
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="ofApp" Collapsed="true">
+    <Position X="11.75" Y="9.5" Width="1.5" />
+    <NestedTypes>
+      <Enum Name="ofApp::SceneChangeType" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>src\ofApp.h</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AIgAAAABCIgAMAgAAAIAAIACIAAAICAgJEAABCAMAgQ=</HashCode>
+      <FileName>src\ofApp.h</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="userManager" />
+      <Field Name="sceneManager" />
+      <Field Name="receiver" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="ccScene" Collapsed="true">
+    <Position X="14.5" Y="13.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EIoAIQBAggAoQAwAQIIAAAAAAAQgQgAAIFBgAOAMAAA=</HashCode>
+      <FileName>src\scenes\ccScene.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ofxApp" Collapsed="true">
+    <Position X="11.75" Y="8.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAAGBEAKwAIQAKAMMAQECAACAAAAgAAAgABCGAKAQAA=</HashCode>
+      <FileName>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxAppUtils\src\ofxApp.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ofxScene" Collapsed="true">
+    <Position X="14.5" Y="12" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>KEAAIgQQQAAACABIAACAAAhEADAAABVABECEggAAAgA=</HashCode>
+      <FileName>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxAppUtils\src\ofxScene.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ofxSceneManager" Collapsed="true">
+    <Position X="14.5" Y="11" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>HGgBAsJg4igAIApEgIKACAQBpiQoADQIYkIAsKQOBAE=</HashCode>
+      <FileName>E:\workspace\openFrameworks\of_v0.11.2_vs2017_release\addons\ofxAppUtils\src\ofxSceneManager.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ccUser" Collapsed="true">
+    <Position X="11.75" Y="11.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CgAAEQAAAAACEAiAACAgIBACAgAIAAAAAAAgAAAAggA=</HashCode>
+      <FileName>src\ccUser.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ccUserManager" Collapsed="true">
+    <Position X="11.75" Y="11" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>YQAAACAACAACAAACAAAAAABAAAAQAQgAAAAABBAAAAA=</HashCode>
+      <FileName>src\ccUserManager.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FluidScene" Collapsed="true">
+    <Position X="13.25" Y="14.75" Width="1.5" />
+    <NestedTypes>
+      <Enum Name="FluidScene::ShadingType" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>src\scenes\fluid\FluidScene.h</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+      <Enum Name="FluidScene::SequenceName" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>src\scenes\fluid\FluidScene.h</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+      <Struct Name="FluidScene::SequenceParameters" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>src\scenes\fluid\FluidScene.h</NewMemberFileName>
+        </TypeIdentifier>
+      </Struct>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>MwRJJPTEBAFAlAiISEvCKOCgBQ5gmwgBgFMiACY+wAI=</HashCode>
+      <FileName>src\scenes\fluid\FluidScene.h</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="solver" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="ccReceiver" Collapsed="true">
+    <Position X="9" Y="11" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIIAAAAAAAAAAAAAAAAAIAAAAAAwAAAIBAAAAAAAAAA=</HashCode>
+      <FileName>src\ccReceiver.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SwarmScene" Collapsed="true">
+    <Position X="15.5" Y="14.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ECshDAzgAhKA4ewIEk4IAFMGEyIAIGwQYVAgwCANAgw=</HashCode>
+      <FileName>src\scenes\swarm\SwarmScene.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="contour::ContourLinesScene" Collapsed="true">
+    <Position X="17.5" Y="14.75" Width="1.5" />
+    <NestedTypes>
+      <Enum Name="contour::ContourLinesScene::SequenceName" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>src\scenes\contourlines\ContourLinesScene.h</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+      <Struct Name="contour::ContourLinesScene::SequenceParameters" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>src\scenes\contourlines\ContourLinesScene.h</NewMemberFileName>
+        </TypeIdentifier>
+      </Struct>
+    </NestedTypes>
+    <AssociationLine Name="interaction" Type="PingPong" FixedToPoint="true">
+      <Path>
+        <Point X="18.25" Y="15.441" />
+        <Point X="18.25" Y="18" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>EAAJAACEAAJEHggIIAoCGACAEAQQEwIAEFAqDAScEAA=</HashCode>
+      <FileName>src\scenes\contourlines\ContourLinesScene.h</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="interaction" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="fluid::ccSolver" Collapsed="true">
+    <Position X="13.25" Y="16" Width="1.5" />
+    <NestedTypes>
+      <Struct Name="fluid::ccSolver::Settings" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>src\scenes\fluid\ccFluid.h</NewMemberFileName>
+        </TypeIdentifier>
+      </Struct>
+      <Struct Name="fluid::ccSolver::Grid" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>src\scenes\fluid\ccFluid.h</NewMemberFileName>
+        </TypeIdentifier>
+      </Struct>
+    </NestedTypes>
+    <AssociationLine Name="divergence" Type="PingPong" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="14.125" Y="16.562" />
+        <Point X="14.125" Y="17.146" />
+        <Point X="14.938" Y="17.146" />
+        <Point X="14.938" Y="18" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="density" Type="PingPong" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="13.506" Y="16.562" />
+        <Point X="13.506" Y="16.937" />
+        <Point X="12.938" Y="16.937" />
+        <Point X="12.938" Y="18" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="pressure" Type="PingPong" FixedToPoint="true">
+      <Path>
+        <Point X="13.875" Y="16.562" />
+        <Point X="13.875" Y="18" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="velocity" Type="PingPong" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="14.562" Y="16.562" />
+        <Point X="14.562" Y="16.935" />
+        <Point X="16.938" Y="16.935" />
+        <Point X="16.938" Y="18" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="vorticity" Type="PingPong" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="14.312" Y="16.562" />
+        <Point X="14.312" Y="17.046" />
+        <Point X="15.938" Y="17.046" />
+        <Point X="15.938" Y="18" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>IIAEAxAXAEIBEIoggJACAJYQIAiwgxAKAIVABBAAoMA=</HashCode>
+      <FileName>src\scenes\fluid\ccFluid.h</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="divergence" />
+      <Field Name="density" />
+      <Field Name="pressure" />
+      <Field Name="velocity" />
+      <Field Name="vorticity" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="gol::GameOfLifeScene" Collapsed="true">
+    <Position X="11" Y="14.75" Width="1.5" />
+    <NestedTypes>
+      <Enum Name="gol::GameOfLifeScene::ShadingType" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>src\scenes\gameoflife\GameOfLifeScene.h</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+      <Enum Name="gol::GameOfLifeScene::SequenceName" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>src\scenes\gameoflife\GameOfLifeScene.h</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+      <Struct Name="gol::GameOfLifeScene::SequenceParameters" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>src\scenes\gameoflife\GameOfLifeScene.h</NewMemberFileName>
+        </TypeIdentifier>
+      </Struct>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAABICiEAABNHAgLgkIiDACAgACiEUIBEFAiRAAeAAI=</HashCode>
+      <FileName>src\scenes\gameoflife\GameOfLifeScene.h</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="cellPingPong" />
+    </ShowAsAssociation>
+  </Class>
+  <Struct Name="PingPong" Collapsed="true">
+    <Position X="11.75" Y="18" Width="6.75" />
+    <TypeIdentifier>
+      <HashCode>AEQAAAAAAAAAAAAAACAAAAAAAAEAIAAAAQAAAAAAAAA=</HashCode>
+      <FileName>src\utils\ccPingPong.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

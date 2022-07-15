@@ -1,12 +1,14 @@
 #include "ccReceiver.h"
 
-ccReceiver::ccReceiver( string host, int port )
+ccReceiver::ccReceiver( string host, int port ) 
+	: userManager( new ccUserManager() ),
+	connectionStatusString( "Status: offline" )
 {
-	receiver.setup( PORT );
-	ofLog() << "Listening on port " << PORT;
+	receiver.setup( port );
+	ofLog() << "Listening on port " << port;
 }
 
-// Receive and handle user data sent by our ofInput
+
 // TODO: create smaller functions to handle different adresses
 void ccReceiver::receiveMessages() {
 	

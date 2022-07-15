@@ -2,6 +2,10 @@
 
 #include "ccUser.h"
 
+
+/// <summary>
+/// Class for user storage and management.Scenes should only store a reference to one instance (TODO: make singleton).
+/// </summary>
 class ccUserManager
 {
 public:

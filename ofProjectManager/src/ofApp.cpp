@@ -10,7 +10,7 @@ using namespace contour;
 extern int SCREEN_WIDTH;
 extern int SCREEN_HEIGHT;
 
-//--------------------------------------------------------------
+
 void ofApp::setup() {
 	ofBackground( 255, 255, 0 );
 
@@ -21,6 +21,7 @@ void ofApp::setup() {
 	transformer.setTransforms( true, true, false, true, true );
 	setTransformer( &transformer );*/
 
+	receiver = ccReceiver( HOST, PORT );
 	receiver.setUserManager( &userManager );
 
 	// Load scenes
@@ -46,7 +47,6 @@ void ofApp::setup() {
 	}
 }
 
-//--------------------------------------------------------------
 void ofApp::update() {
 	userManager.updateUserPositions();
 
@@ -65,13 +65,12 @@ void ofApp::update() {
 	strm << "fps: " << ofGetFrameRate();
 	ofSetWindowTitle( strm.str() );
 
-	//
 	CheckSceneTransitions();
 }
 
-//--------------------------------------------------------------
 void ofApp::draw() {
 
+	// Debug gui
 	if ( isDebug() ) {
 		ofNoFill();
 		ofSetColor( 255 );
@@ -80,9 +79,8 @@ void ofApp::draw() {
 		ofFill();
 	}
 
-	transformer.pop();
-
 	// Draw current scene info
+	//transformer.pop();
 	ofSetColor( 200 );
 	if ( showGui ) {
 		ofxBitmapString( 12, ofGetHeight() - 8 )
@@ -97,11 +95,9 @@ void ofApp::draw() {
 			}
 		}
 	}
-
-	transformer.push();
+	//transformer.push();
 }
 
-//--------------------------------------------------------------
 void ofApp::keyPressed( int key ) {
 	switch ( key ) {
 
@@ -151,7 +147,7 @@ void ofApp::keyPressed( int key ) {
 	}
 }
 
-//--------------------------------------------------------------
+// Check wether time for the next scene has come and do scene transition if it has
 void ofApp::CheckSceneTransitions() {
 	if ( ofGetElapsedTimef() > nextActionTime && nextAction != NULL ) {
 		(this->*nextAction)();
@@ -159,8 +155,10 @@ void ofApp::CheckSceneTransitions() {
 	}
 }
 
-
-//--------------------------------------------------------------
+/// <summary>
+/// Change scene into specified direction. Delay before transition is determined by return value of SceneOutro.
+/// </summary>
+/// <param name="type">Type of transition, either Next or Previous.</param>
 void ofApp::ChangeScene( SceneChangeType type ) {
 	unsigned int currentSceneIndex = sceneManager.getCurrentSceneIndex();
 	float delay = 0.f;
@@ -186,7 +184,6 @@ void ofApp::ChangeScene( SceneChangeType type ) {
 	nextActionTime = ofGetElapsedTimef() + delay;
 }
 
-//--------------------------------------------------------------
 void ofApp::NextScene() {
 	int nextSceneIndex = GetSceneIndex( SceneChangeType::Next );
 	sceneManager.nextScene();
@@ -195,10 +192,16 @@ void ofApp::NextScene() {
 	}
 }
 
-//--------------------------------------------------------------
+void ofApp::PreviousScene() {
+	int previousIndex = GetSceneIndex( SceneChangeType::Previous );
+	sceneManager.prevScene();
+	if ( sceneManager.getSceneAt( previousIndex ) != NULL ) {
+		static_cast<ccScene*>(sceneManager.getSceneAt( previousIndex ))->SceneIntro();
+	}
+}
+
 unsigned int  ofApp::GetSceneIndex( SceneChangeType type ) {
 	unsigned int currentSceneIndex = sceneManager.getCurrentSceneIndex();
-
 
 	switch ( type )
 	{
@@ -224,64 +227,31 @@ unsigned int  ofApp::GetSceneIndex( SceneChangeType type ) {
 	}
 }
 
-//--------------------------------------------------------------
-void ofApp::PreviousScene() {
-	int previousIndex = GetSceneIndex( SceneChangeType::Previous );
-	sceneManager.prevScene();
-	if ( sceneManager.getSceneAt( previousIndex ) != NULL ) {
-		static_cast<ccScene*>(sceneManager.getSceneAt( previousIndex ))->SceneIntro();
-	}
-}
-
-
-//--------------------------------------------------------------
 void ofApp::mouseDragged( int x, int y, int button ) {
 	// Left click is left mouse position, right click right mouse position
 	ccUser* mouse = userManager.getMouseUser();
 	if ( mouse == NULL )
 		return;
 
+	// Left mouse button is "left hand", right mouse button is "right hand"
 	if ( button == OF_MOUSE_BUTTON_LEFT )
 		mouse->setPositions( { (x * 1.f) / ofGetWidth(), (y * 1.f) / ofGetHeight(), 0.f }, mouse->right() );
 	else if ( button == OF_MOUSE_BUTTON_RIGHT )
 		mouse->setPositions( mouse->left(), { (x * 1.f) / ofGetWidth(), (y * 1.f) / ofGetHeight(), 0.f } );
 }
 
-//--------------------------------------------------------------
 void ofApp::mousePressed( int x, int y, int button ) {
 	if ( userManager.getMouseUser() == NULL )
 		userManager.registerMouseUser();
 }
 
-//--------------------------------------------------------------
 void ofApp::mouseReleased( int x, int y, int button ) {
 	userManager.removeMouseUser();
 }
 
-//--------------------------------------------------------------
-void ofApp::mouseEntered( int x, int y ) {
-
-}
-
-//--------------------------------------------------------------
-void ofApp::mouseExited( int x, int y ) {
-
-}
-
-//--------------------------------------------------------------
 void ofApp::windowResized( int w, int h ) {
 	// transformer.setNewScreenSize() is automatically called if the transformer is set
 	for ( ccScene* scene : scenes ) {
 		scene->windowResized( w, h );
 	}
-}
-
-//--------------------------------------------------------------
-void ofApp::gotMessage( ofMessage msg ) {
-
-}
-
-//--------------------------------------------------------------
-void ofApp::dragEvent( ofDragInfo dragInfo ) {
-
 }

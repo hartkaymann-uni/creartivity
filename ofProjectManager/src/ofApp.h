@@ -15,11 +15,15 @@
 #include "ofxTransformPanel.h"
 #endif
 
+// OSC Receiver Settings, need to match settings in ofInteraction/ofInput
 #define HOST "localhost"
 #define PORT 12345
 
 class ccScene;
 
+/// <summary>
+/// Called after application is startedand contains the main update and draw loop, as well as some event handlers
+/// </summary>
 class ofApp : public ofxApp {
 
 public:
@@ -27,49 +31,42 @@ public:
 	void update();
 	void draw();
 
+	// Event Handlers
 	void keyPressed( int key );
 	void mouseDragged( int x, int y, int button );
 	void mousePressed( int x, int y, int button );
 	void mouseReleased( int x, int y, int button );
-	void mouseEntered( int x, int y );
-	void mouseExited( int x, int y );
 	void windowResized( int w, int h );
-	void dragEvent( ofDragInfo dragInfo );
-	void gotMessage( ofMessage msg );
 
-	//Scene Handling
+	// Scene Handling
 	enum class SceneChangeType {
 		Next,
 		Previous,
 		Last
 	};
-
 	void ChangeScene(SceneChangeType type);
 	void CheckSceneTransitions();
 	unsigned int GetSceneIndex(SceneChangeType type);
-	//-----
-
 	float nextActionTime;
 	void (ofApp::* nextAction)();
 
-	ofxTransformer transformer;
-	ofxSceneManager sceneManager;
-	int lastScene;
-
-	ccReceiver receiver;
-	vector<ccScene*> scenes;
 
 private:
 
-	float durationPerScene = 60.f;
-	float lastSceneChangeTime;
-
-	void NextScene();
-	void PreviousScene();
+	ofxTransformer transformer;
 
 	bool showGui = true;
 
 	ccUserManager userManager;
-
 	ofImage img;
+
+	ofxSceneManager sceneManager;
+	float durationPerScene = 60.f;
+	float lastSceneChangeTime;
+	int lastScene;
+	void NextScene();
+	void PreviousScene();
+
+	ccReceiver receiver;
+	vector<ccScene*> scenes;
 };

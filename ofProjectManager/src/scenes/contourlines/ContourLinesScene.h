@@ -5,9 +5,18 @@
 
 namespace contour {
 
+
+	/// <summary>
+	/// Contour lines scene. Imitates stylized moving topology maps.
+	/// </summary>
 	class ContourLinesScene :public ccScene
 	{
 	public:
+		/// <summary>
+		/// Create a new scene. Optionally specify the resolution of the grid upon which the topology map is based on.
+		/// </summary>
+		/// <param name="w">Width of the grid</param>
+		/// <param name="h">Height of the grid</param>
 		ContourLinesScene( int w = 128, int h = 80 );
 		void setup();
 		void update();
@@ -18,15 +27,23 @@ namespace contour {
 		void windowResized( int w, int h);
 
 	private:
+		/// <summary>
+		/// Real time, used to determine when new sequences should start or scene should be changed.
+		/// </summary>
 		float time;
+		/// <summary>
+		/// Time used in shaders. Impacts movement speed and rate of change of the map.
+		/// </summary>
 		float sceneTime;
 
+		// Grid parameters
+		glm::vec2 grid;
+		ofPlanePrimitive plane;
+
+		// Shader parameters
 		ofShader contourLineShader;
 		bool wireframeShading = false;
 		void changeShading();
-
-		glm::vec2 grid;
-		ofPlanePrimitive plane;
 
 		ofParameterGroup terrainUniforms;
 		ofParameter<float> p_Speed;
@@ -37,18 +54,19 @@ namespace contour {
 		ofParameter<float> p_Persistance;
 		ofParameter<bool> p_Sequences;
 
-		ofParameterGroup mouseUniforms;
-		ofParameter<float> p_MouseRadius;
-		ofParameter<float> p_MouseStrength;
-
 		ofParameterGroup lightUniforms;
 		ofParameter<bool> p_MoveLight;
 
+		// Interaction parameters
 		PingPong interaction;
 		ofShader splatShader;
 		ofShader subtractShader;
-
 		void splat( glm::vec3 point );
+
+		// Mouse strength and radius, also used for all other types of interaction
+		ofParameterGroup mouseUniforms;
+		ofParameter<float> p_MouseRadius;
+		ofParameter<float> p_MouseStrength;
 
 		// Members for sequences
 		enum class SequenceName {

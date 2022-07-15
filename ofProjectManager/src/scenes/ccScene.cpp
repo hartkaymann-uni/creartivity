@@ -1,12 +1,13 @@
 #include "ccScene.h"
 
-ccScene::ccScene(std::string name)
-	: ofxScene(name),
-	width(ofGetWidth()),
-	height(ofGetHeight()),
-	mouseIsDown(false),
-	mousePosition(0.f, 0.f, 0.f),
-	scenesPath("../../src/scenes")
+ccScene::ccScene( std::string name )
+	: ofxScene( name ),
+	width( ofGetWidth() ),
+	height( ofGetHeight() ),
+	mouseIsDown( false ),
+	mousePosition( 0.f, 0.f, 0.f ),
+	scenesPath( "../../src/scenes" ),
+	userManager( new ccUserManager() )
 {
 	setSingleSetup(true);
 	camera.disableMouseInput();
@@ -51,29 +52,6 @@ ofVec3f ccScene::getNormalToWorldPosition(ofVec2f normalPos) {
 	ofVec2f worldPos = getScreenToWorldPosition(screenPos);
 
 	return worldPos;
-}
-
-void ccScene::updateUserPositions()
-{
-	map<int, ccUser>* users = userManager->getUsers();
-	std::map<int, ccUser>::iterator it = users->begin();
-	std::map<int, ccUser>::iterator itEnd = users->end();
-	user_positions.fill(ofVec2f(.0f)); // refilling array every call might take a while, maybe just handle the lostUser event smarter
-	auto i = 0;
-	while (it != itEnd) {
-		float xl = it->second.left().x * width;
-		float yl = it->second.left().y * height;
-		float xr = it->second.right().x * width;
-		float yr = it->second.right().y * height;
-
-		ofVec2f left = getProjectedPosition(ofVec3f(xl, yl, 0.f));
-		ofVec2f right = getProjectedPosition(ofVec3f(xr, yr, 0.f));
-
-		user_positions[i++] = left;
-		user_positions[i++] = right;
-
-		it++;
-	}
 }
 
 bool ccScene::isInBounds(ofVec2f pos)

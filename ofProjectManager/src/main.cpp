@@ -1,6 +1,8 @@
 #include "ofMain.h"
 #include "ofApp.h"
 
+
+// Presentation mode autmoatically sets the application to fullscreen and adjusts the position
 #if 0
 #define PRESENTATION_MODE
 #endif 
@@ -16,6 +18,7 @@ int SCREEN_HEIGHT = 1080;
 //========================================================================
 int main() {
 
+	// Define window settings
 	ofGLFWWindowSettings settings;
 	settings.setGLVersion(3, 2);
 	settings.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
