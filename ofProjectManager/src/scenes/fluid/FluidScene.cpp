@@ -12,7 +12,7 @@ FluidScene::FluidScene()
 	debug( false ),
 	step( false ),
 	sequenceDuration( 10.f ),
-	sequenceTransitionDuration( 1.f ),
+	sequenceTransitionDuration( 5.f ),
 	lastSequene( SequenceName::Empty ),
 	currentSequence( SequenceName::Empty ),
 	lastSequenceTime( 0.f ),
@@ -127,7 +127,8 @@ void FluidScene::update()
 	updateSequence();
 	updateParameters();
 
-	vector<ccUser> u = userManager->getUserVec();
+	ccUserManager& um = ccUserManager::get();
+	vector<ccUser> u = um.getUserVec();
 
 	// Do one solver step
 	solver.step( u );

@@ -32,7 +32,15 @@ namespace gol {
 
 		float time;
 
+		/// <summary>
+		/// Do one solver step.
+		/// </summary>
 		void step();
+
+		/// <summary>
+		/// Add influence from interaction to scene for one specified point.
+		/// </summary>
+		/// <param name="point">Point of interaction</param>
 		void addInteraction(glm::vec2 point);
 
 		enum ShadingType {
@@ -42,6 +50,7 @@ namespace gol {
 		ShadingType shading;
 		void changeShading();
 
+		// Shaders
 		ofShader logicShader;
 		ofShader splatShader;
 		ofShader instancedShader;
@@ -50,8 +59,10 @@ namespace gol {
 
 		PingPong cellPingPong;
 
+		// Sphere that will be rendered instanced as cells
 		ofVboMesh vboSphere;
 
+		// GUI
 		ofParameterGroup shaderUniforms;
 		ofParameter<ofVec2f> dimensions;
 		ofParameter<int> sphereResolution;
@@ -66,8 +77,14 @@ namespace gol {
 		float calculateSphereRadius(ofVec2f dim);
 		void allocateCellBuffer(int rows, int cols);
 
+		/// <summary>
+		/// Cells are rendered as outlines of 3D spheres. Combining of cells is done via stencil buffer.
+		/// </summary>
 		void drawOutlined(ofVboMesh& mesh, ofShader& instance, ofShader& outline);
 
+		/// <summary>
+		/// Cells are rendered as metaballs. Effect is achieved via a fragment shader.
+		/// </summary>
 		void drawMetaballs(ofShader& metaballs);
 
 
@@ -102,7 +119,9 @@ namespace gol {
 		void updateParameters();
 		SequenceName randSequence();
 
-		float SceneIntro();
-		float SceneOutro();
+
+		// Scene transitions
+		float SceneIntro() override;
+		float SceneOutro() override;
 	};
 }

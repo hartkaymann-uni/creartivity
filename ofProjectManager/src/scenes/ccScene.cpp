@@ -6,8 +6,7 @@ ccScene::ccScene( std::string name )
 	height( ofGetHeight() ),
 	mouseIsDown( false ),
 	mousePosition( 0.f, 0.f, 0.f ),
-	scenesPath( "../../src/scenes" ),
-	userManager( new ccUserManager() )
+	scenesPath( "../../src/scenes" )
 {
 	setSingleSetup(true);
 	camera.disableMouseInput();
@@ -116,7 +115,8 @@ void ccScene::windowResized(int w, int h) {
 }
 
 vector<ofVec3f> ccScene::getHandPositions(CoordinateSystem system) {
-	vector<ofVec2f> hands_camera = userManager->getHandsVec();
+	ccUserManager& um = ccUserManager::get();
+	vector<ofVec2f> hands_camera = um.getHandsVec();
 
 	vector<ofVec3f> hands_world;
 	for (auto& hand : hands_camera) {

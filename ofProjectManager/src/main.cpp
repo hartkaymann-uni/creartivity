@@ -8,7 +8,7 @@
 #endif 
 
 #ifdef PRESENTATION_MODE
-int SCREEN_WIDTH = 1920; // 3840
+int SCREEN_WIDTH = 3840; // 3840
 int SCREEN_HEIGHT = 1080; // 1080
 #else
 int SCREEN_WIDTH = 1920;
@@ -23,9 +23,9 @@ int main() {
 	settings.setGLVersion(3, 2);
 	settings.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
 #ifdef PRESENTATION_MODE
-	settings.setPosition(glm::vec2{ -(SCREEN_WIDTH - 1), 0 });
+	settings.setPosition(glm::vec2{ 10, 10 });
 	settings.monitor = 1;
-	settings.windowMode = OF_FULLSCREEN;
+	settings.windowMode = OF_WINDOW;	
 #endif
 
 	//settings.decorated = false;

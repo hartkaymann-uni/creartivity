@@ -40,7 +40,6 @@ public:
 		World
 	};
 
-	inline void setUserManager( ccUserManager* um ) { userManager = um; }
 	inline ofxPanel& getGui() { return gui; };
 	vector<ofVec3f> getHandPositions(CoordinateSystem system);
 
@@ -59,8 +58,6 @@ protected:
 
 	ofEasyCam camera;
 	ofxPanel gui;
-
-	ccUserManager* userManager;
 
 	void resetCamera();
 	ofVec3f getProjectedPosition( ofVec3f mp );

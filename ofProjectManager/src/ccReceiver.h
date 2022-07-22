@@ -20,12 +20,9 @@ public:
 
 	inline string getConnectionStatus() const { return connectionStatusString; }
 
-	inline void setUserManager( ccUserManager* um ) { userManager = um; }
-
 private:
 
 	ofxOscReceiver receiver;
-	ccUserManager* userManager;
 
 	string connectionStatusString;
 };

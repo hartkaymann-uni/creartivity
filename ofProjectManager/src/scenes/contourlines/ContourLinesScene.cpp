@@ -6,7 +6,7 @@ namespace contour {
 		sceneTime( 0.f ),
 		grid( { w, h } ),
 		sequenceDuration( 10.f ),
-		sequenceTransitionDuration( 1.f ),
+		sequenceTransitionDuration( 5.f ),
 		lastSequene( SequenceName::Empty ),
 		currentSequence( SequenceName::Empty ),
 		lastSequenceTime( 0.f )
@@ -82,7 +82,8 @@ namespace contour {
 		}
 
 		// Apply interaction for all users
-		vector<ccUser> u = userManager->getUserVec();
+		ccUserManager& um = ccUserManager::get();
+		vector<ccUser> u = um.getUserVec();
 		for ( vector<ccUser>::iterator it = u.begin(); it != u.end(); it++ ) {
 			ccUser user = *it;
 			// Only apply interaction if user is moving

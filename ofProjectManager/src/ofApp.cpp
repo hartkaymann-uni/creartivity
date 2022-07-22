@@ -2,7 +2,7 @@
 
 #include "scenes/scenes.h"
 
-//#define SWITCH_SCENES
+#define SWITCH_SCENES
 
 using namespace gol;
 using namespace contour;
@@ -22,7 +22,6 @@ void ofApp::setup() {
 	setTransformer( &transformer );*/
 
 	receiver = ccReceiver( HOST, PORT );
-	receiver.setUserManager( &userManager );
 
 	// Load scenes
 	scenes.push_back( (FluidScene*)sceneManager.add( new FluidScene() ) );
@@ -40,15 +39,11 @@ void ofApp::setup() {
 	nextAction = NULL;
 
 	setSceneManager( &sceneManager );
-
-	// Give all scenes a pointer to the receiver
-	for ( ccScene* scene : scenes ) {
-		scene->setUserManager( &userManager );
-	}
 }
 
 void ofApp::update() {
-	userManager.updateUserPositions();
+	ccUserManager& um = ccUserManager::get();
+	um.updateUserPositions();
 
 #ifdef SWITCH_SCENES
 	// Change to next scene at an intervall
@@ -229,7 +224,8 @@ unsigned int  ofApp::GetSceneIndex( SceneChangeType type ) {
 
 void ofApp::mouseDragged( int x, int y, int button ) {
 	// Left click is left mouse position, right click right mouse position
-	ccUser* mouse = userManager.getMouseUser();
+	ccUserManager& um = ccUserManager::get();
+	ccUser* mouse = um.getMouseUser();
 	if ( mouse == NULL )
 		return;
 
@@ -241,12 +237,14 @@ void ofApp::mouseDragged( int x, int y, int button ) {
 }
 
 void ofApp::mousePressed( int x, int y, int button ) {
-	if ( userManager.getMouseUser() == NULL )
-		userManager.registerMouseUser();
+	ccUserManager& um = ccUserManager::get();
+	if ( um.getMouseUser() == NULL )
+		um.registerMouseUser();
 }
 
 void ofApp::mouseReleased( int x, int y, int button ) {
-	userManager.removeMouseUser();
+	ccUserManager& um = ccUserManager::get();
+	um.removeMouseUser();
 }
 
 void ofApp::windowResized( int w, int h ) {

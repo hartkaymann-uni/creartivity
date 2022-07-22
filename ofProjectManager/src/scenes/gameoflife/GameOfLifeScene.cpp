@@ -10,8 +10,8 @@ namespace gol {
 		time( 0.f ),
 		cellOffset( 0.f ),
 		sequenceDuration( 10.f ),
-		sequenceTransitionDuration( 1.f ),
-		lastSequene( SequenceName::Default ),
+		sequenceTransitionDuration( 5.f ),
+		lastSequene( SequenceName::Empty ),
 		currentSequence( SequenceName::Default ),
 		lastSequenceTime( 0.f ),
 		shading( ShadingType::OUTLINE )
@@ -154,7 +154,8 @@ namespace gol {
 		step();
 
 		// Apply interaction for all users
-		vector<ccUser> u = userManager->getUserVec();
+		ccUserManager& um = ccUserManager::get();
+		vector<ccUser> u = um.getUserVec();
 		for (vector<ccUser>::iterator it = u.begin(); it != u.end(); it++) {
 			glm::vec2 left(it->getPositons().first);
 			glm::vec2 right(it->getPositons().second);
