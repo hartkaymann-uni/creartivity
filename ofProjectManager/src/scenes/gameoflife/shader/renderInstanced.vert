@@ -126,5 +126,6 @@ void main()
     
     vNormal = normal.xyz;
     vColor = vec4(1.0, 1.0-col.z, 1.0-col.z, 1.0);
-   // vColor = vec4(1.0, 1.0, 1.0, 1.0);
+    // No color
+    // vColor = vec4(1.0, 1.0, 1.0, 1.0);
 }

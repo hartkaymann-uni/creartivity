@@ -5,44 +5,9 @@
 #include <map>
 
 #include "ofxUbo.h"
+#include "utils/ccPingPong.h"
 
 namespace gol {
-	struct pingPongBuffer {
-	public:
-		void allocate(int _width, int _height, int _internalformat = GL_RGBA) {
-			// Allocate
-			for (int i = 0; i < 2; i++) {
-				FBOs[i].allocate(_width, _height, _internalformat);
-				FBOs[i].getTexture().setTextureMinMagFilter(GL_NEAREST, GL_NEAREST);
-			}
-
-			//Assign
-			src = &FBOs[0];
-			dst = &FBOs[1];
-
-			// Clean
-			clear();
-		}
-
-		void swap() {
-			std::swap(src, dst);
-		}
-
-		void clear() {
-			for (int i = 0; i < 2; i++) {
-				FBOs[i].begin();
-				ofClear(0, 255);
-				FBOs[i].end();
-			}
-		}
-
-		ofFbo& operator[](int n) { return FBOs[n]; }
-		ofFbo* src;       // Source       ->  Ping
-		ofFbo* dst;       // Destination  ->  Pong
-
-	private:
-		ofFbo   FBOs[2];    // Real addresses of ping/pong FBO«s
-	};
 
 	class GameOfLifeScene : public ccScene {
 
@@ -67,7 +32,15 @@ namespace gol {
 
 		float time;
 
+		/// <summary>
+		/// Do one solver step.
+		/// </summary>
 		void step();
+
+		/// <summary>
+		/// Add influence from interaction to scene for one specified point.
+		/// </summary>
+		/// <param name="point">Point of interaction</param>
 		void addInteraction(glm::vec2 point);
 
 		enum ShadingType {
@@ -77,16 +50,19 @@ namespace gol {
 		ShadingType shading;
 		void changeShading();
 
+		// Shaders
 		ofShader logicShader;
 		ofShader splatShader;
 		ofShader instancedShader;
 		ofShader outlineShader;
 		ofShader metaballShader;
 
-		pingPongBuffer cellPingPong;
+		PingPong cellPingPong;
 
+		// Sphere that will be rendered instanced as cells
 		ofVboMesh vboSphere;
 
+		// GUI
 		ofParameterGroup shaderUniforms;
 		ofParameter<ofVec2f> dimensions;
 		ofParameter<int> sphereResolution;
@@ -101,8 +77,14 @@ namespace gol {
 		float calculateSphereRadius(ofVec2f dim);
 		void allocateCellBuffer(int rows, int cols);
 
+		/// <summary>
+		/// Cells are rendered as outlines of 3D spheres. Combining of cells is done via stencil buffer.
+		/// </summary>
 		void drawOutlined(ofVboMesh& mesh, ofShader& instance, ofShader& outline);
 
+		/// <summary>
+		/// Cells are rendered as metaballs. Effect is achieved via a fragment shader.
+		/// </summary>
 		void drawMetaballs(ofShader& metaballs);
 
 
@@ -137,7 +119,9 @@ namespace gol {
 		void updateParameters();
 		SequenceName randSequence();
 
-		float SceneIntro();
-		float SceneOutro();
+
+		// Scene transitions
+		float SceneIntro() override;
+		float SceneOutro() override;
 	};
 }

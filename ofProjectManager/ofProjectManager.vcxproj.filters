@@ -381,5 +381,6 @@
     <None Include="src\scenes\fluid\shader\bloomfinal.frag" />
     <None Include="src\scenes\fluid\shader\halfhalf.frag" />
     <None Include="src\scenes\swarm\shader\changeDepth.comp" />
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
 </Project>

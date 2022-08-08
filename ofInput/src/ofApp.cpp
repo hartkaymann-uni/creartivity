@@ -29,12 +29,12 @@ void ofApp::setup()
 	isSequencerInControl.addListener(this, &ofApp::OnSequencerControlChange);
 	coreographed.addListener(this, &ofApp::OnCoreographedChange);
 
-	//InitTestSeqeuenceArray();
+	InitTestSeqeuenceArray();
 	currentSequenceIndex = 0;
 	//sequences.push_back(ParameterSequence(20, SequenceName::UserChaos));
 	//sequences.push_back(ParameterSequence(1, SequenceName::NoUsers));
 	//sequences.push_back(ParameterSequence(5, SequenceName::RandomTeleport));
-	sequences.push_back(ParameterSequence(1000, SequenceName::Smooth));
+	//sequences.push_back(ParameterSequence(1000, SequenceName::Smooth));
 	SetSequence(sequences[currentSequenceIndex]);
 
 	lastMousePos = unmapped(glm::vec2(0.4f, 0.7f));
@@ -270,7 +270,7 @@ void ofApp::StartSequence() {
 	nextSequenceTime = lastSequenceTime + currentSequence.duration;
 
 	RemoveAllUsers();
-	addNewUsers(1);
+	addNewUsers(5);
 
 	switch (currentSequence.sequenceType)
 	{

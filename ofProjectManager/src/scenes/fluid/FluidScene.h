@@ -3,12 +3,13 @@
 #include "ccFluid.h"
 #include "ccScene.h"
 
-/*
-	Fluid Scene
-	Simulation of an incompressible, homogenous fluid using the navier-stokes equaution.
-	Right now the simulation is two-dimensional, but three-dimensional movement could be added in the future.
-*/
 
+
+/// <summary>
+/// Fluid Scene
+/// Simulation of an incompressible, homogenous fluid using the navier - stokes equaution.
+///	Right now the simulation is two - dimensional, but three - dimensional movement could be added in the future.	
+/// </summary>
 class FluidScene : public ccScene
 {
 public:
@@ -29,6 +30,7 @@ private:
 
 	ofPlanePrimitive plane;
 
+	// GUI parameter groupe
 	ofParameterGroup groupGeneral;
 	ofParameterGroup groupGrid;
 	ofParameterGroup groupViscosity;
@@ -38,6 +40,7 @@ private:
 	ofParameterGroup groupBloom;
 	ofParameterGroup groupView;
 
+	// GUI and simulation parameters
 	ofParameter<bool> p_Sequences;
 	ofParameter<bool> p_DebugView;
 	ofParameter<bool> p_Bounds;
@@ -58,8 +61,10 @@ private:
 	ofParameter<glm::vec2> p_GravityDirection;
 	ofParameter<ofFloatColor> p_SplatColor;
 
+	// Fluid solver
 	fluid::ccSolver solver;
 
+	// Shaders and shading parameters
 	ofShader displayScalar;
 	ofShader displayVector;
 	ofShader displayDefault;
@@ -75,12 +80,13 @@ private:
 	ShadingType shading;
 	void changeShading();
 
+	// Draw methods
 	void drawDefault();
 	void drawDebug();
 	void drawScalarField(ofFbo* const field, int x, int y, int w, int h);
 	void drawVelocity();
 	void drawBloom();
-	fluid::Field bloom;
+	PingPong bloom;
 
 	// Members for sequences
 	enum class SequenceName {
@@ -121,6 +127,7 @@ private:
 	float SceneIntro();
 	float SceneOutro();
 
+	// Parameter changed listeners, update members of fluid solver
 	inline void handleCurlChanged( float& c ) { solver.setCurl( c ); }
 	inline void handleBoundsChanged( bool& b ) { solver.setBounds( b ); }
 	inline void handleScaleChanged( float& s ) { solver.setScale( s ); }

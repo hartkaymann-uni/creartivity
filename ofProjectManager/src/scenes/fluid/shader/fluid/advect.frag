@@ -54,11 +54,10 @@ void main()
     vec2 uv = gl_FragCoord.xy / gridSize.xy;
     float scale = 1.0 / gridScale;
 
-    // trace points back in time
+    // Trace points back in time
     vec2 p = gl_FragCoord.xy - timestep * scale * texture(velocity, uv).xy;
 
     vFragColor = vec4(dissipation * f4texRECTbilerp(advected, p), 1.0);
-    //vFragColor = vec4(dissipation * bilerp(advected, p), 0.0, 1.0);
 
     // Debug outs:
     //vFragColor = vec4(uv, 0.0, 1.0);

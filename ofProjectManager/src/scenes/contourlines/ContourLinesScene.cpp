@@ -3,10 +3,10 @@
 namespace contour {
 	ContourLinesScene::ContourLinesScene( int w, int h ) : ccScene( "ContourLines" ),
 		time( 0.f ),
-		sceneTime(0.f),
+		sceneTime( 0.f ),
 		grid( { w, h } ),
 		sequenceDuration( 10.f ),
-		sequenceTransitionDuration( 1.f ),
+		sequenceTransitionDuration( 5.f ),
 		lastSequene( SequenceName::Empty ),
 		currentSequence( SequenceName::Empty ),
 		lastSequenceTime( 0.f )
@@ -24,6 +24,7 @@ namespace contour {
 		plane = ofPlanePrimitive( width, height, grid.x, grid.y );
 		plane.setPosition( width / 2, height / 2, 0.f );
 
+		// Disable rectangular textures to give texture arbitrary dimensions
 		ofDisableArbTex();
 		interaction.allocate( grid, GL_R32F );
 		ofEnableArbTex();
@@ -42,12 +43,12 @@ namespace contour {
 		mouseUniforms.add( p_MouseRadius.set( "u_radius", 0.003, 0.0, 0.01 ) );
 		mouseUniforms.add( p_MouseStrength.set( "u_strength", 0.2, 0.0, 1.0 ) );
 
-//		lightUniforms.add( p_MoveLight.set( "u_moving", false ) );
-//		lightUniforms.setName( "Light" );
+		//		lightUniforms.add( p_MoveLight.set( "u_moving", false ) );
+		//		lightUniforms.setName( "Light" );
 
 		gui.add( terrainUniforms );
 		gui.add( mouseUniforms );
-//		gui.add( lightUniforms );
+		//		gui.add( lightUniforms );
 
 		gui.setPosition( width - gui.getWidth() - 10, height - gui.getHeight() - 10 );
 
@@ -56,28 +57,33 @@ namespace contour {
 
 	void ContourLinesScene::update()
 	{
+		// Update time 
 		time = ofGetElapsedTimef();
 		float dt = ofGetLastFrameTime();
 		sceneTime += dt * p_Speed.get();
 		//cout << sceneTime << endl;
 
+		// Handle anything sequence realted
 		updateSequence();
 		updateParameters();
 
 		// Flatten terrain
-		subtractShader.begin();
-		subtractShader.setUniformTexture( "read", interaction.read->getTexture(), 2 );
-		subtractShader.setUniform2f( "grid", grid );
+		{
+			subtractShader.begin();
+			subtractShader.setUniformTexture( "read", interaction.read->getTexture(), 2 );
+			subtractShader.setUniform2f( "grid", grid );
 
-		interaction.write->begin();
-		plane.draw();
-		interaction.write->end();
-		interaction.swap();
+			interaction.write->begin();
+			plane.draw();
+			interaction.write->end();
+			interaction.swap();
 
-		subtractShader.end();
+			subtractShader.end();
+		}
 
 		// Apply interaction for all users
-		vector<ccUser> u = userManager->getUserVec();
+		ccUserManager& um = ccUserManager::get();
+		vector<ccUser> u = um.getUserVec();
 		for ( vector<ccUser>::iterator it = u.begin(); it != u.end(); it++ ) {
 			ccUser user = *it;
 			// Only apply interaction if user is moving
@@ -99,7 +105,7 @@ namespace contour {
 				contourLineShader.setUniform1f( "u_time", sceneTime );
 				contourLineShader.setUniform2f( "u_mouse", ofGetMouseX(), height - ofGetMouseY() );
 				contourLineShader.setUniforms( terrainUniforms );
-//				contourLineShader.setUniforms( lightUniforms );
+				// contourLineShader.setUniforms( lightUniforms );
 
 				ofDisableAlphaBlending();
 
@@ -112,6 +118,10 @@ namespace contour {
 
 	}
 
+	/// <summary>
+	/// Apply interaction at one point.
+	/// </summary>
+	/// <param name="point">Position of interaction, only x and y values are actually used</param>
 	void ContourLinesScene::splat( glm::vec3 point ) {
 		splatShader.begin();
 
@@ -132,9 +142,9 @@ namespace contour {
 
 	void ContourLinesScene::keyPressed( int key )
 	{
-		// reset the camera to the middle of the scene
 		switch ( key ) {
 		case 'r':
+			// Center camera
 			camera.reset();
 			camera.setPosition( width / 2, height / 2, (width + height) / 2 );
 			break;
@@ -154,6 +164,7 @@ namespace contour {
 		}
 	}
 
+	// Only swapping between wireframe and normal shading at the moment
 	void ContourLinesScene::changeShading() {
 		wireframeShading = !wireframeShading;
 	}
@@ -173,7 +184,6 @@ namespace contour {
 	// Sequences //
 	///////////////	
 
-	/*	Define values for different sequences and create sequence map */
 	/*
 	*	type	name
 	*	float	speed
@@ -183,6 +193,18 @@ namespace contour {
 	*	float	lacunarity
 	*	float	persistance
 	*/
+
+	/// <summary>
+	/// Define values for different sequences and create sequence map.
+	///  <para> Values in order: </para>
+	///  <para> type	name </para>
+	///	 <para> float	speed </para>
+	///	 <para> float	scale </para>
+	///	 <para> float	amplitude </para>
+	///	 <para> float	thickness </para>
+	///	 <para> float	lacunarity </para>
+	///	 <para> float	persistance </para>
+	/// </summary>
 	void ContourLinesScene::initSequences()
 	{
 		lastSequenceTime = time;
@@ -245,7 +267,6 @@ namespace contour {
 	//////////////////////
 	// Scene Transition //
 	//////////////////////
-
 	float ContourLinesScene::SceneIntro() {
 		lastSequene = SequenceName::Empty;
 		setSequence( randSequence() );

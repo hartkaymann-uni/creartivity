@@ -12,9 +12,9 @@
 int main( ){
 	ofGLFWWindowSettings settings;
 	settings.setGLVersion( 3, 2 );	
-	settings.setSize( 1080, 720);
-	settings.setPosition( glm::vec2( 0, 0 ) );
-	settings.decorated = false;
+	settings.setSize( 760, 480 );
+	settings.setPosition( glm::vec2( 50, 50 ) );
+	settings.decorated = true;
 
 	ofCreateWindow( settings );
 	

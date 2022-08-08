@@ -127,7 +127,8 @@ void FluidScene::update()
 	updateSequence();
 	updateParameters();
 
-	vector<ccUser> u = userManager->getUserVec();
+	ccUserManager& um = ccUserManager::get();
+	vector<ccUser> u = um.getUserVec();
 
 	// Do one solver step
 	solver.step( u );

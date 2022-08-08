@@ -1,12 +1,13 @@
 #include "ccReceiver.h"
 
-ccReceiver::ccReceiver( string host, int port )
+ccReceiver::ccReceiver( string host, int port ) 
+	: connectionStatusString( "Status: offline" )
 {
-	receiver.setup( PORT );
-	ofLog() << "Listening on port " << PORT;
+	receiver.setup( port );
+	ofLog() << "Listening on port " << port;
 }
 
-// Receive and handle user data sent by our ofInput
+
 // TODO: create smaller functions to handle different adresses
 void ccReceiver::receiveMessages() {
 	
@@ -28,7 +29,8 @@ void ccReceiver::receiveMessages() {
 				float xr = m.getArgAsFloat( 2 );
 				float yr = m.getArgAsFloat( 3 );
 
-				ccUser* u = userManager->getUser( id );
+				ccUserManager& um = ccUserManager::get();
+				ccUser* u = um.getUser( id );
 				// Check if user exists, create one if it does not
 				if ( u != NULL )
 					u->setTargetPositions( glm::vec3( xl, yl, 0.f ), glm::vec3( xr, yr, 0.f ) );
@@ -37,13 +39,17 @@ void ccReceiver::receiveMessages() {
 			else if (address.find( "new/" ) != string::npos) {
 				int id = m.getArgAsInt32( 0 );
 				ccUser newUser{ id, glm::vec3( 0.f, 0.f, 0.f ), glm::vec3( 0.f, 0.f, 0.f ) };
-				userManager->registerUser( newUser );
+
+				ccUserManager& um = ccUserManager::get();
+				um.registerUser( newUser );
 
 				ofLog( ofLogLevel::OF_LOG_NOTICE, "New User: %i", ofToString( id ) );
 			}
 			else if (address.find( "lost/" ) != string::npos) {
 				int id = m.getArgAsInt32( 0 );
-				userManager->removeUser( id );
+
+				ccUserManager& um = ccUserManager::get();
+				um.removeUser( id );
 
 				ofLog( ofLogLevel::OF_LOG_NOTICE, "Lost User: %i", ofToString( id ) );
 			}
