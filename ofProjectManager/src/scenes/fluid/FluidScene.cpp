@@ -12,7 +12,7 @@ FluidScene::FluidScene()
 	debug( false ),
 	step( false ),
 	sequenceDuration( 10.f ),
-	sequenceTransitionDuration( 5.f ),
+	sequenceTransitionDuration( 1.f ),
 	lastSequene( SequenceName::Empty ),
 	currentSequence( SequenceName::Empty ),
 	lastSequenceTime( 0.f ),

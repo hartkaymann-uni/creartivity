@@ -2,7 +2,7 @@
 
 #include "scenes/scenes.h"
 
-#define SWITCH_SCENES
+//#define SWITCH_SCENES
 
 using namespace gol;
 using namespace contour;
