@@ -310,16 +310,16 @@ void SwarmScene::dragEvent(ofDragInfo dragInfo) {
 // Creates an arrray with sequences
 void SwarmScene::InitSequences() {
 	currentSequenceIndex = 0;
-	sequences.push_back(ParameterSequence(20, SequenceName::BrainNeurons));
-	sequences.push_back(ParameterSequence(20, SequenceName::RepulsionStutter));
-	sequences.push_back(ParameterSequence(20, SequenceName::VeryDense));
-	sequences.push_back(ParameterSequence(20, SequenceName::VeryClose));
 	sequences.push_back(ParameterSequence(20, SequenceName::BrainNeuronsFlashLight));
 	sequences.push_back(ParameterSequence(20, SequenceName::CrazyTestOne));
 	sequences.push_back(ParameterSequence(20, SequenceName::BrainNeuronsDense));
 	sequences.push_back(ParameterSequence(20, SequenceName::Swarm));
 	sequences.push_back(ParameterSequence(20, SequenceName::BrainNeuronsCoarse));
 	sequences.push_back(ParameterSequence(20, SequenceName::CrazyClose));
+	sequences.push_back(ParameterSequence(20, SequenceName::RepulsionStutter));
+	sequences.push_back(ParameterSequence(20, SequenceName::BrainNeurons));
+	sequences.push_back(ParameterSequence(20, SequenceName::VeryDense));
+	sequences.push_back(ParameterSequence(20, SequenceName::VeryClose));
 
 	//	sequences.push_back(ParameterSequence(20, SequenceName::BrainNeurons));
 	//	sequences.push_back(ParameterSequence(7, SequenceName::BlackHole, 5));
