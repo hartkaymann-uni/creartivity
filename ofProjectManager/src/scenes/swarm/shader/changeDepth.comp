@@ -10,9 +10,8 @@ struct Particle{
 	vec4 pos;
 	vec4 vel;
 	vec4 color;
-	vec4 unique;
 	vec4 initialPos;
-	vec4 bufferPos;
+	vec4 unique;
 };
 
 layout(std140, binding=0) buffer particle{
@@ -46,7 +45,4 @@ void main(){
 
 	int index = int(p[gl_GlobalInvocationID.x].unique.y);
 	p3[index].pos.z = p[gl_GlobalInvocationID.x].pos.z;
-
-	
-	//p3[index].color = vec4(1,1,0,1);
 }

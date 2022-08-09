@@ -342,7 +342,6 @@
     <None Include="src\scenes\gameoflife\shader\renderInstanced.frag" />
     <None Include="src\scenes\gameoflife\shader\renderInstanced.vert" />
     <None Include="src\scenes\swarm\shader\intro.comp" />
-    <None Include="src\scenes\swarm\shader\swarm.comp" />
     <None Include="src\scenes\swarm\shader\swarm.frag" />
     <None Include="src\scenes\swarm\shader\swarm.vert" />
   </ItemGroup>

@@ -10,13 +10,14 @@ SwarmScene::SwarmScene() : ccScene("Swarm") {
 void SwarmScene::setup() {
 	camera.setFarClip(ofGetWidth() * 100);
 	ofShowCursor();
-	particleGroups = 40;
 	maxParticleDepth = ORIGINAL_MAX_PARTICLE_DEPTH;
 	minParticleDepth = ORIGINAL_MIN_PARTICLE_DEPTH;
+	particleGroups = 40;
 	particleAmount = 1024 * particleGroups;
+	user_circle_alpha = 1.0f;
+	user_circle_radius = 100;
 
-
-
+	// Initialize all particles
 	particles.resize(std::max(particleAmount, 1024));
 	int i = 0;
 	float step = (maxParticleDepth / (float)particleAmount);
@@ -25,18 +26,14 @@ void SwarmScene::setup() {
 		p.pos.y = ofRandom(0, 1000);
 		p.pos.z = ofRandom(-maxParticleDepth, -minParticleDepth);
 		p.pos.w = 1;
-
-		p.u = { 0,0,0,0 };
-		p.color = { 1, 1, 1, 1 };
 		p.initialPos = p.pos;
-		p.bufferPos = p.pos;
-
-		//int .z = (int)(-step * i);
+		p.color = { 1, 1, 1, 1 };
 		p.unique = { 0, i ,0, 0 };
 
 		i++;
 	}
 
+	// Set up all shaders
 	filesystem::path shader_path = getShaderPath();
 
 	introShader.setupShaderFromFile(GL_COMPUTE_SHADER, shader_path / "intro.comp");
@@ -57,8 +54,10 @@ void SwarmScene::setup() {
 	particleShader.load(shader_path / "swarm.vert", shader_path / "swarm.frag");
 	userCircleShader.load(shader_path / "userCircles.vert", shader_path / "userCircles.frag");
 
-	vector<Particle> sorted = SortParticles();
+	
+	vector<Particle> sorted = sortParticles();
 
+	// Initialize Buffers
 	particlesBuffer.allocate(particles, GL_DYNAMIC_DRAW);
 	particlesBuffer2.allocate(particles, GL_DYNAMIC_DRAW);
 	particlesBuffer3.allocate(sorted, GL_DYNAMIC_DRAW);
@@ -70,6 +69,8 @@ void SwarmScene::setup() {
 	vbo.setVertexBuffer(particlesBuffer3, 4, sizeof(Particle));
 	vbo.setColorBuffer(particlesBuffer3, sizeof(Particle), sizeof(glm::vec4) * 2);
 
+
+	// Initialize GUI
 	ofBackground(0);
 	ofEnableBlendMode(OF_BLENDMODE_ADD);
 	shaderUniforms.setName("shader params");
@@ -89,17 +90,12 @@ void SwarmScene::setup() {
 	gui.add(isSequencerInControl.set("Let Sequencer control", true));
 	gui.add(fps.set("fps", 60, 0, 60)); 
 
-	user_circle_alpha = 1.0f;
-	user_circle_radius = 100;
-
-	gui.add(dirAsColor.set("Useless Button", true));
-	//dirAsColor.addListener(this, &SwarmScene::dirAsColorChanged);
-
-	InitSequences();
+	// Initialize Sequences
+	initSequences();
 }
 
-//--------------------------------------------------------------
-vector<SwarmScene::Particle> SwarmScene::SortParticles() {
+// Sorts the particles according to their z-position
+vector<SwarmScene::Particle> SwarmScene::sortParticles() {
 	vector<Particle> output(particles);
 	std::sort(output.begin(), output.end(), SortByDepthOperator());
 
@@ -117,10 +113,6 @@ vector<SwarmScene::Particle> SwarmScene::SortParticles() {
 		index++;
 	}
 
-	/*for (auto& p : particles) {
-		cout << "Pos: " << p.pos << " refers id: " << p.unique.y << " is pos: " << output[p.unique.y].pos << endl;
-	};*/
-
 	return output;
 }
 
@@ -128,13 +120,13 @@ vector<SwarmScene::Particle> SwarmScene::SortParticles() {
 void SwarmScene::update() {
 	fps = ofGetFrameRate();
 
-	UpdateSequence();
-	ApplyParticleRules();
-	ApplyInteraction();
+	updateSequence();
+	applyParticleBehavior();
+	applyInteraction();
 }
 
 // ####################
-// CodeSection: Drawing Test
+// CodeSection: Drawing
 // ####################
 
 void SwarmScene::draw() {
@@ -146,21 +138,20 @@ void SwarmScene::draw() {
 	ofEnableDepthTest();
 	ofEnableBlendMode(OF_BLENDMODE_ALPHA);
 
-	DrawParticles();
+	drawParticles();
 
 	camera.end();
 
-	DrawUserCircles();
+	drawUserCircles();
 
-	//ofEnableBlendMode(OF_BLENDMODE_ADD);
 	ofSetColor(255);
 	ofPopStyle();
 }
 
-void SwarmScene::DrawParticles() {
+void SwarmScene::drawParticles() {
 	particleShader.begin();
 
-	// Inner particle core
+	// Inner particle core. Transparency is as calculated by the shader.
 	particleShader.setUniform1i("max_particle_depth", maxParticleDepth);
 	particleShader.setUniform1f("alphaMod", 1.0);
 	particleShader.setUniform1f("pointSize", 2);
@@ -169,7 +160,7 @@ void SwarmScene::DrawParticles() {
 
 	ofDisableDepthTest();
 
-	// Outer more transparent particle ring
+	// Outer more particle ring. Has a higher transparency and bigger point size.
 	particleShader.setUniform1f("alphaMod", 0.3);
 	particleShader.setUniform1f("pointSize", 5);
 	glPointSize(5);
@@ -178,9 +169,9 @@ void SwarmScene::DrawParticles() {
 	particleShader.end();
 }
 
-void SwarmScene::DrawUserCircles() {
+void SwarmScene::drawUserCircles() {
 	ccUserManager& um = ccUserManager::get();
-	array<ofVec3f, MAX_SWARM_HANDS> user_hands = GetUserHandsArray(ccScene::CoordinateSystem::Screen);
+	array<ofVec3f, MAX_SWARM_HANDS> user_hands = getUserHandsArray(ccScene::CoordinateSystem::Screen);
 	int hand_count = min(MAX_SWARM_HANDS, um.getUserCount() * 2);
 
 	for (int i = 0; i < hand_count; i++)
@@ -188,8 +179,6 @@ void SwarmScene::DrawUserCircles() {
 		userCircleShader.begin();
 
 		ofFill();
-		ofSetColor(ofColor::cyan);
-
 
 		userCircleShader.setUniform2f("screen_resolution", ofVec2f(ofGetWidth(), ofGetHeight()));
 		userCircleShader.setUniform3f("hand_position", user_hands[i]); 
@@ -198,27 +187,16 @@ void SwarmScene::DrawUserCircles() {
 
 		ofDrawCircle(user_hands[i], user_circle_radius);
 
-		//ofDisableDepthTest();
-
 		userCircleShader.end();
 	}
-
-	//cout << "rez: " << ofVec2f(ofGetWidth(), ofGetHeight()) << " - hand pos 0 : " << user_hands[0] << endl;
-
 }
 
-//--------------------------------------------------------------
-void SwarmScene::dirAsColorChanged(bool& dirAsColor) {
-	if (dirAsColor) {
-		vbo.enableColors();
-	}
-	else {
-		vbo.disableColors();
-	}
-}
+// ###################
+// CodeSection: Events
+// ###################
 
 //--------------------------------------------------------------
-void SwarmScene::UpdateMousePos(int x, int y, string action) {
+void SwarmScene::updateMousePos(int x, int y, string action) {
 	if (isInBounds(x, y))
 	{
 		mousePosition.set((ofVec3f(x, y, 0.0)));
@@ -228,88 +206,43 @@ void SwarmScene::UpdateMousePos(int x, int y, string action) {
 	}
 }
 
-//--------------------------------------------------------------
-void SwarmScene::keyPressed(int key) {
-}
-
-//--------------------------------------------------------------
+// Can be used for debugging
 void SwarmScene::keyReleased(int key) {
-	if (key == 't') {
+	/*if (key == 't') {
 		cout << "Retrigger Scene Intro" << endl;
-		SetSequence(ParameterSequence(3, SequenceName::Intro));
+		setSequence(ParameterSequence(3, SequenceName::Intro));
 	}
 	else if (key == 'd') {
-		ChangeParticleDepth(5000, 10000);
+		changeParticleDepth(5000, 10000);
 	}
 	else if (key == 'r') {
-		RevertParticleDepthToOriginal();
-	}
-}
-
-//--------------------------------------------------------------
-void SwarmScene::mouseMoved(int x, int y) {
+		revertParticleDepthToOriginal();
+	}*/
 }
 
 //--------------------------------------------------------------
 void SwarmScene::mouseDragged(int x, int y, int button) {
-	UpdateMousePos(x, y);
+	updateMousePos(x, y);
 }
 
 //--------------------------------------------------------------
 void SwarmScene::mousePressed(int x, int y, int button) {
-
 	isPressingMouse = true;
-	UpdateMousePos(x, y, "click");
-
-	switch (button) {
-	case 0:
-
-		break;
-	case 2:
-
-		break;
-	default:
-		break;
-	}
+	updateMousePos(x, y, "click");
 }
 
 //--------------------------------------------------------------
 void SwarmScene::mouseReleased(int x, int y, int button) {
 	isPressingMouse = false;
-	UpdateMousePos(x, y);
-}
-
-//--------------------------------------------------------------
-void SwarmScene::mouseEntered(int x, int y) {
-
-}
-
-//--------------------------------------------------------------
-void SwarmScene::mouseExited(int x, int y) {
-
-}
-
-//--------------------------------------------------------------
-void SwarmScene::windowResized(int w, int h) {
-
-}
-
-//--------------------------------------------------------------
-void SwarmScene::gotMessage(ofMessage msg) {
-
-}
-
-//--------------------------------------------------------------
-void SwarmScene::dragEvent(ofDragInfo dragInfo) {
-
+	updateMousePos(x, y);
 }
 
 // ######################
 // CodeSection: Sequencer
 // ######################
 
-// Creates an arrray with sequences
-void SwarmScene::InitSequences() {
+
+void SwarmScene::initSequences() {
 	currentSequenceIndex = 0;
 	sequences.push_back(ParameterSequence(20, SequenceName::BrainNeuronsFlashLight));
 	sequences.push_back(ParameterSequence(20, SequenceName::CrazyTestOne));
@@ -321,34 +254,30 @@ void SwarmScene::InitSequences() {
 	sequences.push_back(ParameterSequence(20, SequenceName::BrainNeurons));
 	sequences.push_back(ParameterSequence(20, SequenceName::VeryDense));
 	sequences.push_back(ParameterSequence(20, SequenceName::VeryClose));
-
-	//	sequences.push_back(ParameterSequence(20, SequenceName::BrainNeurons));
-	//	sequences.push_back(ParameterSequence(7, SequenceName::BlackHole, 5));
-	//	sequences.push_back(ParameterSequence(4, SequenceName::Explosion));
-	//	sequences.push_back(ParameterSequence(0.1f, SequenceName::NormalAttraction));
-	//	sequences.push_back(ParameterSequence(7, SequenceName::BlackHole, 3));
-	SetSequence(sequences[currentSequenceIndex]);
+	setSequence(sequences[currentSequenceIndex]);
 }
 
+
 // Sets currentSequence to a new sequence and immediately activates it.
-void SwarmScene::SetSequence(ParameterSequence sequence) {
+void SwarmScene::setSequence(ParameterSequence sequence) {
 	currentSequence = sequence;
-	StartSequence();
+	startSequence();
 }
 
 // Activates the current sequence by setting the intial parameters
-void SwarmScene::StartSequence() {
+void SwarmScene::startSequence() {
 	lastSequenceTime = ofGetElapsedTimef();
 	nextSequenceTime = lastSequenceTime + currentSequence.duration;
 
-	RevertParticleDepthToOriginal();
+	revertParticleDepthToOriginal();
 	particleColorStart.set(ofVec3f(0, 0, 0));
 	particleColorEnd.set(ofVec3f(0.9f, 0.9f, 0.9f));
 	user_circle_alpha = 1.0f;
 	user_circle_radius = 100;
 
-	ActivateRules();
+	activateRules();
 
+	// Set parameters according to sequence name
 	switch (currentSequence.sequenceType)
 	{
 	case SequenceName::BlackHole:
@@ -356,14 +285,14 @@ void SwarmScene::StartSequence() {
 		attractorForce.set(1250 * currentSequence.modifier);
 		repulsionCoeff.set(repulsionCoeff.getMin());
 		maxSpeed.set(2500 * currentSequence.modifier);
-		ChangeParticleDepth(3000, ORIGINAL_MAX_PARTICLE_DEPTH);
+		changeParticleDepth(3000, ORIGINAL_MAX_PARTICLE_DEPTH);
 		break;
 	case SequenceName::RepulsionStutter:
 		attractionCoeff.set(attractionCoeff.getMin());
 		attractorForce.set(attractorForce.getMax());
 		repulsionCoeff.set(repulsionCoeff.getMin());
 		maxSpeed.set(4000);
-		ChangeParticleDepth(3000, ORIGINAL_MAX_PARTICLE_DEPTH);
+		changeParticleDepth(3000, ORIGINAL_MAX_PARTICLE_DEPTH);
 		break;
 	case SequenceName::Explosion:
 		attractionCoeff.set(attractionCoeff.getMin());
@@ -404,7 +333,7 @@ void SwarmScene::StartSequence() {
 		repulsionCoeff.set(0.15f);
 		attractorForce.set(attractorForce.getMax());
 		maxSpeed.set(2500);
-		ChangeParticleDepth(3000, 6000);
+		changeParticleDepth(3000, 6000);
 		break;
 	}
 	case SequenceName::Swarm:
@@ -418,21 +347,21 @@ void SwarmScene::StartSequence() {
 		attractorForce.set(5000);
 		repulsionCoeff.set(0.5f);
 		maxSpeed.set(5000);
-		ChangeParticleDepth(1000, 3000);
+		changeParticleDepth(1000, 3000);
 		break;
 	case SequenceName::VeryDense:
 		attractionCoeff.set(0);
 		attractorForce.set(5000);
 		repulsionCoeff.set(0.5f);
 		maxSpeed.set(5000);
-		ChangeParticleDepth(1500, 1750);
+		changeParticleDepth(1500, 1750);
 		break;
 	case SequenceName::CrazyClose:
 		attractionCoeff.set(0);
 		attractorForce.set(5000);
 		repulsionCoeff.set(0.5f);
 		maxSpeed.set(5000);
-		ChangeParticleDepth(500, 2500);
+		changeParticleDepth(500, 2500);
 		break;
 	case SequenceName::Intro:
 	{
@@ -442,56 +371,53 @@ void SwarmScene::StartSequence() {
 		repulsionCoeff.set(0.75f);
 		maxSpeed.set(2500);
 		attractorForce.set(3000);
-
-		// This ensures that when this sequence is finished, the sequence loop starts with the sequence that was running before that
-		//currentSequenceIndex -= 1;
-		//if (currentSequenceIndex < 0) currentSequenceIndex = 0;
 		break;
 	}
 	default:
 		break;
 	}
 
-	UpdateSequence();
+	updateSequence();
 }
 
 // Activates all swarm movement rules
-void SwarmScene::ActivateRules() {
+void SwarmScene::activateRules() {
 	UseAttraction.set(true);
 	UseCohesion.set(true);
 	UseRepulsion.set(true);
 }
 
 // If nextSequenceTime has arrived, activate the next sequence in the sequences vector
-void SwarmScene::CheckForNextSequence() {
+void SwarmScene::checkForNextSequence() {
 	if (ofGetElapsedTimef() > nextSequenceTime) {
 		currentSequenceIndex++;
 		if (currentSequenceIndex >= sequences.size() || currentSequenceIndex < 0) currentSequenceIndex = 0;
 
-		SetSequence(sequences[currentSequenceIndex]);
+		setSequence(sequences[currentSequenceIndex]);
 		cout << "Swarm-Scene switched to next sequence with index " << currentSequenceIndex << " . Will wait for " << sequences[currentSequenceIndex].duration << " seconds now." << endl;
 	}
 }
 
 // Change the parameters over time according to the current scene
-void SwarmScene::UpdateSequence() {
+void SwarmScene::updateSequence() {
 	if (isSequencerInControl.get() == false) return;
 
-	CheckForNextSequence();
+	checkForNextSequence();
 
-	float currentTime = ofGetElapsedTimef();
-	float timeSinceStart = currentTime - lastSequenceTime;
-	// ofGetElapsedTime is sometimes buggy and results in a negative timeSinceStart, so this line prevents anything funky from happening
+	float timeSinceStart = ofGetElapsedTimef() - lastSequenceTime;
+	// ofGetElapsedTimef() can be buggy and lead to a negative timeSinceStart. With this line any unexpected behavior will be prevented.
 	timeSinceStart = max(0.f, timeSinceStart);
 
 	bool fadeOutColor = false;
 	if (currentSequence.duration - timeSinceStart < 3.f && currentSequence.sequenceType != SequenceName::Intro && currentSequence.sequenceType != SequenceName::Outro) fadeOutColor = true;
 
+	// Can be used to mess with the particle behavior calcualtion in the shader. This will lead to unexpected particle movement, but can create interesting effects because of it.
 	//float mod = ruleIterationMod.getMax() / 2 + (abs(sin(ofGetElapsedTimef() / 10)) * ruleIterationMod.getMax() / 2);
 	//ruleIterationMod.set(mod);
 
-	float percentage = min(timeSinceStart / currentSequence.duration, 1.f);
+	float sequencePercentage = min(timeSinceStart / currentSequence.duration, 1.f);
 
+	// Change parameters according to sequence name
 	switch (currentSequence.sequenceType)
 	{
 	case SequenceName::BlackHole: {
@@ -503,7 +429,7 @@ void SwarmScene::UpdateSequence() {
 	case SequenceName::CrazyTestOne: {
 		float newMaxDepth = 5000;
 		float newMinDepth = abs(sin(ofGetElapsedTimef())) * newMaxDepth - 100;
-		ChangeParticleDepth(newMinDepth, newMaxDepth);
+		changeParticleDepth(newMinDepth, newMaxDepth);
 
 		if(!fadeOutColor) particleColorStart.set(ofVec3f(min(0.8f, timeSinceStart * 0.5f), 0, 0));
 
@@ -569,20 +495,19 @@ void SwarmScene::UpdateSequence() {
 	}
 	case SequenceName::Intro:
 	{
-		particleColorStart.set(glm::vec3(0, 0, 0) * percentage);
-		particleColorEnd.set(glm::vec3(0.9, 0.9, 0.9) * percentage);
-		user_circle_alpha = min(1.f, percentage);
+		particleColorStart.set(glm::vec3(0, 0, 0) * sequencePercentage);
+		particleColorEnd.set(glm::vec3(0.9, 0.9, 0.9) * sequencePercentage);
+		user_circle_alpha = min(1.f, sequencePercentage);
 		break;
 	}
 	case SequenceName::Outro:
 	{
-		float percentageInverted = 1 - percentage;
 		ofVec3f increment = ofVec3f(-1.f) * ofGetLastFrameTime() * 0.35f;
 
 		particleColorStart.set(particleColorStart.get() + increment);
 		particleColorEnd.set(particleColorEnd.get() + increment);
 
-		user_circle_alpha = max(0.f, percentageInverted);
+		user_circle_alpha = max(0.f, 1 - sequencePercentage);
 
 		break;
 	}
@@ -602,7 +527,7 @@ void SwarmScene::UpdateSequence() {
 	{
 		float newMinDepth = 500; 
 		float newMaxDepth = abs(sin(ofGetElapsedTimef())) * 2000 + 600;
-		ChangeParticleDepth(newMinDepth, newMaxDepth);
+		changeParticleDepth(newMinDepth, newMaxDepth);
 
 		float newMaxSpeed = pow(abs(sin(ofGetElapsedTimef()*2)), 7) * 3000 + 2000;
 		maxSpeed.set(newMaxSpeed);
@@ -624,15 +549,13 @@ void SwarmScene::UpdateSequence() {
 
 		user_circle_radius = max(100.0, user_circle_radius - (0.1f + pow(user_circle_radius, 2) * 0.75f) * ofGetLastFrameTime());
 	}
-
-	//cout << "dur: " << currentSequence.duration << " time since start: " << timeSinceStart << endl;
 }
 
 // ####################
 // CodeSection: Shaders
 // ####################
 
-void SwarmScene::ApplyParticleRules() {
+void SwarmScene::applyParticleBehavior() {
 	behaviorShader.begin();
 
 	behaviorShader.setUniforms(shaderUniforms);
@@ -642,8 +565,9 @@ void SwarmScene::ApplyParticleRules() {
 	behaviorShader.setUniform1i("use_cohesion", (UseCohesion.get() ? 1 : 0));
 	behaviorShader.setUniform1i("use_repulsion", (UseRepulsion.get() ? 1 : 0));
 	behaviorShader.setUniform1i("freeze_particles", (freezeParticles.get() ? 1 : 0));
-	//behaviorShader.setUniform1i("particleAmount", particleAmount);
-	behaviorShader.setUniform1i("particleAmount", ruleIterationMod * 1024);
+	behaviorShader.setUniform1i("particleAmount", particleAmount);
+	// Use this for unexpected particle behavior.
+	//behaviorShader.setUniform1i("particleAmount", ruleIterationMod * 1024);
 	behaviorShader.setUniform1i("min_particle_depth", minParticleDepth);
 	behaviorShader.setUniform1i("max_particle_depth", maxParticleDepth);
 
@@ -654,7 +578,7 @@ void SwarmScene::ApplyParticleRules() {
 	particlesBuffer.copyTo(particlesBuffer2);
 }
 
-void SwarmScene::ApplyInteraction() {
+void SwarmScene::applyInteraction() {
 	interactionShader.begin();
 	interactionShader.setUniforms(shaderUniforms);
 	interactionShader.setUniform1i("freeze_particles", (freezeParticles.get() ? 1 : 0));
@@ -663,8 +587,9 @@ void SwarmScene::ApplyInteraction() {
 	interactionShader.setUniform1i("min_particle_depth", minParticleDepth);
 	interactionShader.setUniform1i("max_particle_depth", maxParticleDepth);
 
+	// Calculate the amount of hands and the respective hand positions
 	ccUserManager& um = ccUserManager::get();
-	array<ofVec3f, MAX_SWARM_HANDS> user_hands = GetUserHandsArray(ccScene::CoordinateSystem::World);
+	array<ofVec3f, MAX_SWARM_HANDS> user_hands = getUserHandsArray(ccScene::CoordinateSystem::World);
 	int hand_count = min(MAX_SWARM_HANDS, um.getUserCount() * 2);
 	if (user_hands.empty()) {
 		interactionShader.setUniform1i("hand_count", 0);
@@ -674,10 +599,6 @@ void SwarmScene::ApplyInteraction() {
 		interactionShader.setUniform1i("hand_count", hand_count);
 	}
 
-	//cout << "0. Hand Position: " << user_hands[0] << " hand count: " << hand_count << endl;
-	/*cout << "MousePosition: " << getProjectedPosition(mousePosition) << endl;
-	cout << "Handcount: " << user_hands.size() << endl;*/
-
 	interactionShader.dispatchCompute((particles.size() + 1024 - 1) / 1024, 1, 1);
 
 	interactionShader.end();
@@ -685,7 +606,7 @@ void SwarmScene::ApplyInteraction() {
 	particlesBuffer.copyTo(particlesBuffer2);
 }
 
-void SwarmScene::ChangeParticleDepth(float newMin, float newMax) {
+void SwarmScene::changeParticleDepth(float newMin, float newMax) {
 	changeDepthShader.begin();
 	changeDepthShader.setUniform1i("original_min_particle_depth", ORIGINAL_MIN_PARTICLE_DEPTH);
 	changeDepthShader.setUniform1i("original_max_particle_depth", ORIGINAL_MAX_PARTICLE_DEPTH);
@@ -702,7 +623,7 @@ void SwarmScene::ChangeParticleDepth(float newMin, float newMax) {
 	maxParticleDepth = newMax;
 }
 
-void SwarmScene::RevertParticleDepthToOriginal() {
+void SwarmScene::revertParticleDepthToOriginal() {
 	changeDepthShader.begin();
 	changeDepthShader.setUniform1i("original_min_particle_depth", ORIGINAL_MIN_PARTICLE_DEPTH);
 	changeDepthShader.setUniform1i("original_max_particle_depth", ORIGINAL_MAX_PARTICLE_DEPTH);
@@ -720,7 +641,8 @@ void SwarmScene::RevertParticleDepthToOriginal() {
 }
 
 
-array<ofVec3f, MAX_SWARM_HANDS> SwarmScene::GetUserHandsArray(ccScene::CoordinateSystem system) {
+// Returns an array of all current user hand positions in the specified coordinate system
+array<ofVec3f, MAX_SWARM_HANDS> SwarmScene::getUserHandsArray(ccScene::CoordinateSystem system) {
 	vector<ofVec3f> user_hands = getHandPositions(system);
 	array<ofVec3f, MAX_SWARM_HANDS> hands_max;
 
@@ -757,7 +679,7 @@ float SwarmScene::SceneIntro() {
 
 	particlesBuffer.copyTo(particlesBuffer2);
 
-	SetSequence(ParameterSequence(4, SequenceName::Intro));
+	setSequence(ParameterSequence(4, SequenceName::Intro));
 
 	return 5.0f;
 }
@@ -766,7 +688,7 @@ float SwarmScene::SceneIntro() {
 float SwarmScene::SceneOutro() {
 	cout << "Swarm Outro Triggered" << endl;
 
-	SetSequence(ParameterSequence(3, SequenceName::Outro));
+	setSequence(ParameterSequence(3, SequenceName::Outro));
 
 	return 5.0f;
 }

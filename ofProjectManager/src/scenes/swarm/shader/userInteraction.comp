@@ -5,9 +5,8 @@ struct Particle{
 	vec4 pos;
 	vec4 vel;
 	vec4 color;
-	vec4 unique;
 	vec4 initialPos;
-	vec4 bufferPos;
+	vec4 unique;
 };
 
 layout(std140, binding=0) buffer particle{
@@ -34,8 +33,10 @@ uniform int hand_count;
 uniform int min_particle_depth;
 uniform int max_particle_depth;
 
-
+//
 // ### Movement
+//
+
 vec3 applyMaxSpeed(vec3 velocity, float limit){
 	vec3 dir = normalize(velocity);
 	// If current velocity exeeds the max_speed, set it to max_speed
@@ -46,12 +47,15 @@ vec3 applyMaxSpeed(vec3 velocity, float limit){
 	}
 }
 
+// Accelerate particles towards the user hand positions
 vec3 calculateAcceleration(vec3 particlePos) {
 	vec3 acc = vec3(0.0,0.0,0.0);
-
 	if(hand_count == 0) return acc;
+
+	// This way all particles will be split evenly across all users
 	uint index = gl_GlobalInvocationID.x % (hand_count);
 
+	// Increase/Decrease attraction according to particle depth
 	float depth = abs(clamp(particlePos.z, -max_particle_depth, -min_particle_depth));
 	float depthPercentage = ((depth - min_particle_depth)/(max_particle_depth - min_particle_depth));
 	float extra_attraction = 0.75 * clamp(depthPercentage, 0, 1);
@@ -70,13 +74,17 @@ void calculateMovement(){
 		return;
 	}
 
+    // Calculate new velocity. Apply drag and the speed limit
     vec3 acc = calculateAcceleration(p2[gl_GlobalInvocationID.x].pos.xyz);
 	p[gl_GlobalInvocationID.x].vel.xyz += acc*timeLastFrame;
 	p[gl_GlobalInvocationID.x].vel.xyz *= 0.99;
 	p[gl_GlobalInvocationID.x].vel.xyz = applyMaxSpeed(p[gl_GlobalInvocationID.x].vel.xyz, max_speed);
 }
 
+//
 // ### Color
+//
+
 void calculateColor() {
 	vec3 particlePos = p2[gl_GlobalInvocationID.x].pos.xyz;
 	vec4 newColor = p2[gl_GlobalInvocationID.x].color;
@@ -95,9 +103,13 @@ void calculateColor() {
 	p3[index].color = newColor;
 }
 
+//
 // ### Main
+//
+
 void main(){
 	if(hand_count == 0) return;
+
 	calculateMovement();
 	calculateColor();
 }
