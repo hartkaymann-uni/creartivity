@@ -5,12 +5,10 @@
 #define MAX_MOVEMENT_SPEED 10.0f
 #define BASE_ACCELERATION 5.0f
 
-/*
-	User Class
-	Stores information on position and movements of a user.
-	Can be used for mouse movement and for actual information.
-*/
-
+/// <summary>
+/// Stores information on position and movement of a user.
+/// Can be used for mouse movement and for actual information.
+/// </summary>
 class ccUser
 {
 public:

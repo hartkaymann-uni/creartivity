@@ -13,6 +13,10 @@
 
 #define MAX_USERS 10
 
+
+/// <summary>
+/// Parent class for all other scenes. Includes some utilitiies, variables and virtual methods.
+/// </summary>
 class ccScene : public ofxScene
 {
 public:
@@ -36,14 +40,10 @@ public:
 		World
 	};
 
-	inline void setUserManager( ccUserManager* um ) { userManager = um; }
 	inline ofxPanel& getGui() { return gui; };
 	vector<ofVec3f> getHandPositions(CoordinateSystem system);
 
-	
-
 	// Scene Handling
-
 	virtual float SceneIntro();
 	virtual float SceneOutro();
 
@@ -55,15 +55,11 @@ protected:
 	filesystem::path scenesPath;
 
 	int width, height;
-	array<ofVec2f, MAX_USERS> user_positions;
 
 	ofEasyCam camera;
 	ofxPanel gui;
 
-	ccUserManager* userManager;
-
 	void resetCamera();
-	void updateUserPositions();
 	ofVec3f getProjectedPosition( ofVec3f mp );
 	ofVec3f getNormalToScreenPosition(ofVec2f normalPos);
 	ofVec3f getScreenToWorldPosition(ofVec2f screenPos);

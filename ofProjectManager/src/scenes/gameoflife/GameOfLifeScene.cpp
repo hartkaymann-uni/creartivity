@@ -11,7 +11,7 @@ namespace gol {
 		cellOffset( 0.f ),
 		sequenceDuration( 10.f ),
 		sequenceTransitionDuration( 1.f ),
-		lastSequene( SequenceName::Default ),
+		lastSequene( SequenceName::Empty ),
 		currentSequence( SequenceName::Default ),
 		lastSequenceTime( 0.f ),
 		shading( ShadingType::OUTLINE )
@@ -105,9 +105,10 @@ namespace gol {
 		}
 
 		// Load data into the FBO's texture
-		cellPingPong.allocate( rows, n_cells_y, GL_RGB32F );
-		cellPingPong.src->getTexture().loadData( cells.data(), rows, cols, GL_RGB );
-		cellPingPong.dst->getTexture().loadData( cells.data(), rows, cols, GL_RGB );
+		glm::vec2 dim( rows, n_cells_y );
+		cellPingPong.allocate( dim, GL_RGB32F);
+		cellPingPong.read->getTexture().loadData( cells.data(), rows, cols, GL_RGB );
+		cellPingPong.write->getTexture().loadData( cells.data(), rows, cols, GL_RGB );
 	}
 
 	/*
@@ -153,7 +154,8 @@ namespace gol {
 		step();
 
 		// Apply interaction for all users
-		vector<ccUser> u = userManager->getUserVec();
+		ccUserManager& um = ccUserManager::get();
+		vector<ccUser> u = um.getUserVec();
 		for (vector<ccUser>::iterator it = u.begin(); it != u.end(); it++) {
 			glm::vec2 left(it->getPositons().first);
 			glm::vec2 right(it->getPositons().second);
@@ -163,21 +165,21 @@ namespace gol {
 	}
 
 	void GameOfLifeScene::step() {
-		cellPingPong.dst->begin();
+		cellPingPong.write->begin();
 		ofClear(0);
 		logicShader.begin();
 		logicShader.setUniforms(shaderUniforms);
-		logicShader.setUniformTexture("cellData", cellPingPong.src->getTexture(), 0);
+		logicShader.setUniformTexture("cellData", cellPingPong.read->getTexture(), 0);
 		logicShader.setUniform2f("screen", (float)width, (float)height);
 		logicShader.setUniform1f("offset", cellOffset);
 
 		// Draw cell texture to call shaders, logic happens in shaders
-		cellPingPong.src->draw(0, 0);
+		cellPingPong.read->draw(0, 0);
 
 		logicShader.end();
 
 		// Ping pong
-		cellPingPong.dst->end();
+		cellPingPong.write->end();
 		cellPingPong.swap();
 	}
 
@@ -185,15 +187,15 @@ namespace gol {
 		splatShader.begin();
 
 		splatShader.setUniforms(shaderUniforms);
-		splatShader.setUniformTexture("cellData", cellPingPong.src->getTexture(), 0);
+		splatShader.setUniformTexture("cellData", cellPingPong.read->getTexture(), 0);
 		splatShader.setUniform2f("resolution", (float)n_cells_x, (float)n_cells_y);
 		splatShader.setUniform2f("point", point);
 
 		// Draw cell texture to call splat shader
-		cellPingPong.dst->begin();
+		cellPingPong.write->begin();
 		ofClear(0);
-		cellPingPong.src->draw(0, 0);
-		cellPingPong.dst->end();
+		cellPingPong.read->draw(0, 0);
+		cellPingPong.write->end();
 		cellPingPong.swap();
 
 		splatShader.end();
@@ -283,7 +285,7 @@ namespace gol {
 		// Draw overlay
 		if (dataSrcSize > 0)
 		{
-			cellPingPong.dst->draw( 0, 0, width / (10 - dataSrcSize), height / (10 - dataSrcSize) );
+			cellPingPong.write->draw( 0, 0, width / (10 - dataSrcSize), height / (10 - dataSrcSize) );
 		}
 		camera.end();
 	}
@@ -303,7 +305,7 @@ namespace gol {
 
 		instance.begin();
 		instance.setUniforms( shaderUniforms );
-		instance.setUniformTexture( "cellData", cellPingPong.src->getTexture(), 0 );
+		instance.setUniformTexture( "cellData", cellPingPong.read->getTexture(), 0 );
 		instance.setUniform2f( "resolution", (float)n_cells_x, (float)n_cells_y );
 		instance.setUniform2f( "screen", (float)width, (float)height );
 		instance.setUniform1f( "offset", cellOffset );
@@ -317,7 +319,7 @@ namespace gol {
 
 		outline.begin();
 		outline.setUniforms( shaderUniforms );
-		outline.setUniformTexture( "cellData", cellPingPong.src->getTexture(), 0 );
+		outline.setUniformTexture( "cellData", cellPingPong.read->getTexture(), 0 );
 		outline.setUniform2f( "resolution", (float)n_cells_x, (float)n_cells_y );
 		outline.setUniform2f( "screen", (float)width, (float)height );
 		outline.setUniform1f( "offset", cellOffset );
@@ -354,7 +356,7 @@ namespace gol {
 
 		metaballs.begin();
 		metaballs.setUniforms( shaderUniforms );
-		metaballs.setUniformTexture( "cells", cellPingPong.src->getTexture(), 0 );
+		metaballs.setUniformTexture( "cells", cellPingPong.read->getTexture(), 0 );
 		metaballs.setUniform2f( "resolution", (float)n_cells_x, (float)n_cells_y );
 		metaballs.setUniform2f( "screen", (float)width, (float)height );
 		metaballs.setUniform1f( "radius", sphereRadius.get() );

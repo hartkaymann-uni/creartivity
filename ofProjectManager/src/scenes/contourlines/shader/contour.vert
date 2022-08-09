@@ -11,8 +11,8 @@ uniform float u_scale;
 uniform float u_amplitude;
 uniform float u_limit;
 uniform float u_radius;
-uniform float u_lacunarity;
-uniform float u_persistance;
+uniform float u_lacunarity; // Determines how much detail is added per octave
+uniform float u_persistance; // Determines how much each octace contributes to overall shape
 
 uniform vec2 u_resolution;
 
@@ -30,7 +30,6 @@ out vec4 vPosition;
 vec4 permute(vec4 x){return mod(((x*34.0)+1.0)*x, 289.0);}
 vec4 taylorInvSqrt(vec4 r){return 1.79284291400159 - 0.85373472095314 * r;}
 vec3 fade(vec3 t) {return t*t*t*(t*(t*6.0-15.0)+10.0);}
-
 float cnoise(vec3 P){
   vec3 Pi0 = floor(P); // Integer part for indexing
   vec3 Pi1 = Pi0 + vec3(1.0); // Integer part + 1
@@ -99,6 +98,7 @@ float cnoise(vec3 P){
   return 2.2 * n_xyz;
 }
 
+// Calculate height of terrain with fractal brownian motion
 float terrain(vec3 p, vec2 offset) {
 	float e = 1.f					* cnoise( vec3(	1.f					 * (p.x + offset.x), 1.f				  * (p.y + offset.y), p.z ) ) 
 			+ u_persistance			* cnoise( vec3(	u_lacunarity		 * (p.x + offset.x), u_lacunarity		  * (p.y + offset.y), p.z ) ) 
@@ -109,7 +109,8 @@ float terrain(vec3 p, vec2 offset) {
 void main(){
 	float time = u_time;
 
-	vec3 pos = vec3( position.xy, 0.f ); // position of vertex
+	// position of vertex
+	vec3 pos = vec3( position.xy, 0.f ); 
 //  vec2 uv = pos.xy / u_resolution.xy;
 
 	vec3 p = vec3( pos.xy * u_scale, time ); // position for noise calculation
@@ -118,19 +119,25 @@ void main(){
 	bool red = interaction_offset >= 0.25 ? false : true;
 	pos.z = (terrain(p, vec2(0.f)) * (  1.0 - interaction_offset)) * u_amplitude;
 	
-//	vec2 ij = vec2(0.001f, 0.f);
-//	vec3 top		= vec3(  ij.yx, terrain(p,  ij.yx));
-//	vec3 right		= vec3(  ij.xy, terrain(p,  ij.xy));
-//	vec3 bottom		= vec3(- ij.yx, terrain(p, -ij.yx));
-//	vec3 left		= vec3(- ij.xy, terrain(p, -ij.xy));
+/*
+	// Calculate normal for phong shading
+	vec2 ij = vec2(0.001f, 0.f);
+	vec3 top		= vec3(  ij.yx, terrain(p,  ij.yx));
+	vec3 right		= vec3(  ij.xy, terrain(p,  ij.xy));
+	vec3 bottom		= vec3(- ij.yx, terrain(p, -ij.yx));
+	vec3 left		= vec3(- ij.xy, terrain(p, -ij.xy
+	vec3 normal = normalize( cross( top - bottom,  left - right));
+	vNormal = normal;
+*/
 
-//	vec3 normal = normalize( cross( top - bottom,  left - right));
+	// Reversed so it works with step in fragment shader 
+	vColor = red ?  vec3(1.0) : vec3(1.0, 0.0, 0.0); 
 
-//	vNormal = normal;
-	vColor = red ?  vec3(1.0) : vec3(1.0, 0.0, 0.0); // reversed so it works with step in fragment shader 
-//	vColor = vec3(interaction_offset);
-
+	// Set output parameters
 	vTexcoord = texcoord;
 	vPosition = vec4( pos, 1.f );
 	gl_Position = modelViewProjectionMatrix * vec4( pos, 1.f );
+
+	// Debug
+	// vColor = vec3(interaction_offset);
 }

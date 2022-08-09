@@ -18,18 +18,23 @@ void ofApp::setup()
 	gui.add(add_button.setup("Add user", 30, 30));
 	gui.add(remove_button.setup("Remove user", 30, 30));
 	gui.add(isSequencerInControl.set("Let Sequencer control", true));
+	gui.add(coreographed.setup("Coregrahped movement", 30, 30));
+	gui.add(coreoDuration.set("Coreo Duration", 5.f, 1.f, 10.f));
+	gui.add(coreoWidth.set("Coreo Width", 0.5f, 0.f, 0.5f));
+	gui.add(coreoHeight.set("Coreo Height", 0.5f, 0.f, 0.5f));
 
 	gui.setPosition(width - gui.getWidth() - 1, height - gui.getHeight() - 10);
 	add_button.addListener(this, &ofApp::handleAddButtonClick);
 	remove_button.addListener(this, &ofApp::handleRemoveButtonClick);
 	isSequencerInControl.addListener(this, &ofApp::OnSequencerControlChange);
+	coreographed.addListener(this, &ofApp::OnCoreographedChange);
 
-	//InitTestSeqeuenceArray();
+	InitTestSeqeuenceArray();
 	currentSequenceIndex = 0;
 	//sequences.push_back(ParameterSequence(20, SequenceName::UserChaos));
 	//sequences.push_back(ParameterSequence(1, SequenceName::NoUsers));
 	//sequences.push_back(ParameterSequence(5, SequenceName::RandomTeleport));
-	sequences.push_back(ParameterSequence(1000, SequenceName::Smooth));
+	//sequences.push_back(ParameterSequence(1000, SequenceName::Smooth));
 	SetSequence(sequences[currentSequenceIndex]);
 
 	lastMousePos = unmapped(glm::vec2(0.4f, 0.7f));
@@ -47,7 +52,26 @@ void ofApp::update() {
 		it++;
 	}
 
-	UpdateSequence();
+	if (isSequencerInControl.get())
+	{
+		UpdateSequence();
+	}
+	else if (coreoRunning)
+	{
+		if (coreoStart + coreoDuration < ofGetElapsedTimef())
+		{
+			coreoRunning = false;
+			coreoStart = ofGetElapsedTimef();
+		}
+		float x = ofMap(ofGetElapsedTimef(), coreoStart, coreoStart + coreoDuration, -1.f, 0.f, true);
+		float y = pow(cos(PI * x / 2.0), 0.5);
+
+		users.at(0).left.x = ofMap(x, -1.f, 0.f, 0.5f - coreoWidth, 0.5f);
+		users.at(0).left.y = ofMap(y, 0.f, 1.f, 0.5f + coreoHeight, 0.5f - coreoHeight);
+
+		users.at(0).right.x = ofMap(x, -1.f, 0.f, 0.5f + coreoWidth, 0.5f);
+		users.at(0).right.y = ofMap(y, 0.f, 1.f, 0.5f + coreoHeight, 0.5f - coreoHeight);
+	}
 }
 
 void ofApp::draw() {
@@ -73,7 +97,7 @@ void ofApp::draw() {
 // Send user information
 void ofApp::sendUser(int id, user& user) {
 	// check if values make sense
-	
+
 	ofxOscMessage m;
 	std::string addr = "/user/data/";
 	addr += ofToString(id);
@@ -163,6 +187,13 @@ void ofApp::handleRemoveButtonClick()
 	removeMostRecentUser(false);
 }
 
+void ofApp::OnCoreographedChange()
+{
+	isSequencerInControl.set(false);
+	coreoRunning = true;
+	coreoStart = ofGetElapsedTimef();
+}
+
 void ofApp::mouseDragged(int x, int y, int button) {
 	lastMousePos = glm::vec2(x, y);
 
@@ -239,7 +270,7 @@ void ofApp::StartSequence() {
 	nextSequenceTime = lastSequenceTime + currentSequence.duration;
 
 	RemoveAllUsers();
-	addNewUsers(1);
+	addNewUsers(5);
 
 	switch (currentSequence.sequenceType)
 	{

@@ -1,9 +1,9 @@
 /*
 *  @author: Irene Santana Martin, Christine Schuller, Kay Hartmann, Cosmo Strattner, Marvin Esche, Franziska Streifert
 *
-*  May 2022
+*  June 2022
 *
-*  In this header are the basic methods and variables for the interaction declared/set.
+*  In this header are the basic methods and variables for the interaction.
 */
 
 #pragma once
@@ -15,6 +15,7 @@
 #include "ofxNI2.h"
 #include "ofxOsc.h"
 
+// define variables for OSC connection
 #define HOST "localhost"
 #define PORT 12345
 
@@ -53,6 +54,7 @@ private:
 	ofEventListener newUserListener;
 	ofEventListener lostUserListener;
 
+	// Methods for user detection
 	void sendConnectionStarted();
 	void registerUser( ofxNiTE2::User::Ref user );
 	void sendUser( int id, user& user );

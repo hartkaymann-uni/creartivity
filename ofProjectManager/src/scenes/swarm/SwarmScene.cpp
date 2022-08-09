@@ -10,7 +10,7 @@ SwarmScene::SwarmScene() : ccScene("Swarm") {
 void SwarmScene::setup() {
 	camera.setFarClip(ofGetWidth() * 100);
 	ofShowCursor();
-	particleGroups = 400;
+	particleGroups = 40;
 	maxParticleDepth = ORIGINAL_MAX_PARTICLE_DEPTH;
 	minParticleDepth = ORIGINAL_MIN_PARTICLE_DEPTH;
 	particleAmount = 1024 * particleGroups;
@@ -179,8 +179,9 @@ void SwarmScene::DrawParticles() {
 }
 
 void SwarmScene::DrawUserCircles() {
+	ccUserManager& um = ccUserManager::get();
 	array<ofVec3f, MAX_SWARM_HANDS> user_hands = GetUserHandsArray(ccScene::CoordinateSystem::Screen);
-	int hand_count = min(MAX_SWARM_HANDS, userManager->getUserCount() * 2);
+	int hand_count = min(MAX_SWARM_HANDS, um.getUserCount() * 2);
 
 	for (int i = 0; i < hand_count; i++)
 	{
@@ -662,9 +663,9 @@ void SwarmScene::ApplyInteraction() {
 	interactionShader.setUniform1i("min_particle_depth", minParticleDepth);
 	interactionShader.setUniform1i("max_particle_depth", maxParticleDepth);
 
-
+	ccUserManager& um = ccUserManager::get();
 	array<ofVec3f, MAX_SWARM_HANDS> user_hands = GetUserHandsArray(ccScene::CoordinateSystem::World);
-	int hand_count = min(MAX_SWARM_HANDS, userManager->getUserCount() * 2);
+	int hand_count = min(MAX_SWARM_HANDS, um.getUserCount() * 2);
 	if (user_hands.empty()) {
 		interactionShader.setUniform1i("hand_count", 0);
 	}
@@ -758,7 +759,7 @@ float SwarmScene::SceneIntro() {
 
 	SetSequence(ParameterSequence(4, SequenceName::Intro));
 
-	return 0.8f;
+	return 5.0f;
 }
 
 // Triggered when this scene is closed
@@ -767,5 +768,5 @@ float SwarmScene::SceneOutro() {
 
 	SetSequence(ParameterSequence(3, SequenceName::Outro));
 
-	return 0.8f;
+	return 5.0f;
 }
