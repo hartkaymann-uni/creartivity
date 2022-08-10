@@ -5,9 +5,8 @@ struct Particle{
 	vec4 pos;
 	vec4 vel;
 	vec4 color;
-	vec4 unique;
 	vec4 initialPos;
-	vec4 bufferPos;
+	vec4 unique;
 };
 
 layout(std140, binding=0) buffer particle{
@@ -28,8 +27,9 @@ layout(std140, binding=2) buffer indices{
 
 layout(local_size_x = 1024, local_size_y = 1, local_size_z = 1) in;
 void main(){
-	int index = int(p[gl_GlobalInvocationID.x].unique.y);
 	// Put the particles back to their original position
-	p[gl_GlobalInvocationID.x].pos.xyz = p[gl_GlobalInvocationID.x].initialPos.xyz ;
+	p[gl_GlobalInvocationID.x].pos.xyz = p[gl_GlobalInvocationID.x].initialPos.xyz;
+
+	int index = int(p[gl_GlobalInvocationID.x].unique.y);
 	p3[index].pos.xyz = p[gl_GlobalInvocationID.x].pos.xyz;
 }

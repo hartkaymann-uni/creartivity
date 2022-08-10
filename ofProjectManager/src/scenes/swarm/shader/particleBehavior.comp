@@ -4,9 +4,8 @@ struct Particle{
 	vec4 pos;
 	vec4 vel;
 	vec4 color;
-	vec4 unique;
 	vec4 initialPos;
-	vec4 bufferPos;
+	vec4 unique;
 };
 
 layout(std140, binding=0) buffer particle{
@@ -45,8 +44,11 @@ uniform int max_particle_depth;
 uniform vec3 particle_color_start;
 uniform vec3 particle_color_end;
 
+//
+// ### Acceleration Rules
+//
 
-// ### Rules
+// Particles try to move away from each other
 vec3 applyRepulsion(vec3 my_pos, vec3 their_pos){
 	if(use_repulsion == 0) {
 		return vec3(0.0);
@@ -60,6 +62,7 @@ vec3 applyRepulsion(vec3 my_pos, vec3 their_pos){
 	return vec3(0.0);
 } 
 
+// Particles try to have the same velocity as other particles
 vec3 applyCohesion(vec3 my_pos, vec3 their_pos, vec3 my_vel, vec3 their_vel){
 	if(use_cohesion == 0) {
 		return vec3(0.0);
@@ -70,6 +73,7 @@ vec3 applyCohesion(vec3 my_pos, vec3 their_pos, vec3 my_vel, vec3 their_vel){
 	return dv / (dot(dv,dv) + 10.0);
 }
 
+// Particles try to move towards each other
 vec3 applyAttraction(vec3 my_pos, vec3 their_pos){
 	if(use_attraction == 0) {
 		return vec3(0.0);
@@ -87,8 +91,10 @@ vec3 applyAttraction(vec3 my_pos, vec3 their_pos){
 	return vec3(0.0);
 }
 
-
+//
 // ### Movement
+//
+
 vec3 applyMaxSpeed(vec3 velocity, float limit){
 	vec3 dir = normalize(velocity);
 	// If current velocity exeeds the max_speed, set it to max_speed
@@ -100,15 +106,14 @@ vec3 applyMaxSpeed(vec3 velocity, float limit){
 }
 
 vec3 calculateAcceleration(vec3 particlePos) {
-	// start and end is dependent on elapsedTime. As a result, a every particle will be compared to every other particle over
-	// the course of a second at least once. Will no longer work perfectly for very large amounts of particles, but it's a very cost efficient
-	// way of applying the movement rules 
+	// start and end is dependent on elapsedTime. Thus every particle will be compared to every other particle at least once over the course of a second. 
+	// For very large amounts of particles, some particles may be left out in the comparison, but it's a very cost efficient way of applying the movement rules.
 	vec3 acc = vec3(0.0,0.0,0.0);
 	uint m = uint(particleAmount * elapsedTime);
 	uint start = m%(particleAmount -512);
 	uint end = start + 512;
 
-	// Compare current particle to 1024 other particles (start to end) 
+	// Compare current particle to 512 other particles (start to end) 
 	for(uint i=start;i<end;i++){
 		if(i!=gl_GlobalInvocationID.x){
 			acc += applyRepulsion(particlePos,p2[i].pos.xyz) * repulsion;
@@ -125,17 +130,21 @@ void calculateMovement(){
 		return;
 	}
 
-	//p[gl_GlobalInvocationID.x].pos.xyz += p[gl_GlobalInvocationID.x].vel.xyz*timeLastFrame;
+	// Calculate new position according to current velocity
 	p[gl_GlobalInvocationID.x].pos.xy += p[gl_GlobalInvocationID.x].vel.xy*timeLastFrame;
 
+	// Calculate new velocity. Apply drag and the speed limit
     vec3 acc = calculateAcceleration(p2[gl_GlobalInvocationID.x].pos.xyz);
 	p[gl_GlobalInvocationID.x].vel.xyz += acc*timeLastFrame;
 	p[gl_GlobalInvocationID.x].vel.xyz *= 0.99;
 	p[gl_GlobalInvocationID.x].vel.xyz = applyMaxSpeed(p[gl_GlobalInvocationID.x].vel.xyz, max_speed);
 }
 
-
+//
 // ### Color
+//
+
+// Lets all the particles flash white for the specified duration. This effect repeats regulary.
 vec4 applyBlink(vec4 my_color, float depth) {
 	float blinkDuration = 1.f;
 
@@ -167,25 +176,28 @@ void calculateColor() {
 	float depth = abs(clamp(particlePos.z, -max_particle_depth, -min_particle_depth));
 	float depthPercentage = ((depth - min_particle_depth)/(max_particle_depth - min_particle_depth));
 
-	// Set base color depending on z-position
+	// Set base color depending on particle depth
 	vec3 colorDiff = particle_color_start - particle_color_end;
 	newColor.rgb = particle_color_start.rgb - (colorDiff.rgb * depthPercentage);
 
-	// Set transparency depending on z-position
+	// Set transparency depending on particle depth
 	newColor.a =  0.05 + (1 - depthPercentage) * 0.95 * 0.05;
 
+	// Apply blink effect
 	//newColor = applyBlink(newColor, depth);
 
 	p[gl_GlobalInvocationID.x].color = newColor;
 }
 
+//
 // ### Main
+//
+
 void main(){
 	calculateMovement();
 	calculateColor();
 
 	int index = int(p[gl_GlobalInvocationID.x].unique.y);
 	p3[index].pos.xy = p[gl_GlobalInvocationID.x].pos.xy;
-	//p3[index].pos.xyz = p[gl_GlobalInvocationID.x].pos.xyz;
 	p3[index].color = p[gl_GlobalInvocationID.x].color;
 }

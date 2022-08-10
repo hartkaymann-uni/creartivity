@@ -14,23 +14,6 @@ class SwarmScene : public ccScene
 public:
 	SwarmScene();
 
-	void setup();
-	void update();
-	void draw();
-	void dirAsColorChanged(bool& dirAsColor);
-
-	void keyPressed(int key);
-	void keyReleased(int key);
-	void mouseMoved(int x, int y);
-	void mouseDragged(int x, int y, int button);
-	void mousePressed(int x, int y, int button);
-	void mouseReleased(int x, int y, int button);
-	void mouseEntered(int x, int y);
-	void mouseExited(int x, int y);
-	void windowResized(int w, int h);
-	void dragEvent(ofDragInfo dragInfo);
-	void gotMessage(ofMessage msg);
-
 	enum class SequenceName {
 		BlackHole,
 		Explosion,
@@ -70,11 +53,10 @@ public:
 
 	struct Particle {
 		glm::vec4 pos;
-		glm::vec4 u;
+		glm::vec4 vel;
 		ofFloatColor color;
-		glm::vec4 unique;
 		glm::vec4 initialPos;
-		glm::vec4 bufferPos;
+		glm::vec4 unique;
 	};
 
 	struct SortByDepthOperator
@@ -91,6 +73,16 @@ public:
 	GLuint vaoID;
 	ofVbo vbo;
 
+	void setup();
+	void update();
+	void draw();
+
+	// ### Controls
+	void keyReleased(int key);
+	void mouseDragged(int x, int y, int button);
+	void mousePressed(int x, int y, int button);
+	void mouseReleased(int x, int y, int button);
+
 	// ### Parameters & GUI
 	ofParameter<float> attractionCoeff, cohesionCoeff, repulsionCoeff;
 	ofParameter<bool> UseAttraction, UseCohesion, UseRepulsion;
@@ -101,49 +93,50 @@ public:
 	ofParameter<int> ruleIterationMod;
 	ofParameterGroup shaderUniforms;
 	ofParameter<float> fps;
-	ofParameter<bool> dirAsColor;
 	ofParameter<bool> isSequencerInControl;
 
-	// Transitions
+	// ### Transitions
 	float SceneIntro() override;
 	float SceneOutro() override;
+
 private:
 	// ### Drawing
 	float user_circle_alpha;
 	float user_circle_radius;
 
-	void DrawParticles();
-	void DrawUserCircles();
+	void drawParticles();
+	void drawUserCircles();
 
 	// ### Shaders
 	ofShader particleShader, userEnter, behaviorShader, interactionShader, userCircleShader;
 	ofShader introShader, changeDepthShader;
 
-	void ApplyParticleRules();
-	void ApplyInteraction();
-	array<ofVec3f, MAX_SWARM_HANDS> GetUserHandsArray(ccScene::CoordinateSystem system);
+	void applyParticleBehavior();
+	void applyInteraction();
+	void changeParticleDepth(float newMin, float newMax);
+	void revertParticleDepthToOriginal();
+	array<ofVec3f, MAX_SWARM_HANDS> getUserHandsArray(ccScene::CoordinateSystem system);
 
 	// ### Controls
 	ofVec3f mousePosition;
 	ofVec3f mouseClickPosition;
 	bool isPressingMouse;
 
-	void UpdateMousePos(int x, int y, string action = "default");
-	void ChangeParticleDepth(float newMin, float newMax);
-	void RevertParticleDepthToOriginal();
-	vector<Particle> SortParticles();
+	void updateMousePos(int x, int y, string action = "default");
 
 	// ### Sequencer
-	void InitSequences();
-	void UpdateSequence();
-	void CheckForNextSequence();
-	void SetSequence(ParameterSequence sequence);
-	void StartSequence();
-	void ActivateRules();
-
-
 	vector<ParameterSequence> sequences;
 	ParameterSequence currentSequence;
 	int currentSequenceIndex;
 	float lastSequenceTime, nextSequenceTime;
+
+	void initSequences();
+	void updateSequence();
+	void checkForNextSequence();
+	void setSequence(ParameterSequence sequence);
+	void startSequence();
+	void activateRules();
+
+	// ### Other
+	vector<Particle> sortParticles();
 };

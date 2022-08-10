@@ -16,6 +16,7 @@ void main(){
 
     fragColor = color;
     
+    // Calculate the point size according to the uniform and particle depth
     float depth = abs(clamp(position.z, -max_particle_depth, 0));
     float sizeMod = (1-depth/max_particle_depth) * 1.5f + 0.5f;
     sizeMod = clamp(sizeMod, 0.5, 10.0);
